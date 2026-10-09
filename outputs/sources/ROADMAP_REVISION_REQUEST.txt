@@ -1,0 +1,1086 @@
+You are revising the existing Star Player development roadmap.
+
+This is a ROADMAP REVISION task.
+
+Do NOT implement production code.
+
+Read the current `ROADMAP.md` completely before editing it.
+
+Also read all currently available supporting planning documents referenced by the roadmap, including when present:
+
+- `docs/SYSTEM_CONTRACTS.md`
+- `docs/UI_ARCHITECTURE.md`
+- `docs/REQUIREMENTS_TRACEABILITY.md`
+- `CURRENT_STATE.md`
+- `AGENTS.md`
+
+Also read and preserve the separate portrait specification:
+
+- `Star_Player_Portrait_System_Design.MD`
+
+The Portrait document remains a separate Source of Truth.
+Do NOT copy the entire Portrait specification into ROADMAP.md.
+Reference it from the appropriate roadmap phases instead.
+
+# PRIMARY GOAL
+
+Update the existing roadmap to reflect the latest owner decisions.
+
+Do NOT redesign the entire roadmap from scratch.
+
+Preserve:
+
+- Phase 0 through Phase 29
+- the current 30-phase structure
+- the current overall phase ordering
+- current dependency logic unless a required new dependency must be added
+- current deterministic simulation architecture
+- current persistence/migration strategy
+- current save-recovery guarantees
+- current hidden-information rules
+- current testing philosophy
+- current acceptance-gate discipline
+- current scope exclusions
+
+Prefer adding requirements to existing phases rather than introducing new top-level phases.
+
+Do NOT renumber the roadmap.
+
+If a new feature needs work across several phases, distribute it across the existing phases according to architectural dependency.
+
+# IMPORTANT TERMINOLOGY
+
+"Club AI", "Manager AI", and other baseball decision AI normally mean deterministic/rule-based game AI.
+
+They do NOT mean an LLM.
+
+Generative AI must be explicitly called Gemini, Generative AI, Narrative AI, or AI-native content where appropriate.
+
+---
+
+# 1. ADD AN EXPLICIT KBO RULE ENGINE
+
+The roadmap already has RuleProfile, GameRuleSnapshot, rule snapshots, versioned rule data, and D2.
+
+Preserve that architecture, but make the responsibility clearer by explicitly defining a:
+
+`KBO Rule Engine`
+
+It should be a data-driven/versioned rules subsystem, not rules scattered throughout unrelated services.
+
+Organize rule ownership conceptually around areas such as:
+
+- GameRules
+- RegularSeasonRules
+- RosterRules
+- RegistrationRules
+- PostseasonRules
+- DraftRules
+- ContractRules
+- FARules
+- ForeignPlayerRules
+- AwardRules where applicable
+
+Do not hardcode all 2026 values into domain classes.
+
+Rules must be versioned and saved with the career as already intended by the roadmap.
+
+Do not create a new phase only for this.
+Integrate it into the existing Phase 1/2/6 and later subsystem phases.
+
+---
+
+# 2. KEEP THE CURRENT SAVE RECOVERY DESIGN
+
+The existing save architecture is approved.
+
+Preserve:
+
+- atomic/transaction-safe authoritative commits
+- immutable snapshot generations
+- copy-before-migrate
+- previous valid save preservation
+- corrupt latest-save recovery
+- rolling autosaves
+- at least three completed autosave generations
+- pre-decision recovery snapshots
+- explicit recovery notices
+- fault-injection testing
+
+Do not weaken this design.
+
+---
+
+# 3. EXPAND MANAGER AND CLUB PERSONALITY
+
+The existing `ClubPolicy` and Club AI architecture are good but incomplete.
+
+Expand Phase 9 so teams and managers can have persistent behavioral differences.
+
+Introduce conceptual models such as:
+
+`ManagerProfile`
+`ClubPhilosophy`
+
+Possible ManagerProfile dimensions:
+
+- veteran preference
+- prospect preference
+- offensive aggression
+- defensive preference
+- catcher-defense preference
+- starter leash
+- bullpen aggression
+- trust sensitivity
+- development patience
+
+Possible ClubPhilosophy dimensions:
+
+- development focus
+- win-now focus
+- FA aggressiveness
+- trade aggressiveness
+- prospect protection
+- roster stability preference
+
+These must affect bounded rule-based decision scoring.
+
+They must NOT become generative-AI decisions.
+
+Identical state + seed + policy must remain deterministic where the existing roadmap requires determinism.
+
+---
+
+# 4. KEEP PENDING DECISION BACKEND AND ADD VISIBLE UX
+
+The roadmap already correctly pauses date advancement for unresolved player decisions.
+
+Preserve this architecture.
+
+Make `PendingDecision` also a visible UX concept.
+
+The player should be able to see unresolved important decisions such as:
+
+- contract offer
+- FA offer
+- injury/treatment decision
+- national-team decision
+- military decision
+- important interview request
+- other time-sensitive player decisions
+
+A pending decision must not silently disappear when advancing time.
+
+Add a compact Pending Decisions / Inbox-style surface at the appropriate early/mid UX phase.
+
+Do not create a separate email simulator.
+
+---
+
+# 5. ADD CONTEXTUAL HELP / TUTORIAL FRAMEWORK
+
+Add this beginning around Phase 5-6.
+
+Do NOT build a long forced tutorial campaign.
+
+Prefer contextual help.
+
+Examples:
+
+first injury
+→ explain injury/recovery choices
+
+first second-team assignment
+→ explain first/second-team status
+
+first FA eligibility
+→ explain FA rules
+
+WAR / advanced metric hover
+→ metric tooltip
+
+developmental registration
+→ terminology explanation
+
+Use:
+
+- first-time contextual notices
+- hover tooltips
+- glossary/help panel
+- "do not show again"
+- ability to reopen help later
+
+The help framework should be implemented early and content can be added incrementally as later systems arrive.
+
+---
+
+# 6. MOVE BASIC SETTINGS EARLIER
+
+The final visual/settings polish may remain in Phase 28.
+
+However, a basic settings framework must exist around Phase 5-6.
+
+Include settings only when their underlying feature exists.
+
+The framework should eventually support:
+
+- QHD / FHD display behavior
+- window / borderless / fullscreen where supported
+- UI text/font size or accessibility scaling
+- game progression speed
+- text/animation speed
+- default game presentation mode
+- confirmation preferences
+- autosave preferences
+- contextual-help reset/preferences
+- audio settings when audio exists
+- Gemini configuration when Narrative AI is implemented
+- Portrait AI settings when Portrait AI is implemented
+
+Do not create fake settings for features that do not exist yet.
+
+Phase 28 remains responsible for final UX, styling, accessibility, and complete settings presentation.
+
+---
+
+# 7. ADD A DEDICATED CATCHER SYSTEM
+
+This is now an early architecture requirement.
+
+The existing roadmap currently models hitters and pitchers but does not sufficiently model catcher-specific ability.
+
+Add catcher-specific skills.
+
+Recommended catcher-specific ratings:
+
+- Receiving / Framing
+- Blocking
+- Pop Time
+- Game Calling
+
+Continue using shared player ratings where appropriate:
+
+- Fielding
+- Arm
+- Endurance / physical workload capability
+
+IMPORTANT:
+
+Catcher-specific ability
+and
+C position proficiency
+
+must remain separate concepts.
+
+Example:
+
+A player may have excellent catcher tools but low C proficiency because they are inexperienced.
+
+Another player may have average physical catcher tools but very high C proficiency because they are an experienced veteran.
+
+Do not collapse these into one CatcherRating.
+
+## Phase integration
+
+### Phase 1
+
+Add catcher-specific ratings to the Player/Ratings architecture.
+
+Add explicit C proficiency separation.
+
+Update public visibility/read-model requirements accordingly.
+
+### Phase 2
+
+The baseball reducer/scoring model must support catcher-relevant events and attribution required by the game.
+
+Examples include:
+
+- passed-ball handling
+- stolen-base attempts / caught stealing
+- catcher defensive participation
+- catcher workload attribution
+
+Do not incorrectly merge official wild pitch and passed ball scoring.
+
+### Phase 3
+
+Integrate catcher abilities into the probability resolver.
+
+Receiving / Framing:
+- may slightly affect marginal called-ball/strike outcomes where the internal pitch/count model supports it
+
+Blocking:
+- affects handling of difficult pitches and passed-ball/runner-advance risk
+
+Pop Time:
+- combines with Arm and C proficiency when resolving stolen-base attempts
+
+Game Calling:
+- provides bounded influence on pitch-selection quality / mistake suppression / pitcher execution
+- must NOT directly inflate pitcher base ratings
+
+A conceptual caught-stealing model should depend on factors such as:
+
+catcher Arm
++ Pop Time
++ C proficiency
++ pitcher delivery/runner-control context
+- runner speed / stealing skill
++ game context
+
+Do NOT create one single "Caught Stealing Ability" rating.
+
+### Phase 7
+
+Catcher-specific skills and C proficiency must have proper growth/training/exposure rules.
+
+Returning to catcher after playing another position must preserve prior C proficiency according to the existing proficiency architecture.
+
+### Phase 8
+
+Catcher workload must interact with fatigue and injury systems.
+
+Catching should generally impose more physical workload than ordinary field positions.
+
+Repeated catcher starts may temporarily reduce effective performance through fatigue.
+
+Do not permanently reduce base ratings merely because the player caught several games.
+
+---
+
+# 8. ADD BATTERY CHEMISTRY
+
+Add a pitcher-catcher pair relationship called:
+
+`BatteryChemistry`
+
+This is NOT the same thing as personal friendship.
+
+Model it per pitcher-catcher pair.
+
+Conceptually:
+
+catcher_id
+pitcher_id
+battery_chemistry
+shared_appearances
+last_battery_date
+other required progression metadata
+
+Do not store one global chemistry number on the catcher.
+
+Examples:
+
+C001 + P001 = very high chemistry
+C001 + P002 = normal chemistry
+C001 + P003 = low chemistry
+
+## Relationship separation
+
+Personal relationship:
+human/social closeness
+
+Battery Chemistry:
+baseball-specific understanding and working familiarity
+
+They may influence each other, but must remain distinct.
+
+High personal familiarity may modestly improve Battery Chemistry growth speed.
+
+It must NOT automatically guarantee excellent baseball chemistry.
+
+## Chemistry growth
+
+Battery Chemistry may improve through:
+
+- shared game appearances
+- spring camp work
+- bullpen/catching sessions where represented
+- repeated seasons together
+- meaningful high-pressure game experience
+
+It may decay slowly after long periods without working together if appropriate.
+
+Avoid excessive churn.
+
+## Gameplay effect
+
+Battery Chemistry must affect effective game performance only.
+
+It must NOT permanently change base ratings.
+
+Possible bounded effects:
+
+- fewer sign/communication mistakes
+- slightly improved receiving consistency
+- slightly improved blocking decisions
+- better use of catcher Game Calling
+- pitcher comfort / execution stability
+- better situational coordination
+
+Do NOT implement:
+
+Battery Chemistry 90
+→ pitcher Stuff +10
+
+or similar direct permanent rating inflation.
+
+---
+
+# 9. USE BATTERY CHEMISTRY IN CLUB AI
+
+Integrate Battery Chemistry into Phase 9 catcher selection.
+
+A manager's catcher selection should consider a bounded combination of:
+
+- catcher defensive ability
+- batting ability
+- C proficiency
+- health
+- current condition
+- fatigue/workload
+- Battery Chemistry with the scheduled pitcher
+- manager profile
+- club philosophy
+- opponent/context where appropriate
+
+This should naturally allow outcomes such as:
+
+- ace-specific catcher
+- veteran catcher paired with a rookie pitcher
+- long-running "golden battery"
+- newly traded pitcher requiring time to build chemistry
+
+Do not implement a hardcoded "personal catcher" flag as the primary mechanic.
+
+A dedicated/personal catcher should emerge naturally from selection policy and Battery Chemistry.
+
+The game may record that historical pattern later for narrative/history purposes.
+
+---
+
+# 10. ADD MID/LATE QoL FEATURES
+
+Integrate these into the existing historical/discovery phases, primarily Phase 23-24.
+
+## Favorites / Watchlist
+
+Allow the player to bookmark:
+
+- players
+- prospects
+
+This is presentation/user preference data, not authoritative simulation state.
+
+## Player Comparison
+
+Allow comparing two players.
+
+Respect all current visibility rules.
+
+The controlled player's exact abilities may be shown.
+
+NPC players must use the normal scouting/observation representation.
+
+Never reveal hidden true ratings or true potential through comparison.
+
+## Game Archive
+
+The game already retains historical game facts and box scores.
+
+Add a player-facing Game Archive.
+
+Allow browsing past games by useful dimensions such as:
+
+- season
+- date
+- team
+- postseason
+- games in which the controlled player appeared
+
+A historical game view should be able to show available retained information such as:
+
+- final score
+- box score
+- lineup
+- scoring progression
+- controlled player's appearances
+- important events
+
+Do not create another simulation.
+
+It is a read model over retained facts.
+
+## Milestone Tracking
+
+The roadmap already has milestone occurrences.
+
+Add milestone progress tracking.
+
+Examples:
+
+1,873 career hits
+→ 127 remaining to 2,000
+
+487 home runs
+→ 13 remaining to 500
+
+Do not turn this into an RPG quest system.
+
+It is a career-history/status feature.
+
+---
+
+# 11. REINTEGRATE THE PORTRAIT SYSTEM
+
+The current roadmap incorrectly says the portrait design was excluded by an earlier owner response.
+
+That is no longer the current decision.
+
+Remove that exclusion.
+
+The separate:
+
+`Star_Player_Portrait_System_Design.MD`
+
+is now an approved design reference.
+
+Do NOT duplicate the whole document into ROADMAP.md.
+
+Instead:
+
+- reference the Portrait document
+- connect its implementation work to appropriate existing phases
+- preserve its independent design authority
+
+Core portrait policy remains:
+
+Seed 2D
+→ default portrait for generated players
+
+Gemini AI Portrait
+→ optional user-selected enhancement
+
+No automatic Gemini portrait generation.
+
+Generated AI portraits are locally cached.
+
+Seed data remains available as fallback.
+
+Real datapack photos may take precedence when supplied.
+
+Place Seed 2D/profile integration when player/profile/discovery architecture is mature.
+
+Place optional Gemini Portrait work later, after the base portrait path is stable.
+
+Do not add a new top-level phase solely for Portrait unless absolutely unavoidable.
+
+A sub-section or bounded work package inside an existing later phase is preferred.
+
+---
+
+# 12. REVISE THE GENERATIVE AI PHILOSOPHY
+
+This is an important owner decision.
+
+The philosophy is NOT:
+
+"use AI as little as possible."
+
+The philosophy is:
+
+Use generative AI where it significantly increases immersion,
+personality, expression, and narrative variety.
+
+Do not use generative AI where normal deterministic/rule-based code
+is more appropriate, more reliable, or provides no meaningful benefit.
+
+In short:
+
+Do not use AI merely because AI can do the task.
+
+Use AI aggressively where AI makes Star Player substantially more immersive.
+
+## Generative AI should NOT own:
+
+- game results
+- baseball simulation
+- player growth
+- aging
+- injury outcomes
+- lineup decisions
+- manager/team operations
+- draft outcomes
+- contracts
+- FA outcomes
+- trades
+- generated-player ratings
+- league progression
+- authoritative relationship values
+- authoritative game facts
+
+These remain C# Game Core / deterministic or seeded game systems.
+
+## Generative AI should be actively used for:
+
+- free-text player interviews
+- contextual fan reactions
+- SNS / community reactions
+- selected high-value narrative articles
+- other high-value expressive narrative where approved
+
+Routine information that does not gain much from AI should remain template/procedural.
+
+Example:
+
+ordinary 4-for-1 game
+→ no need for expensive AI content
+
+career first home run / MVP / Korean Series Game 7 / major controversy
+→ AI content is valuable
+
+---
+
+# 13. CHANGE INTERVIEWS TO FREE-TEXT AI-NATIVE INTERVIEWS
+
+This replaces the current backend-defined interview-choice design.
+
+The player must be able to type their own interview answer.
+
+Do NOT make the main interview interaction:
+
+1. humble answer
+2. confident answer
+3. fan answer
+
+Instead use:
+
+Reporter question
+↓
+Player writes free-text response
+↓
+Gemini interpretation
+↓
+bounded structured interpretation
+↓
+C# Game Core validation
+↓
+Game Core applies authoritative consequences
+↓
+Gemini generates contextual reactions/presentation
+↓
+content is stored
+
+Possible structured interpretation fields may include:
+
+- target
+- topic
+- tone
+- intensity
+- sentiment
+- relevant approved semantic tags
+
+These are examples, not an unrestricted domain language.
+
+Gemini must NOT directly return arbitrary gameplay mutations such as:
+
+manager_relationship = -12
+fan_popularity = +8
+
+Instead:
+
+Gemini interpretation
+→ whitelist/schema validation
+→ Game Core rule lookup
+→ authoritative game consequence
+
+The Game Core decides the actual numbers/effects.
+
+The player's original interview text should be preserved as career/history content where appropriate.
+
+---
+
+# 14. CONNECT INTERVIEWS TO FAN / SNS / MEDIA REACTION
+
+One important event may produce a connected narrative bundle:
+
+confirmed game/career facts
++
+player's actual interview answer
+↓
+Gemini
+↓
+reporter follow-up/reaction
+news presentation
+fan reactions
+SNS/community reactions
+
+These outputs may have different voices/personas.
+
+Examples:
+
+- formal sports media
+- club fans
+- opposing-team fans
+- general social media
+- critical commenters
+
+However, AI must not invent authoritative facts.
+
+Opinions, jokes, emotional reactions and speculation may be expressive,
+but factual claims supplied as game facts must remain grounded in confirmed backend data.
+
+Past interviews may be referenced later only if the backend supplies the actual stored historical interview as context.
+
+The LLM must never invent a past quote that does not exist.
+
+---
+
+# 15. AI-NATIVE FEATURES DO NOT REQUIRE TEMPLATE EQUIVALENTS
+
+Remove the previous universal rule:
+
+"Every generative AI feature must have a deterministic/template fallback."
+
+That is no longer the owner decision.
+
+Some designated features are intentionally AI-native.
+
+AI-native features include at least:
+
+- free-text interview interpretation
+- rich contextual fan reactions
+- SNS/community reactions
+
+If Gemini is unavailable:
+
+- do not fabricate a fake AI result
+- do not partially mutate authoritative state
+- allow retry
+- allow the AI-native content/interaction to remain pending where appropriate
+- unrelated already-committed core simulation state must remain safe
+- loading/saving/core data must remain safe
+
+Do not require a template replacement that pretends to provide the same experience.
+
+Routine non-AI systems still work normally.
+
+Core simulation must remain independent from generative AI.
+
+---
+
+# 16. REVISE PHASE 21
+
+Phase 21 should still implement:
+
+- relationships
+- family
+- rivalry
+- structured story eligibility
+- authoritative story facts
+- interview event triggers/context
+- approved consequence rules
+
+However, remove the assumption that the final interview answer is selected from backend-defined predefined intent choices.
+
+Phase 21 may define:
+
+- when an interview occurs
+- the factual context
+- reporter/topic intent
+- allowable consequence categories
+- relationship/reputation rules
+
+The actual free-text interpretation pipeline belongs to the Narrative AI phase.
+
+Do not use arbitrary LLM interpretation before the validated AI architecture exists.
+
+---
+
+# 17. REVISE PHASE 26
+
+Rename/reframe Phase 26 if necessary from merely:
+
+"Optional Gemini narrative presentation"
+
+toward something equivalent to:
+
+"Narrative AI and AI-native interaction"
+
+without changing the phase number.
+
+Phase 26 should implement:
+
+- Gemini provider integration
+- free-text interview input
+- structured interpretation schema
+- whitelist validation
+- interview consequence bridge into Game Core
+- contextual fan reactions
+- SNS/community reactions
+- major-event article generation
+- caching
+- model/prompt/version metadata
+- retry/failure states
+- API configuration
+- cost/request controls where appropriate
+- privacy-safe fact bundles
+- protection against stale callbacks and wrong-save attachment
+
+Generated narrative prose itself must never be parsed as a domain command.
+
+Only the explicitly defined structured interview interpretation schema may cross back toward the Application/Game Core layer, and it must pass strict validation.
+
+Update Phase 26 tests accordingly.
+
+Do NOT require every failed AI-native interaction to immediately display a template replacement.
+
+Instead test:
+
+- no partial domain mutation on API failure
+- malformed/unsupported tags rejected
+- invented factual references rejected
+- stale callback rejected
+- retry does not duplicate consequences
+- same interview interpretation cannot be applied twice
+- raw interview is preserved correctly
+- secret/API key isolation
+- generated narrative reopening does not regenerate unnecessarily
+
+---
+
+# 18. REVISE D5
+
+The current D5 framing should be updated to reflect the approved AI design.
+
+Keep strict protection of authoritative facts.
+
+However, do not reduce Gemini to merely rearranging engine-authored clauses.
+
+Allow richer prose, fan reactions, SNS reactions and interview interpretation where appropriate.
+
+The boundary should be:
+
+Game Core provides confirmed facts and allowed context.
+
+Generative AI provides interpretation/expression.
+
+Game Core validates structured interpretation.
+
+Game Core owns all authoritative consequences.
+
+Generated prose cannot create authoritative events.
+
+Distinguish:
+
+factual authority
+from
+fictional opinion/expression.
+
+Fan comments can express emotion, jokes, support, anger and opinions.
+
+They cannot create a new injury, contract, trade, relationship, result, award or past quote that does not exist.
+
+---
+
+# 19. PLAYER-FACING UI LANGUAGE
+
+All actual player-facing UI remains Korean.
+
+Technical architecture, code names, interfaces and roadmap prose may remain English.
+
+Examples of actual UI:
+
+홈
+내 선수
+경기
+훈련
+선수 DB
+구단
+신인 / 드래프트
+계약
+커리어
+의사결정 대기함
+설정
+
+Do not silently convert actual in-game labels to English merely because the roadmap is written in English.
+
+---
+
+# 20. UPDATE SUPPORTING CONTRACTS AND TRACEABILITY
+
+After revising ROADMAP.md, update supporting planning documents when necessary so they do not contradict the roadmap.
+
+Especially check:
+
+- SYSTEM_CONTRACTS
+- UI_ARCHITECTURE
+- REQUIREMENTS_TRACEABILITY
+
+Add or update contracts for:
+
+- CatcherRatings
+- BatteryChemistry
+- catcher workload
+- catcher selection inputs
+- ManagerProfile / ClubPhilosophy
+- Pending Decision UX
+- contextual help/settings ownership
+- AI-native interview interpretation
+- portrait roadmap reference
+- QoL read models
+
+Do NOT duplicate large requirements across every document.
+
+Keep each document's existing responsibility.
+
+---
+
+# 21. ROADMAP REVISION RULES
+
+Do not create production code.
+
+Do not silently remove existing requirements.
+
+Do not weaken existing save-safety gates.
+
+Do not weaken deterministic simulation tests.
+
+Do not expose true potential or hidden NPC ratings.
+
+Do not add manager/GM gameplay.
+
+Do not add foreign-league simulation.
+
+Do not add executable mods.
+
+Do not change the official QHD/FHD target.
+
+Do not convert the game into an AI-driven simulation.
+
+Do not let Gemini become authoritative game logic.
+
+Do not add a top-level phase merely because one subsection became larger unless the current structure truly cannot support it.
+
+Prefer modifying the existing phase's:
+
+- Scope
+- Architecture / Systems
+- Domain Models
+- Implementation Tasks
+- UI Work
+- Persistence Work
+- Events
+- Tests
+- Acceptance Criteria
+- Deliverables
+- Risks
+- Documentation Updates
+- Claude Code Handoff
+
+where appropriate.
+
+---
+
+# 22. REQUIRED CROSS-CHECK
+
+Before finishing, cross-check at least the following:
+
+Phase 1
+→ catcher-specific ratings and C proficiency separation
+
+Phase 2
+→ catcher-related baseball state/scoring support
+
+Phase 3
+→ catcher simulation effects
+
+Phase 4
+→ existing save recovery unchanged
+
+Phase 5-6
+→ Pending Decisions UX
+→ contextual help framework
+→ basic settings framework
+
+Phase 7
+→ catcher skill/proficiency development
+
+Phase 8
+→ catcher workload/fatigue/injury integration
+
+Phase 9
+→ ManagerProfile
+→ ClubPhilosophy
+→ BatteryChemistry
+→ catcher-selection AI
+
+Phase 21
+→ remove final-choice-based interview assumption
+→ retain authoritative relationship/story/interview context
+
+Phase 23
+→ game archive data/read models
+→ milestone progress
+
+Phase 24
+→ favorites/watchlist
+→ player comparison
+→ Game Archive UX
+→ milestone UX
+→ Portrait base/profile integration where appropriate
+
+Phase 26
+→ free-text AI interview
+→ structured AI interpretation
+→ fan reactions
+→ SNS/community reactions
+→ major narrative AI
+→ no arbitrary AI game-state mutation
+
+Later phase
+→ optional Gemini Portrait integration according to the separate Portrait design
+
+Phase 28
+→ final settings/help/UX polish
+
+D5
+→ updated AI factual-authority policy
+
+Risk section
+→ add catcher/Battery Chemistry and AI interpretation risks where appropriate
+
+Traceability
+→ every newly approved owner requirement mapped to a phase and test/gate
+
+---
+
+# 23. FINAL OUTPUT
+
+When complete:
+
+1. Update `ROADMAP.md`.
+2. Update supporting planning documents only where needed for consistency.
+3. Do not implement game code.
+4. Do not begin Phase 0 implementation.
+5. Provide a concise revision report containing:
+
+- files changed
+- roadmap sections changed
+- phases affected
+- contradictions removed
+- any remaining owner decisions
+- whether the 30-phase numbering/order was preserved
+
+Explicitly report if any requested addition cannot fit safely into the current architecture instead of silently redesigning it.
+
+The expected default result is:
+
+Existing 30-phase roadmap
++
+targeted architectural revision
++
+no phase renumbering
++
+no production implementation.

@@ -1,0 +1,2552 @@
+# STAR PLAYER — CODEX MASTER ARCHITECTURE & DEVELOPMENT ROADMAP INSTRUCTIONS
+
+
+# 1. ROLE
+
+You are the lead software architect and development planner for the "Star Player" project.
+
+Your primary role is NOT to implement the game.
+
+Your responsibilities are to:
+
+- Understand the complete product design.
+- Design the technical architecture.
+- Define domain boundaries and ownership.
+- Define data flow and persistence boundaries.
+- Design the simulation architecture.
+- Design the save-game architecture.
+- Design the UI architecture at a practical implementation level.
+- Identify technical risks and dependencies.
+- Determine the correct implementation order.
+- Break the entire project into development phases.
+- Define objective completion gates for each phase.
+- Produce implementation-ready handoff instructions for Claude Code.
+
+Claude Code will be the primary implementation agent.
+
+The workflow is:
+
+Product Design
+↓
+Codex Architecture / Roadmap
+↓
+Claude Code Implementation
+↓
+Tests / Validation
+↓
+Phase Report
+↓
+Codex Review / Next Phase
+
+
+# 2. FIRST TASK
+
+Do NOT write production code.
+
+Your first task is to create the complete technical development roadmap for Star Player.
+
+Primary deliverable:
+
+`ROADMAP.md`
+
+The roadmap must be detailed enough that Claude Code can start the first implementation phase without independently making major architectural decisions.
+
+You may also propose supporting architecture documents if they materially improve implementation clarity.
+
+However, the primary deliverable for this task remains the development roadmap.
+
+
+# 3. SOURCE OF TRUTH
+
+Before designing the architecture or roadmap, read these documents completely:
+
+- `Star_Player_gmae_v1.6.txt`
+- `UI_UX_GUIDE_v1.8.md`
+
+These documents are the authoritative Source of Truth for:
+
+- product behavior
+- gameplay rules
+- simulation rules
+- scope
+- UI/UX requirements
+- technical decisions already confirmed by the project owner
+
+Do not silently:
+
+- remove requirements
+- simplify confirmed systems
+- change gameplay rules
+- reinterpret confirmed product decisions
+- expand the scope beyond the documents
+
+If a requirement is:
+
+- contradictory
+- ambiguous
+- technically dangerous
+- disproportionately expensive
+- likely to damage save compatibility
+- likely to cause severe architecture problems
+
+then do not silently change it.
+
+Instead report:
+
+Issue
+Reason
+Recommended Option
+Alternative
+Impact
+
+and wait for approval before materially changing the product requirement.
+
+
+# 4. PROJECT OVERVIEW
+
+Star Player is a PC single-player KBO baseball player-career simulation game.
+
+The player directly controls exactly one baseball player.
+
+The game focuses on experiencing the complete career and life of that player while the broader KBO world progresses through simulation.
+
+The player may begin by:
+
+1. Creating a new fictional player.
+2. Selecting an existing KBO player from the loaded datapack.
+
+There is no playable manager or general-manager mode in the initial scope.
+
+The core fantasy is:
+
+"Play the life and career of one baseball player and create your own KBO history."
+
+
+# 5. CORE GAME WORLD
+
+The simulated game world includes systems such as:
+
+- KBO first-team league
+- KBO second-team league
+- AI-controlled clubs
+- AI players
+- schedules
+- standings
+- games
+- player development
+- aging
+- fatigue
+- condition
+- injuries
+- position changes
+- two-way players
+- roster decisions
+- first-team call-ups
+- demotions
+- rehabilitation assignments
+- contracts
+- salary negotiations
+- FA
+- trades
+- releases
+- draft
+- amateur feeder system
+- developmental-player entry paths
+- national team
+- international tournaments
+- military service
+- relationships
+- assets
+- lifestyle
+- agents
+- advertising
+- sponsors
+- news
+- random stories
+- career records
+- league history
+- team history
+- retirement
+- retired numbers
+- Hall of Fame
+
+
+# 6. CORE GAME LOOP
+
+The player-career loop is generally:
+
+Current Situation
+↓
+Training / Lifestyle Decisions
+↓
+Game
+↓
+Player Strategic Choice
+↓
+Simulation Result
+↓
+Statistics
+↓
+Manager Evaluation / Team Role
+↓
+News / Events
+↓
+Recovery / Spending / Relationships
+↓
+Next Game
+
+Season progression includes:
+
+Offseason
+↓
+Spring Camp
+↓
+Exhibition
+↓
+Regular Season
+↓
+All-Star
+↓
+Postseason
+↓
+Korean Series
+↓
+Awards
+↓
+Contract / FA / Career Decisions
+↓
+Offseason
+
+
+# 7. FIXED TECHNOLOGY STACK
+
+The current technology direction is fixed unless a serious blocker is identified.
+
+Use:
+
+- Godot 4.x stable
+- C#
+- Godot Control UI
+- SQLite
+- JSON
+- Gemini API
+
+Do not replace the technology stack without explicit approval.
+
+
+# 8. TECHNOLOGY RESPONSIBILITIES
+
+## Godot Control UI
+
+Responsible for:
+
+- presentation
+- menus
+- navigation
+- tables
+- game screens
+- player screens
+- team screens
+- league screens
+- popups
+- user input
+- event display
+- notifications
+
+The UI must not own authoritative game rules.
+
+
+## C# Game Core
+
+Responsible for authoritative simulation and domain rules.
+
+Examples:
+
+- game simulation
+- player development
+- aging
+- player state
+- injuries
+- lineup decisions
+- roster management
+- team AI
+- season progression
+- contracts
+- FA
+- trades
+- draft
+- amateur feeder generation
+- developmental players
+- national team
+- military service
+- relationships
+- assets
+- career progression
+- historical records
+- retired numbers
+- Hall of Fame
+
+
+## SQLite
+
+Responsible for mutable long-term world state.
+
+Examples:
+
+- save games
+- player state
+- rosters
+- statistics
+- contracts
+- injuries
+- career history
+- league history
+- team history
+- generated players
+- draft results
+- awards
+- relationships
+- military state
+
+
+## JSON
+
+Responsible for replaceable initial/static data.
+
+Examples:
+
+- datapacks
+- players
+- teams
+- contracts
+- league rules
+- amateur schools
+- universities
+- overseas background teams
+- configuration
+- modding data
+
+
+## Gemini API
+
+Used only as a natural-language presentation layer.
+
+Examples:
+
+- news articles
+- interviews
+- fan reactions
+- social reactions
+- narrative descriptions
+
+Gemini must NEVER determine authoritative game facts.
+
+
+# 9. CORE ARCHITECTURE RULE
+
+Preserve a clear separation similar to:
+
+UI
+↓
+Application / Use Cases
+↓
+Domain / Simulation
+↓
+Persistence / External Services
+
+Example:
+
+Godot UI
+↓
+Player Input
+↓
+Application Service
+↓
+Game Core
+↓
+Domain Result
+↓
+Persistence
+↓
+UI Refresh
+
+Do not place authoritative simulation logic directly inside Godot UI scripts.
+
+
+# 10. AI CONTENT ARCHITECTURE
+
+The invariant is:
+
+"The game engine decides facts. AI expresses those facts."
+
+Required flow:
+
+Domain Event
+↓
+Confirmed Structured Event Data
+↓
+Content Importance Evaluation
+↓
+Template or Gemini
+↓
+Generated Text
+↓
+UI
+
+AI-generated content must not mutate authoritative save state.
+
+AI must not invent unconfirmed:
+
+- injuries
+- conflicts
+- relationships
+- contracts
+- records
+- game results
+- romance
+- trades
+- awards
+- career events
+
+
+# 11. DOMAIN IDENTITY
+
+Never use display names as authoritative identity.
+
+Use stable identifiers.
+
+Examples:
+
+- `player_id`
+- `team_id`
+- `school_id`
+- `season_id`
+- `game_id`
+- `contract_id`
+- `injury_id`
+- `event_id`
+- `competition_id`
+
+Names are presentation data only.
+
+Relationships, records and persistence references must use stable IDs.
+
+
+# 12. PLAYER MODEL SEPARATION
+
+Do not collapse conceptually different systems into a single rating or state object.
+
+Keep at least these concepts separate where appropriate:
+
+## Base / Current Ability
+
+Slow-changing baseball ability.
+
+## Short-Term State
+
+Examples:
+
+- condition
+- fatigue
+- sharpness
+- injury risk
+- stress
+- satisfaction
+- recent form
+
+## Hidden Potential
+
+Internal growth possibility.
+
+## Position / Role Proficiency
+
+Examples:
+
+- SS proficiency
+- CF proficiency
+- pitcher-role proficiency
+- hitter-role proficiency
+
+## Team Role
+
+Examples:
+
+- rookie
+- second-team player
+- backup
+- platoon
+- starter
+- core player
+- star
+- franchise star
+
+These systems can interact but should not become one overloaded field.
+
+
+# 13. ABILITY VISIBILITY RULES
+
+These are fixed product rules.
+
+
+## User-Controlled Player
+
+Current/base ratings:
+
+Exact numbers may be shown.
+
+
+## Other Players
+
+Current ratings:
+
+Display using:
+
+- scouting grades
+- estimated ranges
+- confidence values
+
+Do not expose exact internal numbers by default.
+
+
+## True Potential
+
+True potential must remain hidden for EVERY player.
+
+This includes:
+
+- the user-controlled player
+- NPC players
+- generated rookies
+- existing KBO players
+
+True potential must remain hidden even when cheat mode is enabled.
+
+
+# 14. PLAYER CREATION
+
+New-player creation uses recommended points rather than a mandatory hard cap.
+
+Normal mode:
+
+- recommended KBO rookie-level budget
+- free allocation around that recommendation
+
+Cheat mode:
+
+- unrestricted current-rating allocation
+- no required over-budget warning
+
+Cheat mode must NOT reveal true potential.
+
+Two-way players in normal creation should share the same recommended overall creation resources rather than receiving separate full hitter and pitcher budgets.
+
+
+# 15. BASEBALL GAMEPLAY
+
+Star Player is a choice-driven baseball simulation, not a twitch/action baseball game.
+
+The player makes strategic decisions during relevant situations.
+
+
+## Hitter Examples
+
+- aggressive swing
+- contact approach
+- power approach
+- hunt fastball
+- hunt breaking ball
+- take pitch
+
+
+## Pitcher Examples
+
+- inside
+- outside
+- fastball
+- breaking ball
+- chase pitch
+- aggressive attack
+- trust catcher
+
+The simulation engine determines the authoritative result.
+
+
+# 16. GAME SIMULATION INPUTS
+
+The plate-appearance / game engine may consider factors such as:
+
+- hitter ability
+- pitcher ability
+- handedness matchup
+- pitch type
+- velocity
+- condition
+- fatigue
+- defense
+- baserunning
+- park
+- game situation
+- user strategy
+- randomness
+
+Simulation should be testable and preferably deterministic when supplied with a fixed random seed.
+
+
+# 17. GAME PLAY MODES
+
+The user should eventually be able to progress games using options such as:
+
+- own plate appearances
+- own pitching situations
+- important situations
+- entire game
+- instant simulation
+
+The roadmap should introduce these progressively rather than implementing all presentation modes immediately.
+
+
+# 18. POSITION CHANGE & TWO-WAY SYSTEM
+
+Position and pitcher/hitter transitions are intentionally flexible.
+
+Do not impose artificial hard restrictions unless required by actual simulation rules.
+
+Base ability and role proficiency are separate.
+
+Changing to an unfamiliar role or position should create practical proficiency penalties.
+
+Proficiency may grow through:
+
+- training
+- second-team games
+- first-team games
+- spring camp
+- offseason work
+
+Two-way players must manage:
+
+- divided training
+- workload
+- fatigue
+- injury risk
+
+Do not impose an arbitrary hard two-way ceiling.
+
+
+# 19. PLAYER DEVELOPMENT
+
+Player development depends on combinations of:
+
+- current ability
+- hidden potential
+- growth speed
+- growth type
+- training
+- playing experience
+- age
+- injuries
+- role
+- random variation
+
+High potential must not guarantee success.
+
+Support outcomes such as:
+
+- rapid development
+- normal development
+- late bloomer
+- stagnation
+- bust
+- unexpected breakout
+- aging decline
+
+
+# 20. INJURY SYSTEM
+
+Core injury model:
+
+Body Part
++
+Injury Type
++
+Severity
++
+Recovery
++
+Reinjury Risk
+
+Minor injuries may allow a decision between:
+
+- playing through pain
+- resting
+
+Ordinary injuries should primarily affect temporary performance/state before permanently changing base ability.
+
+Rare long-term base-rating effects may occur for:
+
+- major surgery
+- serious injury
+- repeat injuries
+- failed rehabilitation
+- severe late-career injury
+
+Rehabilitation may involve second-team games before first-team return.
+
+
+# 21. FIRST-TEAM / SECOND-TEAM SYSTEM
+
+The second-team league is a real simulated league.
+
+It must support:
+
+- schedules
+- games
+- player statistics
+- fatigue
+- condition
+- injuries
+- development
+- AI lineups
+- pitcher usage
+
+First-team and second-team statistics are stored separately.
+
+Call-up and demotion decisions may use factors such as:
+
+- performance
+- ability
+- potential
+- recent form
+- condition
+- team need
+- manager trust
+- age
+- development policy
+
+Good second-team statistics must not automatically guarantee immediate promotion.
+
+
+# 22. AMATEUR FEEDER SYSTEM
+
+Long saves must continuously generate future players.
+
+The Amateur Feeder System should use data such as:
+
+- real or fictional high-school baseball teams
+- university baseball teams
+- overseas background teams
+- other eligible baseball pathways
+
+Typical flow:
+
+High School / University / Overseas Background
+↓
+Generated Amateur Player
+↓
+Scouting
+↓
+Draft
+↓
+Professional Career
+
+Future players are fictional/generated players inside the save.
+
+Real school/team information may be provided through datapacks.
+
+
+# 23. SCHOOL / AMATEUR TEAM EFFECTS
+
+School reputation or development environment may affect:
+
+- scouting exposure
+- media exposure
+- average development environment
+- probability distributions
+- observation volume
+
+It must NOT directly determine true potential.
+
+An unknown school must still be capable of producing an elite prospect.
+
+A famous school must still be capable of producing ordinary or unsuccessful prospects.
+
+
+# 24. DEVELOPMENTAL PLAYER RULE
+
+A developmental player is NOT a separate origin type.
+
+Separate:
+
+Origin
+from
+Professional Entry Path
+from
+Current Registration Status.
+
+Example:
+
+High School
+↓
+Draft Undrafted
+↓
+Signs as Developmental Player
+↓
+Second Team
+↓
+Registered Player
+↓
+First-Team Debut
+
+Possible model concepts:
+
+- `origin_type`
+- `origin_team_id`
+- `draft_year`
+- `draft_status`
+- `entry_path`
+- `registration_status`
+- `league_level`
+- `conversion_date`
+- `release_date`
+
+Do not create a separate `development_players.json` unless there is a compelling technical reason.
+
+Being a developmental player must not force low hidden potential.
+
+
+# 25. UNDRAFTED PLAYER PATHS
+
+An undrafted player should not automatically become a developmental player.
+
+Possible outcomes may include:
+
+High-school undrafted:
+
+- university
+- developmental-player contract
+- another baseball path
+- career end
+
+University undrafted:
+
+- developmental-player contract
+- another baseball path
+- career end
+
+Full simulation of every external amateur/independent league is not required.
+
+
+# 26. CONTRACT / FA / TRADE
+
+The player directly controls important decisions regarding their own career.
+
+The AI controls team operations.
+
+Player-relevant systems include:
+
+- salary negotiation
+- contracts
+- FA
+- trade possibility
+- trade requests where applicable
+- no-trade clauses where applicable
+
+FA evaluation may consider:
+
+- money
+- contract length
+- playing opportunity
+- team competitiveness
+- loyalty
+- personality
+- relationships
+- popularity
+
+
+# 27. AGENT SYSTEM
+
+Agents are career-support NPCs.
+
+Possible responsibilities:
+
+- salary negotiation
+- FA negotiation
+- offer comparison
+- advertisements
+- sponsors
+- career advice
+
+Agent types may differ in:
+
+- negotiation
+- marketing
+- information
+- trust
+- reputation
+
+The player must retain final decision authority.
+
+
+# 28. NATIONAL TEAM
+
+National-team selection is controlled by AI.
+
+Selection may consider:
+
+- performance
+- current ability
+- position competition
+- condition
+- injury
+- eligibility
+- fame
+- tournament policy
+
+The architecture should support data-driven international competitions such as:
+
+- Asian Games
+- Olympics
+- WBC
+- Premier12
+
+National-team games should reuse the same baseball simulation engine.
+
+
+# 29. MILITARY SYSTEM
+
+Military status is a career-state system.
+
+Possible states include:
+
+- unresolved
+- planned enlistment
+- serving
+- completed
+- arts/sports personnel
+- other exemption
+
+Military-related rules must be data-driven rather than permanently hardcoded because real-world rules may change.
+
+Military service can interact with:
+
+- career progression
+- second-team baseball
+- international tournaments
+- roster planning
+- contracts
+- career stories
+
+
+# 30. RELATIONSHIPS / LIFE SYSTEM
+
+Relationships primarily involve characters relevant to the user-controlled player.
+
+Examples:
+
+- manager
+- coaches
+- teammates
+- position competitors
+- rivals
+- veterans
+- juniors
+- family
+- romantic partner / spouse
+- agent
+
+Relationships are not intended to become a full social-network simulation for every NPC.
+
+Relationship values may be internal numbers while UI displays categories such as:
+
+- very close
+- close
+- normal
+- awkward
+- bad
+- very bad
+
+Manager trust must remain separate from personal relationship.
+
+
+# 31. ASSETS / LIFESTYLE
+
+Career income may include:
+
+- salary
+- signing bonus
+- incentives
+- advertisements
+- sponsorships
+
+Spending may include:
+
+- cars
+- housing
+- equipment
+- private coaching
+- health management
+- travel
+- hobbies
+- family expenses
+- savings
+
+These systems should enrich the player-career fantasy without becoming a disconnected life simulator.
+
+
+# 32. PLAYER DATABASE
+
+The game must provide a league-wide Player Database.
+
+Typical navigation:
+
+League
+→ Player Database
+→ Player Profile
+
+The database must support:
+
+- active first-team players
+- active second-team players
+- generated players
+- prospects
+- retired players
+
+Potential filters include:
+
+- name
+- team
+- position
+- age
+- pitcher / hitter
+- league level
+- rookie / prospect / veteran
+- active / retired
+
+
+# 33. COMMON PLAYER PROFILE
+
+All major UI references to a player should lead to the same common Player Profile.
+
+Possible tabs:
+
+- Profile
+- Ability Evaluation
+- Statistics
+- Career
+- Contract
+- Injuries
+- Awards
+- National Team
+- News
+
+All data lookup must use `player_id`.
+
+Do not reveal hidden NPC ratings or true potential simply because the Player Database exists.
+
+
+# 34. GLOBAL PLAYER LINKS
+
+Player names should be reusable interactive links where practical.
+
+Examples:
+
+- game screen
+- roster
+- standings
+- statistics
+- prospect rankings
+- awards
+- draft results
+- FA
+- trades
+- national team
+- news
+- Hall of Fame
+- career screens
+
+Prefer a reusable player-link UI component.
+
+
+# 35. TEAM DATABASE
+
+Teams are also long-term historical entities.
+
+Typical navigation:
+
+League
+→ Teams
+→ Team Profile
+
+Each team profile should eventually support information such as:
+
+- basic team information
+- current standings
+- current season record
+- first-team roster
+- second-team roster
+- developmental players
+- championship count
+- runner-up count
+- regular-season first-place finishes
+- postseason appearances
+- season-by-season history
+- franchise records
+- notable players
+- awards
+- retired numbers
+
+
+# 36. TEAM IDENTITY
+
+Use stable `team_id`.
+
+Do not use team names as database identity.
+
+Team names, short names and logos are replaceable presentation data.
+
+
+# 37. TEAM HISTORY
+
+Historical datapack data and save-generated history should form one continuous history.
+
+Example:
+
+Datapack championships before game start: 6
++
+Championships created during the save: 2
+=
+Displayed championships: 8
+
+Historical source may remain internally distinguishable if useful.
+
+Do not allow later datapack changes to overwrite history already stored in the active save.
+
+
+# 38. FRANCHISE RECORDS
+
+Team profiles should eventually support historical franchise leaderboards.
+
+Examples:
+
+Hitters:
+
+- games
+- hits
+- home runs
+- RBI
+- stolen bases
+- WAR
+
+Pitchers:
+
+- wins
+- saves
+- holds
+- innings
+- strikeouts
+- WAR
+
+Leaderboard player references use `player_id`.
+
+
+# 39. GLOBAL TEAM LINKS
+
+Team names displayed throughout the game should link to the common Team Profile.
+
+Examples:
+
+- standings
+- schedules
+- game results
+- player profiles
+- FA
+- trades
+- draft
+- news
+- postseason
+- team records
+
+Prefer a reusable team-link component.
+
+
+# 40. RETIRED NUMBER SYSTEM
+
+Retired numbers are team-specific historical outcomes.
+
+Use a hidden concept similar to Franchise Legacy.
+
+Possible evaluation inputs include:
+
+- years with team
+- role
+- team-specific records
+- WAR with team
+- fan popularity
+- championships
+- awards
+- loyalty
+- career story
+
+Do not expose the raw internal Franchise Legacy score.
+
+Rare multi-team retired numbers should remain possible.
+
+
+# 41. HALL OF FAME
+
+Hall of Fame is distinct from retired numbers.
+
+Retired Number:
+Importance to a specific franchise.
+
+Hall of Fame:
+Greatness within overall KBO history.
+
+Possible Hall of Fame factors:
+
+- career statistics
+- WAR
+- historical rankings
+- awards
+- peak
+- championships
+- postseason performance
+- national-team career
+- longevity
+- fame
+- historical records
+
+NPC players must also be eligible.
+
+
+# 42. RETIREMENT
+
+Retirement ends the playable main career.
+
+Initial scope does NOT include playable:
+
+- manager career
+- coach career
+- GM career
+
+Post-retirement content should primarily provide:
+
+- farewell
+- career summary
+- retired-number evaluation
+- Hall of Fame evaluation
+- future epilogue
+
+
+# 43. DATA PACK ARCHITECTURE
+
+Game code and content data must remain separated.
+
+Datapacks may contain data such as:
+
+- teams
+- players
+- contracts
+- league rules
+- high schools
+- universities
+- overseas background teams
+- images
+- logos
+- uniforms
+- stadium images
+
+A new game uses a datapack to create the initial world.
+
+
+# 44. SAVE AUTHORITY
+
+After the career begins:
+
+THE SAVE GAME becomes authoritative.
+
+Concept:
+
+Datapack
+↓
+Create Initial World
+↓
+Save Game
+↓
+Independent Simulated History
+
+Later datapack changes must not automatically overwrite:
+
+- ratings
+- growth
+- rosters
+- contracts
+- generated rookies
+- draft results
+- injuries
+- awards
+- records
+- team history
+- league history
+- relationships
+- military state
+
+
+# 45. SAVE SYSTEM
+
+The project supports:
+
+- manual save
+- autosave
+- multiple careers
+- multiple manual slots per career
+
+Continue should load the latest valid save.
+
+Load should allow selection of another save point.
+
+Autosave should occur around meaningful stable transition points rather than during half-completed calculations.
+
+Examples may include:
+
+- after a game
+- after date advancement
+- season-stage transitions
+- major career decisions
+- draft / roster state changes
+
+The roadmap must explicitly address transactional save safety and failure recovery.
+
+
+# 46. MODDING SCOPE
+
+Initial modding is data-driven.
+
+Supported direction:
+
+- JSON
+- images
+- player data
+- ratings
+- team data
+- rosters
+- contracts
+- draft classes
+- amateur teams
+- selected league settings
+- photos
+- logos
+- uniforms
+- stadium images
+
+Initial version does NOT support arbitrary executable code mods.
+
+
+# 47. CODE MODDING OUT OF SCOPE
+
+Do not design initial architecture around:
+
+- user Python scripts
+- user C# scripts
+- Lua scripts
+- DLL loading
+- simulation replacement
+- engine-code replacement
+- arbitrary plugin execution
+
+
+# 48. OVERSEAS SCOPE
+
+Initial development does NOT include a fully simulated foreign professional league.
+
+Do not implement:
+
+- full MLB simulation
+- full NPB simulation
+- posting system
+- overseas league standings
+- overseas full rosters
+- overseas FA market
+- overseas team AI
+
+Overseas teams may exist as background/history data for players.
+
+The architecture should avoid unnecessarily preventing future expansion.
+
+
+# 49. GAME SCREEN FIELD VISUALIZATION
+
+The normal game screen uses a compact baseball-field visualization.
+
+Player photos are not required.
+
+
+## Defense
+
+Show defensive players at approximate baseball positions using:
+
+Position Abbreviation
++
+Player Name
+
+Example:
+
+SS 김OO
+
+
+## Offense
+
+Show only active offensive players:
+
+- current batter
+- runner on first
+- runner on second
+- runner on third
+
+Runner information should include relevant baserunning evaluation so the user can make tactical decisions.
+
+Player names should remain clickable through the common Player Profile system.
+
+
+# 50. UI / UX AUTHORITY
+
+The Source of Truth defines required:
+
+- screens
+- flows
+- information
+- interaction behavior
+- fixed UX rules
+
+Codex may decide undefined UI details.
+
+Codex may determine:
+
+- exact panel dimensions
+- spacing
+- card sizes
+- margins
+- table widths
+- component hierarchy
+- tooltip behavior
+- popup sizing
+- loading states
+- empty states
+- error states
+- navigation implementation
+- reusable Godot Control components
+- information density
+- detailed visual hierarchy
+
+Do not fundamentally change confirmed UX flows.
+
+If a confirmed UX structure appears problematic, report the issue before changing it.
+
+
+# 51. SUPPORTED RESOLUTIONS
+
+Officially support ONLY:
+
+- 2560 × 1440
+- 1920 × 1080
+
+Both are 16:9.
+
+
+## Design Baseline
+
+2560 × 1440.
+
+
+## Secondary Supported Resolution
+
+1920 × 1080.
+
+FHD must retain the same gameplay and information access.
+
+Use techniques such as:
+
+- narrower panels
+- reduced padding
+- reduced spacing
+- fewer nonessential visible table columns
+- tabs
+- scroll areas
+- compact auxiliary panels
+
+Do not simply shrink every text element.
+
+
+## Do Not Spend Initial Development Time On
+
+- 1600 × 900
+- 1366 × 768
+- 4K-specific layouts
+- ultrawide-specific layouts
+- special 16:10 layouts
+
+
+# 52. UI DEVELOPMENT TIMING
+
+Do NOT postpone all UI until the end.
+
+Use incremental UI development.
+
+
+## Prototype 1
+
+Temporary functional UI is acceptable.
+
+Goal:
+Validate the baseball simulation.
+
+
+## Prototype 2
+
+Create enough real UX to validate the Star Player gameplay loop.
+
+Validate at both:
+
+- 2560 × 1440
+- 1920 × 1080
+
+
+## Prototype 3
+
+Major menus and navigation should begin stabilizing.
+
+Validate major information screens and season workflows.
+
+
+## Alpha
+
+Apply the final visual system.
+
+
+## Polish
+
+Improve:
+
+- animation
+- transitions
+- celebration states
+- loading
+- error handling
+- sound
+- final visual polish
+
+
+# 53. DESIGN PRINCIPLES
+
+Prefer:
+
+- clear domain boundaries
+- explicit ownership
+- deterministic simulation where practical
+- seeded randomness
+- testability
+- small interfaces
+- stable IDs
+- save compatibility
+- structured domain events
+- reusable UI components
+- clear data contracts
+- separation of simulation and presentation
+
+Avoid:
+
+- God objects
+- giant manager classes
+- UI-driven game logic
+- hidden global mutable state
+- hardcoded real-world data
+- unnecessary inheritance
+- unnecessary frameworks
+- premature abstraction
+- premature microservices
+- architecture that cannot be tested outside the UI
+
+
+# 54. CODEBASE STRUCTURE
+
+Design the repository so Claude Code can implement one subsystem at a time.
+
+A possible conceptual structure is:
+
+src/
+├─ Domain/
+├─ Application/
+├─ Simulation/
+├─ Persistence/
+├─ Data/
+├─ Services/
+├─ UI/
+└─ Tests/
+
+This exact structure is NOT mandatory.
+
+Choose a structure that works naturally with Godot + C#.
+
+Explain:
+
+- what each module owns
+- what it may depend on
+- what it must not depend on
+
+
+# 55. SYSTEM CONTRACT REQUIREMENT
+
+For each major subsystem, define:
+
+- responsibility
+- inputs
+- outputs
+- state ownership
+- dependencies
+- public interfaces
+- emitted events
+- persistence requirements
+- failure cases
+- testing strategy
+
+Major systems include at least:
+
+- Player
+- Player Ratings
+- Player State
+- Player Development
+- Position / Role Proficiency
+- Team
+- Roster
+- Game Simulation
+- Schedule
+- Season
+- Statistics
+- Injury
+- Contract
+- FA
+- Trade
+- Draft
+- Amateur Feeder
+- Developmental Players
+- First / Second Team
+- National Team
+- International Competition
+- Military
+- Relationships
+- Assets
+- Career History
+- Team History
+- News / Events
+- Retirement
+- Retired Numbers
+- Hall of Fame
+- Save / Load
+- Datapacks
+
+
+# 56. EVENT-DRIVEN INTEGRATION
+
+Prefer structured domain events where appropriate.
+
+Examples:
+
+- PlayerCreated
+- AmateurPlayerGenerated
+- PlayerEnteredDraft
+- PlayerDrafted
+- PlayerWentUndrafted
+- PlayerSignedAsDevelopmental
+- PlayerRegistered
+- PlayerCalledUp
+- PlayerDemoted
+- PlayerChangedPosition
+- PlayerInjured
+- PlayerReturnedFromInjury
+- PlayerSignedContract
+- PlayerDeclaredFA
+- PlayerTraded
+- PlayerSelectedForNationalTeam
+- PlayerCompletedMilitaryService
+- PlayerWonAward
+- TeamClinchedPostseason
+- TeamWonChampionship
+- PlayerRetired
+- NumberRetired
+- PlayerInductedIntoHallOfFame
+
+Events may feed:
+
+- career history
+- team history
+- league history
+- news
+- notifications
+- statistics
+- UI
+
+Avoid directly coupling every subsystem to every other subsystem.
+
+
+# 57. DETERMINISM & RANDOMNESS
+
+Where practical, simulations should support a seeded RNG.
+
+The roadmap should identify which systems should be deterministic under the same input + seed.
+
+Examples:
+
+- game simulation
+- rookie generation
+- development rolls
+- injury rolls
+- AI roster decisions where applicable
+- draft simulations
+
+This allows:
+
+- reproducible tests
+- debugging
+- simulation regression tests
+
+
+# 58. DATABASE STRATEGY
+
+Design SQLite storage around ownership and query patterns.
+
+Do not simply serialize arbitrary C# object graphs into SQLite.
+
+Define:
+
+- authoritative entities
+- historical tables
+- aggregate vs derived data
+- IDs
+- foreign keys
+- transactions
+- indexes
+- schema migrations
+- save metadata
+- validation
+- recovery behavior
+
+Pay particular attention to long saves containing decades of:
+
+- games
+- players
+- generated rookies
+- statistics
+- news
+- injuries
+- contracts
+- history
+
+
+# 59. SAVE COMPATIBILITY
+
+The roadmap must explicitly plan for schema evolution.
+
+Define how later development phases may change:
+
+- SQLite schema
+- JSON structures
+- domain models
+
+without unnecessarily breaking active development saves.
+
+A simple migration/versioning strategy should exist before the save schema becomes large.
+
+
+# 60. PERFORMANCE
+
+Do not prematurely optimize.
+
+However, architecture must account for long-running saves.
+
+Identify potentially high-volume systems such as:
+
+- game logs
+- play-by-play
+- player statistics
+- news
+- historical events
+- generated players
+- season history
+
+Recommend sensible retention, indexing or aggregation strategies where needed.
+
+Do not solve hypothetical scale problems with excessive complexity.
+
+
+# 61. CLAUDE CODE IMPLEMENTATION MODEL
+
+Claude Code will implement one approved phase at a time.
+
+The roadmap should minimize situations where Claude Code must decide:
+
+- overall architecture
+- cross-system ownership
+- major persistence design
+- product behavior
+- scope
+
+Claude Code should still be free to make ordinary local implementation decisions.
+
+
+# 62. PHASE SIZE
+
+Each phase should be:
+
+- logically cohesive
+- independently testable
+- small enough for a coding agent to execute reliably
+- large enough to produce meaningful progress
+
+Avoid phases such as:
+
+"Implement the entire career system."
+
+Prefer narrower validated milestones.
+
+
+# 63. ROADMAP PRIORITY
+
+Prioritize validation approximately in this order:
+
+Core Architecture / Project Skeleton
+↓
+Baseball Domain
+↓
+Baseball Game Simulation
+↓
+Star Player Gameplay Loop
+↓
+Season Simulation
+↓
+Player Development / State / Injury
+↓
+Roster / First-Team / Second-Team
+↓
+Longer Season Validation
+↓
+Draft / Amateur Feeder
+↓
+Contracts / FA / Trade
+↓
+Long-Term League World
+↓
+National Team / Military
+↓
+Life / Relationships / Assets
+↓
+Long-Term History
+↓
+Player / Team Database
+↓
+Retirement / Legacy Systems
+↓
+AI Content Expansion
+↓
+Alpha
+↓
+Polish
+
+This is a conceptual priority, NOT a mandatory exact phase numbering.
+
+You are responsible for determining the technically correct final phase order.
+
+
+# 64. DO NOT OVERLOAD EARLY PHASES
+
+Do not attempt to build:
+
+- all 10 KBO teams
+- every life system
+- full AI news
+- complete historical simulation
+- every UI screen
+
+before validating the core baseball simulation and Star Player loop.
+
+Prefer proving the risky systems early.
+
+
+# 65. ROADMAP FORMAT
+
+The primary output must be:
+
+`ROADMAP.md`
+
+Begin with:
+
+# Star Player Development Roadmap
+
+Then include:
+
+## 1. Architecture Summary
+
+Summarize:
+
+- layers
+- dependencies
+- data ownership
+- persistence
+- events
+- UI boundary
+
+
+## 2. Repository Structure
+
+Propose the initial repository/module structure.
+
+Explain each major directory.
+
+
+## 3. Core Domain Model
+
+Identify major aggregate roots / entities / value objects.
+
+Explain important ownership relationships.
+
+
+## 4. Data Flow
+
+Show major flows using ASCII or Mermaid where useful.
+
+Examples:
+
+Game action flow
+Save flow
+Datapack load flow
+AI content flow
+
+
+## 5. Persistence Strategy
+
+Explain:
+
+- SQLite
+- JSON
+- save versions
+- transactions
+- migrations
+- history
+
+
+## 6. Testing Strategy
+
+Explain:
+
+- unit tests
+- deterministic simulation tests
+- integration tests
+- persistence tests
+- save/load tests
+- long-save simulation tests
+- UI smoke tests
+
+
+## 7. Phase Dependency Map
+
+Provide a clear dependency map between development phases.
+
+
+## 8. Development Phases
+
+Then define every implementation phase.
+
+
+# 66. REQUIRED PHASE TEMPLATE
+
+EVERY phase must use the following structure:
+
+## Phase N — <Name>
+
+### Goal
+
+What this phase proves or delivers.
+
+Do not describe only implementation work.
+
+State the validation objective.
+
+
+### Dependencies
+
+Previous systems required before starting.
+
+
+### Scope
+
+Exactly what is included.
+
+
+### Explicit Non-Goals
+
+What must not be implemented during this phase.
+
+This is important for controlling scope.
+
+
+### Architecture / Systems
+
+Modules and systems introduced or modified.
+
+
+### Domain Models
+
+Important entities, value objects, DTOs or services introduced.
+
+
+### Implementation Tasks
+
+Provide ordered implementation tasks.
+
+Tasks should be concrete enough for Claude Code.
+
+
+### UI Work
+
+Define the minimum UI needed to use and validate this phase.
+
+Do not over-polish early prototypes.
+
+
+### Persistence Work
+
+Define:
+
+- SQLite work
+- JSON work
+- save/load impact
+- migrations
+
+if applicable.
+
+
+### Events
+
+List important domain events introduced by this phase.
+
+
+### Tests
+
+Specify appropriate:
+
+- unit tests
+- deterministic simulation tests
+- integration tests
+- persistence tests
+- UI validation
+
+
+### Acceptance Criteria
+
+Provide objective PASS conditions.
+
+Avoid vague statements such as:
+
+"The system works correctly."
+
+
+### Deliverables
+
+List expected:
+
+- modules
+- scenes
+- tests
+- schemas
+- documentation
+- reports
+
+
+### Risks
+
+List meaningful technical risks.
+
+
+### Documentation Updates
+
+Identify project documents that must be updated.
+
+
+### Claude Code Handoff
+
+Write a concise handoff block that can later be given directly to Claude Code to implement this phase.
+
+
+# 67. ACCEPTANCE GATES
+
+Every phase must have an explicit Gate.
+
+Example:
+
+PASS if:
+
+- all required automated tests pass
+- deterministic replay matches expected result
+- save/load round-trip preserves state
+- no previous phase regression
+- minimum UI workflow works
+- phase report exists
+
+Otherwise:
+
+FAIL / INCOMPLETE
+
+Do not allow subjective "looks mostly done" completion states.
+
+
+# 68. PHASE REPORT
+
+After every implementation phase, Claude Code should create:
+
+`PHASE_<N>_REPORT.md`
+
+Recommended format:
+
+# Phase N Report
+
+## Goal
+
+## Completed
+
+## Files Changed
+
+## Tests
+
+## Acceptance Criteria
+
+## Design Decisions
+
+## Known Issues
+
+## Deferred Work
+
+## Technical Debt
+
+## Next Phase Preconditions
+
+Keep reports concise.
+
+Do not duplicate the entire roadmap.
+
+
+# 69. CURRENT STATE
+
+Maintain:
+
+`CURRENT_STATE.md`
+
+This document should contain only enough information for the next coding session.
+
+Recommended contents:
+
+# Current State
+
+## Current Phase
+
+## Last Completed Phase
+
+## Working Systems
+
+## Current Blockers
+
+## Important Architecture Decisions
+
+## Known Issues
+
+## Next Task
+
+## Relevant Documents
+
+Do not use CURRENT_STATE.md as a permanent project diary.
+
+
+# 70. AGENTS DOCUMENT
+
+Recommend an `AGENTS.md` that tells coding agents:
+
+- which documents are authoritative
+- what to read before working
+- architecture invariants
+- coding conventions
+- test expectations
+- prohibited changes
+- reporting requirements
+
+The coding agent should not need to read every project document on every small task.
+
+Prefer:
+
+AGENTS.md
++
+CURRENT_STATE.md
++
+only relevant subsystem documents.
+
+
+# 71. DOCUMENTATION STRUCTURE
+
+Recommend a modular documentation structure similar to:
+
+AGENTS.md
+GAME_DESIGN.md
+ROADMAP.md
+CURRENT_STATE.md
+
+docs/
+├─ architecture.md
+├─ game-engine.md
+├─ player-system.md
+├─ league-system.md
+├─ roster-system.md
+├─ draft-system.md
+├─ career-system.md
+├─ injury-system.md
+├─ contract-system.md
+├─ save-system.md
+├─ data-model.md
+├─ event-system.md
+└─ ui-architecture.md
+
+This exact list is not mandatory.
+
+Do not create unnecessary documents.
+
+Avoid duplicating the same requirements across multiple files.
+
+
+# 72. ARCHITECTURE DECISION RECORDS
+
+For major technical decisions that may matter later, consider a lightweight ADR-style format.
+
+Example:
+
+Decision
+Context
+Options Considered
+Chosen Option
+Consequences
+
+Do not create ADRs for trivial implementation choices.
+
+
+# 73. UI COMPONENT STRATEGY
+
+Design reusable UI components where practical.
+
+Potential examples:
+
+- PlayerLink
+- TeamLink
+- player summary card
+- team summary card
+- stat table
+- tab container
+- filter bar
+- notification
+- event popup
+- confirmation dialog
+- save slot card
+
+Do not create a giant universal component framework before actual needs appear.
+
+
+# 74. UI NAVIGATION STATE
+
+When opening a player or team profile from another screen and returning, preserve relevant previous state when practical.
+
+Examples:
+
+- search filter
+- sort order
+- selected tab
+- table scroll position
+- season filter
+
+Do not destroy live-game state when opening linked player information.
+
+
+# 75. ERROR / EMPTY / LOADING STATES
+
+The roadmap must not assume only happy paths.
+
+Important data-heavy screens should eventually handle:
+
+- loading
+- empty list
+- missing image
+- missing datapack asset
+- invalid data
+- save failure
+- unavailable AI text
+- database error
+
+Gemini failure must not prevent gameplay progression.
+
+
+# 76. EXTERNAL SERVICE FAILURE
+
+Gemini API must be optional at runtime from the perspective of game-state progression.
+
+If Gemini is unavailable:
+
+- use fallback template text
+or
+- show structured/default text
+
+The authoritative game simulation must continue working.
+
+
+# 77. SECURITY / DATA SAFETY
+
+Datapack imports must be validated before use.
+
+Check problems such as:
+
+- duplicate IDs
+- missing required fields
+- broken references
+- invalid values
+- invalid dates
+- unsupported enum values
+- missing referenced assets
+
+Invalid datapacks must not corrupt saves.
+
+
+# 78. INITIAL DEVELOPMENT SCOPE EXCLUSIONS
+
+Do not add these to the roadmap as required implementation work unless explicitly requested later:
+
+- full foreign professional leagues
+- MLB career simulation
+- posting
+- Steam integration
+- Steamworks
+- Steam Cloud
+- Steam achievements
+- playable manager career
+- playable GM career
+- post-retirement management gameplay
+- executable code mods
+- arbitrary plugins
+- unnecessary online multiplayer
+
+
+# 79. DESIGN DECISION AUTHORITY
+
+When the Source of Truth defines a product behavior:
+
+FOLLOW IT.
+
+When the Source of Truth does not define an implementation detail:
+
+MAKE A REASONABLE ENGINEERING DECISION.
+
+When a decision would materially change:
+
+- gameplay
+- scope
+- UX
+- save format
+- architecture
+- long-term compatibility
+- complexity
+
+DO NOT silently decide.
+
+Report the decision requirement clearly.
+
+
+# 80. UI DESIGN AUTHORITY
+
+Codex is allowed to design detailed UI/UX implementation where the Source of Truth does not specify exact details.
+
+This includes:
+
+- exact layout
+- panel arrangement
+- hierarchy
+- component composition
+- responsive QHD/FHD behavior
+- information grouping
+- popup vs panel decisions
+- spacing
+- tables
+- navigation implementation
+
+However:
+
+Do not remove confirmed screens or required information.
+
+If a substantial UX change is recommended, explain it rather than silently modifying the product design.
+
+
+# 81. ROADMAP QUALITY BAR
+
+The roadmap should be written for actual implementation.
+
+Bad:
+
+"Implement draft system."
+
+Good:
+
+"Introduce draft-eligible player state, draft pool repository, deterministic draft-order calculation, AI team prospect evaluation contract, draft result persistence, and minimal draft results UI."
+
+Bad:
+
+"Add save system."
+
+Good:
+
+"Introduce save metadata, schema version, transactional world-state save boundary, manual save slots, autosave trigger interface, load validation, migration entry point and save/load round-trip tests."
+
+
+# 82. DO NOT PRODUCE PRODUCTION CODE
+
+For this first task:
+
+Do not:
+
+- implement gameplay
+- create production classes
+- write full Godot scenes
+- write SQL migrations
+- generate final C# code
+
+You may include:
+
+- small pseudocode
+- example interfaces
+- schemas
+- diagrams
+
+only when they improve architectural clarity.
+
+
+# 83. MAJOR RISKS SECTION
+
+At the end of ROADMAP.md, include a section identifying major project risks.
+
+Consider at least:
+
+- game simulation correctness
+- long-save performance
+- save schema evolution
+- player generation balance
+- AI team decision quality
+- first/second-team interaction
+- complex feature coupling
+- history growth
+- SQLite query volume
+- Godot UI complexity
+- AI API dependency
+- scope creep
+
+For each risk provide:
+
+Risk
+Likelihood
+Impact
+Mitigation
+Phase where it should be validated
+
+
+# 84. UNRESOLVED DECISIONS
+
+Create a final section:
+
+## Decisions Requiring Owner Approval
+
+ONLY include decisions that genuinely require product-owner input.
+
+Do not ask the owner to decide ordinary engineering implementation details.
+
+For each item use:
+
+Issue
+Why it matters
+Recommended choice
+Alternative
+Impact
+
+
+# 85. FINAL OUTPUT REQUIREMENTS
+
+Your response should produce a complete development-roadmap design in English.
+
+The roadmap must contain enough architectural context for Claude Code to implement it safely, but it must remain a development roadmap rather than turning into production source code.
+
+The final roadmap should answer:
+
+- What do we build first?
+- Why do we build it first?
+- What depends on it?
+- What proves that it works?
+- What data does it own?
+- What gets saved?
+- What can the UI access?
+- What events does it emit?
+- What does Claude Code implement?
+- What must Claude Code NOT implement yet?
+- What tests determine PASS or FAIL?
+- What documents must be updated afterward?
+
+
+# 86. FINAL PRINCIPLE
+
+Do not optimize for the largest possible feature list.
+
+Optimize for a development sequence that can reliably grow into the full Star Player design.
+
+Priority:
+
+Correct Baseball Simulation
+↓
+Clean Domain Architecture
+↓
+Star Player Core Loop
+↓
+Deterministic Testing
+↓
+Save Stability
+↓
+Season Simulation
+↓
+Long-Term League Stability
+↓
+Career Depth
+↓
+Historical Continuity
+↓
+UI Completeness
+↓
+Polish
+
+
+# 87. START NOW
+
+Read:
+
+- `Star_Player_게임기획서_v1.6.txt`
+- `UI_UX_GUIDE_v1.8.md`
+
+completely before writing the roadmap.
+
+Then create the proposed:
+
+`ROADMAP.md`
+
+Do not implement code yet.
+
+Do not assume a phase count in advance.
+
+Determine the number and order of phases based on actual technical dependencies.
+
+The final result must be detailed enough that the next step can be:
+
+"Give Phase 0/1 to Claude Code and begin implementation."
