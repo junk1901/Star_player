@@ -1,8 +1,8 @@
 ---
 type: project-dashboard
 project: Star Player
-current_phase: "02"
-phase_status: Phase 0–2 승인 완료 (3/30), Phase 3 미착수
+current_phase: "03"
+phase_status: Phase 0–2 승인 완료 (3/30), Phase 3은 작업 패키지 3-A(RNG)만 승인(PASS WITH NOTES), 3-B 미착수
 last_updated: 2026-10-11
 ---
 
@@ -16,17 +16,17 @@ last_updated: 2026-10-11
 - PC 싱글 플레이 KBO 선수 커리어 시뮬레이션
 - 계획 범위: Phase 0–29, 총 30개 Phase
 - 현재 상태: **Phase 0 · Phase 1 · Phase 2 완료·승인 (3/30)**. Phase 2는 2026-10-11 `PASS WITH NOTES` / 승인 완료(상세는 아래 "완료된 Phase"와 [Phase_02_Review](01_Phase_Reviews/Phase_02_Review.md)). 후속 NOTES: C33, C38, C42, C44, D2 정책, Phase 4 엔진 규칙 버전·영속화.
-- 현재 개발 중인 Phase: **없음 (Phase 2 승인 완료, Phase 3 미착수)**
-- 다음 후보: **Phase 3 — 소유자의 별도 지시 후 시작 (현재 미착수)**
+- 현재 개발 중인 Phase: **Phase 3 — 작업 패키지 3-A(RNG) PASS WITH NOTES / GPT Chat 승인 (2026-10-11), Codex 최종 검토 PASS WITH NOTES** (3-B~3-F, Phase 4 미착수; Phase 3 전체 Gate INCOMPLETE)
+- 다음 후보: **소유자의 별도 지시로 3-B 착수 (현재 미착수)**
 
 ## 진행 요약
 
 | 구분 | 수량 | 내용 |
 |---|---:|---|
 | 승인 완료 | 3 | Phase 0, Phase 1, Phase 2 |
-| 검토 대기 | 0 | 없음 |
-| 구현/기록 중 | 0 | 현재 진행 중인 Phase 없음 |
-| 미착수 | 27 | Phase 3–29 (Phase 3은 소유자의 별도 지시 전까지 미착수) |
+| 검토 대기 | 0 | 없음 (Phase 3-A는 승인, Phase 3 전체는 미완료) |
+| 구현/기록 중 | 1 | Phase 3 (3-A 승인 완료, 3-B~3-F 미착수) |
+| 미착수 | 26 | Phase 4–29 |
 
 ## Phase 0–29 현황
 
@@ -37,7 +37,7 @@ last_updated: 2026-10-11
 | 0 | Reproducible desktop foundation | 승인 완료 | [Phase_00_Review](01_Phase_Reviews/Phase_00_Review.md) |
 | 1 | Player identity, visibility, and baseball vocabulary | 승인 완료 (PASS WITH NOTES) | [Phase_01_Review](01_Phase_Reviews/Phase_01_Review.md) |
 | 2 | Baseball state transitions and scoring | 승인 완료 (PASS WITH NOTES, 2026-10-11) | [Phase_02_Review](01_Phase_Reviews/Phase_02_Review.md) |
-| 3 | Seeded game simulation / Prototype 1 | 미착수 | 미생성 |
+| 3 | Seeded game simulation / Prototype 1 | 3-A(RNG) PASS WITH NOTES / 승인 — Phase 3 전체 Gate INCOMPLETE, 3-B 미착수 | [Phase_03_Review](01_Phase_Reviews/Phase_03_Review.md) |
 | 4 | Datapack initialization and safe save spine | 미착수 | 미생성 |
 | 5 | One-player career loop / Prototype 2 | 미착수 | 미생성 |
 | 6 | Calendar, regular season, and basic discovery | 미착수 | 미생성 |
@@ -73,7 +73,8 @@ last_updated: 2026-10-11
 
 ## 검토 대기 중인 Phase
 
-- 없음 — Phase 2는 2026-10-11 `승인 완료`(PASS WITH NOTES)로 이 목록에서 제외되었습니다.
+- 없음 — Phase 3 작업 패키지 3-A(RNG)는 2026-10-11 GPT Chat `PASS WITH NOTES` 승인, Codex 최종 검토 PASS WITH NOTES (전체 xUnit 709 PASS(Claude 실행), Randomness 111 PASS(Codex 독립 재실행), `verify.ps1` 2회 GATE PASS). Phase 3 전체는 아님, Gate INCOMPLETE. [리뷰](01_Phase_Reviews/Phase_03_Review.md), [보고서](../docs/reports/PHASE_3A_REPORT.md), [ADR-004](../docs/decisions/ADR-004.md).
+- Phase 2는 2026-10-11 `승인 완료`(PASS WITH NOTES)로 이 목록에서 제외되었습니다.
 
 ## 추적 중인 기술 부채
 
@@ -83,7 +84,7 @@ last_updated: 2026-10-11
 
 ## 주요 선행 조건과 미해결 항목
 
-- Phase 3 이상은 소유자의 별도 구현 지시가 필요합니다 (Phase 0–2 승인 완료; Phase 3 미착수). D2 `GameRules` 운영 부분 집합은 KBO 규정집·기록규칙 확보 후 인증해야 합니다(현재 비인증 프로필; 연장 11회 한도와 R02 운영 근거만 확인).
+- Phase 3-B 이후와 Phase 4 이상은 소유자의 별도 구현 지시가 필요합니다 (Phase 0–2 승인 완료; Phase 3은 3-A만 착수). D2 `GameRules` 운영 부분 집합은 KBO 규정집·기록규칙 확보 후 인증해야 합니다(현재 비인증 프로필; 연장 11회 한도와 R02 운영 근거만 확인).
 - 각 소비 Phase는 구현 전에 필요한 KBO RuleProfile 상세 규칙과 명시적 단순화를 확정해야 합니다.
 - 개인 KBO 2026 팩은 Phase 27에서 정확한 `as_of_date`, 증거 기준일, 제공 데이터와 출처를 인증해야 합니다.
 - 툴체인(.NET 8.0.425, Godot 4.7.2 Mono)과 Windows Export 가능성은 Phase 0에서 검증되었습니다 — [toolchain](../docs/toolchain.md).
@@ -97,6 +98,7 @@ last_updated: 2026-10-11
 - KBO 규칙은 커리어에 동결되는 버전형 2026 KBO 지향 RuleProfile과 명시적 단순화를 사용합니다.
 - 장기 기록은 우선 보존하고 Phase 17/29 실측 후 필요한 경우에만 제한적으로 정리합니다.
 - Club Finance Lite가 Scope Lock의 단일 승인 예외로 추가되었습니다: C13 계약 기반 급여, KBO 샐러리캡, 성과형 구단 스폰서 수익, 규칙 기반 Club AI 연동, 읽기 전용 재정 화면.
+- Phase 3-A 구현 결정: [ADR-004](../docs/decisions/ADR-004.md) — PCG32 `pcg32-xsh-rr-v1`, SHA-256 `kd1` 스트림 유도, 6개 `game/*` 스트림(`game/location@1` 규약 포함), `rngset1` 스냅샷, 원자적 작업 범위, 결정적 ID (검토 요청; Codex 검토 권장).
 - Phase 2 구현 결정: [ADR-003](../docs/decisions/ADR-003.md) (Codex 보완 10–16, 최종 보완 17–22, R02·OBR 원문 라운드 23–26, 편차 수정 라운드 27–32 포함: 타자주자 도달 전/후, 어필 제외, KBO 우선·OBR 보완 정책, 아웃 분류의 상태 도출, 이벤트 영수증, DH 상태 분리, 끝내기 잔루 규칙) — 입력 구동 순수 리듀서, D1 단계를 상태에 포함, 단일 득점 경로(`FinishPlay`)와 이닝 종료 시 자책 재구성, 추가 전용 증거 기반 기록·1회 확정, 불변 규칙 스냅샷과 비인증 KBO 지향 프로필 표기, 독립 Python 오라클 (검토 요청).
 - Phase 1 구현 결정: [ADR-002](../docs/decisions/ADR-002.md) — 숨김 데이터 구조적 제외, 신뢰된 바인딩이 조작 선수 결정(옵션·쿼리로 재정의 불가), 원본 세계 `internal` 격리(Codex 보완 8–11), 치트 모드도 잠재력 비노출·NPC 현재값 비확대, `observation-v0` 임시 관측 모델, 가상 팩 내장, `ClubId` 추가 (검토 요청).
 - Phase 0 구조 결정: [ADR-001](../docs/decisions/ADR-001.md) — 계층 경계(Client는 Domain/Simulation 직접 참조 금지), Godot 클라이언트 전용 `.sln`, 진단 실행 모드, Codex 지적 반영.
