@@ -10,6 +10,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\StarPlayer.Application\StarPlayer.Application.csproj" />
+    <!-- Integration tests load the fictional Phase 1 pack through the real Infrastructure source. -->
+    <ProjectReference Include="..\..\src\StarPlayer.Infrastructure\StarPlayer.Infrastructure.csproj" />
     <!-- Build order only: ArchitectureTests inspect the compiled client. Not referenced by any code here. -->
     <ProjectReference Include="..\..\game\StarPlayer.Client.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>

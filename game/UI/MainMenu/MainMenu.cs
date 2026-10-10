@@ -3,9 +3,12 @@ using StarPlayer.Application.Diagnostics;
 
 namespace StarPlayer.Client.UI;
 
-/// <summary>Thin presenter for the Phase 0 diagnostic shell. No gameplay, no direct storage access.</summary>
+/// <summary>Thin presenter for the diagnostic shell (Phase 0 storage probe, Phase 1 player-card entry). No gameplay, no direct storage access.</summary>
 public partial class MainMenu : Control
 {
+    [Signal]
+    public delegate void PlayerDiagnosticsRequestedEventHandler();
+
     private Label _titleLabel = null!;
     private Label _versionLabel = null!;
     private Label _resultLabel = null!;
@@ -19,6 +22,7 @@ public partial class MainMenu : Control
         _versionLabel = GetNode<Label>("%VersionLabel");
         _resultLabel = GetNode<Label>("%ResultLabel");
         GetNode<Button>("%StartButton").Pressed += () => RunDiagnostics();
+        GetNode<Button>("%PlayerDiagnosticsButton").Pressed += () => EmitSignal(SignalName.PlayerDiagnosticsRequested);
         GetNode<Button>("%QuitButton").Pressed += () => GetTree().Quit();
     }
 

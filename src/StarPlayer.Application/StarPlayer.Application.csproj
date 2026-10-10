@@ -3,4 +3,14 @@
     <ProjectReference Include="..\StarPlayer.Domain\StarPlayer.Domain.csproj" />
     <ProjectReference Include="..\StarPlayer.Simulation\StarPlayer.Simulation.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!--
+      Trusted boundary: the raw world port/data (PlayerWorld, IPlayerWorldSource), ViewerContext and the service
+      constructor are internal. Only Infrastructure (composition) and the test assemblies see them. The Godot client is
+      deliberately NOT listed; ArchitectureTests pins this list.
+    -->
+    <InternalsVisibleTo Include="StarPlayer.Infrastructure" />
+    <InternalsVisibleTo Include="StarPlayer.Application.Tests" />
+    <InternalsVisibleTo Include="StarPlayer.Infrastructure.Tests" />
+  </ItemGroup>
 </Project>

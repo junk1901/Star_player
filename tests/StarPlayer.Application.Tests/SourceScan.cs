@@ -46,6 +46,18 @@ internal static class SourceScan
         R("SqliteConnection", @"\bSqliteConnection\b"),
     ];
 
+    /// <summary>Raw world / hidden-data / authority types that no Godot client code (Bootstrap included) may even name.</summary>
+    public static readonly Rule[] RawWorldRules =
+    [
+        R("PlayerWorld", @"\bPlayerWorld\b"),
+        R("IPlayerWorldSource", @"\bIPlayerWorldSource\b"),
+        R("FixturePlayerWorldSource", @"\bFixturePlayerWorldSource\b"),
+        R("WorldJson", @"\bWorldJson\b"),
+        R("DevelopmentProfile", @"\bDevelopmentProfile\b"),
+        R("PlayerSheet", @"\bPlayerSheet\b"),
+        R("ViewerContext", @"\bViewerContext\b"),
+    ];
+
     public static List<string> Find(string source, IEnumerable<Rule> rules)
     {
         var code = Strip(source);

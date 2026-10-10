@@ -2,7 +2,7 @@
 type: project-dashboard
 project: Star Player
 current_phase: none
-phase_status: Phase 0 승인 완료, Phase 1 미착수
+phase_status: Phase 0–1 승인 완료 (2/30), Phase 2 미착수
 last_updated: 2026-10-10
 ---
 
@@ -15,18 +15,18 @@ last_updated: 2026-10-10
 
 - PC 싱글 플레이 KBO 선수 커리어 시뮬레이션
 - 계획 범위: Phase 0–29, 총 30개 Phase
-- 현재 상태: **Phase 0 완료·승인 (2026-10-10), Phase 1 미착수**
+- 현재 상태: **Phase 0 · Phase 1 완료·승인 (2/30, 2026-10-10), Phase 2 미착수**
 - 현재 개발 중인 Phase: **없음**
-- 다음 후보: **Phase 1 — 소유자의 별도 지시 후 시작**
+- 다음 후보: **Phase 2 — 소유자의 별도 지시 후 시작 (컬렉션 가변성 후속 조치 선행)**
 
 ## 진행 요약
 
 | 구분 | 수량 | 내용 |
 |---|---:|---|
-| 승인 완료 | 1 | Phase 0 |
+| 승인 완료 | 2 | Phase 0, Phase 1 |
 | 검토 대기 | 0 | 외부 검토 대기 중인 Phase 없음 |
 | 구현/기록 중 | 0 | 현재 진행 중인 Phase 없음 |
-| 미착수 | 29 | Phase 1–29 |
+| 미착수 | 28 | Phase 2–29 |
 
 ## Phase 0–29 현황
 
@@ -35,7 +35,7 @@ last_updated: 2026-10-10
 | Phase | 이름 | 상태 | 리뷰 |
 |---:|---|---|---|
 | 0 | Reproducible desktop foundation | 승인 완료 | [Phase_00_Review](01_Phase_Reviews/Phase_00_Review.md) |
-| 1 | Player identity, visibility, and baseball vocabulary | 미착수 | 미생성 |
+| 1 | Player identity, visibility, and baseball vocabulary | 승인 완료 (PASS WITH NOTES) | [Phase_01_Review](01_Phase_Reviews/Phase_01_Review.md) |
 | 2 | Baseball state transitions and scoring | 미착수 | 미생성 |
 | 3 | Seeded game simulation / Prototype 1 | 미착수 | 미생성 |
 | 4 | Datapack initialization and safe save spine | 미착수 | 미생성 |
@@ -67,15 +67,20 @@ last_updated: 2026-10-10
 
 ## 완료된 Phase
 
+- Phase 1 — Player identity, visibility, and baseball vocabulary, **승인 완료 (PASS WITH NOTES, 2026-10-10)**: 자체 검증 → Codex `CHANGES REQUIRED` → 보완 → Codex 최종 재검토 `PASS WITH NOTES` → GPT Chat 승인(사용자 전달). xUnit 289개, verify 연속 2회 PASS, 수정 후 수동 UI 검증은 사용자 완료 전달(세부 없음). [리뷰](01_Phase_Reviews/Phase_01_Review.md), [보고서](../docs/reports/PHASE_1_REPORT.md), [ADR-002](../docs/decisions/ADR-002.md). 커밋·푸시 없음.
 - Phase 0 — Reproducible desktop foundation, 승인 완료 (2026-10-10, GPT Chat 최종 검토 결과를 사용자가 전달). [리뷰](01_Phase_Reviews/Phase_00_Review.md), [보고서](../docs/reports/PHASE_0_REPORT.md), [검증 로그](../docs/reports/PHASE_0_VERIFY_LOG.md), [1차 검증 로그(보존)](../docs/reports/PHASE_0_VERIFY_LOG_initial.md). Codex 지적 5건 수정 후 `verify.ps1` PASS, Codex 재검토는 미실시.
 
 ## 검토 대기 중인 Phase
 
 없음.
 
+## 추적 중인 기술 부채
+
+- Domain 컬렉션 가변성(Codex Medium, Notes): `Ratings.cs`(`PitchRepertoire.Pitches`), `Proficiency.cs`, `PlayerStatus.cs`, `DevelopmentProfile.cs`, `Player.cs`가 `List` 기반 `IReadOnlyList`를 그대로 노출. **Phase 2에서 이 컬렉션을 경기 상태·결정론적 처리에 쓰기 전에** 방어 복사, 읽기 전용(`AsReadOnly`) 노출, 캐스팅 변이 테스트(`IList` 캐스트 후 변경 시 예외)를 적용한다. 현재 승인된 Phase 1 코드는 수정하지 않는다.
+
 ## 주요 선행 조건과 미해결 항목
 
-- Phase 1 이상은 소유자의 별도 구현 지시가 필요합니다 (Phase 0은 승인 완료).
+- Phase 2 이상은 소유자의 별도 구현 지시가 필요합니다 (Phase 0–1 승인 완료). Phase 2는 구현 전에 `GameRules` 상세 부분 집합(D2)이 필요합니다.
 - 각 소비 Phase는 구현 전에 필요한 KBO RuleProfile 상세 규칙과 명시적 단순화를 확정해야 합니다.
 - 개인 KBO 2026 팩은 Phase 27에서 정확한 `as_of_date`, 증거 기준일, 제공 데이터와 출처를 인증해야 합니다.
 - 툴체인(.NET 8.0.425, Godot 4.7.2 Mono)과 Windows Export 가능성은 Phase 0에서 검증되었습니다 — [toolchain](../docs/toolchain.md).
@@ -89,6 +94,7 @@ last_updated: 2026-10-10
 - KBO 규칙은 커리어에 동결되는 버전형 2026 KBO 지향 RuleProfile과 명시적 단순화를 사용합니다.
 - 장기 기록은 우선 보존하고 Phase 17/29 실측 후 필요한 경우에만 제한적으로 정리합니다.
 - Club Finance Lite가 Scope Lock의 단일 승인 예외로 추가되었습니다: C13 계약 기반 급여, KBO 샐러리캡, 성과형 구단 스폰서 수익, 규칙 기반 Club AI 연동, 읽기 전용 재정 화면.
+- Phase 1 구현 결정: [ADR-002](../docs/decisions/ADR-002.md) — 숨김 데이터 구조적 제외, 신뢰된 바인딩이 조작 선수 결정(옵션·쿼리로 재정의 불가), 원본 세계 `internal` 격리(Codex 보완 8–11), 치트 모드도 잠재력 비노출·NPC 현재값 비확대, `observation-v0` 임시 관측 모델, 가상 팩 내장, `ClubId` 추가 (검토 요청).
 - Phase 0 구조 결정: [ADR-001](../docs/decisions/ADR-001.md) — 계층 경계(Client는 Domain/Simulation 직접 참조 금지), Godot 클라이언트 전용 `.sln`, 진단 실행 모드, Codex 지적 반영.
 - 이 예외 반영 후 게임플레이 Scope Lock은 다시 활성화되었으며, 새 기능은 별도 승인 없이 추가하지 않습니다.
 

@@ -4,4 +4,13 @@
     <ProjectReference Include="..\StarPlayer.Application\StarPlayer.Application.csproj" />
     <ProjectReference Include="..\StarPlayer.Domain\StarPlayer.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Fictional Phase 1 pack, embedded so the exported desktop build needs no loose content folder. -->
+    <EmbeddedResource Include="..\..\content\fictional\phase1_two_club_pack.json" LogicalName="phase1_two_club_pack.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Raw fixture/world types are internal; only these test assemblies may see them (the Godot client may not). -->
+    <InternalsVisibleTo Include="StarPlayer.Application.Tests" />
+    <InternalsVisibleTo Include="StarPlayer.Infrastructure.Tests" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,92 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://UI/PlayerDiagnostics/PlayerDiagnosticsScreen.cs" id="1_screen"]
+
+[node name="PlayerDiagnosticsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_screen")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.09, 0.1, 0.13, 1)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 48
+
+[node name="Column" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HeaderRow" type="HBoxContainer" parent="Margin/Column"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="TitleLabel" type="Label" parent="Margin/Column/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 52
+text = "선수 정보 진단 (Phase 1)"
+
+[node name="BackButton" type="Button" parent="Margin/Column/HeaderRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 84)
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "뒤로"
+
+[node name="SummaryLabel" type="Label" parent="Margin/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "-"
+autowrap_mode = 3
+
+[node name="Body" type="HBoxContainer" parent="Margin/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 28
+
+[node name="PlayerList" type="ItemList" parent="Margin/Column/Body"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(760, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+
+[node name="CardScroll" type="ScrollContainer" parent="Margin/Column/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CardLabel" type="Label" parent="Margin/Column/Body/CardScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
+text = "왼쪽에서 선수를 선택하세요."
+autowrap_mode = 3
+
+[node name="CheckLabel" type="Label" parent="Margin/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "-"
+autowrap_mode = 3

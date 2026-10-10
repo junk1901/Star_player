@@ -42,7 +42,7 @@ Prerequisites: the SDK and Godot files above. If Godot lives elsewhere, set `STA
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\verify.ps1
 ```
 
-It runs, in order: toolchain checks (including SHA-256 of the five installed export-template files), solution-configuration and client output-path checks, `dotnet build StarPlayer.sln -c Release`, the four test projects, Godot headless build + diagnostics launch, Windows export, and a cold-copy run of the exported program (diagnostic launch mode, QHD, screenshot). Exit code 0 = PASS, 1 = FAIL, 2 = INCOMPLETE (a tool is missing; never reported as PASS). Results are written to `docs/reports/PHASE_0_VERIFY_LOG.md`; raw logs and the exported build go to `build/` (git-ignored).
+It runs, in order: toolchain checks (including SHA-256 of the five installed export-template files), solution-configuration and client output-path checks, `dotnet build StarPlayer.sln -c Release`, the four test projects, Godot headless build + diagnostics launch, Windows export, and a cold-copy run of the exported program (diagnostic launch mode, QHD, screenshot). Exit code 0 = PASS, 1 = FAIL, 2 = INCOMPLETE (a tool is missing; never reported as PASS). Results are written to `docs/reports/PHASE_1_VERIFY_LOG.md` since Phase 1 (the approved Phase 0 logs are kept untouched); raw logs and the exported build go to `build/` (git-ignored). The script switches off MSBuild node reuse and build servers for its own process tree only, gives every command a time limit (a timed-out command has only its own process tree killed, exit 124) and lists, without killing, any build-server process it left behind (check Z1, informational).
 
 Individual commands:
 

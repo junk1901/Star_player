@@ -1,2 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <!-- Lets tests build deliberately corrupt ledgers to prove the defensive checks; nothing else sees Domain internals. -->
+    <InternalsVisibleTo Include="StarPlayer.Domain.Tests" />
+  </ItemGroup>
 </Project>
