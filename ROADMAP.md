@@ -109,7 +109,7 @@ The following additions reuse existing owners and phases rather than creating a 
 - C34 may optionally import completed draft facts, entry/signing/registration facts and an initial C47 number. No Game Core branch checks `year == 2026`; the default KBO 2026 pack policy comes from pack data and may instead describe other imported years or fictional completed classes.
 - The personal KBO 2026 pack represents the world immediately before the 2026 regular season, with opening day as the simulation divergence point. Its default configuration marks the already-completed 2026 rookie draft/history as `Imported`/completed and locked; with no imported 2027+ classes, 2027 onward uses the normal generated pipeline. This is pack data, not a Game Core conditional. Phase 27 still records and certifies the exact `as_of_date`, evidence cutoff, source rows and provenance.
 - C01 Existing Player Start may select an imported already-drafted rookie by the same stable PlayerId. Career binding never copies the Player, reruns the draft or changes the historical club/entry facts. Facts before the configured start remain imported history; events after it are simulation-owned and may diverge completely from reality.
-- F closed the committed gameplay feature scope. CF is an owner-approved bounded exception described in §1.11, and Broadcast Commentary Lite (BCL, §1.12; user-approved 2026-10-11) is a second, presentation-only exception; after their integration, the Scope Lock remains active. Future ideas are deferred unless an implementation dependency is genuinely missing, an existing requirement is contradictory, or the owner explicitly approves another feature.
+- F closed the committed gameplay feature scope. CF is an owner-approved bounded exception described in §1.11, Broadcast Commentary Lite (BCL, §1.12) and Live Match Viewer Lite (LMV-A, §1.13) are user-approved (2026-10-11) presentation-only exceptions with unchanged, independent scopes, and LMV-B is only a recorded future-extension possibility, not an approved feature; after their integration, the Scope Lock remains active. Future ideas are deferred unless an implementation dependency is genuinely missing, an existing requirement is contradictory, or the owner explicitly approves another feature.
 
 ### 1.11 Club Finance Lite approved exception and renewed scope lock
 
@@ -133,7 +133,21 @@ Select one crew at game start by a **documented, deterministic A/B rotation acro
 
 Messages derive only from committed game events and permissible read-model facts (inning, outs, score, bases, scoring plays, verified player records, measured recent-game context where available). Never invent pitch sequences, quotations, injuries, skills, psychology, records or tactical causes, and never disclose hidden NPC ratings/potential. Routine actions receive sparse lines; game-changing events may produce a short two-speaker exchange. Korean text is skippable, scrollable and nonblocking; controls include off / highlights / fuller commentary, limited by screen and available event granularity. Skipped and instant games never require replaying thousands of lines.
 
-Dialogue variation uses a **separate deterministic presentation selection key** derived from stable event/game identity, crew ID and dialogue-pack version, never authoritative gameplay RNG. Deduplicate by event ID + presentation version; replay and reopening cannot duplicate or reorder messages. Record the frozen pack/version and relevant immutable presentation references (or a stable transcript) where needed for historic re-display, without treating dialogue as a core game fact. Renderer failures, missing dialogue content, disabled settings or changed layout leave the scored game, RNG/event hashes and pending gameplay decisions unchanged. Gemini/generative commentary, TTS or further crews need a later explicit design decision. Phase placement: 3 (boundary only), 5 (offline chat), 6 (fixture-bound assignment), 28 (final UX audit).
+Dialogue variation uses a **separate deterministic presentation selection key** derived from stable event/game identity, crew ID and dialogue-pack version, never authoritative gameplay RNG. Deduplicate by event ID + presentation version; replay and reopening cannot duplicate or reorder messages. Record the frozen pack/version and relevant immutable presentation references (or a stable transcript) where needed for historic re-display, without treating dialogue as a core game fact. Renderer failures, missing dialogue content, disabled settings or changed layout leave the scored game, RNG/event hashes and pending gameplay decisions unchanged. Gemini/generative commentary, TTS or further crews need a later explicit design decision. Phase placement: 3 (boundary only), 5 (offline chat), 6 (fixture-bound assignment), 28 (final UX audit). BCL's Crew A/B are broadcaster crews and are unrelated to the LMV-A/LMV-B visualization modes of §1.13.
+
+### 1.13 Live Match Viewer Lite — owner-approved presentation addition
+
+**Status:** user-directed addition of 2026-10-11, design only; implementation not started. The user chose **LMV-A** (2D icon-based live field) first and **LMV-B** (SD-character motion) as a later extension. LMV-A is a bounded, presentation-only Scope Lock exception (§1.10) that adds no top-level phase, leaves Phases 0–29, their numbering and Gates unchanged, and does not alter CF (§1.11) or BCL (§1.12). **LMV-B is not approved for implementation**: it is a design-preserved future extension and no part of any current Gate. "LMV-A/B" names visualization modes only; BCL's "Crew A/B" names broadcaster crews. The two are independent.
+
+**Flow.** (1) Game Core resolves and commits every outcome, out, runner movement, run and record. (2) A read-only Presentation Adapter in the Application layer (Godot-free, unit-testable) converts committed game events into presentation cues. (3) The LMV-A Godot renderer plays icon-based field animation from those cues. (4) A later LMV-B renderer may consume the same cues with separate SD sprite/animation assets. Visual physics never decide a result; no engine rebuild is implied, and no giant interface or general animation engine is built ahead of need.
+
+**Presentation contract.** A `PlayPresentationCue` (or equivalent DTO) may carry only what the real event model can supply: GameId / EventId / event sequence, play kind, runner/out/run state before and after the event, batted-ball kind or direction where recorded, handling fielder or defensive position where recorded, the presentation effect kind and display order, and a presentation version. Exact ball coordinates, speed, catch point or throw order that the event model does not record are never presented as official fact. A generic presentation path may be drawn, kept visibly separate from the official record and never asserting an unrecorded defensive detail; an event with too little information degrades to a short ball movement, a generic state change or a static result display. Field coordinates are presentation-only and are never used in rules, fielding success or scoring.
+
+**Separation of responsibilities (minimum).** Committed-event query · event→cue conversion · playback sequencing · LMV-A icon rendering · a single future attachment point for an LMV-B renderer. Keep these as small feature-focused pieces.
+
+**Determinism.** Frame rate and animation speed never influence gameplay RNG. Watching, skipping, fast-forward and disabling animation leave outcome, score, records and event hashes identical for the same seed and strategy inputs. Any presentation randomness uses a presentation-only key separate from gameplay streams (as in §1.12), and no authoritative fact depends on it. BCL commentary selection and LMV playback keys are derived in distinct, explicitly named namespaces (so neither feature's draws can influence the other) and neither touches a gameplay RNG stream; Phase 5 implements and tests this separation. Interrupting playback or re-entering the screen never re-applies a game event; cue playback is deduplicated by event ID + presentation version.
+
+**Future LMV-B.** Responsibilities are separated so SD sprites, running/catching/throwing motion, per-character facing, richer baserunning and effects can be added later. Detailed motion may need event information the model does not record today; such a need would require a separate, explicitly approved extension design. A drop-in, no-change replacement is not promised, and LMV-B development and final art are outside every current Gate.
 
 ## 2. Repository Structure
 
@@ -783,7 +797,7 @@ Temporary QHD game, PA-approach choices, authoritative count, current mode, resu
 Versioned tuning JSON, seed/command replay fixtures, game-state serialization contract. No career save promise yet.
 
 ### Events
-Existing scored-game events; `GameDecisionRequested`. Do not emit a “pitch event” for an invented display count. These scored-event and replay contracts are the future input for read-only Broadcast Commentary Lite (§1.12); **no dialogue generation or commentary UI belongs to Phase 3**, and presentation never consumes authoritative RNG or fabricates pitch events.
+Existing scored-game events; `GameDecisionRequested`. Do not emit a “pitch event” for an invented display count. These scored-event and replay contracts are the future input for read-only Broadcast Commentary Lite (§1.12); **no dialogue generation or commentary UI belongs to Phase 3**, and presentation never consumes authoritative RNG or fabricates pitch events. The same events and replay contract are the only future data source for read-only Live Match Viewer Lite cues (§1.13): committed results alone can later yield presentation data, and Phase 3 introduces no required physics/coordinate model, no ball or player animation, and no change to the probability resolver, rules, scoring or official records.
 
 ### Tests
 100,000 seeded PAs; 100 complete games; monotonic ability/strategy influence fixtures; identical-seed canonical replay; all outcome probabilities finite and normalized; neutral-strategy watched vs instant results identical; default PA prompt count and one-pitch `Take` resume fixtures; displayed counts equal authoritative state.
@@ -874,7 +888,7 @@ New/existing player starts, including imported already-drafted rookie selection,
 
 Visible Pending Decisions, first-time contextual help/tooltips/glossary and a basic settings framework (C42) ship with the first career loop.
 
-Add Broadcast Commentary Lite's (§1.12) minimal offline, template-driven caster/analyst side chat for the controlled player's playable games, with Crew A and Crew B having clearly different stable tone and dialogue packs independent of game mechanics. No career-wide broadcast schedule yet (Phase 6).
+Add Broadcast Commentary Lite's (§1.12) minimal offline, template-driven caster/analyst side chat for the controlled player's playable games, with Crew A and Crew B having clearly different stable tone and dialogue packs independent of game mechanics. No career-wide broadcast schedule yet (Phase 6). Add Live Match Viewer Lite's LMV-A (§1.13): the 2D icon-based live field for the Game view, driven by read-only presentation cues from committed events.
 
 ### Explicit Non-Goals
 No developed life economy, real growth curves, full draft, major league season, advanced news, or final visual theme.
@@ -896,11 +910,14 @@ Add `PendingDecisionView`, `HelpTopic`, `HelpSeenPreference`, `SettingsCapabilit
 5. Add Korean `의사결정 대기함` with count, subject/type/due date/status/block reason and links to existing decision actions. Dismissal/navigation/reload cannot resolve or hide an outstanding decision.
 6. Add contextual notices, hover/focus tooltips and reopenable glossary/help; persist do-not-show-again and reset controls. Introduce basic display/window/text scale, existing progression/text speeds, implemented default modes and confirmation/autosave/help preferences. Capabilities hide unavailable audio/Gemini/portrait controls; autosave settings cannot disable mandatory recovery boundaries or lower the three-generation minimum.
 7. Implement a read-only, event-driven `CommentaryContext` projection and bounded `CommentaryLine` selector over existing scored-play events (single engine, never a reducer/state-machine change for narration). Build separate versioned, data-driven Korean Crew A/B packs that prevent unsupported factual claims, assign a crew per stable Phase 5 test-game identity by the documented A/B rotation and preserve it on resume.
+8. Implement LMV-A (§1.13): a 2D field coordinate system and icon display of the nine defenders, batter and runners; a read-only Presentation Adapter producing versioned `PlayPresentationCue`s from committed events; ball movement after contact; defensive and baserunning movement only where existing events support it; out/safe and run visual effects; skip and speed controls; per-event playback deduplication; and a safe static fallback when information is insufficient. Coordinates are presentation-only and never used for rules or fielding success. No SD characters (LMV-B) and no change to the reducer or scoring.
 
 ### UI Work
 Home, My Player, Training, Game, Result, basic News/Event, menu shell and minimal overlay player card. Build compact QHD/FHD variants now; preserve active game when inspecting a name. Label Prototype 2's new-player scenario as a fictional post-entry fixture rather than the final direct-club career start.
 
 Game view: a collapsible broadcaster chat beside the game view in QHD and a compact tab/drawer in FHD. Distinguish caster vs analyst by name and role, show brief dialogue bursts, offer off/highlights/fuller verbosity as event granularity allows, and never cover essential PA/count/score/runner/decision controls. Missing commentary content yields no message, never a fabricated play or a blocked game.
+
+LMV-A layout: at QHD the LMV-A field stays central with the BCL chat panel shown beside it; at FHD the field keeps its readability and the chat becomes a tab or collapsible panel. Neither the field nor the chat may cover the PA-approach choice, real count, score, outs, runners or required action buttons, and skip/speed controls stay reachable.
 
 Use Korean labels including 홈, 내 선수, 경기, 훈련, 기존 선수로 시작, 신인만 보기, 드래프트 연도, 지명 순번, 출신 학교, 의사결정 대기함 and 설정. Imported rookie results are read-only historical facts. Inbox is a compact decision list, not an email simulator; contextual help is skippable and reopenable, not a forced tutorial campaign.
 
@@ -919,24 +936,26 @@ Pending decision survives close/reload/date-advance attempt; help suppress/reset
 
 Commentary: Crew A/B alternate over five consecutive controlled-player test games and stay fixed within each game and across reload; normal plays, scoring plays, home runs, strikeouts and game-ending situations yield only context-supported lines; disabling/reopening, every verbosity level, watched/instant modes and viewport differences leave authoritative RNG/event/score hashes unchanged and draw nothing from gameplay RNG streams; event replay is idempotent with stable message order; hidden NPC fields are absent; no network/API is required; all controls remain reachable at QHD/FHD.
 
+LMV-A: the same event yields the same cue and playback; chat display and LMV playback are independent of each other; normal speed, fast speed and skip give identical results; animation on/off leaves gameplay RNG and event hashes identical; BCL and LMV presentation keys live in distinct namespaces (changing one feature's output or settings never changes the other's, and neither consumes gameplay RNG); save/load and screen re-entry never re-apply an event or replay a duplicate cue; a composite play with insufficient information falls back safely without asserting unrecorded detail; required UI stays accessible at QHD/FHD.
+
 ### Acceptance Criteria
 **Gate: G +** five consecutive games and an off-day complete for each role at both resolutions; switching mode changes no outcomes with identical actions; default play does not require every-pitch input; every shown count is real; `Take` advances exactly one pitch; an observer identifies inning/score/outs/runners in <=3 seconds for 9 of 10 prepared situations; next action is reachable without losing game state. Log usability misses as failed criteria to correct.
 
 All live decision barriers are reachable via Inbox; settings/help work at both resolutions and make zero gameplay RNG draws. An imported rookie start binds the existing Player exactly once and never reruns or changes the historical draft.
 
-Broadcast chat passes the commentary tests above with exactly one stable crew per game, no duplicated or reordered messages and no effect on game outcomes or hashes.
+Broadcast chat passes the commentary tests above with exactly one stable crew per game, no duplicated or reordered messages and no effect on game outcomes or hashes. Phase 5 passes when LMV-A works and meets its tests above; it never requires LMV-B.
 
 ### Deliverables
-Playable Prototype 2, creation/existing selection, shell/scenes, paired screenshots and workflow evidence, minimal two-pack Korean dialogue dataset with read-only presenter/contract tests, `PHASE_5_REPORT.md`.
+Playable Prototype 2, creation/existing selection, shell/scenes, paired screenshots and workflow evidence, minimal two-pack Korean dialogue dataset with read-only presenter/contract tests, the LMV-A field with presentation-cue tests, `PHASE_5_REPORT.md`.
 
 ### Risks
 Prototype shortcuts becoming permanent roster rules; UI inventing growth or automatically choosing important actions.
 
 ### Documentation Updates
-UI routes and state contract, creation policy/config, new `docs/commentary-system.md` (factual boundaries, pack versions, settings, future Phase 6 fixture integration), current state and report.
+UI routes and state contract, creation policy/config, new `docs/commentary-system.md` (factual boundaries, pack versions, settings, future Phase 6 fixture integration), new `docs/live-match-viewer.md` (presentation-cue contract, factual boundary, LMV-A scope, LMV-B extension boundary), current state and report.
 
 ### Claude Code Handoff
-> Deliver the one-player loop at QHD and FHD. Reuse Existing Player Start for imported already-drafted rookies with filters and stable identity; do not copy the player or rerun the draft. Keep missing later systems explicitly unavailable, and keep early training intent distinct from implemented growth. Do not hard-cap normal creation or modify imported existing-player facts. Keep the broadcast chat read-only, offline and outside authoritative RNG/hashes.
+> Deliver the one-player loop at QHD and FHD. Reuse Existing Player Start for imported already-drafted rookies with filters and stable identity; do not copy the player or rerun the draft. Keep missing later systems explicitly unavailable, and keep early training intent distinct from implemented growth. Do not hard-cap normal creation or modify imported existing-player facts. Keep the broadcast chat read-only, offline and outside authoritative RNG/hashes. Build LMV-A as a presentation-only icon field over committed events; do not build LMV-B or alter engine results, and keep LMV-A/B distinct from BCL Crew A/B.
 
 ## Phase 6 — Calendar, regular season, and basic discovery
 
@@ -2272,6 +2291,8 @@ All screens, long names, large numbers, Korean text, wrapped news, tables, field
 
 Broadcast-panel audit (§1.12) at QHD/FHD: long Korean dialogue and player names, caster/analyst accessibility labels, focus/keyboard interaction, highlight-only vs full text volume, mute/off/hide, scrolling, archive revisit, responsive drawer layout and no overlap with required decisions. Styling must not change gameplay hashes.
 
+LMV-A final-quality audit: field and icon readability, naturalness of ball movement, UI scale and QHD/FHD behavior, field/chat space allocation, no excessive animation, overlap or stutter, reachable speed and skip controls, and unchanged game hashes under any visual-effect setting. LMV-B is not a Phase 28 deliverable.
+
 ### Persistence Work
 Versioned display/preferences file, migrations only if presentation metadata changes. No save fact rewrite for a theme change.
 
@@ -2284,7 +2305,7 @@ Every inventory route at QHD/FHD, window/borderless/fullscreen as supported in t
 Inbox unresolved/expired/pending-AI states; first injury/second-team/FA/developmental and advanced-metric help; do-not-show/reset/reopen; scaled text/focus; no fake settings; mandatory autosave safety unchanged.
 
 ### Acceptance Criteria
-**Gate: G +** all inventory rows have screenshots and workflow evidence at both resolutions; no clipped required action or unreachable information; all error/loading/empty states are usable; §6.3 query/input budgets pass; simulation hashes match the unthemed build for identical inputs; the broadcast panel passes the QHD/FHD audit with no overlap of required decisions.
+**Gate: G +** all inventory rows have screenshots and workflow evidence at both resolutions; no clipped required action or unreachable information; all error/loading/empty states are usable; §6.3 query/input budgets pass; simulation hashes match the unthemed build for identical inputs; the broadcast panel and the LMV-A field pass the QHD/FHD audit with no overlap of required decisions.
 
 Every player-facing label/help/reaction surface is Korean; complete settings expose only implemented capabilities and cannot bypass domain barriers or save-recovery requirements.
 
