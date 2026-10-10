@@ -1,0 +1,84 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1014E48A-695E-4AB7-8F7D-61354D090EE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.Application", "src\StarPlayer.Application\StarPlayer.Application.csproj", "{228C9F99-257B-47A4-9968-A3F9ADCC2A22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.Domain", "src\StarPlayer.Domain\StarPlayer.Domain.csproj", "{73575452-39BC-4112-B351-BB78E55F67EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.Infrastructure", "src\StarPlayer.Infrastructure\StarPlayer.Infrastructure.csproj", "{30F3F530-1974-4D2D-816F-88EC77C8CDDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.Simulation", "src\StarPlayer.Simulation\StarPlayer.Simulation.csproj", "{0926728C-0C66-40D8-A2F8-F08F73357A97}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4D7FE29D-D307-4D96-8615-7FEAFDE35A4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.Application.Tests", "tests\StarPlayer.Application.Tests\StarPlayer.Application.Tests.csproj", "{C4274940-1F7E-4009-9477-5D70264BECF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.Domain.Tests", "tests\StarPlayer.Domain.Tests\StarPlayer.Domain.Tests.csproj", "{40161DE6-4697-433C-A54B-3FD87EA9A170}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.Infrastructure.Tests", "tests\StarPlayer.Infrastructure.Tests\StarPlayer.Infrastructure.Tests.csproj", "{C085A714-0311-404F-876D-4D4CA6580052}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.Simulation.Tests", "tests\StarPlayer.Simulation.Tests\StarPlayer.Simulation.Tests.csproj", "{3B181684-BD05-461E-9B55-29C2666DE479}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.Client", "game\StarPlayer.Client.csproj", "{CF4E4D30-3826-45F2-8767-01C05ED44CD4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{228C9F99-257B-47A4-9968-A3F9ADCC2A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{228C9F99-257B-47A4-9968-A3F9ADCC2A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{228C9F99-257B-47A4-9968-A3F9ADCC2A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{228C9F99-257B-47A4-9968-A3F9ADCC2A22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73575452-39BC-4112-B351-BB78E55F67EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73575452-39BC-4112-B351-BB78E55F67EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73575452-39BC-4112-B351-BB78E55F67EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73575452-39BC-4112-B351-BB78E55F67EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30F3F530-1974-4D2D-816F-88EC77C8CDDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30F3F530-1974-4D2D-816F-88EC77C8CDDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30F3F530-1974-4D2D-816F-88EC77C8CDDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30F3F530-1974-4D2D-816F-88EC77C8CDDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0926728C-0C66-40D8-A2F8-F08F73357A97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0926728C-0C66-40D8-A2F8-F08F73357A97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0926728C-0C66-40D8-A2F8-F08F73357A97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0926728C-0C66-40D8-A2F8-F08F73357A97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4274940-1F7E-4009-9477-5D70264BECF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4274940-1F7E-4009-9477-5D70264BECF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4274940-1F7E-4009-9477-5D70264BECF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4274940-1F7E-4009-9477-5D70264BECF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40161DE6-4697-433C-A54B-3FD87EA9A170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40161DE6-4697-433C-A54B-3FD87EA9A170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40161DE6-4697-433C-A54B-3FD87EA9A170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40161DE6-4697-433C-A54B-3FD87EA9A170}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C085A714-0311-404F-876D-4D4CA6580052}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C085A714-0311-404F-876D-4D4CA6580052}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C085A714-0311-404F-876D-4D4CA6580052}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C085A714-0311-404F-876D-4D4CA6580052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B181684-BD05-461E-9B55-29C2666DE479}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B181684-BD05-461E-9B55-29C2666DE479}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B181684-BD05-461E-9B55-29C2666DE479}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B181684-BD05-461E-9B55-29C2666DE479}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF4E4D30-3826-45F2-8767-01C05ED44CD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF4E4D30-3826-45F2-8767-01C05ED44CD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF4E4D30-3826-45F2-8767-01C05ED44CD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF4E4D30-3826-45F2-8767-01C05ED44CD4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{228C9F99-257B-47A4-9968-A3F9ADCC2A22} = {1014E48A-695E-4AB7-8F7D-61354D090EE8}
+		{73575452-39BC-4112-B351-BB78E55F67EA} = {1014E48A-695E-4AB7-8F7D-61354D090EE8}
+		{30F3F530-1974-4D2D-816F-88EC77C8CDDA} = {1014E48A-695E-4AB7-8F7D-61354D090EE8}
+		{0926728C-0C66-40D8-A2F8-F08F73357A97} = {1014E48A-695E-4AB7-8F7D-61354D090EE8}
+		{C4274940-1F7E-4009-9477-5D70264BECF9} = {4D7FE29D-D307-4D96-8615-7FEAFDE35A4E}
+		{40161DE6-4697-433C-A54B-3FD87EA9A170} = {4D7FE29D-D307-4D96-8615-7FEAFDE35A4E}
+		{C085A714-0311-404F-876D-4D4CA6580052} = {4D7FE29D-D307-4D96-8615-7FEAFDE35A4E}
+		{3B181684-BD05-461E-9B55-29C2666DE479} = {4D7FE29D-D307-4D96-8615-7FEAFDE35A4E}
+	EndGlobalSection
+EndGlobal

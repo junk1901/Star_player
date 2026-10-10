@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 
-ROOT=Path(r'E:\Madegame\Star_player\outputs')
+ROOT=Path(r'E:\Madegame\Star_player')
 
 def read(name): return (ROOT/name).read_text(encoding='utf-8-sig')
 def write(name,text): (ROOT/name).write_text(text,encoding='utf-8',newline='\n')

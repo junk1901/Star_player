@@ -3,7 +3,7 @@ import hashlib, json, re
 
 root=Path(r'E:\Madegame\Star_player')
 old=(root/'work/revision-baseline/ROADMAP.md').read_text(encoding='utf-8-sig')
-new=(root/'outputs/ROADMAP.md').read_text(encoding='utf-8-sig')
+new=(root/'ROADMAP.md').read_text(encoding='utf-8-sig')
 checks=[]
 def check(ok, label):
     assert ok,label
@@ -53,9 +53,9 @@ required={
 29:['ParkFactor','salary','staff','captain','weather','All-Star','imported/generated draft','C47','stable PlayerIds','C48 invariants','financially weak clubs can recover']}
 for n,terms in required.items():
     for term in terms: check(term.casefold() in np[n].casefold(),f'Phase {n} revision coverage: {term}')
-trace=(root/'outputs/docs/REQUIREMENTS_TRACEABILITY.md').read_text(encoding='utf-8')
+trace=(root/'docs/REQUIREMENTS_TRACEABILITY.md').read_text(encoding='utf-8')
 check([int(x) for x in re.findall(r'^\| R(\d+) \|',trace,re.M)]==list(range(1,108)),'All 64 original requirement IDs retained plus 43 revision rows')
-contracts=(root/'outputs/docs/SYSTEM_CONTRACTS.md').read_text(encoding='utf-8')
+contracts=(root/'docs/SYSTEM_CONTRACTS.md').read_text(encoding='utf-8')
 check([int(x) for x in re.findall(r'^## C(\d{2}) —',contracts,re.M)]==list(range(1,49)),'All 48 sequential contracts present')
 for term in ['DraftClassSource','Imported','Generated','never a timeless Player field','F closed the committed gameplay feature scope']:
     check(term.casefold() in new.casefold(),f'R3 architecture coverage: {term}')
@@ -70,8 +70,8 @@ for term in ['Club Finance Lite approved exception and renewed scope lock','C13 
 for term in ['C13 alone owns player contracts/obligations','SponsorshipSettlement','GetClubFinancialSummary','Gemini, generated prose and wall-clock randomness are forbidden decision inputs']:
     check(term.casefold() in contracts.casefold(),f'C48 contract coverage: {term}')
 for rel,source in [('Star_Player_Portrait_System_Design.MD',Path(r'C:\Users\user\Downloads\Star_Player_Portrait_System_Design.MD')),('sources/ROADMAP_REVISION_REQUEST.txt',Path(r'C:\Users\user\.codex\attachments\e69f6bf2-a508-4775-8ea3-dce34891a5c3\붙여넣은 텍스트.txt'))]:
-    check(hashlib.sha256((root/'outputs'/rel).read_bytes()).digest()==hashlib.sha256(source.read_bytes()).digest(),f'Exact original bytes preserved: {rel}')
-for path in [root/'outputs/ROADMAP.md',root/'outputs/AGENTS.md',root/'outputs/CURRENT_STATE.md',*list((root/'outputs/docs').glob('*.md'))]:
+    check(hashlib.sha256((root/rel).read_bytes()).digest()==hashlib.sha256(source.read_bytes()).digest(),f'Exact original bytes preserved: {rel}')
+for path in [root/'ROADMAP.md',root/'AGENTS.md',root/'CURRENT_STATE.md',*list((root/'docs').glob('*.md'))]:
     if path.name=='SOURCE_SECTION_INDEX.md': continue
     text=path.read_text(encoding='utf-8')
     for obsolete in ['always has local fallback','Backend interview choices and relationship effects exist before','backend-defined interview choices','its additional portrait-design document is excluded','Optional Gemini narrative presentation','39 system contracts']:

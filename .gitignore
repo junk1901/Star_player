@@ -51,3 +51,6 @@ temp/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Godot/.NET tool backups
+*.csproj.old

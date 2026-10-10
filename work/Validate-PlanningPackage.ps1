@@ -1,6 +1,6 @@
 param([string]$PackagePath)
 $ErrorActionPreference = 'Stop'
-if (-not $PackagePath) { $PackagePath = Join-Path (Split-Path -Parent $PSScriptRoot) 'outputs' }
+if (-not $PackagePath) { $PackagePath = Split-Path -Parent $PSScriptRoot }
 $packageRoot = (Resolve-Path -LiteralPath $PackagePath).Path
 $failures = [System.Collections.Generic.List[string]]::new()
 $checks = [System.Collections.Generic.List[string]]::new()
@@ -48,7 +48,7 @@ for ($i=0; $i -lt $contractMatches.Count; $i++) {
     Assert-Check ([int]$contractMatches[$i].Groups[1].Value -eq ($i+1)) ('Sequential contract C' + ($i+1))
     foreach ($field in $contractFields) { Assert-Check ($body.Contains('**' + $field + ':**')) ('Contract C' + ($i+1) + ' field: ' + $field) }
 }
-$markdownFiles = Get-ChildItem -LiteralPath $packageRoot -Filter '*.md' -Recurse | Where-Object { $_.FullName -notlike '*\sources\UI_UX_GUIDE_v1.8.md' }
+$markdownFiles = @(Get-ChildItem -LiteralPath $packageRoot -Filter '*.md'; Get-ChildItem -LiteralPath (Join-Path $packageRoot 'docs'),(Join-Path $packageRoot 'sources') -Filter '*.md') | Where-Object { $_.FullName -notlike '*\sources\UI_UX_GUIDE_v1.8.md' }
 $linkCount = 0
 foreach ($file in $markdownFiles) {
     $body = [System.IO.File]::ReadAllText($file.FullName)
@@ -94,11 +94,12 @@ for($i=0; $i -lt $decisionMatches.Count; $i++) {
 Assert-Check (-not [regex]::IsMatch($roadmap,'(?i)D1, D2, D3, D4 and D6 (are|remain) pending')) 'No owner decision remains pending'
 Assert-Check ($roadmap.Contains('preserve first, measure, then prune only if evidence requires it')) 'D6 preserve-first policy recorded'
 Assert-Check ($roadmap.Contains('### 1.11 Club Finance Lite approved exception and renewed scope lock')) 'Club Finance Lite approved exception recorded'
-Assert-Check ($contracts.Contains('## C48 — Club Finance Lite')) 'Club Finance Lite contract recorded'
+Assert-Check ($contracts.Contains('## C48 '+[char]0x2014+' Club Finance Lite')) 'Club Finance Lite contract recorded'
 Assert-Check ($contracts.Contains('C13 alone owns player contracts/obligations')) 'Single contract obligation authority recorded'
 Assert-Check ($roadmap.Contains('Phase 11 owns baseball results and achievement facts and has no dependency on C48 or Phase 14')) 'No Phase 11 to Phase 14 finance dependency'
 $sourceRoot = Join-Path $packageRoot 'sources'
-$unexpectedCode = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Where-Object {$_.Extension -in @('.cs','.tscn','.sql','.csproj','.godot')}
+# Since Phase 0 production code lives in src/ tests/ game/; the planning documents (root files, docs/, sources/) must stay code-free.
+$unexpectedCode = @(Get-ChildItem -LiteralPath $packageRoot -File; Get-ChildItem -LiteralPath (Join-Path $packageRoot 'docs'),$sourceRoot -Recurse -File) | Where-Object {$_.Extension -in @('.cs','.tscn','.sql','.csproj','.godot')}
 Assert-Check (@($unexpectedCode).Count -eq 0) 'No production code, scenes or SQL migrations in deliverables'
 $result = [ordered]@{status=if($failures.Count -eq 0){'PASS'}else{'FAIL'}; checks_passed=$checks.Count; checks_failed=$failures.Count; phases=$phaseMatches.Count; contracts=$contractMatches.Count; local_links_checked=$linkCount; failures=@($failures); scope='Documentation structure and integrity only; no game runtime tests'}
 $result | ConvertTo-Json -Depth 4

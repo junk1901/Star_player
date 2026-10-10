@@ -30,12 +30,12 @@ tags:
 | 작업 완료일 |  |
 | 개발 담당 AI | Claude Code |
 | 리뷰 상태 | 초안 |
-| 관련 ROADMAP | [Phase 항목](../../outputs/ROADMAP.md) |
+| 관련 ROADMAP | [Phase 항목](../../ROADMAP.md) |
 | 관련 Git 브랜치 |  |
 | 관련 커밋 |  |
 
 - 대시보드: [Star Player 개발 대시보드](../00_Dashboard.md)
-- 공식 현재 상태: [CURRENT_STATE.md](../../outputs/CURRENT_STATE.md)
+- 공식 현재 상태: [CURRENT_STATE.md](../../CURRENT_STATE.md)
 
 ## B. 개발 목표
 
@@ -53,8 +53,8 @@ tags:
 
 ### 관련 요구사항 및 시스템 계약
 
-- 요구사항: [REQUIREMENTS_TRACEABILITY.md](../../outputs/docs/REQUIREMENTS_TRACEABILITY.md)
-- 시스템 계약: [SYSTEM_CONTRACTS.md](../../outputs/docs/SYSTEM_CONTRACTS.md)
+- 요구사항: [REQUIREMENTS_TRACEABILITY.md](../../docs/REQUIREMENTS_TRACEABILITY.md)
+- 시스템 계약: [SYSTEM_CONTRACTS.md](../../docs/SYSTEM_CONTRACTS.md)
 - 관련 계약/요구사항 ID:
 
 ## C. 실제 구현 내역
@@ -189,7 +189,7 @@ tags:
 - [ ] 미검증 항목, 미해결 문제와 설계 변경 식별
 - [ ] 중요한 설계 변경의 결정 문서 연결
 - [ ] 리뷰 상태를 `검토 대기`로 변경
-- [ ] [CURRENT_STATE.md](../../outputs/CURRENT_STATE.md)와 실제 상태 일치 확인
+- [ ] [CURRENT_STATE.md](../../CURRENT_STATE.md)와 실제 상태 일치 확인
 - [ ] GPT Chat 전달용 간략 요약 작성
 - [ ] 다음 Phase를 자동 시작하지 않음
 

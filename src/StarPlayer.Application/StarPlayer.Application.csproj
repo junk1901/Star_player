@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\StarPlayer.Domain\StarPlayer.Domain.csproj" />
+    <ProjectReference Include="..\StarPlayer.Simulation\StarPlayer.Simulation.csproj" />
+  </ItemGroup>
+</Project>

@@ -28,6 +28,6 @@ Phase 0–29의 번호·순서·직접 의존성은 유지한다. D1–D6은 변
 
 ## 공식 문서
 
-- [ROADMAP §1.11](../../outputs/ROADMAP.md#111-club-finance-lite-approved-exception-and-renewed-scope-lock)
-- [C48 System Contract](../../outputs/docs/SYSTEM_CONTRACTS.md#c48--club-finance-lite-phases-9-11-1417-2324-27-29)
-- [Requirements R101–R107](../../outputs/docs/REQUIREMENTS_TRACEABILITY.md#newly-approved-revision-coverage)
+- [ROADMAP §1.11](../../ROADMAP.md#111-club-finance-lite-approved-exception-and-renewed-scope-lock)
+- [C48 System Contract](../../docs/SYSTEM_CONTRACTS.md#c48--club-finance-lite-phases-9-11-1417-2324-27-29)
+- [Requirements R101–R107](../../docs/REQUIREMENTS_TRACEABILITY.md#newly-approved-revision-coverage)

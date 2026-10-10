@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\StarPlayer.Domain\StarPlayer.Domain.csproj" />
+  </ItemGroup>
+</Project>

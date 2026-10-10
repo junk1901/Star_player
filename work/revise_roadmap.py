@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 
-ROOT = Path(r'E:\Madegame\Star_player\outputs')
+ROOT = Path(r'E:\Madegame\Star_player')
 p = ROOT / 'ROADMAP.md'
 s = p.read_text(encoding='utf-8-sig')
 

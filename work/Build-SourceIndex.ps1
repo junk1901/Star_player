@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
-$packageRoot = Join-Path $taskRoot 'outputs'
+$packageRoot = $taskRoot
 $indexLines = [System.Collections.Generic.List[string]]::new()
 $indexLines.Add('# Source Section Index')
 $indexLines.Add('')

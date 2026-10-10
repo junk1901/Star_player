@@ -2,31 +2,31 @@
 type: project-dashboard
 project: Star Player
 current_phase: none
-phase_status: 구현 시작 전
+phase_status: Phase 0 승인 완료, Phase 1 미착수
 last_updated: 2026-10-10
 ---
 
 # Star Player 개발 대시보드
 
 > [!info] 문서 역할
-> 이 Vault는 Phase 리뷰와 개발 히스토리를 관리합니다. 공식 계획과 현재 상태는 각각 [ROADMAP](../outputs/ROADMAP.md), [CURRENT_STATE](../outputs/CURRENT_STATE.md)가 기준이며, 이 대시보드는 이를 대체하지 않습니다.
+> 이 Vault는 Phase 리뷰와 개발 히스토리를 관리합니다. 공식 계획과 현재 상태는 각각 [ROADMAP](../ROADMAP.md), [CURRENT_STATE](../CURRENT_STATE.md)가 기준이며, 이 대시보드는 이를 대체하지 않습니다.
 
 ## 프로젝트 개요
 
 - PC 싱글 플레이 KBO 선수 커리어 시뮬레이션
 - 계획 범위: Phase 0–29, 총 30개 Phase
-- 현재 상태: **개발 Phase 미착수**
+- 현재 상태: **Phase 0 완료·승인 (2026-10-10), Phase 1 미착수**
 - 현재 개발 중인 Phase: **없음**
-- 다음 후보: **Phase 0 — 별도 소유자 승인 후 시작**
+- 다음 후보: **Phase 1 — 소유자의 별도 지시 후 시작**
 
 ## 진행 요약
 
 | 구분 | 수량 | 내용 |
 |---|---:|---|
-| 승인 완료 | 0 | 완료·승인된 개발 Phase 없음 |
+| 승인 완료 | 1 | Phase 0 |
 | 검토 대기 | 0 | 외부 검토 대기 중인 Phase 없음 |
 | 구현/기록 중 | 0 | 현재 진행 중인 Phase 없음 |
-| 미착수 | 30 | Phase 0–29 |
+| 미착수 | 29 | Phase 1–29 |
 
 ## Phase 0–29 현황
 
@@ -34,7 +34,7 @@ last_updated: 2026-10-10
 
 | Phase | 이름 | 상태 | 리뷰 |
 |---:|---|---|---|
-| 0 | Reproducible desktop foundation | 미착수 | 미생성 |
+| 0 | Reproducible desktop foundation | 승인 완료 | [Phase_00_Review](01_Phase_Reviews/Phase_00_Review.md) |
 | 1 | Player identity, visibility, and baseball vocabulary | 미착수 | 미생성 |
 | 2 | Baseball state transitions and scoring | 미착수 | 미생성 |
 | 3 | Seeded game simulation / Prototype 1 | 미착수 | 미생성 |
@@ -67,7 +67,7 @@ last_updated: 2026-10-10
 
 ## 완료된 Phase
 
-없음.
+- Phase 0 — Reproducible desktop foundation, 승인 완료 (2026-10-10, GPT Chat 최종 검토 결과를 사용자가 전달). [리뷰](01_Phase_Reviews/Phase_00_Review.md), [보고서](../docs/reports/PHASE_0_REPORT.md), [검증 로그](../docs/reports/PHASE_0_VERIFY_LOG.md), [1차 검증 로그(보존)](../docs/reports/PHASE_0_VERIFY_LOG_initial.md). Codex 지적 5건 수정 후 `verify.ps1` PASS, Codex 재검토는 미실시.
 
 ## 검토 대기 중인 Phase
 
@@ -75,10 +75,10 @@ last_updated: 2026-10-10
 
 ## 주요 선행 조건과 미해결 항목
 
-- Phase 0 시작 전 소유자의 별도 구현 승인이 필요합니다.
+- Phase 1 이상은 소유자의 별도 구현 지시가 필요합니다 (Phase 0은 승인 완료).
 - 각 소비 Phase는 구현 전에 필요한 KBO RuleProfile 상세 규칙과 명시적 단순화를 확정해야 합니다.
 - 개인 KBO 2026 팩은 Phase 27에서 정확한 `as_of_date`, 증거 기준일, 제공 데이터와 출처를 인증해야 합니다.
-- 실제 툴체인과 데스크톱 내보내기 가능성은 Phase 0에서 검증해야 합니다.
+- 툴체인(.NET 8.0.425, Godot 4.7.2 Mono)과 Windows Export 가능성은 Phase 0에서 검증되었습니다 — [toolchain](../docs/toolchain.md).
 
 별도 이슈 문서가 생기면 `03_Issues/`에 기록하고 이 구역에서 링크합니다.
 
@@ -89,9 +89,10 @@ last_updated: 2026-10-10
 - KBO 규칙은 커리어에 동결되는 버전형 2026 KBO 지향 RuleProfile과 명시적 단순화를 사용합니다.
 - 장기 기록은 우선 보존하고 Phase 17/29 실측 후 필요한 경우에만 제한적으로 정리합니다.
 - Club Finance Lite가 Scope Lock의 단일 승인 예외로 추가되었습니다: C13 계약 기반 급여, KBO 샐러리캡, 성과형 구단 스폰서 수익, 규칙 기반 Club AI 연동, 읽기 전용 재정 화면.
+- Phase 0 구조 결정: [ADR-001](../docs/decisions/ADR-001.md) — 계층 경계(Client는 Domain/Simulation 직접 참조 금지), Godot 클라이언트 전용 `.sln`, 진단 실행 모드, Codex 지적 반영.
 - 이 예외 반영 후 게임플레이 Scope Lock은 다시 활성화되었으며, 새 기능은 별도 승인 없이 추가하지 않습니다.
 
-상세 근거: [ROADMAP — Approved Owner Decisions](../outputs/ROADMAP.md#approved-owner-decisions)
+상세 근거: [ROADMAP — Approved Owner Decisions](../ROADMAP.md#approved-owner-decisions)
 
 결정 기록: [Club Finance Lite 승인 및 Scope Lock 재활성화](02_Decisions/2026-10-10_Club_Finance_Lite.md)
 
@@ -105,12 +106,12 @@ last_updated: 2026-10-10
 
 ## 주요 개발 문서
 
-- [ROADMAP.md](../outputs/ROADMAP.md) — 공식 개발 계획과 Phase 완료 기준
-- [CURRENT_STATE.md](../outputs/CURRENT_STATE.md) — 공식 현재 상태
-- [AGENTS.md](../outputs/AGENTS.md) — AI 작업 및 Phase 종료 규칙
-- [SYSTEM_CONTRACTS.md](../outputs/docs/SYSTEM_CONTRACTS.md) — 시스템 소유권과 계약
-- [UI_ARCHITECTURE.md](../outputs/docs/UI_ARCHITECTURE.md) — UI 구조와 화면 계약
-- [REQUIREMENTS_TRACEABILITY.md](../outputs/docs/REQUIREMENTS_TRACEABILITY.md) — 요구사항 추적성
+- [ROADMAP.md](../ROADMAP.md) — 공식 개발 계획과 Phase 완료 기준
+- [CURRENT_STATE.md](../CURRENT_STATE.md) — 공식 현재 상태
+- [AGENTS.md](../AGENTS.md) — AI 작업 및 Phase 종료 규칙
+- [SYSTEM_CONTRACTS.md](../docs/SYSTEM_CONTRACTS.md) — 시스템 소유권과 계약
+- [UI_ARCHITECTURE.md](../docs/UI_ARCHITECTURE.md) — UI 구조와 화면 계약
+- [REQUIREMENTS_TRACEABILITY.md](../docs/REQUIREMENTS_TRACEABILITY.md) — 요구사항 추적성
 
 ## 운영 원칙
 
