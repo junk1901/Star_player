@@ -7,6 +7,9 @@
   <ItemGroup>
     <!-- Fictional Phase 1 pack, embedded so the exported desktop build needs no loose content folder. -->
     <EmbeddedResource Include="..\..\content\fictional\phase1_two_club_pack.json" LogicalName="phase1_two_club_pack.json" />
+    <!-- Phase 2: GameRules profiles (KBO-oriented unverified + fictional test variants) and the fictional diagnostic games. -->
+    <EmbeddedResource Include="..\..\content\rules\game_rules_profiles.json" LogicalName="game_rules_profiles.json" />
+    <EmbeddedResource Include="..\..\content\fictional\phase2_diagnostic_games.json" LogicalName="phase2_diagnostic_games.json" />
   </ItemGroup>
   <ItemGroup>
     <!-- Raw fixture/world types are internal; only these test assemblies may see them (the Godot client may not). -->

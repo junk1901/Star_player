@@ -1,0 +1,1246 @@
+{
+  "format_version": 1,
+  "policy_id": "kbo-first-obr2026-fallback-v1",
+  "policy": {
+    "approved_by": "사용자 지시(2026-10-11); R02 적용 승인과 OBR 원문 대조 지시: GPT Chat 검토 결과(TASK.md, 2026-10-11)",
+    "priority": [
+      "1 KBO 리그 고유 규정",
+      "2 KBO 공식야구규칙·기록규칙(조항 확인 시)",
+      "3 2026 MLB Official Baseball Rules (보완, 사용자 승인)",
+      "4 Star Player 전용 단순화(사용자 승인·명시 기록)"
+    ],
+    "statuses": {
+      "KBO_VERIFIED": "KBO 공식 근거를 확인함",
+      "OBR_FALLBACK_APPROVED": "KBO 별도 규정을 확인하지 못해 사용자 승인 OBR 보완 기준을 사용함(KBO 인증 아님)",
+      "GAME_SIMPLIFICATION_APPROVED": "사용자 승인 게임 단순화 또는 승인된 운영 기준 적용(규정 조문 인증이 아님: clause_certified 필드로 구분)",
+      "UNRESOLVED": "적용할 근거·정책 또는 구현 범위가 결정되지 않음"
+    },
+    "gate_rule": "gate_required=true 인 항목이 UNRESOLVED이거나 알려진 KBO 규정과 충돌하면 Phase 2 Gate는 INCOMPLETE",
+    "obr_edition": "2026 Official Baseball Rules",
+    "obr_text_read": true,
+    "obr_note": "2026 OBR 원문을 docs/2026-official-baseball-rules.pdf(소유자 제공, 아래 obr_pdf)에서 pdftotext -layout으로 추출해 읽었다. 조항 번호는 obr_comparison에서 원문과 실제로 대조한 것만 확인된 것으로 인용한다. MLB 용어집 문장은 설명 자료이며 조항 확인으로 분류하지 않는다. OBR 대조는 MLB 규정집과의 비교이며 KBO 규정 인증이 아니다.",
+    "kbo_pages_read": [
+      "https://www.koreabaseball.com/Kbo/League/GameManage2026.aspx",
+      "https://www.koreabaseball.com/MediaNews/Notice/View.aspx?bdSe=11353",
+      "https://www.koreabaseball.com/MediaNews/Notice/View.aspx?bdSe=11896",
+      "https://www.koreabaseball.com/MediaNews/Notice/View.aspx?bdSe=11814",
+      "https://www.koreabaseball.com/Kbo/AboutKbo/Committee/RecordRule.aspx",
+      "https://www.koreabaseball.com/MediaNews/Notice/View.aspx?bdSe=11795",
+      "https://www.koreabaseball.com/MediaNews/News/BreakingNews/View.aspx?bdSe=61318"
+    ],
+    "obr_pdf": {
+      "url": "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf",
+      "local_path": "docs/2026-official-baseball-rules.pdf",
+      "sha256": "f85860f3b754dfb5e07269e9d3a86c77c89b856376f6e3ba8345af36db997859",
+      "bytes": 1316921,
+      "pages_extracted": 192,
+      "read_method": "pdftotext -layout (8,130 text lines), 2026-10-11",
+      "note": "소유자가 저장소 docs/에 넣은 파일. 같은 공식 URL의 배포본이라는 점은 제공자 진술이며 이 작업이 URL과 바이트 단위로 대조하지는 않았다."
+    },
+    "press_pages_read": [
+      "https://www.mt.co.kr/sports/2026/10/04/2026100414225885017"
+    ],
+    "kbo_record_rule_pdf": {
+      "local_path": "docs/2023recordRule.pdf",
+      "status": "파일은 저장소에 있으나 pdftotext 추출 결과에 한글이 없어 대조하지 못함(OCR/육안 대조 미실시). R26은 UNRESOLVED 유지"
+    }
+  },
+  "rules": [
+    {
+      "rule_id": "R01-extra-innings-limit-11",
+      "area": "game end",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "KBO_VERIFIED",
+      "value": "정규시즌 연장은 11회까지(정규 9회 + 연장 2회)",
+      "source_urls": [
+        "https://www.koreabaseball.com/MediaNews/Notice/View.aspx?bdSe=11353",
+        "https://www.koreabaseball.com/MediaNews/News/BreakingNews/View.aspx?bdSe=61318"
+      ],
+      "what_was_read": "KBO 보도자료 2025-01-22 \"2025년 KBO 제1차 이사회 결과\" [KBO 리그규정 개정 사항] ▲연장전 이닝 축소: 정규시즌 12회까지 진행하던 연장전을 11회까지 축소(2025 시즌부터 적용), 조문 번호는 없음. 2026 유지는 KBO 공식 뉴스 2026-06-03 한화-두산(잠실) 3-3 기사(bdSe=61318)가 연장 11회까지 치르고 무승부로 끝났다고 보도하는 점으로 확인",
+      "reason": "2026 정규시즌에도 11회 한도가 운영됨을 공식 경기 기록으로 확인(운영 근거). KBO 리그규정 조문은 미확인. 정규시즌 값이며 포스트시즌·퓨처스와 섞지 않음(R28)",
+      "gate_required": true,
+      "tests": [
+        "Profile_with_an_eleventh_inning_limit_ends_a_scoreless_game_as_a_tie_after_eleven",
+        "Profile_with_a_tenth_inning_limit_ends_a_tie_after_ten"
+      ]
+    },
+    {
+      "rule_id": "R02-tie-when-limit-reached",
+      "area": "game end",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "GAME_SIMPLIFICATION_APPROVED",
+      "value": "연장 한도(11회) 종료 시 동점이면 무승부로 종료",
+      "source_urls": [
+        "https://www.koreabaseball.com/MediaNews/Notice/View.aspx?bdSe=11353",
+        "https://www.koreabaseball.com/MediaNews/News/BreakingNews/View.aspx?bdSe=61318"
+      ],
+      "what_was_read": "KBO 이사회 보도자료 2025-01-22: 11회까지 진행(무승부 선언 문구는 없음). KBO 공식 뉴스 2026-06-03 잠실 한화-두산 3-3: 연장 11회까지 치르고 무승부(bdSe=61318, 본문 읽음). 비공식 보도 2026-10-04 수원 KT-롯데 2-2: 연장 11회 끝 무승부(mt.co.kr, 본문 읽음). 검색 결과 요약에서만 본 사례(본문 미열람, 근거로 쓰지 않음): 2026-08-25 삼성-키움 3-3, 2026-09-16 한화-KT 4-4. OBR 7.01(b)(1)은 승패가 날 때까지 연장을 규정하고 한도·무승부 개념이 없음을 원문에서 확인(OBR로 대체 불가)",
+      "reason": "소유자 적용 승인(GPT Chat 검토 결과, 2026-10-11): 연장 11회 종료 동점은 무승부. 근거는 공식 발표와 2026 실제 운영 기록이다. KBO 리그규정 조문은 미확인이므로 clause_certified=false이며 이 승인은 규정 인증이 아니다(D2 규칙 인증 상태와 별개).",
+      "gate_required": true,
+      "tests": [
+        "Profile_with_an_eleventh_inning_limit_ends_a_scoreless_game_as_a_tie_after_eleven"
+      ],
+      "press_urls": [
+        "https://www.mt.co.kr/sports/2026/10/04/2026100414225885017"
+      ],
+      "evidence_basis": "KBO 공식 발표(2025-01-22 이사회) + 2026 정규시즌 실제 11회 무승부 경기 기록",
+      "clause_certified": false,
+      "open_risk": "공지 11795(2025-12-19 \"2026 KBO 리그 규정 개정\")의 \"승부치기는 10회부터 12회까지만 진행하며 이후 무승부\" 문장은 ▲퓨처스리그 경기일정 편성 항목 안에 있는 것으로 확인했다(WebFetch 요약 기반, 원문 대조 아님). 1군 정규시즌 근거로 쓰지 않으며 퓨처스 프로필은 R28로 분리한다."
+    },
+    {
+      "rule_id": "R03-no-mlb-automatic-runner",
+      "area": "game end",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "GAME_SIMPLIFICATION_APPROVED",
+      "value": "연장 이닝은 빈 베이스에서 시작한다(MLB의 자동 주자 특례를 도입하지 않음)",
+      "source_urls": [],
+      "what_was_read": "사용자 정책(2026-10-11): MLB 고유 운영 특례를 KBO 프로필에 자동 적용하지 않음. OBR 2026 원문 7.01(b)(2)에 연장 이닝 자동 주자(2루) 규정이 실제로 존재함을 원문에서 확인(MLB 운영 특례)",
+      "reason": "MLB 운영 규칙은 KBO 별도 규정이 확인되기 전까지 도입하지 않는 정책 결정",
+      "gate_required": true,
+      "tests": [
+        "Extra_innings_start_with_empty_bases_and_no_automatic_runner"
+      ]
+    },
+    {
+      "rule_id": "R04-counts-innings-home-last-half",
+      "area": "game flow",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "3아웃, 4볼 볼넷, 3스트라이크 삼진, 정규 9회, 홈팀이 앞서면 마지막 말 공격 생략, 끝내기",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/regulation-game",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 7.01(a),(e)(1)-(3), 5.05(a)(2),(b)(1), 5.09(a)(3): 정규 9회, 홈팀이 앞서면 말 공격 생략, 말 공격의 결승점은 즉시 종료(마지막 타자 홈런 예외), 4볼 볼넷, 낫아웃 규칙. 보조: MLB 용어집 \"Regulation Game\"",
+      "reason": "KBO 별도 규정 미확인이어서 OBR 보완. 원문 대조 결과 일치(obr_comparison C01, C37). 3아웃·3스트라이크 값은 야구 기본 규칙",
+      "gate_required": true,
+      "tests": [
+        "The_home_team_does_not_bat_in_the_ninth_when_it_already_leads",
+        "A_nine_inning_game_with_the_away_team_ahead_ends_after_the_home_half_of_the_ninth",
+        "Count_follows_real_pitches_with_foul_with_two_strikes_not_ending_the_at_bat"
+      ]
+    },
+    {
+      "rule_id": "R05-dh-exists",
+      "area": "lineup",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "지명타자 제도가 있다(경기 시작 때 정해지고 투수를 대신해 타격)",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/designated-hitter-rule",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 5.11(a)(1),(3): DH는 경기 전에 정해 라인업 카드에 적어야 하고, 지정하지 않을 수도 있으나 그 경기에서는 DH를 쓸 수 없음. 보조: MLB 용어집 \"Designated Hitter Rule\"",
+      "reason": "KBO의 지명타자 별도 규정은 읽지 못함. 팀별 DH 미선택은 지원하지 않는 기록된 단순화(obr_comparison C23)",
+      "gate_required": true,
+      "tests": [
+        "Both_teams_start_with_an_active_dh_exactly_when_the_profile_has_one"
+      ]
+    },
+    {
+      "rule_id": "R06-dh-ends-when-dh-plays-defense",
+      "area": "lineup",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "지명타자가 수비를 하면 그 팀은 이후 지명타자를 쓸 수 없고, 그는 자기 타순에서 계속 타격, 투수는 대체된 야수의 타순에서 타격",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/designated-hitter-rule",
+        "https://www.mlb.com/glossary/rules/substitutions",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 5.11(a)(5),(12): DH가 수비에 서면 자기 타순에서 계속 타격하고 투수는 교체된 수비수의 자리에서 타격, 그 팀의 DH는 경기 끝까지 소멸. 5.11(a)(4): 대타·대주자가 DH가 되고 교체된 DH는 재출장 불가",
+      "reason": "원문 대조 결과 일치(obr_comparison C25). 소멸 전환은 DhMayBeForfeited 프로필에서만 허용. 다중 교체(더블 스위치)는 C26",
+      "gate_required": true,
+      "tests": [
+        "The_dh_takes_the_field_the_fielder_leaves_the_pitcher_bats_and_only_that_team_loses_its_dh",
+        "A_profile_with_only_the_defense_transition_ends_the_dh_when_he_plays_the_field_but_keeps_the_mound_transition_off",
+        "After_the_dh_is_gone_it_cannot_be_brought_back_and_a_live_dh_cannot_be_named_either"
+      ]
+    },
+    {
+      "rule_id": "R07-dh-other-forfeit-triggers",
+      "area": "lineup",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "UNRESOLVED",
+      "value": "OBR 5.11(a)(8) 투수가 마운드에서 다른 수비 위치로 이동 / (9) 대타로 나온 선수가 투수가 됨 / (10) 현재 투수가 DH의 대타·대주자가 됨 → DH 소멸",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/designated-hitter-rule",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 5.11(a)(8)(9)(10)을 읽음. 야수가 투수가 되는 (14)는 R27, DH가 수비에 서는 (12)는 R06에서 구현",
+      "reason": "(8)(10)은 엔진이 입력을 거부함(NOT_MODELLED, 안전한 쪽). (9)와 DH가 투수가 되는 경우는 이제 DH 소멸로 구현(C32 수정, 5.11(a)(12))",
+      "gate_required": false,
+      "tests": []
+    },
+    {
+      "rule_id": "R08-two-way-dh-after-leaving-mound",
+      "area": "lineup",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "선발 투수가 DH를 겸하면 투수에서 교체된 뒤에도 DH로 남을 수 있다",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/designated-hitter-rule",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 5.11(b): 선발 투수가 자신의 DH를 겸하면 한 사람이 두 명으로 취급되고, 투수에서 교체돼도 DH로 남고 DH가 교체돼도 투수로 남음. 그 선수가 투수 아닌 수비로 가면 DH 소멸",
+      "reason": "KBO의 투타 겸업 규정은 읽지 못함. 마운드를 떠난 뒤 DH 유지는 일치(C30). 투수 진입 경로는 이제 원문과 같다: 선발 투수가 곧 선발 DH일 때만 예외, 그 밖의 DH는 투수가 되면 DH 소멸(C32 수정, 2026-10-11)",
+      "gate_required": true,
+      "tests": [
+        "A_two_way_dh_who_is_pitching_cannot_be_pinch_hit_for_but_can_leave_the_mound_and_keep_hitting",
+        "A_two_way_player_keeps_batting_and_pitching_records_apart_and_appears_in_the_game_once",
+        "An_ordinary_dh_who_goes_to_the_mound_ends_the_dh_role_instead_of_keeping_it",
+        "The_two_way_starter_keeps_the_dh_role_after_leaving_the_mound_and_cannot_pitch_again"
+      ]
+    },
+    {
+      "rule_id": "R09-two-way-dh-replaced-while-pitching",
+      "area": "lineup",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "UNRESOLVED",
+      "value": "DH가 교체돼도 그 선수는 투수로 계속 던질 수 있다(단 자신의 타석은 불가)",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/designated-hitter-rule",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 5.11(b): DH가 교체돼도 그 선수는 투수로 계속 던질 수 있으나 자신의 타석은 불가(원문 확인)",
+      "reason": "이 엔진은 투구 중인 투타 겸업 DH의 교체를 거부함(OBR보다 좁은 지원 범위, NOT_MODELLED C31). 확장 여부는 별도 결정",
+      "gate_required": false,
+      "tests": [
+        "A_two_way_dh_who_is_pitching_cannot_be_pinch_hit_for_but_can_leave_the_mound_and_keep_hitting"
+      ]
+    },
+    {
+      "rule_id": "R10-dh-must-bat-once",
+      "area": "lineup",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "DH는 상대 투수 교체 전이 아니면 최소 한 번 타석에 서야 함",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/designated-hitter-rule",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 5.11(a)(2): 선발 라인업의 DH는 상대 팀이 투수를 바꾸지 않는 한 최소 한 번 타석에 서야 함(원문 확인)",
+      "reason": "구현(2026-10-11, C24): 선발 DH는 상대 팀이 투수를 바꾸기 전에는 첫 타석 전에 대타·수비 교체로 바뀔 수 없다. KBO의 DH 별도 규정은 읽지 못함",
+      "gate_required": true,
+      "tests": [
+        "The_starting_dh_cannot_be_pinch_hit_for_before_his_first_plate_appearance_while_the_opponent_keeps_its_pitcher",
+        "The_restriction_ends_when_the_opposing_club_changes_pitchers",
+        "A_dh_who_has_batted_once_can_be_replaced_without_the_opponent_changing_pitchers"
+      ]
+    },
+    {
+      "rule_id": "R11-third-out-and-runs",
+      "area": "scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "제3아웃이 타자주자의 1루 도달 전 아웃이거나 포스아웃이면 그 플레이의 득점은 무효, 그 밖의 제3아웃이면 아웃 이전에 홈을 밟은 득점만 인정",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/force-play",
+        "https://www.koreabaseball.com/MediaNews/Notice/View.aspx?bdSe=11814",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 5.08(a)와 EXCEPTION(1)(2)(3), 정의 FORCE PLAY: 제3아웃이 타자주자의 1루 도달 전이거나 포스아웃이면 그 플레이의 득점은 없음, 앞선 아웃으로 포스가 풀리면 앞선 득점 인정. 보조: KBO 보도자료 2026-01-29(포스아웃 해제와 득점 시점의 판단 원칙, 조문 아님)",
+      "reason": "원문 대조 결과 (1)(2) 일치(C04). (3)은 어필 플레이로 R15에서 제외(C05)",
+      "gate_required": true,
+      "tests": [
+        "A_run_that_crossed_the_plate_before_a_non_force_third_out_counts",
+        "The_same_play_with_the_out_first_and_the_run_after_it_gives_no_run",
+        "A_force_out_for_the_third_out_voids_the_run_whatever_the_order",
+        "A_batter_runner_put_out_before_first_base_ends_the_inning_with_no_run_and_no_hit",
+        "A_batter_runner_out_for_the_third_out_voids_the_run_in_either_order"
+      ]
+    },
+    {
+      "rule_id": "R12-batter-runner-out-after-reaching",
+      "area": "scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "안타로 베이스에 도달한 타자주자가 더 가려다 아웃되면 일반(비포스) 태그아웃: 안타·타수 유지, 앞선 득점 인정, 도달 전 아웃과 구분",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/force-play",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 5.08(a) EXCEPTION(1): 득점 무효는 \"타자주자가 1루를 밟기 전\"의 제3아웃에만 해당. 안타로 도달한 뒤 아웃된 타자주자는 이 예외가 아님",
+      "reason": "도달의 증거는 안타가 준 베이스보다 앞 베이스의 아웃 위치(OutAt)로만 인정(C08)",
+      "gate_required": true,
+      "tests": [
+        "A_single_whose_batter_is_put_out_at_second_for_the_third_out_counts_the_run_that_crossed_first_and_records_one_hit_one_at_bat_one_out",
+        "The_same_single_with_the_out_first_and_the_run_after_it_gives_no_run_but_the_hit_and_the_at_bat_stand",
+        "A_batter_out_on_a_hit_without_proof_that_he_reached_the_base_is_rejected_and_nothing_changes"
+      ]
+    },
+    {
+      "rule_id": "R13-force-play-derived-from-state",
+      "area": "scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "포스는 상태에서 도출: 타자주자가 아직 아웃되지 않았고 뒤 베이스 주자가 모두 살아 있는 강제 주자가 강제 베이스에서 아웃되면 포스아웃(태그해도 포스아웃), 앞선 아웃이 포스를 해제",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/force-play",
+        "https://www.koreabaseball.com/MediaNews/Notice/View.aspx?bdSe=11814",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 정의 FORCE PLAY와 그 주석: 주자가 타자의 주자 전환으로 베이스 점유권을 잃는 플레이이며 도중에 포스가 풀린다. 주석의 예시(포스 해제 전 득점은 인정, 포스 유지면 제3아웃 득점 무효)를 대조. 보조: KBO 보도자료 2026-01-29",
+      "reason": "입력이 선언한 아웃 종류를 신뢰하지 않고 불일치를 거부(C07)",
+      "gate_required": true,
+      "tests": [
+        "A_forced_runner_put_out_at_the_base_he_was_forced_to_is_a_force_out_even_if_the_input_calls_it_a_tag_and_the_state_is_unchanged",
+        "A_force_that_an_earlier_out_removed_makes_the_next_out_a_tag_out_and_the_earlier_run_counts",
+        "The_same_outs_in_the_other_order_leave_the_force_in_place_so_the_third_out_is_a_force_out_and_no_run_counts"
+      ]
+    },
+    {
+      "rule_id": "R14-hit-by-pitch-dead-ball",
+      "area": "pitching",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "몸에 맞는 공은 볼 데드: 강제 진루와 강제 득점·타점만, 폭투·포일·낫아웃 결합 불가",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/dead-ball",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 5.06(c)(1), 5.05(b)(2): 투구가 타자에 맞으면 볼 데드, 강제된 주자만 진루",
+      "reason": "볼 데드 중 임의 추가 진루 금지는 일반 원칙의 적용(C09)",
+      "gate_required": true,
+      "tests": [
+        "A_hit_by_pitch_with_empty_bases_puts_the_batter_on_first_without_a_hit_or_an_at_bat",
+        "A_bases_loaded_hit_by_pitch_forces_in_a_run_with_an_RBI_and_leaves_the_bases_loaded",
+        "A_hit_by_pitch_cannot_be_combined_with_a_wild_pitch_or_passed_ball_and_nothing_is_recorded"
+      ]
+    },
+    {
+      "rule_id": "R15-appeal-plays-excluded",
+      "area": "scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "GAME_SIMPLIFICATION_APPROVED",
+      "value": "어필 플레이(누의 공과, 리터치 실패, 어필 제3아웃, 제4아웃 어필)를 구현하지 않음; 입력되면 미지원으로 거부, 일반 태그아웃으로 바꾸지 않음",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/appeal-plays"
+      ],
+      "what_was_read": "사용자 결정(2026-10-11). MLB 용어집 \"Appeal Plays\"는 뜬공 리터치 실패 등이 어필 대상임을 설명(읽음)",
+      "reason": "KBO 규칙 변경이 아니라 Star Player의 게임 단순화. 정상 경기에서는 주자가 베이스를 적법하게 밟았다고 전제",
+      "gate_required": true,
+      "tests": [
+        "An_appeal_request_is_refused_as_unsupported_and_the_state_is_unchanged",
+        "A_runner_put_out_back_at_his_own_base_after_a_caught_ball_is_a_retouch_appeal_and_is_refused_instead_of_becoming_a_tag_out",
+        "Retiring_a_runner_who_is_not_forced_by_touching_the_base_is_an_appeal_and_is_refused"
+      ]
+    },
+    {
+      "rule_id": "R16-rbi",
+      "area": "official scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "득점 주자의 타점은 타격 결과로 들어온 득점에 부여, 실책·병살타로 들어온 득점은 제외, 밀어내기 볼넷/몸에 맞는 공은 타점",
+      "source_urls": [
+        "https://www.mlb.com/glossary/standard-stats/runs-batted-in",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 9.04(a),(b), 9.02(a)(17): 안타·희생·내야 아웃·야수선택으로 시작된 오류 없는 득점, 만루 볼넷/사구 득점은 타점; 포스/역포스 병살은 타점·병살타 아님; 2사 전 오류 시 3루 주자 득점은 타점(9.04(a)(3))",
+      "reason": "병살타·타점 불인정은 9.04(b)(1)대로 포스/역포스 병살에서만(C12 수정). 오류로 들어온 득점에 타점을 주지 않는 판단 사례(9.04(a)(3), C11)와 희생플라이 도출(C38)은 별도 기록",
+      "gate_required": true,
+      "tests": [
+        "Ground_ball_double_play_gives_two_outs_one_GIDP_no_RBI_and_double_play_credit_to_each_fielder",
+        "A_run_that_scores_on_a_ground_ball_double_play_counts_as_a_run_but_gives_the_batter_no_RBI",
+        "A_runner_ahead_who_is_thrown_out_with_a_batter_out_after_a_hit_is_not_a_double_play_and_keeps_the_rbi",
+        "A_ground_ball_hit_with_two_outs_on_the_play_is_not_a_grounded_into_double_play_and_the_run_keeps_its_rbi"
+      ]
+    },
+    {
+      "rule_id": "R17-earned-run",
+      "area": "official scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "자책점: 실책이나 포일의 도움 없이 투수에게 기록된 득점; 이닝 도중 교체된 투수가 남긴 주자의 득점은 원래 투수 책임",
+      "source_urls": [
+        "https://www.mlb.com/glossary/standard-stats/earned-run",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 9.16 서두, (a)(b)(c)(d)(g)(h)(i): 실책·포일이 없었다면의 재구성, 폭투·볼넷은 자책에 기여, 구원 투수의 승계 주자와 첫 타자 볼넷 책임 규칙",
+      "reason": "기본 정의(C13), 구원 투수 자책 재구성 9.16(i)(C14 수정), 구원 투수 첫 타자 볼넷 카운트 9.16(h)(C34 수정)는 원문과 일치. 승계 주자 책임 9.16(g)의 인원수 방식(C33)은 엔진이 개인별 책임이라 차이가 남아 있으며 소유자 결정 대기",
+      "gate_required": true,
+      "tests": [
+        "A_run_scoring_on_a_wild_pitch_is_earned",
+        "A_run_scoring_on_a_passed_ball_is_unearned_but_still_charged_to_the_pitcher_as_a_run",
+        "Inherited_runners_are_charged_to_the_pitcher_who_put_them_on_and_the_reliever_only_for_his_own"
+      ]
+    },
+    {
+      "rule_id": "R18-earned-run-reconstruction",
+      "area": "official scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "GAME_SIMPLIFICATION_APPROVED",
+      "value": "실책·포일이 없었다면 이닝이 어떻게 진행됐을지 재구성해 자책을 가림(제3아웃 규칙은 R11과 같은 규칙 객체 사용)",
+      "source_urls": [],
+      "what_was_read": "기록원 판정 단순화(정책 4순위, 문서에 명시)",
+      "reason": "재구성은 이제 투수별 시작점(9.16(i))과 팀 전체(TeamER) 두 가지 뷰를 가진다(C14). 알고리즘은 docs/game-engine.md 4절",
+      "gate_required": true,
+      "tests": [
+        "An_error_that_would_have_ended_the_inning_makes_every_later_run_unearned",
+        "The_same_inning_without_the_error_gives_two_earned_runs",
+        "A_run_is_earned_only_if_it_crossed_the_plate_before_the_third_out_the_error_prevented"
+      ]
+    },
+    {
+      "rule_id": "R19-win-loss",
+      "area": "official scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "승리투수: 팀이 영원히 앞서게 된 시점의 기록 투수, 선발은 5이닝(15아웃) 미만이면 가장 효과적인 구원 투수에게",
+      "source_urls": [
+        "https://www.mlb.com/glossary/standard-stats/win",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 9.17(a)(b)(c)(d): 승리투수는 영구 리드를 잡을 때 경기에 있던 투수, 선발이 5이닝 미만이면 가장 효과적인 구원 투수, 짧고 비효과적인 구원 배제, 패전은 영구 리드를 만든 득점의 책임 투수",
+      "reason": "승/패 판정 일치(C15). 구원 중 가장 효과적인 투수와 비효과적 구원 배제는 기록원 판단을 아웃 수 기준으로 단순화(C16, C17)",
+      "gate_required": true,
+      "tests": [
+        "Complete_game_gives_the_starter_the_win_and_the_pitcher_charged_with_the_go_ahead_run_the_loss_and_no_save",
+        "A_starter_with_too_few_outs_loses_the_win_to_the_relief_pitcher_who_recorded_the_most_outs"
+      ]
+    },
+    {
+      "rule_id": "R20-save",
+      "area": "official scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "세이브: 승리팀 마무리, 승리 투수가 아님, 3점 이하 리드로 1이닝 이상 / 동점 주자가 온덱 이내 / 3이닝 이상",
+      "source_urls": [
+        "https://www.mlb.com/glossary/standard-stats/save",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 9.19(a)-(d): 마무리, 승리투수 아님, 1/3이닝 이상, (1)3점 이하 리드로 1이닝 이상 (2)동점 주자가 누상·타석·대기 타석 (3)3이닝 이상",
+      "reason": "프로필 값(SaveMaxLead 3, SaveMinOuts 3, SaveLongOuts 9)과 일치(C18)",
+      "gate_required": true,
+      "tests": [
+        "A_closer_who_holds_a_small_lead_for_three_outs_gets_the_save_and_the_starter_keeps_the_win",
+        "No_save_when_the_lead_is_large_and_the_stint_short"
+      ]
+    },
+    {
+      "rule_id": "R21-left-on-base-team",
+      "area": "official scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "팀 잔루 = 이닝이 끝날 때 누상에 남은 주자 수; 개인 잔루는 기록하지 않음",
+      "source_urls": [
+        "https://www.mlb.com/glossary/standard-stats/left-on-base",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 9.03(c): 박스 증명식 = 타수+볼넷+사구+희생번트+희생플라이(+방해 출루) = 득점+잔루+상대 아웃. 보조: MLB 용어집 \"Left On Base\"",
+      "reason": "팀 잔루 = 이닝 종료 시 누상 주자 + 득점이 인정되지 않았지만 홈을 지난 주자(러너별 1회); 증명식이 200팀경기 모두 성립(C19 수정). 이전 문장 \"무효가 된 득점의 주자는 잔루가 아님\"은 9.03(c)와 맞지 않아 2026-10-11에 정정. 개인 잔루는 기록하지 않음",
+      "gate_required": true,
+      "tests": [
+        "Only_a_team_total_exists_and_no_individual_left_on_base_is_recorded",
+        "A_run_on_the_play_that_makes_the_third_out_by_the_batter_does_not_count_so_no_sacrifice_fly",
+        "A_run_voided_by_a_batter_runner_third_out_is_left_on_base_and_the_box_proof_balances",
+        "The_box_proof_of_obr_9_03_c_balances_exactly_in_all_two_hundred_team_games_including_the_ones_with_voided_runs"
+      ]
+    },
+    {
+      "rule_id": "R22-walk-off-left-on-base",
+      "area": "official scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "GAME_SIMPLIFICATION_APPROVED",
+      "value": "끝내기로 끝난 미완성 이닝은 종료 시점 누상 주자를 팀 잔루로 센다(프로필 CountWalkOffRunnersAsLeftOnBase)",
+      "source_urls": [
+        "https://www.mlb.com/glossary/standard-stats/left-on-base",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 9.03(c): 끝내기로 끝난 미완성 이닝도 증명식이 성립하려면 종료 시점 누상 주자가 잔루로 세어져야 함(원문에 끝내기 이닝의 명시 정의는 없음). 보조: MLB 용어집 \"Left On Base\"",
+      "reason": "증명식 산술과 일치하나 명시 정의가 없으므로 기록원 판정 단순화 라벨 유지(C20)",
+      "gate_required": true,
+      "tests": [
+        "A_walk_off_single_counts_the_runners_still_on_base_when_the_game_ends",
+        "A_profile_that_does_not_count_walk_off_runners_records_none_for_the_unfinished_inning_but_still_counts_completed_halves"
+      ]
+    },
+    {
+      "rule_id": "R23-substitutions",
+      "area": "lineup",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "교체 선수는 교체된 선수의 타순에서 타격, 한번 교체된 선수는 재출장 불가, 교체는 볼 데드(투구 사이)에만",
+      "source_urls": [
+        "https://www.mlb.com/glossary/rules/substitutions",
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf"
+      ],
+      "what_was_read": "OBR 2026 원문 5.10(a),(d),(g): 교체는 볼 데드, 교체 선수는 교체된 선수의 타순, 교체된 선수는 재출장 불가; 5.10(g) 투수 최소 3타자는 MLB 운영 특례",
+      "reason": "5.10(a)(d) 일치(C21). 5.10(g)는 MLB 운영 특례로 도입하지 않는 정책(C22)",
+      "gate_required": true,
+      "tests": [
+        "A_pinch_hitter_takes_the_batters_turn_and_the_replaced_player_can_never_return",
+        "Substitutions_are_rejected_for_the_wrong_team_during_pitch_sequences_and_for_unavailable_players"
+      ]
+    },
+    {
+      "rule_id": "R24-pitch-clock-abs-not-modelled",
+      "area": "league operation",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "GAME_SIMPLIFICATION_APPROVED",
+      "value": "ABS, 피치클락, 3피트 주로, 체크스윙·전략적 오버런 판독, 수비 시프트 제재의 진행 로직은 구현하지 않음",
+      "source_urls": [
+        "https://www.koreabaseball.com/Kbo/League/GameManage2026.aspx"
+      ],
+      "what_was_read": "KBO \"2026 주요 규정∙규칙\" 페이지에서 존재를 확인(읽음)",
+      "reason": "사용자 정책(2026-10-11): 복잡한 실시간 피치클락 진행 로직 제외. 규칙의 존재를 부정하지 않음",
+      "gate_required": true,
+      "tests": []
+    },
+    {
+      "rule_id": "R25-other-situations-out-of-scope",
+      "area": "scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "UNRESOLVED",
+      "value": "인필드플라이, 방해/주루방해, 인터페어, 서스펜디드·강우콜드, 퇴장·징계",
+      "source_urls": [],
+      "what_was_read": "Phase 2 범위 밖(D2 문서 기록)",
+      "reason": "구현하지 않음. 입력 경로 없음",
+      "gate_required": false,
+      "tests": []
+    },
+    {
+      "rule_id": "R26-kbo-record-rule-text-unread",
+      "area": "official scoring",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "UNRESOLVED",
+      "value": "KBO 야구 기록규칙 원문과의 대조",
+      "source_urls": [
+        "https://www.koreabaseball.com/Kbo/AboutKbo/Committee/RecordRule.aspx"
+      ],
+      "what_was_read": "페이지는 PDF(2023판)와 이미지 e-book만 제공; PDF 링크는 파일 다운로드로 응답해 읽지 못함",
+      "reason": "KBO와 OBR이 충돌하면 KBO가 우선이므로 R16~R22는 원문 대조 전까지 보완 기준이다. 알려진 충돌은 없음",
+      "gate_required": false,
+      "tests": []
+    },
+    {
+      "rule_id": "R27-dh-fielder-to-mound",
+      "area": "lineup",
+      "profiles": "kbo-oriented-unverified-v0",
+      "status": "OBR_FALLBACK_APPROVED",
+      "value": "수비 중인 선수(야수)가 마운드에 올라 투수를 대신하면 그 팀의 지명타자는 경기 끝까지 소멸(DH 선수는 비는 수비 위치로 들어가고 기존 투수는 퇴장, 새 투수는 자기 타순에서 타격)",
+      "source_urls": [
+        "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf",
+        "https://www.mlb.com/glossary/rules/designated-hitter-rule"
+      ],
+      "what_was_read": "OBR 2026 원문 5.11(a)(14): \"If a player on defense goes to the mound (i.e., replaces the pitcher), this move shall terminate the Designated Hitter's role\" — 원문 조항. 5.11(b)의 투타 겸업 예외도 읽음",
+      "reason": "소멸 효과는 OBR 원문 조항이다(2026-10-11 정정: 이전의 \"OBR도 KBO도 아닌 가상 규칙\" 분류는 오류). 원문은 비는 수비 위치를 누가 채우는지 정하지 않으므로 엔진은 이벤트가 Slot으로 명시한 배치(DH가 채우고 기존 투수는 퇴장) 하나만 처리하고 그 밖은 거부한다(C29, C39). KBO 별도 DH 규정은 읽지 못함. KBO 지향 프로필에서 이 전환을 켬(fielder_to_mound_forfeits_dh=true)",
+      "gate_required": true,
+      "tests": [
+        "A_lineup_fielder_who_goes_to_the_mound_ends_the_dh_who_takes_his_position_and_the_old_pitcher_leaves",
+        "A_fielder_going_to_the_mound_with_an_active_dh_needs_the_explicit_request_for_the_dh_to_fill_the_vacated_position",
+        "A_fielder_going_to_the_mound_names_the_dh_slot_explicitly_and_that_request_replays_identically_after_a_json_round_trip",
+        "The_profiles_name_this_policy_and_only_the_kbo_oriented_profile_is_kbo_oriented_while_fictional_profiles_say_so"
+      ]
+    },
+    {
+      "rule_id": "R28-futures-league-extra-innings-deferred",
+      "area": "game end",
+      "profiles": "none (Phase 2에 퓨처스 프로필 없음)",
+      "status": "UNRESOLVED",
+      "value": "퓨처스리그 연장·승부치기 규칙(공지 11795: 승부치기는 10회부터 12회까지만, 이후 무승부)",
+      "source_urls": [
+        "https://www.koreabaseball.com/MediaNews/Notice/View.aspx?bdSe=11795"
+      ],
+      "what_was_read": "공지 2025-12-19 \"2026 KBO 리그 규정 개정\"의 해당 문장이 ▲퓨처스리그 경기일정 편성 항목 안에 있음(WebFetch 요약으로 확인, 원문 대조 아님)",
+      "reason": "2군은 별도 실제 경기라는 AGENTS 불변식이 있으나 Phase 2에는 2군 프로필이 없음. 2군 경기를 만드는 Phase 이전에 별도 RuleProfile로 명세해야 하며 1군 프로필에 섞지 않음",
+      "gate_required": false,
+      "tests": []
+    }
+  ],
+  "gate_blockers": [],
+  "fictional_profile_note": "가상 테스트 프로필 test-dh-forfeit는 이제 \"OBR 5.11(a)(14) 전환 + DH 수비 전환\"을 함께 켜는 플래그 조합의 시험용이며(fielder_to_mound_forfeits_dh=true), 더 이상 \"임의 정의\" 전용 규칙을 담지 않는다. 전환 자체의 분류는 R27.",
+  "obr_comparison": [
+    {
+      "id": "C01",
+      "rule_id": "R04-counts-innings-home-last-half",
+      "clauses": [
+        "7.01(a)",
+        "7.01(e)(1)-(3)"
+      ],
+      "topic": "정규 9회, 홈팀 리드 시 말 생략, 끝내기 즉시 종료와 마지막 타자 홈런 예외",
+      "engine": "동일(GameFlowTests)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 코드·테스트 판독"
+    },
+    {
+      "id": "C02",
+      "rule_id": "R02-tie-when-limit-reached",
+      "clauses": [
+        "7.01(b)(1)"
+      ],
+      "topic": "연장은 승패가 날 때까지(한도·무승부 개념 없음)",
+      "engine": "KBO 한도 11회(R01)와 한도 시 무승부(R02)를 적용",
+      "result": "KBO_PRECEDENCE",
+      "basis": "R01 KBO_VERIFIED(공식 발표+2026 공식 경기 기록), R02 소유자 적용 승인",
+      "verified_by": "원문 대조(OBR에 한도가 없음을 확인)"
+    },
+    {
+      "id": "C03",
+      "rule_id": "R03-no-mlb-automatic-runner",
+      "clauses": [
+        "7.01(b)(2)(A)-(D)"
+      ],
+      "topic": "10회부터 매 반이닝 2루에 자동 주자",
+      "engine": "도입하지 않음(빈 베이스에서 시작)",
+      "result": "APPROVED_SIMPLIFICATION",
+      "basis": "소유자 정책 2026-10-11(R03): MLB 운영 특례 미도입",
+      "verified_by": "원문 대조(조항 존재 확인) + GameFlowTests"
+    },
+    {
+      "id": "C04",
+      "rule_id": "R11-third-out-and-runs",
+      "clauses": [
+        "5.08(a)",
+        "5.08(a) EXCEPTION (1)(2)"
+      ],
+      "topic": "제3아웃이 타자주자의 1루 도달 전/포스아웃이면 득점 무효, 그 밖에는 아웃 이전 득점만",
+      "engine": "동일(ThirdOutRule, 순서 입력)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 코드·테스트 판독"
+    },
+    {
+      "id": "C05",
+      "rule_id": "R15-appeal-plays-excluded",
+      "clauses": [
+        "5.08(a) EXCEPTION (3)"
+      ],
+      "topic": "선행 주자가 누를 밟지 않아 선언된 제3아웃도 득점 무효 예외",
+      "engine": "어필 플레이를 구현하지 않고 거부",
+      "result": "APPROVED_SIMPLIFICATION",
+      "basis": "소유자 결정 2026-10-11(R15): 어필 플레이 제외",
+      "verified_by": "원문 대조 + AppealExclusionTests"
+    },
+    {
+      "id": "C06",
+      "rule_id": "R15-appeal-plays-excluded",
+      "clauses": [
+        "5.08(b)"
+      ],
+      "topic": "강제 진루 끝내기: 3루 주자의 홈 터치·타자주자의 1루 터치 전에는 종료 미선언, 거부 시 득점 불인정",
+      "engine": "주자가 적법하게 밟았다고 전제하고 결승점 시점에 종료",
+      "result": "APPROVED_SIMPLIFICATION",
+      "basis": "R15 전제(주자가 베이스를 적법하게 밟았다고 전제)",
+      "verified_by": "원문 대조 + 코드 판독"
+    },
+    {
+      "id": "C07",
+      "rule_id": "R13-force-play-derived-from-state",
+      "clauses": [
+        "정의 FORCE PLAY와 주석"
+      ],
+      "topic": "앞선 아웃이 포스를 풀고, 풀리기 전 득점은 인정, 포스 유지 시 제3아웃 득점 무효",
+      "engine": "동일(상태에서 도출; 반대 순서 테스트)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 코드·테스트 판독"
+    },
+    {
+      "id": "C08",
+      "rule_id": "R12-batter-runner-out-after-reaching",
+      "clauses": [
+        "5.08(a) EXCEPTION (1)"
+      ],
+      "topic": "무효 예외는 \"1루를 밟기 전\" 타자주자 아웃에만 해당",
+      "engine": "안타로 도달한 뒤 아웃된 타자주자는 일반 비포스 아웃(안타·타수 유지)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 코드·테스트 판독"
+    },
+    {
+      "id": "C09",
+      "rule_id": "R14-hit-by-pitch-dead-ball",
+      "clauses": [
+        "5.06(c)(1)",
+        "5.05(b)(2)"
+      ],
+      "topic": "몸에 맞는 공은 볼 데드, 강제된 주자만 진루",
+      "engine": "동일(HitByPitchTests; 폭투·포일 결합 거부)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 코드·테스트 판독"
+    },
+    {
+      "id": "C10",
+      "rule_id": "R16-rbi",
+      "clauses": [
+        "9.04(a)(1)",
+        "9.04(a)(2)"
+      ],
+      "topic": "오류 없이 안타·희생·내야 아웃·야수선택으로 시작된 득점, 만루 볼넷/사구 득점은 타점",
+      "engine": "동일",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 코드·테스트 판독"
+    },
+    {
+      "id": "C11",
+      "rule_id": "R16-rbi",
+      "clauses": [
+        "9.04(a)(3)"
+      ],
+      "topic": "2사 전 오류 + 정상이면 3루 주자가 득점할 플레이 → 타점",
+      "engine": "오류로 들어온 득점에는 타점을 주지 않음(판단 사례 미모델링)",
+      "result": "APPROVED_SIMPLIFICATION",
+      "basis": "R16 reason과 docs/game-engine.md 6절에 이번 개정 이전부터 기록(정책 4순위 기록된 기록원 단순화)",
+      "verified_by": "원문 대조 + 문서 기록 확인"
+    },
+    {
+      "id": "C12",
+      "rule_id": "R16-rbi",
+      "clauses": [
+        "9.04(b)(1)",
+        "9.02(a)(17)",
+        "정의 DOUBLE PLAY"
+      ],
+      "topic": "타점 불인정·병살타는 \"포스/역포스 병살\"만 해당, 병살 사이에 오류가 없어야 함",
+      "engine": "GIDP와 타점 불인정은 땅볼에서 첫 두 아웃이 포스 병살 또는 역포스 병살일 때만(타자주자의 땅볼 아웃은 포스플레이로 본다); 수비 병살(DP) 크레딧은 별개로 안타가 아닌 플레이의 2아웃 이상(9.11)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 독립 수작업 오라클(수정 전 실패를 확인한 뒤 수정) + 100경기 재생성 일치",
+      "fixed_on": "2026-10-11",
+      "before_fix": "아웃이 2개 이상인 비안타 플레이를 모두 병살로 보아 땅볼이면 GIDP·무타점(비포스 병살도 GIDP, 뜬공 병살은 무타점)",
+      "tests": [
+        "A_reverse_force_double_play_batter_out_at_first_then_the_runner_tagged_at_second_is_a_double_play_and_a_GIDP",
+        "A_ground_ball_double_play_whose_first_out_is_not_a_force_out_is_a_double_play_but_not_a_GIDP",
+        "A_run_that_scores_on_a_ground_ball_double_play_that_is_not_a_force_or_reverse_force_double_play_keeps_its_RBI",
+        "A_line_drive_caught_and_a_runner_thrown_out_is_a_defensive_double_play_never_a_GIDP",
+        "A_hit_with_two_outs_and_a_strikeout_followed_by_a_caught_stealing_are_never_a_GIDP",
+        "Ground_ball_double_play_gives_two_outs_one_GIDP_no_RBI_and_double_play_credit_to_each_fielder",
+        "Triple_play_ends_the_half_inning_with_no_runners_left_and_credits_every_fielder_involved"
+      ],
+      "note": "타점은 이제 뜬공·직선타 병살에서도 인정된다(9.04(a)(1)). 그 플레이가 희생플라이로 분류되지 않는 점은 C38에 기록"
+    },
+    {
+      "id": "C13",
+      "rule_id": "R17-earned-run",
+      "clauses": [
+        "9.16 서두",
+        "9.16(a)",
+        "9.16(c)"
+      ],
+      "topic": "실책·포일 없이 재구성하고, 폭투·볼넷·안타·도루 등은 자책에 기여",
+      "engine": "동일(WP 자책, PB 재구성 제외)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + RunnerPlayAndEarnedRunTests"
+    },
+    {
+      "id": "C14",
+      "rule_id": "R18-earned-run-reconstruction",
+      "clauses": [
+        "9.16(i)",
+        "9.16(i) Comment (1)-(3)"
+      ],
+      "topic": "구원 투수는 이전 투수 때의 미수행 아웃 기회를 인정받지 못함(팀 비자책 개념)",
+      "engine": "투수별 자책은 그 투수가 등판한 시점의 실제 아웃 수와 실제 주자를 출발점으로 이닝을 재구성한 결과로 판정(9.16(i)); 팀 자책(TeamER)은 이닝 처음부터 재구성한 결과; 처음 던진 투수는 팀 재구성과 같음",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 독립 수작업 오라클(수정 전 실패를 확인한 뒤 수정) + 100경기 재생성 일치",
+      "fixed_on": "2026-10-11",
+      "before_fix": "재구성이 반이닝 단위였고 투수 교체를 몰랐다: 공식 예시 (1)에서 구원 투수의 자책이 0, 팀 비자책 개념 없음",
+      "tests": [
+        "Obr_9_16_i_example_1_with_two_out_a_walk_and_an_error_then_a_relief_home_run_gives_the_reliever_one_earned_run_and_the_team_none",
+        "Obr_9_16_i_example_2_an_error_by_the_reliever_s_defense_makes_both_pitchers_runs_unearned",
+        "Obr_9_16_i_example_3_five_runs_two_of_them_earned_for_the_team_one_each_for_the_two_pitchers",
+        "Inherited_runners_are_charged_to_the_pitcher_who_put_them_on_and_the_reliever_only_for_his_own"
+      ],
+      "note": "공식 예시 (1)(2)(3)을 그대로 수작업 오라클로 작성(단위: 투수별 R/ER와 팀 TeamER)"
+    },
+    {
+      "id": "C15",
+      "rule_id": "R19-win-loss",
+      "clauses": [
+        "9.17(a)",
+        "9.17(d)",
+        "9.17(a)(d) Comment"
+      ],
+      "topic": "동점이 되면 새 경기, 영구 리드를 잡을 때의 투수가 승리, 그 득점을 만든 투수가 패전",
+      "engine": "동일(BoxScoreBuilder.Decisions takeover 로직)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 코드·테스트 판독"
+    },
+    {
+      "id": "C16",
+      "rule_id": "R19-win-loss",
+      "clauses": [
+        "9.17(b)",
+        "9.17(b) Comment"
+      ],
+      "topic": "선발이 5이닝 미만이면 구원 1명이면 그 투수, 여럿이면 기록원이 가장 효과적인 투수",
+      "engine": "선발 15아웃 미만이면 아웃을 가장 많이 잡은 구원 투수(동률은 먼저 등판); 단축 경기(4/5이닝) 기준은 없음",
+      "result": "APPROVED_SIMPLIFICATION",
+      "basis": "R19 reason과 game-engine 4절에 이번 개정 이전부터 기록(구원 1명이면 OBR과 동일)",
+      "verified_by": "원문 대조 + 코드 판독"
+    },
+    {
+      "id": "C17",
+      "rule_id": "R19-win-loss",
+      "clauses": [
+        "9.17(c)"
+      ],
+      "topic": "짧고 비효과적인 구원 투수의 승리 배제",
+      "engine": "모델링하지 않음",
+      "result": "APPROVED_SIMPLIFICATION",
+      "basis": "R19 reason에 이번 개정 이전부터 기록",
+      "verified_by": "원문 대조 + 문서 기록 확인"
+    },
+    {
+      "id": "C18",
+      "rule_id": "R20-save",
+      "clauses": [
+        "9.19(a)-(d)"
+      ],
+      "topic": "세이브 4조건과 세 경로",
+      "engine": "SaveMaxLead 3·SaveMinOuts 3·SaveLongOuts 9, 동점 주자 경로는 lead <= 주자 수 + 2; 1/3이닝 검사는 별도 없음(마무리는 아웃 없이 경기를 끝낼 수 없어 사실상 동일)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 코드 판독(BoxScoreBuilder.cs:101-110)"
+    },
+    {
+      "id": "C19",
+      "rule_id": "R21-left-on-base-team",
+      "clauses": [
+        "9.03(c)"
+      ],
+      "topic": "박스 증명: 타수+볼넷+사구+희생번트+희생플라이(+방해) = 득점+잔루+상대 아웃",
+      "engine": "팀 잔루 = 이닝 종료 시(끝내기는 경기 종료 시, 프로필 규칙) 누상 주자 + 득점이 인정되지 않았지만 홈을 지난 주자(RunVoided) — 러너 키별 1회; BoxScoreReconciler가 박스 증명식을 검사",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 독립 수작업 오라클(수정 전 실패를 확인한 뒤 수정) + 100경기 재생성 일치",
+      "fixed_on": "2026-10-11",
+      "before_fix": "무효 득점 주자를 잔루로 세지 않아 이전 100경기 200팀경기 중 70건에서 증명식이 1~2 모자랐다(측정, BoxProofTests의 이전 판)",
+      "tests": [
+        "A_run_voided_by_a_batter_runner_third_out_is_left_on_base_and_the_box_proof_balances",
+        "A_force_out_third_out_with_a_voided_run_counts_the_voided_runner_once_beside_the_runners_still_on_base",
+        "A_walk_off_inning_ends_the_game_with_the_runners_still_on_base_counted_once_and_the_proof_balances",
+        "The_box_proof_of_obr_9_03_c_balances_exactly_in_all_two_hundred_team_games_including_the_ones_with_voided_runs",
+        "The_reconciler_checks_the_obr_9_03_c_box_proof_and_reports_a_missing_left_on_base_runner"
+      ],
+      "note": "무조건 +1이 아니라 러너별 최종 상태에서 도출: 누상에 남음 / 아웃 / 득점 인정 / 득점 불인정(잔루) 중 정확히 하나. 증명식은 200/200 조정 없이 성립"
+    },
+    {
+      "id": "C20",
+      "rule_id": "R22-walk-off-left-on-base",
+      "clauses": [
+        "9.03(c)"
+      ],
+      "topic": "끝내기로 끝난 이닝의 종료 시점 누상 주자",
+      "engine": "팀 잔루로 센다(CountWalkOffRunnersAsLeftOnBase)",
+      "result": "MATCH",
+      "basis": "증명식 산술이 요구(원문에 끝내기 이닝의 명시 정의는 없음); 위 측정에서 끝내기 경기도 무효 득점 수를 더하면 성립",
+      "verified_by": "원문 대조 + 측정(BoxProofTests)"
+    },
+    {
+      "id": "C21",
+      "rule_id": "R23-substitutions",
+      "clauses": [
+        "5.10(a)",
+        "5.10(d)"
+      ],
+      "topic": "교체는 볼 데드에, 교체 선수는 교체된 선수의 타순, 한번 물러난 선수는 재출장 불가",
+      "engine": "동일(투구 사이에만, 물러난 선수 재출장 거부)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 코드·테스트 판독"
+    },
+    {
+      "id": "C22",
+      "rule_id": "R23-substitutions",
+      "clauses": [
+        "5.10(g)"
+      ],
+      "topic": "투수 최소 3타자",
+      "engine": "도입하지 않음",
+      "result": "APPROVED_SIMPLIFICATION",
+      "basis": "MLB 운영 특례 미도입 정책(R03와 같은 소유자 정책 2026-10-11, R23 reason)",
+      "verified_by": "원문 대조(조항 존재 확인)"
+    },
+    {
+      "id": "C23",
+      "rule_id": "R05-dh-exists",
+      "clauses": [
+        "5.11(a)(1)",
+        "5.11(a)(3)"
+      ],
+      "topic": "DH는 경기 전 지정, 팀이 지정하지 않을 수 있음(그 경기에서 DH 불가)",
+      "engine": "프로필이 DH를 갖는지로 양 팀 동일하게 시작; 팀별 미선택 미지원",
+      "result": "APPROVED_SIMPLIFICATION",
+      "basis": "R05 reason에 이번 개정 이전부터 기록",
+      "verified_by": "원문 대조 + 문서 기록 확인"
+    },
+    {
+      "id": "C24",
+      "rule_id": "R10-dh-must-bat-once",
+      "clauses": [
+        "5.11(a)(2)"
+      ],
+      "topic": "DH는 상대 투수 교체 전이 아니면 최소 한 타석",
+      "engine": "팀이 DH를 가진 동안 선발 DH(경기 시작 명단)는 상대 팀이 투수를 바꾸기 전에는 첫 타석(완료했거나 투구를 이미 본 경우) 전에 대타·수비 교체로 바뀔 수 없다; 거부하면 상태 불변",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 독립 수작업 오라클(수정 전 실패를 확인한 뒤 수정) + 100경기 재생성 일치",
+      "fixed_on": "2026-10-11",
+      "before_fix": "검사가 없어 첫 타석 전 DH 자리 교체를 허용",
+      "tests": [
+        "The_starting_dh_cannot_be_pinch_hit_for_before_his_first_plate_appearance_while_the_opponent_keeps_its_pitcher",
+        "The_restriction_ends_when_the_opposing_club_changes_pitchers",
+        "A_dh_who_has_batted_once_can_be_replaced_without_the_opponent_changing_pitchers",
+        "An_ordinary_dh_game_keeps_the_dh_through_normal_replacements"
+      ]
+    },
+    {
+      "id": "C25",
+      "rule_id": "R06-dh-ends-when-dh-plays-defense",
+      "clauses": [
+        "5.11(a)(5)",
+        "5.11(a)(12)",
+        "5.11(a)(4)"
+      ],
+      "topic": "DH가 수비에 서면 자기 타순에서 계속 타격, 투수는 교체된 수비수의 자리에서 타격, DH 소멸; 대타·대주자가 DH가 됨",
+      "engine": "동일(DhToField, 대타는 슬롯과 DH 위치를 이어받음)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + DhStateTests"
+    },
+    {
+      "id": "C26",
+      "rule_id": "R06-dh-ends-when-dh-plays-defense",
+      "clauses": [
+        "5.11(a)(5) 단서",
+        "5.11(a)(7)"
+      ],
+      "topic": "둘 이상 교체 시 감독이 타순 지정(더블 스위치), DH 타순 고정",
+      "engine": "단일 교체 이벤트만 있어 표현 불가",
+      "result": "NOT_MODELLED",
+      "basis": "입력 경로 없음, 거부(안전한 쪽)",
+      "verified_by": "코드 판독"
+    },
+    {
+      "id": "C27",
+      "rule_id": "R07-dh-other-forfeit-triggers",
+      "clauses": [
+        "5.11(a)(8)",
+        "5.11(a)(10)"
+      ],
+      "topic": "투수가 다른 수비로 이동, 투수가 DH의 대타·대주자",
+      "engine": "표현·허용하지 않고 거부",
+      "result": "NOT_MODELLED",
+      "basis": "R07 UNRESOLVED(비필수)",
+      "verified_by": "코드 판독"
+    },
+    {
+      "id": "C28",
+      "rule_id": "R27-dh-fielder-to-mound",
+      "clauses": [
+        "5.11(a)(14)"
+      ],
+      "topic": "수비 중인 선수가 마운드에 오르면 DH 소멸",
+      "engine": "FielderToMoundForfeitsDh: KBO 지향 프로필에서 켬(이번 개정)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + DhStateTests"
+    },
+    {
+      "id": "C29",
+      "rule_id": "R27-dh-fielder-to-mound",
+      "clauses": [
+        "5.11(a)(14) 주변"
+      ],
+      "topic": "원문은 DH 소멸 후 비는 수비 위치를 누가 채우는지 정하지 않음(감독 결정)",
+      "engine": "PitchingChange에 Slot(= DH의 타순 번호)을 명시한 요청만 처리: DH 선수가 비는 위치로, 기존 투수는 퇴장, 새 투수는 자기 타순; Slot이 없으면 dh_vacated_position_unspecified, 다른 값이면 dh_vacated_position_invalid로 거부하며 아무것도 보정·생성하지 않음",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 독립 수작업 오라클",
+      "fixed_on": "2026-10-11",
+      "before_fix": "이벤트에 말이 없어도 DH를 비는 위치에 자동 배치(엔진이 선택)",
+      "tests": [
+        "A_fielder_going_to_the_mound_with_an_active_dh_needs_the_explicit_request_for_the_dh_to_fill_the_vacated_position",
+        "A_lineup_fielder_who_goes_to_the_mound_ends_the_dh_who_takes_his_position_and_the_old_pitcher_leaves",
+        "A_fielder_going_to_the_mound_names_the_dh_slot_explicitly_and_that_request_replays_identically_after_a_json_round_trip"
+      ],
+      "note": "5.11(a)(14)는 DH 소멸만 정하고 빈 자리를 누가 채우는지는 감독의 선택으로 둔다. 엔진은 감독이 이벤트로 밝힌 배치 하나만 지원한다(승인된 단순화가 아니라 명시 요청)"
+    },
+    {
+      "id": "C30",
+      "rule_id": "R08-two-way-dh-after-leaving-mound",
+      "clauses": [
+        "5.11(b)"
+      ],
+      "topic": "선발 투수 겸 DH는 투수에서 교체돼도 DH 유지(투구 불가)",
+      "engine": "동일",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + DhStateTests"
+    },
+    {
+      "id": "C31",
+      "rule_id": "R09-two-way-dh-replaced-while-pitching",
+      "clauses": [
+        "5.11(b)"
+      ],
+      "topic": "DH가 교체돼도 그 선수는 투수 유지",
+      "engine": "투구 중인 겸업 DH의 교체를 거부",
+      "result": "NOT_MODELLED",
+      "basis": "R09 UNRESOLVED(비필수), 안전한 쪽",
+      "verified_by": "코드 판독 + DhStateTests"
+    },
+    {
+      "id": "C32",
+      "rule_id": "R08-two-way-dh-after-leaving-mound",
+      "clauses": [
+        "5.11(b)",
+        "5.11(a)(4)",
+        "5.11(a)(9)",
+        "5.11(a)(12)"
+      ],
+      "topic": "투타 겸업 예외는 선발 투수로 라인업에 두 번 적힌 선수에게만 적용",
+      "engine": "DH 자리 선수가 투수가 되면 5.11(a)(12)에 따라 DH 역할이 소멸한다(소멸을 허용하지 않는 프로필은 거부); 투타 겸업 예외는 선발 투수가 곧 선발 DH인 팀(StartingDh)에서 투수 교체 뒤 DH 유지로만 남고 그 선수는 다시 던질 수 없다",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 독립 수작업 오라클(수정 전 실패를 확인한 뒤 수정) + 100경기 재생성 일치",
+      "fixed_on": "2026-10-11",
+      "before_fix": "TwoWayPlayerRule이면 DH 자리의 모든 선수(대타로 DH가 된 선수 포함)가 DH를 유지한 채 투수가 될 수 있었다",
+      "tests": [
+        "An_ordinary_dh_who_goes_to_the_mound_ends_the_dh_role_instead_of_keeping_it",
+        "Without_a_forfeiture_profile_an_ordinary_dh_cannot_go_to_the_mound_at_all_and_nothing_changes",
+        "A_replacement_dh_who_then_pitches_ends_the_dh_role_too",
+        "The_two_way_starter_keeps_the_dh_role_after_leaving_the_mound_and_cannot_pitch_again",
+        "The_two_way_starter_who_has_left_the_mound_ends_the_dh_role_by_taking_a_fielding_position",
+        "A_dh_who_walks_to_the_mound_ends_the_dh_role_or_is_refused_but_never_keeps_the_role_unless_he_is_the_two_way_starter"
+      ]
+    },
+    {
+      "id": "C33",
+      "rule_id": "R17-earned-run",
+      "clauses": [
+        "9.16(g)",
+        "9.16(g) Comment (1)-(7)",
+        "9.16(h)",
+        "9.16(i)",
+        "9.17(d)"
+      ],
+      "topic": "구원 투수는 \"그가 올려 놓은 주자 수\"만큼 책임, 아웃된 주자 뒤의 후속 주자 득점도 원래 투수 책임(예 (3)(7))",
+      "engine": "책임 슬롯 장부(RunResponsibility): 누상 주자는 투수의 책임 슬롯 하나를 차지한다. 득점은 득점 주자와 루상에 남은 주자의 슬롯 중 가장 앞선 투수 순서로 1점씩 청구하고 남은 슬롯은 남은 주자에게 되돌린다. 야수선택으로 주자가 아웃되면 타자가 그 슬롯을 승계하고(서로 다른 투수의 주자 둘 이상이 아웃되면 Game.ambiguous_responsibility로 거부), 도루사·견제사·추가 진루 중 아웃은 슬롯이 사라진다. 실점(R)은 장부가, 자책(ER)은 각 투수 시점의 9.16(i) 재구성이 따로 정한다",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 독립 수작업 오라클(9.16(g) 주석 예시 1~7을 원문 수치로 작성, 수정 전 실패를 확인한 뒤 수정) + Python 스코어러의 C33 책임 이동 경기 30개(장부를 끄면 99건 불일치) + 100경기 재생성 바이트 일치",
+      "fixed_on": "2026-10-11",
+      "before_fix": "(2차 재검토 High: 서로 다른 투수의 주자 둘이 한 야수선택에서 아웃되면 가장 앞선 투수의 슬롯을 임의로 승계했다 → 명시 거부로 수정) 주자 개인별 ResponsiblePitcher를 득점 시 그대로 청구했다. 앞 투수 주자가 야수선택으로 아웃된 뒤 구원 투수 책임 주자가 득점하면 구원 투수 실점(예시 2·3·5·6 불일치), 그 득점이 결승점이면 패전 투수도 어긋났다",
+      "unsupported_scope": "예시 7의 \"타자가 송구 사이 2루로 진루\"는 안타 타자의 추가 진루 입력이 없어 표현할 수 없다(도루로 2루에 옮긴 동등 시나리오로 책임 구조만 검증, Gate 영향 없음). 타자주자가 1루에 닿기 전 방해로 아웃되는 경우(9.16(g) 주석)는 '기타' 아웃을 거부하는 기존 범위 밖. 한 야수선택에서 서로 다른 투수의 책임 주자 둘 이상이 아웃되면 어느 아웃이 야수선택이고 어느 아웃이 독립적인 추가 진루 아웃인지 입력으로 알 수 없어 Game.ambiguous_responsibility로 명시 거부한다(소유자 승인에 따른 Phase 2 지원 범위 제한이며 OBR/KBO 규칙 진술이 아님, 같은 투수의 주자들이면 허용). 득점의 자책 여부는 득점 주자 신원의 재구성 결과를 청구된 투수 시점에서 본다",
+      "tests": [
+        "Example_1_a_runner_advanced_by_ground_outs_and_scored_by_a_single_is_charged_to_Peter",
+        "Example_2_a_runner_forced_out_by_a_fielders_choice_leaves_Peters_charge_with_the_batter_who_took_his_place",
+        "Example_3_a_runner_of_Peter_out_at_home_on_a_fielders_choice_keeps_Peters_charge_for_the_next_run_to_score",
+        "Example_4_a_runner_of_Peter_picked_off_is_no_longer_Peters_and_the_run_of_Rogers_runner_is_Rogers",
+        "Example_5_three_pitchers_two_fielders_choice_force_outs_and_a_home_run_charge_one_run_to_each",
+        "Example_6_a_runner_forced_out_at_home_leaves_the_runs_of_Baker_and_Charlie_split_between_Peter_and_Roger",
+        "Example_7_supported_equivalent_a_runner_of_Peter_out_trying_for_an_extra_base_is_no_longer_Peters",
+        "Runs_charged_by_the_ledger_get_their_earned_verdict_from_each_pitchers_own_reconstruction",
+        "The_loss_goes_to_Peter_when_the_go_ahead_run_is_the_one_Peters_charge_was_carried_to_by_a_fielders_choice",
+        "A_rejected_event_leaves_the_state_and_every_charge_untouched",
+        "A_fielders_choice_that_retires_runners_of_two_different_pitchers_is_refused_because_the_slot_to_pass_on_is_not_decided_by_the_input",
+        "The_order_of_the_two_outs_does_not_make_the_play_decidable",
+        "Two_runners_of_the_same_pitcher_retired_on_a_fielders_choice_pass_that_pitchers_slot_on_without_ambiguity",
+        "Other_ways_to_enter_the_same_play_are_not_fielders_choices_and_remove_both_slots",
+        "All_games_replay_to_the_independent_expected_box_scores_including_every_pitchers_runs_and_earned_runs"
+      ]
+    },
+    {
+      "id": "C34",
+      "rule_id": "R17-earned-run",
+      "clauses": [
+        "9.16(h)(1)-(3)"
+      ],
+      "topic": "구원 투수가 맡은 첫 타자가 볼넷이면 카운트가 2-0, 2-1, 3-0, 3-1, 3-2일 때 이전 투수의 볼넷/타자",
+      "engine": "교체 시 카운트가 2-0, 2-1, 3-0, 3-1, 3-2이고 그 타자가 볼넷이면 볼넷과 그 주자의 책임은 이전 투수; 그 밖의 카운트·다른 결과는 구원 투수",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 독립 수작업 오라클(수정 전 실패를 확인한 뒤 수정) + 100경기 재생성 일치",
+      "fixed_on": "2026-10-11",
+      "before_fix": "볼 3개이고 스트라이크 2 미만(3-0, 3-1)만 이전 투수 책임",
+      "tests": [
+        "A_walk_to_the_first_batter_a_reliever_faces_at_these_counts_is_charged_to_the_previous_pitcher",
+        "At_every_other_count_the_relief_pitcher_is_charged_with_the_walk",
+        "Any_other_result_of_that_first_batter_belongs_to_the_relief_pitcher",
+        "A_walk_after_a_mid_count_relief_is_charged_by_the_count_the_reliever_inherited"
+      ]
+    },
+    {
+      "id": "C35",
+      "rule_id": "R04-counts-innings-home-last-half",
+      "clauses": [
+        "9.02(a)(1)"
+      ],
+      "topic": "타수에서 제외: 희생번트·희생플라이·볼넷·사구·방해 출루",
+      "engine": "동일(방해 출루는 R25 범위 밖)",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + CountAndPlateAppearanceTests"
+    },
+    {
+      "id": "C36",
+      "rule_id": "R16-rbi",
+      "clauses": [
+        "9.08(a)-(c)"
+      ],
+      "topic": "희생번트: 주자를 진루시키고 타자가 아웃(또는 오류가 아니면 아웃), 야수가 앞선 주자를 잡으려다 실패한 경우도 희생",
+      "engine": "기록원 플래그가 붙은 번트로서 타자만 아웃되고 주자가 진루한 경우만",
+      "result": "APPROVED_SIMPLIFICATION",
+      "basis": "game-engine 4절에 이번 개정 이전부터 범위 한정이 기록됨",
+      "verified_by": "원문 대조 + 문서 기록 확인"
+    },
+    {
+      "id": "C37",
+      "rule_id": "R04-counts-innings-home-last-half",
+      "clauses": [
+        "5.05(a)(2)",
+        "5.05(b)(1)",
+        "5.09(a)(3)"
+      ],
+      "topic": "4볼 볼넷, 낫아웃 삼진은 1루가 비었거나 2사일 때 타자가 주자가 됨",
+      "engine": "동일",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + CountAndPlateAppearanceTests"
+    },
+    {
+      "id": "C38",
+      "rule_id": "R16-rbi",
+      "clauses": [
+        "9.08(d)",
+        "9.08(d) Comment"
+      ],
+      "topic": "희생플라이: 2사 전, 잡힌 뜬공 뒤 득점 또는 낙구 시 잡았어도 득점했을 경우(다른 주자가 포스아웃돼도 인정)",
+      "engine": "뜬공으로 플레이의 아웃이 정확히 1개이고 오류 도움 없는 득점이 1점 이상일 때만",
+      "result": "APPROVED_SIMPLIFICATION",
+      "basis": "소유자 승인(2026-10-11 TASK.md): Gate 비필수 후속 구현으로 이월. 기본 희생플라이(잡힌 뜬공 1아웃 + 득점)는 유지하고 직선타·낙구 실책·복합 아웃 등 변형은 미지원 범위로 명시한다. 구현된 것으로 표시하지 않으며 Phase 3의 타구·수비 사건 표현과 함께 재평가한다",
+      "verified_by": "원문 대조 + 코드 판독",
+      "original_rule": "9.08(d)와 주석: 희생플라이는 타자가 칠 때 아웃이 2개 미만이고, 외야수(또는 외야로 달려간 내야수)가 처리한 인플라이트 타구(페어·파울)가 (1)잡히고 그 뒤 주자가 득점하거나 (2)떨어뜨렸어도(실책) 잡았더라면 주자가 득점했을 거라고 기록원이 판단할 때. 타자가 주자가 되어 다른 주자가 포스아웃돼도 희생플라이다",
+      "difference": "엔진은 Fly 타구, 그 플레이의 아웃이 정확히 1개, 오류 도움 없는 득점 1점 이상일 때만 희생플라이로 도출한다. OBR과 다른 점: 직선타(외야수가 잡음) 미포함, 같은 플레이에 다른 아웃이 있으면 희생플라이가 아님(뜬공 병살+득점은 타점은 주지만 타수로 남음), 낙구 실책으로 출루한 경우는 판단 사례라 미지원, 누가 잡았는지(외야수 여부) 검사 없음",
+      "impact": "희생플라이·타수 수치가 드문 상황에서만 달라지며 타점(RBI)에는 영향이 없다(이번 라운드의 9.04 수정 이후 뜬공 병살의 득점도 타점)",
+      "recommendation": "(승인됨) 명시적 미지원 단순화로 유지하고 Phase 3 타구 모델이 수비 위치(외야수 처리 여부)를 갖게 될 때 9.08(d) 전체를 구현. 지금 부분 확장은 권하지 않음",
+      "gate_required": false,
+      "gate_note": "희생플라이 분류는 R16의 보조 통계이고 득점·타점·박스 증명에 영향이 없으므로 Gate 필수 구현 결함이 아니다(소유자 승인 2026-10-11로 후속 구현 이월 확정)"
+    },
+    {
+      "id": "C39",
+      "rule_id": "R27-dh-fielder-to-mound",
+      "clauses": [
+        "5.11(a)(5)",
+        "5.11(a)(14)"
+      ],
+      "topic": "빈 수비 위치를 DH가 아닌 선수(기존 투수, 벤치 선수)가 채우는 배치와 둘 이상 동시 교체",
+      "engine": "지원하지 않고 명시적으로 거부(dh_vacated_position_invalid / 단일 교체 이벤트만 존재)",
+      "result": "NOT_MODELLED",
+      "basis": "범위를 크게 넓혀야 하므로 구현하지 않음(2026-10-11 지시: 지원 못 하는 전환은 거부); 거부는 안전한 쪽",
+      "verified_by": "코드 판독 + 수작업 오라클"
+    },
+    {
+      "id": "C40",
+      "rule_id": "R16-rbi",
+      "clauses": [
+        "9.11",
+        "9.04(b)(2)"
+      ],
+      "topic": "병살 사이에 오류가 끼면 병살이 아님 / 병살을 완성할 1루 송구를 놓친 실책의 타점 불인정",
+      "engine": "오류가 어느 아웃 사이에 났는지 입력으로 알 수 없어 검사하지 않음(타자가 실책으로 출루하면 이미 무타점)",
+      "result": "NOT_MODELLED",
+      "basis": "입력에 오류와 아웃의 순서가 없음: 순서 입력을 새로 만들면 범위 확장",
+      "verified_by": "코드 판독"
+    },
+    {
+      "id": "C41",
+      "rule_id": "R13-force-play-derived-from-state",
+      "clauses": [
+        "9.05(b)(1)"
+      ],
+      "topic": "타구로 선행 주자가 포스아웃되면 타자에게 안타를 인정하지 않는다",
+      "engine": "Single/Double/Triple/HomeRun 결과인데 같은 플레이에 규칙상 포스아웃(상태에서 도출, 앞선 아웃으로 포스가 풀리면 제외, 태그로 잡아도 포스면 포함)이 있으면 상태 변경 전에 Game.hit_with_force_out으로 거부한다. 결과를 야수선택·실책 출루로 바꾸지 않는다",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 독립 수작업 오라클(수정 전 실패를 확인한 뒤 수정)",
+      "fixed_on": "2026-10-11",
+      "before_fix": "(Codex 최종 집중 리뷰 High) Single이 포스아웃된 선행 주자와 함께 수락되어 안타·타수가 기록됐고, 같은 플레이의 야수선택 입력이 거부되는 C33 모호성 검사를 결과 분류만 바꿔 우회할 수 있었다",
+      "tests": [
+        "A_single_on_a_batted_ball_that_forces_out_a_preceding_runner_is_refused_and_nothing_is_recorded",
+        "Every_hit_kind_is_refused_when_a_runner_is_forced_out_on_the_same_batted_ball",
+        "The_same_play_entered_as_a_fielders_choice_still_gets_the_responsibility_refusal",
+        "A_forced_runner_put_out_by_a_tag_is_still_a_force_out_and_the_hit_is_refused",
+        "A_force_removed_by_an_earlier_out_leaves_the_later_out_a_tag_out_and_the_hit_stands_in_that_order_only",
+        "Hits_without_a_force_out_keep_their_records_including_a_runner_thrown_out_on_his_own_advance",
+        "A_batter_put_out_stretching_a_hit_is_not_a_force_out_of_a_preceding_runner",
+        "An_accepted_hit_is_a_harmless_duplicate_when_delivered_again"
+      ],
+      "scope_note": "9.05(b)(2)-(5)와 9.05(a)(6)·(b)(3)(4)는 기록원 판단이 필요하거나 어필·방해 입력이 없어 엔진이 판정하지 않는다(안타 부정 규칙 전체를 구현했다고 표시하지 않는다)"
+    },
+    {
+      "id": "C42",
+      "rule_id": "R16-rbi",
+      "clauses": [
+        "9.15(a)",
+        "9.05(b)(1)"
+      ],
+      "topic": "실책 출루(ReachedOnError)가 실제 플레이의 공식 기록 분류인지",
+      "engine": "ReachedOnError는 실책 기록이 하나 이상 있는지만 확인한다. 그 실책이 타자 출루의 직접 원인인지(실책이 없었다면 타자가 아웃이었는지)는 판정하지 못한다. 같은 플레이에 선행 주자의 포스아웃이 있어도 수락한다(현재 확인한 재현: 1루 주자 포스아웃 + ReachedOnError 수락, ROE 1·아웃 1)",
+      "result": "NOT_MODELLED",
+      "basis": "입력에 '실책이 타자 출루의 직접 원인인가'를 나타내는 정보가 없다. 모든 실책 출루를 합법으로 인증하지도, 유효한 실책 출루를 일괄 거부하지도 않는다. 기록원이 실제 플레이에 부합하는 공식 기록 분류로 입력하는 것을 전제한다(2026-10-11 소유자 지시: 이번 작업에서 확장하지 않음)",
+      "verified_by": "코드 판독 + 재현 확인(임시 테스트, 저장소에 남기지 않음)"
+    },
+    {
+      "id": "C43",
+      "rule_id": "R16-rbi",
+      "clauses": [
+        "9.05(b)(1)"
+      ],
+      "topic": "실책이 없었다면 포스아웃되었을 주자가 있는 타구의 안타 인정(\"or would have been forced out except for a fielding error\")",
+      "engine": "Single/Double/Triple에서 기록원이 ErrorSavedOut으로 명시한 주자의 아웃이 상태에서 도출된 포스(OutClassification.Force)였을 것이면 Game.hit_with_force_out_saved_by_error로 상태 변경 전에 거부한다. 앞선 실제 아웃으로 포스가 풀렸으면(NonForce) 안타를 유지한다. 인과관계를 입력으로 증명할 수 없는 조합은 C44로 미지원 거부한다. 결과를 FieldersChoice·ReachedOnError로 바꾸지 않는다",
+      "result": "MATCH",
+      "verified_by": "원문 대조 + 독립 수작업 오라클(수정 전 재현·실패 로그 보존 후 수정)",
+      "fixed_on": "2026-10-11",
+      "before_fix": "(2026-10-11 재현) 1루 주자가 2루로 ErrorSavedOut인 Single이 안타로 기록됐다(안타 1, 타수 1)",
+      "tests": [
+        "A_hit_is_refused_when_an_error_saved_a_forced_runner_from_being_forced_out",
+        "The_same_two_moves_in_the_other_order_keep_the_force_on_the_saved_runner_and_the_hit_is_refused",
+        "A_force_removed_by_an_earlier_real_out_leaves_the_error_saved_runner_a_non_force_case_and_the_hit_stands",
+        "A_runner_saved_by_an_error_from_a_non_force_out_does_not_take_the_hit_away",
+        "A_single_with_a_runner_on_first_and_an_error_that_a_move_explains_keeps_its_hit",
+        "A_single_without_a_runner_on_first_keeps_its_hit_whatever_error_is_recorded_on_the_play",
+        "An_accepted_single_with_an_explained_error_is_a_harmless_duplicate_and_the_refused_one_never_is",
+        "A_single_with_an_explained_error_survives_the_json_event_contract_and_a_refused_hit_leaves_no_receipt"
+      ],
+      "scope_note": "Double/Triple에서는 1루 주자가 포스 베이스(2루)에 남을 수 없어 이 입력 자체가 이미 무효다. 안타 부정 규칙 전체(9.05(a)(6), (b)(2)-(5))를 구현했다는 뜻이 아니다"
+    },
+    {
+      "id": "C44",
+      "rule_id": "R16-rbi",
+      "clauses": [
+        "9.05(b)(1)",
+        "9.12"
+      ],
+      "topic": "1루 주자가 있는 안타 플레이의 실책을 입력으로 설명할 수 없는 경우(설명하는 이동이 없거나 실책이 2개 이상)",
+      "engine": "Single/Double/Triple에서 플레이 시작 시 1루에 주자가 있고(강제 주자가 존재) 실책이 기록되었으며 (a) 실책 진루·실책으로 아웃 면함(ErrorExtraBase/ErrorSavedOut) 이동이 하나도 없거나 (b) 실책이 2개 이상이면 Game.hit_error_cause_unclear로 상태·기록·책임 슬롯·영수증 생성 전에 거부한다. 사건 모델에는 실책과 그 원인 이동을 1:1로 연결하는 정보가 없으므로 이동 개수를 세는 것으로 실책이 설명됐다고 간주하지 않는다(실책 2개 이상이면 원인 이동이 일부든 여러 개든 거부). 1루 주자가 없거나, 실책이 정확히 1개이고 그것을 이동 하나가 표시하거나, 실책이 없으면 거부하지 않는다. 검사 순서(먼저 실패한 쪽의 오류 코드): Game.hit_with_force_out → Game.hit_with_force_out_saved_by_error(C43 확정) → Game.hit_error_cause_unclear(C44). 결과를 다른 사건으로 재분류하지 않는다. 복수 실책 사건은 실제 야구에서 합법일 수 있으며 이 거부는 입력 표현 한계에 따른 게임 지원 범위 제한이지 KBO/OBR 규칙이 아니다",
+      "result": "NOT_MODELLED",
+      "basis": "입력에 각 실책이 무엇을 했는지(포스아웃을 막았는지)와 실책-이동의 1:1 연결을 말하는 정보가 없어 올바른 안타 판정을 확정할 수 없다. '모든 실책이 설명됐다'고 입증하는 것이 아니라, 이동에 실책 원인이 표시된 단일 실책만 그 표시를 기록원의 진술로 받아들이는 것이다. 모든 Single+실책 조합을 금지하지 않는 최소 범위의 Phase 2 지원 범위 제한이다. Phase 2 승인 지원 범위 제한(2026-10-11, GPT Chat 설계 판단으로 승인, 사용자가 TASK.md로 전달; 소유자 직접 승인 표시는 따로 기록되지 않음): 1루 주자가 있는 안타에서 실책 원인을 현재 입력으로 설명할 수 없으면 명시적으로 거부하고, 원인이 확인되지 않은 실책을 다른 사건으로 임의 재분류하지 않는다. ErrorSavedOut+검증된 포스아웃 결합 안타는 기존 C43 검증이 거부하고, 정상 안타에 동반된 ErrorExtraBase 등 지원 가능한 사건은 유지하며 모든 안타+실책을 일괄 거부하지 않는다. KBO 공식 인증이나 OBR 완전 구현이 아니며 C42는 NOT_MODELLED로 유지한다. 구별되지 않는 합법 사건(1루 주자가 있는 안타에서 효과 없는 실책만 기록, 타자의 송구 진루 등 모델에 없는 실책 효과)은 제한된다",
+      "verified_by": "코드 판독 + 수작업 오라클",
+      "tests": [
+        "A_hit_with_a_runner_on_first_and_an_error_that_no_move_explains_is_refused_as_unsupported",
+        "A_single_with_a_runner_on_first_and_no_error_at_all_keeps_its_hit",
+        "A_single_with_a_runner_on_first_two_errors_and_one_error_move_is_refused",
+        "A_double_or_triple_with_a_runner_on_first_two_errors_and_one_error_move_is_refused",
+        "Two_errors_and_two_error_moves_without_a_link_between_them_are_not_taken_as_explained",
+        "The_confirmed_c43_force_out_error_wins_over_the_multi_error_refusal",
+        "One_error_with_a_matching_error_move_and_a_runner_on_first_keeps_its_hit",
+        "Without_a_runner_on_first_a_hit_with_several_errors_keeps_its_hit",
+        "A_re_delivered_accepted_event_is_a_duplicate_and_the_refused_one_stays_refused",
+        "A_single_with_an_explained_error_survives_the_json_event_contract_and_a_refused_hit_leaves_no_receipt"
+      ],
+      "limit_extended_on": "2026-10-11",
+      "before_extension": "Codex 집중 리뷰 Medium: 1루 주자 + 실책 2개 + 원인 이동 1개 이상이면 이동 하나만 있어도 모든 실책이 설명된 것으로 취급해 안타를 인정했다(수정 전 RED 로그: docs/reports/PHASE_2_C44_MULTI_ERROR_RED.log [Git 제외 원본, 추적 요약: docs/reports/PHASE_2_RED_EVIDENCE.md], 새 테스트 5건 실패)"
+    }
+  ],
+  "obr_comparison_legend": {
+    "MATCH": "원문과 같은 결과를 내는 것으로 대조함",
+    "KBO_PRECEDENCE": "OBR와 다르지만 KBO 규정/운영(1순위)이 우선",
+    "APPROVED_SIMPLIFICATION": "소유자 결정 또는 이번 개정 이전부터 기록된 단순화(basis에 근거)",
+    "PROPOSED_SIMPLIFICATION": "이번 개정에서 처음 기록한 단순화이며 소유자 확인 전(승인으로 부르지 않음)",
+    "OPEN_DEVIATION": "엔진이 원문과 다르고 단순화로 승인된 적 없음: 실제 미해결 문제(이슈·이유·권장안·대안·영향 기록)",
+    "NOT_MODELLED": "표현할 입력 경로가 없고 엔진이 거부함(안전한 쪽)"
+  },
+  "obr_not_compared": [
+    "9.02 나머지 기록 항목, 9.05-9.07 안타·도루 세부, 9.09-9.15(풋아웃·실책·폭투·포일·볼넷·삼진 세부 판정), 9.18 완봉, 9.20-9.22",
+    "5.01-5.04, 5.06(a)(b) 주루 세부, 5.07 투구, 5.09(b)-(c) 주자 아웃 세부(어필 관련은 R15), 6.xx 반칙·방해, 7.02-7.04 서스펜디드·몰수·항의"
+  ],
+  "obr_open_deviation_ids": [],
+  "gate_note": "gate_blockers(UNRESOLVED인 필수 규칙)는 0건이고 OPEN_DEVIATION도 0건이다. Gate 필수 구현 결함으로 관리하던 C33은 수정되어 MATCH이고(서로 다른 투수의 주자를 아웃시키는 야수선택은 소유자 승인 Phase 2 지원 범위 제한으로 명시 거부), Codex 최종 집중 리뷰의 High(안타와 포스아웃 모순)는 C41로, 그 둘째 절(실책이 없었다면 포스아웃)은 C43으로 수정되었다. 실책의 인과관계를 입력으로 증명할 수 없는 조합(원인 이동 없음, 1루 주자와 실책 2개 이상)은 C44로 명시 거부하며 이 지원 범위 제한은 GPT Chat 설계 판단으로 Phase 2 승인 지원 범위 제한이 되었다(KBO 인증·OBR 완전 구현 아님, 소유자 직접 승인 표시는 별도 기록 없음). C38은 소유자 승인으로 Gate 비필수 후속 이월이다. D2 규칙 인증(KBO 규정집·기록규칙 미열람)이 끝나지 않았고 독립 재검토·수동 검증이 남았으므로 Phase 2 Gate 충족을 자체 선언하지 않는다. R02 해소(운영 근거 적용 승인)와 D2 규칙 적용·인증 상태는 별개다.",
+  "implementation_defects_open": {
+    "gate_required_rules": [],
+    "not_gate_required": [
+      "C38"
+    ],
+    "note": "구현 결함은 규칙 출처 차단(gate_blockers)과 별도로 관리한다. 2026-10-11 수정으로 OPEN_DEVIATION 6건(C12, C14, C19, C24, C32, C34)과 구현 결함 후보 C33이 모두 수정되었다(MATCH). Gate 필수 구현 결함은 0건이다. C38(희생플라이 변형 미지원)은 Gate 비필수 후속 구현으로 이월되어 구현됐다고 표시하지 않는다. 2026-10-11 Codex 최종 집중 리뷰 High(C41)와 같은 조항 둘째 절(C43)은 수정되었다. Phase 2 지원 범위 제한 C44(실책 인과 불명 안타 거부, 2026-10-11 Codex Medium 후 실책 2개 이상 포함)는 2026-10-11 GPT Chat 설계 판단으로 승인되었다(Claude Code가 자체 승인한 것이 아니며 Phase 2 최종 승인 상태는 변경하지 않는다).",
+    "support_limits_approved_by_gpt_chat_design_judgement": [
+      "C44"
+    ]
+  },
+  "pending_owner_decisions": []
+}

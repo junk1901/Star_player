@@ -8,7 +8,7 @@ completed: "2026-10-10"
 developer_ai: Claude Code
 reviewed_by: "GPT Chat 최종 검토(사용자 전달, 2026-10-10) · Codex 최종 재검토 PASS WITH NOTES"
 branch: "main"
-commit: "미커밋 (HEAD e28cb8d 위의 작업 트리에만 존재)"
+commit: "64167f788dc6a77fe4725bb13e06d946fd122ada (승인 후 사용자 지시로 커밋·푸시, origin/main)"
 roadmap_anchor: "phase-1--player-identity-visibility-and-baseball-vocabulary"
 last_updated: "2026-10-10"
 codex_review: "1차 CHANGES REQUIRED → 보완 후 최종 재검토 PASS WITH NOTES"
@@ -33,7 +33,7 @@ tags:
 | 리뷰 상태 | 승인 완료 (PASS WITH NOTES, 2026-10-10) |
 | 관련 ROADMAP | [Phase 1](../../ROADMAP.md#phase-1--player-identity-visibility-and-baseball-vocabulary) |
 | 관련 Git 브랜치 | main |
-| 관련 커밋 | 없음 (승인 전까지 커밋·푸시하지 않음) |
+| 관련 커밋 | `64167f7` `feat: complete phase 1 player domain and visibility` (승인 후 별도 지시로 커밋·푸시; 승인 시점에는 미커밋이었음) |
 | 독립 Codex 리뷰 | `CHANGES REQUIRED` (High 2, Medium 2) → 아래 "Codex 리뷰 이력과 보완" 참조 |
 
 - 대시보드: [Star Player 개발 대시보드](../00_Dashboard.md)

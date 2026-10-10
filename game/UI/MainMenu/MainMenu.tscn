@@ -45,7 +45,7 @@ text = "Star Player"
 [node name="SubtitleLabel" type="Label" parent="Margin/Column"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
-text = "개발 진단 화면 — Phase 0 환경 진단 · Phase 1 선수 정보 진단 (게임 기능은 아직 구현되지 않았습니다)"
+text = "개발 진단 화면 — Phase 0 환경 · Phase 1 선수 정보 · Phase 2 경기 진단 (게임 기능은 아직 구현되지 않았습니다)"
 
 [node name="VersionLabel" type="Label" parent="Margin/Column"]
 unique_name_in_owner = true
@@ -66,10 +66,17 @@ text = "진단 시작"
 
 [node name="PlayerDiagnosticsButton" type="Button" parent="Margin/Column/Buttons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(640, 110)
+custom_minimum_size = Vector2(560, 110)
 layout_mode = 2
 theme_override_font_sizes/font_size = 44
 text = "선수 정보 진단"
+
+[node name="GameDiagnosticsButton" type="Button" parent="Margin/Column/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(520, 110)
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+text = "경기 진단"
 
 [node name="QuitButton" type="Button" parent="Margin/Column/Buttons"]
 unique_name_in_owner = true

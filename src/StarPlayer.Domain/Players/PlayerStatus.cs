@@ -47,17 +47,17 @@ public sealed record PlayerStatus
 
     public ClubAffiliation? CurrentAffiliation => Affiliations.FirstOrDefault(a => a.To is null);
 
-    public static Result<PlayerStatus> Create(IEnumerable<OriginRecord> origins, EntryPath? entryPath, RegistrationStatus registration,
-        LeagueAssignment? league, IEnumerable<ClubAffiliation> affiliations, CareerStatus career)
+    public static Result<PlayerStatus> Create(IEnumerable<OriginRecord>? origins, EntryPath? entryPath, RegistrationStatus registration,
+        LeagueAssignment? league, IEnumerable<ClubAffiliation>? affiliations, CareerStatus career)
     {
-        var origin = origins.ToList();
+        var origin = (origins ?? []).ToList();
         if (origin.Count == 0)
             return Fail("PlayerStatus.origin_missing", "출신 이력이 하나 이상 필요합니다.");
         if (origin.Any(o => !Enum.IsDefined(o.Type)) || (entryPath is { } e && !Enum.IsDefined(e)) || !Enum.IsDefined(registration)
             || (league is { } l && !Enum.IsDefined(l)) || !Enum.IsDefined(career))
             return Fail("PlayerStatus.enum_invalid", "상태 값이 올바르지 않습니다.");
 
-        var club = affiliations.OrderBy(a => a.From).ToList();
+        var club = (affiliations ?? []).OrderBy(a => a.From).ToList();
         for (var i = 0; i < club.Count; i++)
         {
             var a = club[i];
@@ -78,7 +78,7 @@ public sealed record PlayerStatus
         if (!open && professional && career == CareerStatus.Active)
             return Fail("PlayerStatus.registration_without_club", "현역 등록 선수는 현재 소속 구단이 필요합니다.");
 
-        return Result<PlayerStatus>.Success(new PlayerStatus(origin, entryPath, registration, league, club, career));
+        return Result<PlayerStatus>.Success(new PlayerStatus(origin.AsReadOnly(), entryPath, registration, league, club.AsReadOnly(), career));
     }
 
     private static Result<PlayerStatus> Fail(string code, string message) => Result<PlayerStatus>.Failure(new Error(code, message));

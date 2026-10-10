@@ -56,6 +56,12 @@ internal static class SourceScan
         R("DevelopmentProfile", @"\bDevelopmentProfile\b"),
         R("PlayerSheet", @"\bPlayerSheet\b"),
         R("ViewerContext", @"\bViewerContext\b"),
+        R("IScriptedGameSource", @"\bIScriptedGameSource\b"),
+        R("ScriptedGameSource", @"\bScriptedGameSource\b"),
+        R("ScriptedGameJson", @"\bScriptedGameJson\b"),
+        R("GameRulesJson", @"\bGameRulesJson\b"),
+        R("GameReducer", @"\bGameReducer\b"),
+        R("GameState", @"\bGameState\b"),
     ];
 
     public static List<string> Find(string source, IEnumerable<Rule> rules)

@@ -26,19 +26,19 @@ public sealed record ProficiencyProfile
         Roles = roles;
     }
 
-    public static Result<ProficiencyProfile> Create(FieldPosition preferred, IEnumerable<(FieldPosition Position, SkillValue Value)> positions, IEnumerable<(PlayerRole Role, SkillValue Value)> roles)
+    public static Result<ProficiencyProfile> Create(FieldPosition preferred, IEnumerable<(FieldPosition Position, SkillValue Value)>? positions, IEnumerable<(PlayerRole Role, SkillValue Value)>? roles)
     {
         if (!Enum.IsDefined(preferred))
             return Result<ProficiencyProfile>.Failure(new Error("Proficiency.position_invalid", "포지션 값이 올바르지 않습니다."));
-        var pos = positions.OrderBy(p => p.Position).ToList();
+        var pos = (positions ?? []).OrderBy(p => p.Position).ToList();
         if (pos.Any(p => !Enum.IsDefined(p.Position) || p.Position is FieldPosition.Pitcher or FieldPosition.DesignatedHitter))
             return Result<ProficiencyProfile>.Failure(new Error("Proficiency.position_not_fielding", "수비 숙련도는 야수 수비 포지션에만 둘 수 있습니다."));
         if (pos.Select(p => p.Position).Distinct().Count() != pos.Count)
             return Result<ProficiencyProfile>.Failure(new Error("Proficiency.duplicate_position", "같은 포지션의 숙련도가 중복되었습니다."));
-        var rol = roles.OrderBy(r => r.Role).ToList();
+        var rol = (roles ?? []).OrderBy(r => r.Role).ToList();
         if (rol.Any(r => !Enum.IsDefined(r.Role)) || rol.Select(r => r.Role).Distinct().Count() != rol.Count)
             return Result<ProficiencyProfile>.Failure(new Error("Proficiency.role_invalid", "역할 숙련도 값이 올바르지 않거나 중복되었습니다."));
-        return Result<ProficiencyProfile>.Success(new ProficiencyProfile(preferred, pos, rol));
+        return Result<ProficiencyProfile>.Success(new ProficiencyProfile(preferred, pos.AsReadOnly(), rol.AsReadOnly()));
     }
 
     public SkillValue PositionProficiency(FieldPosition position) =>

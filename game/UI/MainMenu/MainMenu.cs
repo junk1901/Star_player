@@ -9,6 +9,9 @@ public partial class MainMenu : Control
     [Signal]
     public delegate void PlayerDiagnosticsRequestedEventHandler();
 
+    [Signal]
+    public delegate void GameDiagnosticsRequestedEventHandler();
+
     private Label _titleLabel = null!;
     private Label _versionLabel = null!;
     private Label _resultLabel = null!;
@@ -23,6 +26,7 @@ public partial class MainMenu : Control
         _resultLabel = GetNode<Label>("%ResultLabel");
         GetNode<Button>("%StartButton").Pressed += () => RunDiagnostics();
         GetNode<Button>("%PlayerDiagnosticsButton").Pressed += () => EmitSignal(SignalName.PlayerDiagnosticsRequested);
+        GetNode<Button>("%GameDiagnosticsButton").Pressed += () => EmitSignal(SignalName.GameDiagnosticsRequested);
         GetNode<Button>("%QuitButton").Pressed += () => GetTree().Quit();
     }
 

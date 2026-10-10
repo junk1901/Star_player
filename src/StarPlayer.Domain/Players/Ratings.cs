@@ -14,14 +14,14 @@ public sealed record PitchRepertoire
 
     private PitchRepertoire(IReadOnlyList<PitchRating> pitches) => Pitches = pitches;
 
-    public static Result<PitchRepertoire> Create(IEnumerable<PitchRating> pitches)
+    public static Result<PitchRepertoire> Create(IEnumerable<PitchRating>? pitches)
     {
-        var list = pitches.OrderBy(p => p.Type).ToList();
+        var list = (pitches ?? []).OrderBy(p => p.Type).ToList();
         if (list.Count == 0)
             return Result<PitchRepertoire>.Failure(new Error("PitchRepertoire.empty", "투수는 구종을 하나 이상 가져야 합니다."));
         if (list.Select(p => p.Type).Distinct().Count() != list.Count)
             return Result<PitchRepertoire>.Failure(new Error("PitchRepertoire.duplicate", "같은 구종을 두 번 등록할 수 없습니다."));
-        return Result<PitchRepertoire>.Success(new PitchRepertoire(list));
+        return Result<PitchRepertoire>.Success(new PitchRepertoire(list.AsReadOnly())); // the validated copy is wrapped read-only: IList casts cannot change it
     }
 }
 

@@ -1,9 +1,9 @@
-﻿# Star Player verification (Phase 0 foundation + Phase 1 player model/diagnostics). Repeatable: run from anywhere.
+﻿# Star Player verification (Phase 0 foundation + Phase 1 player model/diagnostics + Phase 2 game state/scoring). Repeatable: run from anywhere.
 #   powershell -NoProfile -ExecutionPolicy Bypass -File tools\verify.ps1 [-GodotConsolePath <path>]
 # Exit code: 0 = PASS, 1 = FAIL (an executed check failed), 2 = INCOMPLETE (a check could not run).
 # A check that cannot run is INCOMPLETE and is never reported as PASS.
 param(
-    [string]$LogName = 'PHASE_1_VERIFY_LOG.md',
+    [string]$LogName = 'PHASE_2_VERIFY_LOG.md',
     [string]$GodotConsolePath = $(if ($env:STARPLAYER_GODOT) { $env:STARPLAYER_GODOT } else { 'E:\Madegame\tools\godot\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64_console.exe' })
 )
 $ErrorActionPreference = 'Continue'
@@ -172,7 +172,14 @@ if ($godotReady) {
     $ptext = if (Test-Path $pout) { Get-Content $pout -Raw -Encoding UTF8 } else { '' }
     $pok = $g3.Exit -eq 0 -and $ptext -match 'STARPLAYER_PLAYER_DIAGNOSTICS=PASS' -and $ptext -match '자체 점검: 통과 \(7/7\)' -and $ptext -match 'hidden_identifier_leaks=0'
     Add-Result 'G3' 'Godot headless: Phase 1 player card self-check (7/7), no hidden-field leaks' 'godot --headless --path game -- --player-diagnostics' $g3.Exit $(if ($pok) { 'PASS' } else { 'FAIL' }) (($ptext -split "`n" | Where-Object { $_ -match 'hidden_identifier_leaks' } | Select-Object -First 1))
+
+    $gout = Join-Path $work 'headless-game-diagnostics.txt'
+    $g4 = Invoke-Logged 'G4' $GodotConsolePath "--headless --path game --quit-after 3000 -- --game-diagnostics --diagnostics-out=`"$gout`"" $root 300
+    $gtext = if (Test-Path $gout) { Get-Content $gout -Raw -Encoding UTF8 } else { '' }
+    $gok = $g4.Exit -eq 0 -and $gtext -match 'STARPLAYER_GAME_DIAGNOSTICS=PASS' -and $gtext -match '자체 점검: 통과 \(7/7\)' -and $gtext -match 'self_check=PASS'
+    Add-Result 'G4' 'Godot headless: Phase 2 scripted games stepped to the end, box scores match independent expected results (7/7)' 'godot --headless --path game -- --game-diagnostics' $g4.Exit $(if ($gok) { 'PASS' } else { 'FAIL' }) (($gtext -split "`n" | Where-Object { $_ -match '^games=' } | Select-Object -First 1))
 } else {
+    Add-Result 'G4' 'Godot headless: Phase 2 scripted game diagnostics' 'godot --headless ... -- --game-diagnostics' 127 'INCOMPLETE' 'Godot missing'
     Add-Result 'G3' 'Godot headless: Phase 1 player card self-check' 'godot --headless ... -- --player-diagnostics' 127 'INCOMPLETE' 'Godot missing'
     Add-Result 'G1' 'Godot builds the C# solution headless' 'godot --headless ... --build-solutions' 127 'INCOMPLETE' 'Godot missing'
     Add-Result 'G2' 'Godot headless launch runs SQLite diagnostics' 'godot --headless ... -- --diagnostics' 127 'INCOMPLETE' 'Godot missing'
@@ -228,17 +235,48 @@ if ($godotReady -and $templatesReady) {
         if (Test-Path $pcOut) { Copy-Item $pcOut (Join-Path $work 'exported-player-diagnostics.txt') }
         $p3 = $x3.Exit -eq 0 -and $ptext -match 'STARPLAYER_PLAYER_DIAGNOSTICS=PASS' -and $ptext -match '자체 점검: 통과 \(7/7\)' -and $ptext -match 'hidden_identifier_leaks=0' -and $shots
         Add-Result 'E3' 'Exported program: Phase 1 player card at QHD (cold copy, embedded fictional pack, screenshots)' 'StarPlayer.console.exe --resolution 2560x1440 -- --player-diagnostics --screenshot=...' $x3.Exit $(if ($p3) { 'PASS' } else { 'FAIL' }) "screenshots=$shots"
+        $gcOut = Join-Path $cold 'game-diagnostics.txt'
+        $gcPng = Join-Path $cold 'game-screen.png'
+        $x4 = Invoke-Logged 'E4' (Join-Path $cold 'StarPlayer.console.exe') "--resolution 2560x1440 -- --game-diagnostics --diagnostics-out=`"$gcOut`" --screenshot=`"$gcPng`"" $cold 300
+        $gtext = if (Test-Path $gcOut) { Get-Content $gcOut -Raw -Encoding UTF8 } else { '' }
+        $gshots = (Test-Path $gcPng) -and (Test-Path (Join-Path $cold 'game-screen-end.png'))
+        if ($gshots) { Copy-Item $gcPng (Join-Path $work 'exported-game-screen.png'); Copy-Item (Join-Path $cold 'game-screen-end.png') (Join-Path $work 'exported-game-screen-end.png') }
+        if (Test-Path $gcOut) { Copy-Item $gcOut (Join-Path $work 'exported-game-diagnostics.txt') }
+        $g4ok = $x4.Exit -eq 0 -and $gtext -match 'STARPLAYER_GAME_DIAGNOSTICS=PASS' -and $gtext -match '자체 점검: 통과 \(7/7\)' -and $gshots
+        Add-Result 'E4' 'Exported program: Phase 2 game screen at QHD (cold copy, embedded fictional games, screenshots)' 'StarPlayer.console.exe --resolution 2560x1440 -- --game-diagnostics --screenshot=...' $x4.Exit $(if ($g4ok) { 'PASS' } else { 'FAIL' }) "screenshots=$gshots"
         Remove-Item $cold -Recurse -Force -ErrorAction SilentlyContinue
     } else {
         Add-Result 'E2' 'Exported program SQLite diagnostics' 'StarPlayer.console.exe -- --diagnostics' 1 'FAIL' 'export did not produce a runnable build'
         Add-Result 'E3' 'Exported program: Phase 1 player card' 'StarPlayer.console.exe -- --player-diagnostics' 1 'FAIL' 'export did not produce a runnable build'
+        Add-Result 'E4' 'Exported program: Phase 2 game screen' 'StarPlayer.console.exe -- --game-diagnostics' 1 'FAIL' 'export did not produce a runnable build'
     }
 } else {
     $why = if (-not $godotReady) { 'Godot missing' } else { 'export templates missing' }
     Add-Result 'E1' 'Windows Desktop release export' 'godot --export-release ...' 127 'INCOMPLETE' $why
     Add-Result 'E2' 'Exported program SQLite diagnostics' 'StarPlayer.console.exe -- --diagnostics' 127 'INCOMPLETE' $why
     Add-Result 'E3' 'Exported program: Phase 1 player card' 'StarPlayer.console.exe -- --player-diagnostics' 127 'INCOMPLETE' $why
+    Add-Result 'E4' 'Exported program: Phase 2 game screen' 'StarPlayer.console.exe -- --game-diagnostics' 127 'INCOMPLETE' $why
 }
+
+# ---- 5. Documentation links and changed files ----
+# Relative markdown links in the official documents and the Obsidian vault must resolve to an existing file or folder.
+$mdFiles = @(Get-ChildItem $root -File -Filter '*.md') + @(Get-ChildItem (Join-Path $root 'docs'), (Join-Path $root 'Star') -Recurse -File -Filter '*.md' -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\.obsidian\\' })
+$broken = @()
+foreach ($f in $mdFiles) {
+    $body = [System.IO.File]::ReadAllText($f.FullName)
+    $body = [regex]::Replace($body, '(?s)```.*?```', '')
+    foreach ($m in [regex]::Matches($body, '\]\(([^)\s]+)\)')) {
+        $target = $m.Groups[1].Value
+        if ($target -match '^(https?:|mailto:|#|<)') { continue }
+        $path = [uri]::UnescapeDataString(($target -split '#')[0])
+        if ($path -eq '') { continue }
+        if (-not (Test-Path (Join-Path $f.DirectoryName $path))) { $broken += "$($f.FullName.Substring($root.Length + 1)) -> $target" }
+    }
+}
+Add-Result 'D1' 'Relative markdown links in root docs, docs/ and Star/ resolve' 'scan *.md links' $(if ($broken.Count) { 1 } else { 0 }) $(if ($broken.Count) { 'FAIL' } else { 'PASS' }) $(if ($broken.Count) { ($broken | Select-Object -First 8) -join '; ' } else { "$($mdFiles.Count) files checked" })
+
+$changed = @(& git status --porcelain 2>$null)
+Add-Result 'D2' 'Changed files vs HEAD (informational; no commit is made by this script)' 'git status --porcelain' 0 'INFO' "$($changed.Count) entries"
 
 # ---- Leftover build servers started during this run (informational; never killed here) ----
 $leftover = @(Get-Process -Name 'dotnet', 'MSBuild', 'VBCSCompiler' -ErrorAction SilentlyContinue | Where-Object { $_.StartTime -ge $scriptStart })
@@ -250,7 +288,7 @@ $gate = if ($results | Where-Object Status -eq 'FAIL') { 'FAIL' } elseif ($resul
 $commit = (& git rev-parse --short HEAD 2>$null)
 $dirty = if (& git status --porcelain 2>$null) { 'dirty working tree' } else { 'clean' }
 $lines = [System.Collections.Generic.List[string]]::new()
-$lines.Add('# Phase 1 verification log (includes the Phase 0 regression checks)')
+$lines.Add('# Phase 2 verification log after the Codex remediation (includes the Phase 0 and Phase 1 regression checks)')
 $lines.Add('')
 $lines.Add('Generated by `tools/verify.ps1`; overwritten on each run. Raw logs: `build/verify/` (git-ignored).')
 $lines.Add('')

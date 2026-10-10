@@ -77,7 +77,7 @@ public sealed record Player
     }
 
     public static Result<Player> Create(PlayerId id, string? displayName, DateOnly birthDate, ThrowingHand throws, BattingSide bats,
-        BodyMeasurements body, IEnumerable<PersonalityTrait> personality, string? biography)
+        BodyMeasurements body, IEnumerable<PersonalityTrait>? personality, string? biography)
     {
         if (id == default)
             return Result<Player>.Failure(new Error("Player.id_missing", "선수 ID가 없습니다."));
@@ -88,14 +88,14 @@ public sealed record Player
         if (!Enum.IsDefined(throws) || !Enum.IsDefined(bats))
             return Result<Player>.Failure(new Error("Player.handedness_invalid", "투타 방향 값이 올바르지 않습니다."));
 
-        var traits = personality.OrderBy(t => t).Distinct().ToList();
+        var traits = (personality ?? []).OrderBy(t => t).Distinct().ToList();
         if (traits.Any(t => !Enum.IsDefined(t)))
             return Result<Player>.Failure(new Error("Player.personality_invalid", "성격 값이 올바르지 않습니다."));
         var text = biography ?? "";
         if (text.Length > MaxBiographyLength)
             return Result<Player>.Failure(new Error("Player.biography_too_long", $"소개 글은 {MaxBiographyLength}자 이하여야 합니다."));
 
-        return Result<Player>.Success(new Player(id, displayName, birthDate, throws, bats, body, traits, text));
+        return Result<Player>.Success(new Player(id, displayName, birthDate, throws, bats, body, traits.AsReadOnly(), text));
     }
 
     public Result<int> AgeOn(DateOnly date) => AgeCalculator.AgeOn(BirthDate, date);

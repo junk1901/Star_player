@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using StarPlayer.Application.Diagnostics;
 using StarPlayer.Application.Ports;
+using StarPlayer.Application.Projections;
 using StarPlayer.Application.Queries;
 using StarPlayer.Application.Sessions;
 using StarPlayer.Infrastructure.Fixtures;
@@ -22,7 +23,9 @@ public class TrustedBoundaryTests
     private static readonly Assembly InfrastructureAssembly = typeof(PlayerInfoComposition).Assembly;
     private static readonly Assembly DomainAssembly = typeof(StarPlayer.Domain.Common.PlayerId).Assembly;
 
-    private static readonly string[] DangerousNames = ["PlayerWorld", "IPlayerWorldSource", "ViewerContext", "DevelopmentProfile", "PlayerSheet", "FixturePlayerWorldSource", "WorldJson"];
+    private static readonly string[] DangerousNames =
+        ["PlayerWorld", "IPlayerWorldSource", "ViewerContext", "DevelopmentProfile", "PlayerSheet", "FixturePlayerWorldSource", "WorldJson",
+         "IScriptedGameSource", "ScriptedGame", "ExpectedGame", "ScriptedGameSource", "ScriptedGameJson", "GameRulesJson", "GameReducer", "GameState"];
 
     // ---- public surface: reflection ----
 
@@ -81,16 +84,16 @@ public class TrustedBoundaryTests
     }
 
     [Fact]
-    public void Infrastructure_public_api_exposes_only_the_two_entry_points_and_nothing_raw()
+    public void Infrastructure_public_api_exposes_only_the_composition_entry_points_and_nothing_raw()
     {
         var exported = InfrastructureAssembly.GetExportedTypes().Select(t => t.Name).Order().ToArray();
 
-        Assert.Equal(["PlayerInfoComposition", "SqliteStorageDiagnostics"], exported);
+        Assert.Equal(["GameDiagnosticsComposition", "PlayerInfoComposition", "SqliteStorageDiagnostics"], exported);
         var surface = PublicSurface(InfrastructureAssembly);
         Assert.DoesNotContain(surface, t => t.Assembly == DomainAssembly);
         Assert.DoesNotContain(surface, t => DangerousNames.Contains(t.Name));
         // The raw source, JSON reader and DTOs exist but are not visible outside the trusted boundary.
-        foreach (var name in new[] { "FixturePlayerWorldSource", "WorldJson", "WorldDto", "DevelopmentDto" })
+        foreach (var name in new[] { "FixturePlayerWorldSource", "WorldJson", "WorldDto", "DevelopmentDto", "ScriptedGameSource", "ScriptedGameJson", "GameRulesJson", "ScriptedGameDto", "EventDto" })
         {
             var type = InfrastructureAssembly.GetTypes().Single(t => t.Name == name);
             Assert.False(type.IsVisible, $"{name} must not be public");
@@ -106,6 +109,9 @@ public class TrustedBoundaryTests
         Assert.False(typeof(IPlayerWorldSource).IsVisible);
         Assert.False(typeof(PlayerWorld).IsVisible);
         Assert.False(typeof(ViewerContext).IsVisible);
+        Assert.False(typeof(IScriptedGameSource).IsVisible);
+        Assert.False(typeof(ScriptedGame).IsVisible);
+        Assert.False(typeof(ExpectedGame).IsVisible);
     }
 
     [Fact]
@@ -166,6 +172,34 @@ public class TrustedBoundaryTests
                 $"{method.Name} exposes {type.FullName}");
     }
 
+    [Fact]
+    public void The_game_diagnostics_service_has_no_public_constructor_and_only_one_public_way_to_get_it()
+    {
+        Assert.Empty(typeof(GameDiagnosticsService).GetConstructors(BindingFlags.Public | BindingFlags.Instance));
+        var factories = new[] { ApplicationAssembly, InfrastructureAssembly }
+            .SelectMany(a => a.GetExportedTypes())
+            .SelectMany(t => t.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+            .Where(m => m.ReturnType == typeof(GameDiagnosticsService))
+            .ToList();
+
+        var factory = Assert.Single(factories);
+        Assert.Equal("GameDiagnosticsComposition.CreateFictionalPhase2", $"{factory.DeclaringType!.Name}.{factory.Name}");
+        Assert.Empty(factory.GetParameters());
+    }
+
+    [Fact]
+    public void The_game_diagnostics_service_speaks_only_primitives_and_public_projection_dtos_and_runs_no_command_but_next_outcome()
+    {
+        var methods = typeof(GameDiagnosticsService).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(m => !m.IsSpecialName).ToList();
+
+        Assert.Equal(["Current", "ListGames", "Next", "RunToEnd", "Select"], methods.Select(m => m.Name).Order().ToArray());
+        var dtoNamespace = typeof(GameView).Namespace;
+        foreach (var method in methods)
+        foreach (var type in method.GetParameters().Select(p => p.ParameterType).Append(method.ReturnType).SelectMany(TypesIn))
+            Assert.True(type.IsPrimitive || type == typeof(string) || type == typeof(void) || type.Namespace == dtoNamespace || type.Namespace == "System.Collections.Generic",
+                $"{method.Name} exposes {type.FullName}");
+    }
+
     // ---- the compiled Godot client ----
 
     private static string ClientDll()
@@ -184,7 +218,11 @@ public class TrustedBoundaryTests
         var named = IlScan.NamedTypesFrom(client, "StarPlayer.Infrastructure");
 
         Assert.Equal(["StarPlayer.Client.Bootstrap.CompositionRoot"], users.Order().ToArray());
-        Assert.Subset(new HashSet<string> { "StarPlayer.Infrastructure.Fixtures.PlayerInfoComposition", "StarPlayer.Infrastructure.Sqlite.SqliteStorageDiagnostics" }, named);
+        Assert.Subset(new HashSet<string>
+        {
+            "StarPlayer.Infrastructure.Fixtures.PlayerInfoComposition", "StarPlayer.Infrastructure.Fixtures.GameDiagnosticsComposition",
+            "StarPlayer.Infrastructure.Sqlite.SqliteStorageDiagnostics",
+        }, named);
         Assert.Empty(IlScan.TypesReferencing(client, "StarPlayer.Domain"));
         Assert.Empty(IlScan.TypesReferencing(client, "StarPlayer.Simulation"));
     }
