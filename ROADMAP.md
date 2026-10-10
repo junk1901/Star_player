@@ -109,7 +109,7 @@ The following additions reuse existing owners and phases rather than creating a 
 - C34 may optionally import completed draft facts, entry/signing/registration facts and an initial C47 number. No Game Core branch checks `year == 2026`; the default KBO 2026 pack policy comes from pack data and may instead describe other imported years or fictional completed classes.
 - The personal KBO 2026 pack represents the world immediately before the 2026 regular season, with opening day as the simulation divergence point. Its default configuration marks the already-completed 2026 rookie draft/history as `Imported`/completed and locked; with no imported 2027+ classes, 2027 onward uses the normal generated pipeline. This is pack data, not a Game Core conditional. Phase 27 still records and certifies the exact `as_of_date`, evidence cutoff, source rows and provenance.
 - C01 Existing Player Start may select an imported already-drafted rookie by the same stable PlayerId. Career binding never copies the Player, reruns the draft or changes the historical club/entry facts. Facts before the configured start remain imported history; events after it are simulation-owned and may diverge completely from reality.
-- F closed the committed gameplay feature scope. CF is the single owner-approved bounded exception described in §1.11; after its integration, the Scope Lock remains active. Future ideas are deferred unless an implementation dependency is genuinely missing, an existing requirement is contradictory, or the owner explicitly approves another feature.
+- F closed the committed gameplay feature scope. CF is an owner-approved bounded exception described in §1.11, and Broadcast Commentary Lite (BCL, §1.12; user-approved 2026-10-11) is a second, presentation-only exception; after their integration, the Scope Lock remains active. Future ideas are deferred unless an implementation dependency is genuinely missing, an existing requirement is contradictory, or the owner explicitly approves another feature.
 
 ### 1.11 Club Finance Lite approved exception and renewed scope lock
 
@@ -119,7 +119,21 @@ Club Finance Lite is a lightweight autonomous-club subsystem, not a playable fro
 
 Club sponsorship uses abstract/versioned agreements with annual base revenue and bonuses tied only to finalized regular-season, postseason and championship facts. Unique settlement evidence makes base/bonus realization idempotent across reload, repeated closure and projection rebuild. Renewal uses deterministic bounded annual changes, multi-season smoothing, baseline support and minimum/maximum policy limits so success cannot create unlimited wealth and struggling clubs can recover. Real club sponsorship amounts or confidential budgets are never presented as verified facts without certified evidence; fictional assumptions and game-model estimates carry explicit provenance and player-facing labels.
 
-The player may inspect Korean read-only financial summaries and reasons relevant to contracts, but cannot allocate club budgets, negotiate club sponsorships, hire staff or act as owner/GM. Gemini has no financial decision authority. Ticketing, stadium operations, broadcast rights, ownership/investment, staff payroll, debt/bankruptcy, accounting statements and other franchise-finance features remain excluded. CF authorizes no further gameplay system, no new top-level phase and no production implementation in this revision.
+The player may inspect Korean read-only financial summaries and reasons relevant to contracts, but cannot allocate club budgets, negotiate club sponsorships, hire staff or act as owner/GM. Gemini has no financial decision authority. Ticketing, stadium operations, broadcast rights, ownership/investment, staff payroll, debt/bankruptcy, accounting statements and other franchise-finance features remain excluded. CF authorizes no further gameplay system, no new top-level phase and no production implementation in this revision. (The "broadcast rights" exclusion concerns revenue; the presentation-only BCL of §1.12 is a separate approved feature.)
+
+### 1.12 Broadcast Commentary Lite — owner-approved presentation addition
+
+**Status:** user-directed addition of 2026-10-11, planning approved; implementation not started. It is a bounded exception to the Scope Lock (§1.10), adds no new top-level phase and keeps Phases 0–29 and their numbering/completion status unchanged (Phases 0–2 stay approved as recorded in CURRENT_STATE.md).
+
+Add an offline, text-only, rule-based in-game broadcast chat. It reuses authoritative scored-game events and visible, confirmed context; commentary has no authority over game outcomes, strategy selection, scoring, player ratings, season facts or saves. It does **not** implement broadcast rights, television revenue, club finance, authentic broadcaster likenesses, Gemini, external AI/API calls, TTS or required networking.
+
+Ship **exactly two fictional broadcaster crews** initially, each with a caster and an analyst/commentator. Crew A uses restrained play-by-play and tactical analysis; Crew B uses energetic reactions, light banter and grounded tactical explanations. Names and portraits are provisional presentation assets, not game-logic identifiers. Use one reusable commentary service with two independently authored Korean dialogue packs, not two engines.
+
+Select one crew at game start by a **documented, deterministic A/B rotation across the controlled player's consecutive games**, and keep it for the whole game. Persist the assignment against a stable game/fixture identity; save/reload, watched/instant modes, weather postponements/rescheduling and revisiting archived games cannot silently reroll it. Phase 5 prototypes the assignment against its stable test-game identity (no season calendar exists yet); Phase 6 binds it to the canonical persisted fixture/reschedule chain and keeps every already-assigned game's crew unchanged. The crew is committed once, when the game or fixture chain first starts: a fixture postponed or cancelled before it starts consumes no rotation slot, and a started game that later resumes, replays or is rescheduled keeps its crew.
+
+Messages derive only from committed game events and permissible read-model facts (inning, outs, score, bases, scoring plays, verified player records, measured recent-game context where available). Never invent pitch sequences, quotations, injuries, skills, psychology, records or tactical causes, and never disclose hidden NPC ratings/potential. Routine actions receive sparse lines; game-changing events may produce a short two-speaker exchange. Korean text is skippable, scrollable and nonblocking; controls include off / highlights / fuller commentary, limited by screen and available event granularity. Skipped and instant games never require replaying thousands of lines.
+
+Dialogue variation uses a **separate deterministic presentation selection key** derived from stable event/game identity, crew ID and dialogue-pack version, never authoritative gameplay RNG. Deduplicate by event ID + presentation version; replay and reopening cannot duplicate or reorder messages. Record the frozen pack/version and relevant immutable presentation references (or a stable transcript) where needed for historic re-display, without treating dialogue as a core game fact. Renderer failures, missing dialogue content, disabled settings or changed layout leave the scored game, RNG/event hashes and pending gameplay decisions unchanged. Gemini/generative commentary, TTS or further crews need a later explicit design decision. Phase placement: 3 (boundary only), 5 (offline chat), 6 (fixture-bound assignment), 28 (final UX audit).
 
 ## 2. Repository Structure
 
@@ -769,7 +783,7 @@ Temporary QHD game, PA-approach choices, authoritative count, current mode, resu
 Versioned tuning JSON, seed/command replay fixtures, game-state serialization contract. No career save promise yet.
 
 ### Events
-Existing scored-game events; `GameDecisionRequested`. Do not emit a “pitch event” for an invented display count.
+Existing scored-game events; `GameDecisionRequested`. Do not emit a “pitch event” for an invented display count. These scored-event and replay contracts are the future input for read-only Broadcast Commentary Lite (§1.12); **no dialogue generation or commentary UI belongs to Phase 3**, and presentation never consumes authoritative RNG or fabricates pitch events.
 
 ### Tests
 100,000 seeded PAs; 100 complete games; monotonic ability/strategy influence fixtures; identical-seed canonical replay; all outcome probabilities finite and normalized; neutral-strategy watched vs instant results identical; default PA prompt count and one-pitch `Take` resume fixtures; displayed counts equal authoritative state.
@@ -860,6 +874,8 @@ New/existing player starts, including imported already-drafted rookie selection,
 
 Visible Pending Decisions, first-time contextual help/tooltips/glossary and a basic settings framework (C42) ship with the first career loop.
 
+Add Broadcast Commentary Lite's (§1.12) minimal offline, template-driven caster/analyst side chat for the controlled player's playable games, with Crew A and Crew B having clearly different stable tone and dialogue packs independent of game mechanics. No career-wide broadcast schedule yet (Phase 6).
+
 ### Explicit Non-Goals
 No developed life economy, real growth curves, full draft, major league season, advanced news, or final visual theme.
 
@@ -879,16 +895,19 @@ Add `PendingDecisionView`, `HelpTopic`, `HelpSeenPreference`, `SettingsCapabilit
 
 5. Add Korean `의사결정 대기함` with count, subject/type/due date/status/block reason and links to existing decision actions. Dismissal/navigation/reload cannot resolve or hide an outstanding decision.
 6. Add contextual notices, hover/focus tooltips and reopenable glossary/help; persist do-not-show-again and reset controls. Introduce basic display/window/text scale, existing progression/text speeds, implemented default modes and confirmation/autosave/help preferences. Capabilities hide unavailable audio/Gemini/portrait controls; autosave settings cannot disable mandatory recovery boundaries or lower the three-generation minimum.
+7. Implement a read-only, event-driven `CommentaryContext` projection and bounded `CommentaryLine` selector over existing scored-play events (single engine, never a reducer/state-machine change for narration). Build separate versioned, data-driven Korean Crew A/B packs that prevent unsupported factual claims, assign a crew per stable Phase 5 test-game identity by the documented A/B rotation and preserve it on resume.
 
 ### UI Work
 Home, My Player, Training, Game, Result, basic News/Event, menu shell and minimal overlay player card. Build compact QHD/FHD variants now; preserve active game when inspecting a name. Label Prototype 2's new-player scenario as a fictional post-entry fixture rather than the final direct-club career start.
+
+Game view: a collapsible broadcaster chat beside the game view in QHD and a compact tab/drawer in FHD. Distinguish caster vs analyst by name and role, show brief dialogue bursts, offer off/highlights/fuller verbosity as event granularity allows, and never cover essential PA/count/score/runner/decision controls. Missing commentary content yields no message, never a fabricated play or a blocked game.
 
 Use Korean labels including 홈, 내 선수, 경기, 훈련, 기존 선수로 시작, 신인만 보기, 드래프트 연도, 지명 순번, 출신 학교, 의사결정 대기함 and 설정. Imported rookie results are read-only historical facts. Inbox is a compact decision list, not an email simulator; contextual help is skippable and reopenable, not a forced tutorial campaign.
 
 ### Persistence Work
 Add creation settings, controlled PlayerId binding, personality, plans, pending choices and navigation preferences. Preserve imported draft/entry/jersey references rather than copying player rows. Autosave postgame and pre/post major career decisions; migration fixture required.
 
-Version preferences separately outside authoritative simulation; Inbox reads persisted decisions and never stores a second decision truth.
+Version preferences separately outside authoritative simulation; Inbox reads persisted decisions and never stores a second decision truth. Store the commentary verbosity preference with those preferences and the per-game crew ID + dialogue-pack version as presentation metadata against the stable test-game identity (migration fixture); neither is a core game fact.
 
 ### Events
 `CareerStarted`, `TrainingPlanChanged`, `PlayerStateChanged`, `DecisionResolved`; existing game events.
@@ -898,22 +917,26 @@ Both start modes; imported rookie appears under filters; selecting one preserves
 
 Pending decision survives close/reload/date-advance attempt; help suppress/reset/reopen; preference migration/corruption fallback leaves core save intact; scaling/FHD focus; no unavailable setting and no weakened autosave floor.
 
+Commentary: Crew A/B alternate over five consecutive controlled-player test games and stay fixed within each game and across reload; normal plays, scoring plays, home runs, strikeouts and game-ending situations yield only context-supported lines; disabling/reopening, every verbosity level, watched/instant modes and viewport differences leave authoritative RNG/event/score hashes unchanged and draw nothing from gameplay RNG streams; event replay is idempotent with stable message order; hidden NPC fields are absent; no network/API is required; all controls remain reachable at QHD/FHD.
+
 ### Acceptance Criteria
 **Gate: G +** five consecutive games and an off-day complete for each role at both resolutions; switching mode changes no outcomes with identical actions; default play does not require every-pitch input; every shown count is real; `Take` advances exactly one pitch; an observer identifies inning/score/outs/runners in <=3 seconds for 9 of 10 prepared situations; next action is reachable without losing game state. Log usability misses as failed criteria to correct.
 
 All live decision barriers are reachable via Inbox; settings/help work at both resolutions and make zero gameplay RNG draws. An imported rookie start binds the existing Player exactly once and never reruns or changes the historical draft.
 
+Broadcast chat passes the commentary tests above with exactly one stable crew per game, no duplicated or reordered messages and no effect on game outcomes or hashes.
+
 ### Deliverables
-Playable Prototype 2, creation/existing selection, shell/scenes, paired screenshots and workflow evidence, `PHASE_5_REPORT.md`.
+Playable Prototype 2, creation/existing selection, shell/scenes, paired screenshots and workflow evidence, minimal two-pack Korean dialogue dataset with read-only presenter/contract tests, `PHASE_5_REPORT.md`.
 
 ### Risks
 Prototype shortcuts becoming permanent roster rules; UI inventing growth or automatically choosing important actions.
 
 ### Documentation Updates
-UI routes and state contract, creation policy/config, current state and report.
+UI routes and state contract, creation policy/config, new `docs/commentary-system.md` (factual boundaries, pack versions, settings, future Phase 6 fixture integration), current state and report.
 
 ### Claude Code Handoff
-> Deliver the one-player loop at QHD and FHD. Reuse Existing Player Start for imported already-drafted rookies with filters and stable identity; do not copy the player or rerun the draft. Keep missing later systems explicitly unavailable, and keep early training intent distinct from implemented growth. Do not hard-cap normal creation or modify imported existing-player facts.
+> Deliver the one-player loop at QHD and FHD. Reuse Existing Player Start for imported already-drafted rookies with filters and stable identity; do not copy the player or rerun the draft. Keep missing later systems explicitly unavailable, and keep early training intent distinct from implemented growth. Do not hard-cap normal creation or modify imported existing-player facts. Keep the broadcast chat read-only, offline and outside authoritative RNG/hashes.
 
 ## Phase 6 — Calendar, regular season, and basic discovery
 
@@ -927,6 +950,8 @@ Phase 5; approved D2 policy with the regular-season/calendar RuleProfile subset 
 World clock/stage cursor, schedule import/generation, fixture StadiumId, lightweight weather/interruption context, date advance barriers, current standings, minimal Player DB/common profiles and Team Profile.
 
 Integrate KBO Rule Engine RegularSeasonRules and complete early Inbox/help/settings routing with the resumable calendar.
+
+Bind the two Broadcast Commentary Lite crews (§1.12) to the canonical fixture schedule: deterministic A/B rotation across the controlled player's consecutive viewed/played fixtures; off-days never advance it; a rescheduled fixture keeps its original crew.
 
 ### Explicit Non-Goals
 No draft, postseason results, long-world stability claim, full historical profile tabs, or life calendar simulation.
@@ -946,12 +971,13 @@ Application date coordinator; Simulation World; schedule/season/query systems C0
 5. Show pending deadlines/advance-stop reasons in Home, Schedule and Inbox from one C42 projection. Add each later contract/FA/injury/national/military/interview type as its owner ships. Distinguish required choices from informational notices.
 6. Resolve schedule/standings rules through versioned RegularSeasonRules. Add rule-aware glossary links and capability-driven progression/default-mode settings; unseen future systems expose no fake controls.
 7. Assign each fixture a C46 StadiumId and resolve minimal Clear/Rain/HeavyRain-equivalent weather through an isolated deterministic stream. RegularSeasonRules alone decides delay/postponement/cancellation and creates a traceable reschedule relation; no major weather ability modifier or unrelated RNG draw.
+8. Attach a versioned `BroadcastCrewAssignment` presentation reference to the stable fixture/game ID using committed fixture ordering (not wall-clock or gameplay PRNG); repeat date-advance and save/reload are idempotent, postponed/cancelled fixtures never double-allocate a crew, and loading never swaps the assigned duo. Phase 5 prototype assignments on already-played games are migrated unchanged, never reassigned.
 
 ### UI Work
 Schedule, Team, League standings, Player DB and common Player/Team Profiles, status-bar next activity. Show Korean venue/weather/status labels such as `우천 취소`, `경기 연기`, `보충 경기`; missing future tabs show truthful empty/unavailable states.
 
 ### Persistence Work
-Competition/season/fixture/stage tables and indexed queries; fixture rows retain StadiumId, weather/status/reason and original↔rescheduled linkage. Preserve played fixtures when loading; migration from Prototype 2 starts a declared new fixture schedule without rewriting past games.
+Competition/season/fixture/stage tables and indexed queries; fixture rows retain StadiumId, weather/status/reason and original↔rescheduled linkage. Persist crew ID and dialogue-pack version in game/fixture presentation metadata (migration as needed; extends the Phase 5 per-game assignment). Preserve played fixtures when loading; migration from Prototype 2 starts a declared new fixture schedule without rewriting past games.
 
 ### Events
 `DateAdvanced`, `FixtureScheduled`, `FixturePostponed`, `FixtureRescheduled`, `SeasonStageChanged`; existing game events feed standings/history.
@@ -961,10 +987,12 @@ Competition/season/fixture/stage tables and indexed queries; fixture rows retain
 
 Inbox count/list/calendar parity, explicit expiry notice and no silent disappearance during advance; reopening help never repeats the gameplay event; settings changes do not alter rules or saved game facts. Same weather seed/profile reproduces fixture status; reload/reschedule creates neither lost nor duplicate games; weather-stream draws leave game/injury/draft hashes unchanged.
 
+Broadcast crews: full-schedule rotation, postponement/reschedule/reload (crew fixed after start, no slot consumed by a pre-start postponement), two simultaneous games, skipped-game modes and offline re-display of older commentary; identical core results/hashes with chat on/off and with either crew.
+
 ### Acceptance Criteria
 **Gate: G +** ten seeds of the 30-day fixture finish with all scheduled games accounted for; loaded continuation matches uninterrupted facts; required decisions stop advancement; minimal profiles are reachable from standings, roster, games and records at both resolutions.
 
-Every advance barrier reports the same persisted decision in Inbox; help/settings remain usable while a required choice is pending; rule snapshots survive load unchanged. Every fixture has a valid StadiumId and weather interruption either leaves it scheduled or produces one rule-valid linked replacement.
+Every advance barrier reports the same persisted decision in Inbox; help/settings remain usable while a required choice is pending; rule snapshots survive load unchanged. Every fixture has a valid StadiumId and weather interruption either leaves it scheduled or produces one rule-valid linked replacement. Every controlled-player game has exactly one stable crew assignment following the documented A/B rotation, with no duplicated messages, altered outcomes or invented records.
 
 ### Deliverables
 Calendar/coordinator/read models, five screens, schedule validation suite, `PHASE_6_REPORT.md`.
@@ -2242,6 +2270,8 @@ Presentation-only `ThemeTokens`, `DisplayPreferences`, `NotificationPriority`, `
 ### UI Work
 All screens, long names, large numbers, Korean text, wrapped news, tables, field labels, popups, saves and data management; accessible focus and non-color status meaning.
 
+Broadcast-panel audit (§1.12) at QHD/FHD: long Korean dialogue and player names, caster/analyst accessibility labels, focus/keyboard interaction, highlight-only vs full text volume, mute/off/hide, scrolling, archive revisit, responsive drawer layout and no overlap with required decisions. Styling must not change gameplay hashes.
+
 ### Persistence Work
 Versioned display/preferences file, migrations only if presentation metadata changes. No save fact rewrite for a theme change.
 
@@ -2254,7 +2284,7 @@ Every inventory route at QHD/FHD, window/borderless/fullscreen as supported in t
 Inbox unresolved/expired/pending-AI states; first injury/second-team/FA/developmental and advanced-metric help; do-not-show/reset/reopen; scaled text/focus; no fake settings; mandatory autosave safety unchanged.
 
 ### Acceptance Criteria
-**Gate: G +** all inventory rows have screenshots and workflow evidence at both resolutions; no clipped required action or unreachable information; all error/loading/empty states are usable; §6.3 query/input budgets pass; simulation hashes match the unthemed build for identical inputs.
+**Gate: G +** all inventory rows have screenshots and workflow evidence at both resolutions; no clipped required action or unreachable information; all error/loading/empty states are usable; §6.3 query/input budgets pass; simulation hashes match the unthemed build for identical inputs; the broadcast panel passes the QHD/FHD audit with no overlap of required decisions.
 
 Every player-facing label/help/reaction surface is Korean; complete settings expose only implemented capabilities and cannot bypass domain barriers or save-recovery requirements.
 
