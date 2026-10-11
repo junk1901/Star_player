@@ -2,4 +2,9 @@
   <ItemGroup>
     <ProjectReference Include="..\StarPlayer.Domain\StarPlayer.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Phase 3-C2B-2: the pure in-play planner core and the post-reducer verification are internal; only these two test assemblies see them. -->
+    <InternalsVisibleTo Include="StarPlayer.Simulation.Tests" />
+    <InternalsVisibleTo Include="StarPlayer.Infrastructure.Tests" />
+  </ItemGroup>
 </Project>

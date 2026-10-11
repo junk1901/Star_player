@@ -1,0 +1,125 @@
+# Phase 3-C2B-2 mutation checks. 32 defects, each injected ALONE into the production source and reverted.
+# Run 1 (part 1): 23 detected, 8 BUILD-ERROR (the injected 'if (false)'-style edits made the compiler reject unreachable code, so they were not tests of anything), 1 SURVIVED (M32).
+# After run 1 a test was added for M32 (Verify with a verdict that lost a move), the 8 build-error mutants were re-expressed with a non-constant condition and re-run together with M32 (part 2): all 9 detected.
+# Result: 32 of 32 detected, 0 survived. Unreachable defensive branches: none left over.
+
+## Part 1
+M01 roe forced runner holds | DETECTED | failed(sim,infra)=(11, 0)
+M02 ground out forced advance removed | DETECTED | failed(sim,infra)=(9, 0)
+M03 walk-off credit disabled | BUILD-ERROR | .Simulation\StarPlayer.Simulation.csproj]
+
+빌드하지 못했습니다.
+
+E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\InPlayOfficialCredit.cs(30,9): error CS0162: 접근할 수 없는 코드가 있습니다. [E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj]
+    경고 0개
+    오류 1개
+
+경과 시간: 00:00:00.93
+
+M04 winner taken as lead runner | DETECTED | failed(sim,infra)=(4, 0)
+M05 always reduce by one base | DETECTED | failed(sim,infra)=(6, 0)
+M06 game end needs strictly more runs | DETECTED | failed(sim,infra)=(15, 0)
+M07 winning runner is the lead scorer | DETECTED | failed(sim,infra)=(3, 0)
+M08 pop error moved to the second baseman | DETECTED | failed(sim,infra)=(12, 0)
+M09 ground out without the assist | DETECTED | failed(sim,infra)=(11, 1)
+M10 pop single dropped from the approved set | DETECTED | failed(sim,infra)=(16, 0)
+M11 a zero combination accepted | DETECTED | failed(sim,infra)=(2, 1)
+M12 fly-out context ignores the third out | DETECTED | failed(sim,infra)=(9, 0)
+M13 double context needs a runner on second | DETECTED | failed(sim,infra)=(13, 0)
+M14 pending ignores a game-ending play | DETECTED | failed(sim,infra)=(5, 0)
+M15 pending never returned | DETECTED | failed(sim,infra)=(0, 5)
+M16 event without the draft location | BUILD-ERROR | lation\StarPlayer.Simulation.csproj]
+
+빌드하지 못했습니다.
+
+E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\InPlayPitchPlanning.cs(95,107): error CS8602: null 가능 참조에 대한 역참조입니다. [E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj]
+    경고 0개
+    오류 1개
+
+경과 시간: 00:00:01.18
+
+M17 candidate next RNG is the start position | DETECTED | failed(sim,infra)=(0, 12)
+M18 pitch count check removed | BUILD-ERROR | Simulation\StarPlayer.Simulation.csproj]
+
+빌드하지 못했습니다.
+
+E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\InPlayPitchPlanning.cs(125,13): error CS0162: 접근할 수 없는 코드가 있습니다. [E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj]
+    경고 0개
+    오류 1개
+
+경과 시간: 00:00:01.24
+
+M19 duplicate check removed | BUILD-ERROR | Simulation\StarPlayer.Simulation.csproj]
+
+빌드하지 못했습니다.
+
+E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\InPlayPitchPlanning.cs(120,13): error CS0162: 접근할 수 없는 코드가 있습니다. [E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj]
+    경고 0개
+    오류 1개
+
+경과 시간: 00:00:01.20
+
+M20 receipt version check removed | DETECTED | failed(sim,infra)=(1, 0)
+M21 working id skips one sequence | DETECTED | failed(sim,infra)=(0, 17)
+M22 id collision check removed | BUILD-ERROR | .Simulation\StarPlayer.Simulation.csproj]
+
+빌드하지 못했습니다.
+
+E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\InPlayPitchPlanning.cs(84,13): error CS0162: 접근할 수 없는 코드가 있습니다. [E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj]
+    경고 0개
+    오류 1개
+
+경과 시간: 00:00:01.25
+
+M23 composite needs three runners | DETECTED | failed(sim,infra)=(8, 1)
+M24 shared check: rng position check removed | BUILD-ERROR | er.Simulation\StarPlayer.Simulation.csproj]
+
+빌드하지 못했습니다.
+
+E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\PitchPreparation.cs(194,13): error CS0162: 접근할 수 없는 코드가 있습니다. [E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj]
+    경고 0개
+    오류 1개
+
+경과 시간: 00:00:01.31
+
+M25 in-play kind check removed | BUILD-ERROR | Simulation\StarPlayer.Simulation.csproj]
+
+빌드하지 못했습니다.
+
+E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\InPlayPitchPlanning.cs(101,13): error CS0162: 접근할 수 없는 코드가 있습니다. [E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj]
+    경고 0개
+    오류 1개
+
+경과 시간: 00:00:01.22
+
+M26 finished game not refused | BUILD-ERROR | er.Simulation\StarPlayer.Simulation.csproj]
+
+빌드하지 못했습니다.
+
+E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\InPlayBasePlanner.cs(21,13): error CS0162: 접근할 수 없는 코드가 있습니다. [E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj]
+    경고 0개
+    오류 1개
+
+경과 시간: 00:00:01.30
+
+M27 half-inning end off by one out | DETECTED | failed(sim,infra)=(9, 1)
+M28 forced test uses any instead of all | DETECTED | failed(sim,infra)=(11, 0)
+M29 hit not capped at home | DETECTED | failed(sim,infra)=(12, 0)
+M30 official record check removed | DETECTED | failed(sim,infra)=(1, 0)
+M31 walk-off needs no final win | DETECTED | failed(sim,infra)=(1, 0)
+M32 plan keeps the batter's move count out | SURVIVED | failed(sim,infra)=(0, 0)
+# detected=23 survived=1 other=8
+
+## Part 2 (re-run)
+# Mutation checks (Phase 3-C2B-2). Each line: one injected defect, applied alone to the production source, then reverted.
+# Tests run for each: Simulation.Tests InPlay.* and Infrastructure.Tests InPlayPitchPlanningTests + PitchPreparationTests.
+M03 walk-off credit disabled | DETECTED | failed(sim,infra)=(7, 0)
+M16 event without the draft location | DETECTED | failed(sim,infra)=(0, 22)
+M18 pitch count check removed | DETECTED | failed(sim,infra)=(1, 0)
+M19 duplicate check removed | DETECTED | failed(sim,infra)=(1, 0)
+M22 id collision check removed | DETECTED | failed(sim,infra)=(0, 1)
+M24 shared check: rng position check removed | DETECTED | failed(sim,infra)=(0, 2)
+M25 in-play kind check removed | DETECTED | failed(sim,infra)=(0, 25)
+M26 finished game not refused | DETECTED | failed(sim,infra)=(1, 0)
+M32 plan keeps the batter's move count out | DETECTED | failed(sim,infra)=(1, 0)
+# detected=9 survived=0 other=0

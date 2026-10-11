@@ -33,10 +33,13 @@ public class HiddenTendencyBoundaryTests
     // stage result (which records the signed tendency shift of one zone). None of them may appear in an Application or Infrastructure member signature.
     // Phase 3-C2A adds the pitch-branch draft, which carries the per-step traces and exact rolls: it is resolver-internal as well.
     // Phase 3-C2B-1 adds the prepared pitch (it holds the draft) and the unconfirmed event candidate: both stay Simulation-internal too.
+    // Phase 3-C2B-2 adds the base in-play plan, its audit record (exact rolls and RNG hashes), the candidate and the pending advancement: all Simulation-internal as well.
     private static readonly Type[] HiddenTypes =
         [typeof(BatterZoneTendency), typeof(ZoneReferenceDistribution), typeof(TendencyContext), typeof(ProbabilityTrace), typeof(StageResult),
          typeof(StarPlayer.Simulation.Baseball.PitchBranchDraft), typeof(StarPlayer.Simulation.Baseball.PitchBranchStep),
-         typeof(StarPlayer.Simulation.Baseball.PreparedPitch), typeof(StarPlayer.Simulation.Baseball.NonInPlayPitchCandidate)];
+         typeof(StarPlayer.Simulation.Baseball.PreparedPitch), typeof(StarPlayer.Simulation.Baseball.NonInPlayPitchCandidate),
+         typeof(StarPlayer.Simulation.Baseball.BaseInPlayPlan), typeof(StarPlayer.Simulation.Baseball.InPlayAudit), typeof(StarPlayer.Simulation.Baseball.InPlayPlanOutcome),
+         typeof(StarPlayer.Simulation.Baseball.InPlayPitchCandidate), typeof(StarPlayer.Simulation.Baseball.PendingAdvancement)];
 
     private static bool IsHidden(Type type) => Mentions(type).Any(t => HiddenTypes.Contains(t));
 

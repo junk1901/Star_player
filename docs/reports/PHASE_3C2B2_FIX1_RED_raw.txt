@@ -1,0 +1,25 @@
+[xUnit.net 00:00:00.22]     StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.Three_behind_with_the_bases_loaded_a_grand_slam_is_won_by_the_batter_runner [FAIL]
+  실패 StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.Three_behind_with_the_bases_loaded_a_grand_slam_is_won_by_the_batter_runner [79 ms]
+  오류 메시지:
+[xUnit.net 00:00:00.22]     StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.One_behind_with_a_runner_on_first_a_home_run_is_won_by_the_batter_runner [FAIL]
+  실패 StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.One_behind_with_a_runner_on_first_a_home_run_is_won_by_the_batter_runner [1 ms]
+  오류 메시지:
+[xUnit.net 00:00:00.22]     StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.A_walk_off_home_run_scores_the_existing_runners_first_then_the_batter_in_the_reducer_order [FAIL]
+  실패 StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.A_walk_off_home_run_scores_the_existing_runners_first_then_the_batter_in_the_reducer_order [2 ms]
+  오류 메시지:
+[xUnit.net 00:00:00.24]     StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.Two_behind_with_first_and_second_a_home_run_is_won_by_the_batter_runner [FAIL]
+[xUnit.net 00:00:00.24]     StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.Tied_in_the_bottom_of_the_ninth_with_nobody_on_a_home_run_is_won_by_the_batter_runner [FAIL]
+[xUnit.net 00:00:00.24]     StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.No_winning_scorer_and_the_batter_runner_are_different_data_in_the_audit [FAIL]
+  실패 StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.Two_behind_with_first_and_second_a_home_run_is_won_by_the_batter_runner [2 ms]
+  오류 메시지:
+  실패 StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.Tied_in_the_bottom_of_the_ninth_with_nobody_on_a_home_run_is_won_by_the_batter_runner [1 ms]
+  오류 메시지:
+  실패 StarPlayer.Simulation.Tests.InPlay.InPlayWinningRunnerTests.No_winning_scorer_and_the_batter_runner_are_different_data_in_the_audit [1 ms]
+  오류 메시지:
+[xUnit.net 00:00:00.25]     StarPlayer.Simulation.Tests.InPlay.InPlayBasePlannerTests.A_walk_off_home_run_with_nobody_on_is_won_by_the_batter [FAIL]
+  실패 StarPlayer.Simulation.Tests.InPlay.InPlayBasePlannerTests.A_walk_off_home_run_with_nobody_on_is_won_by_the_batter [< 1 ms]
+  오류 메시지:
+[xUnit.net 00:00:01.55]     StarPlayer.Simulation.Tests.InPlay.InPlayOracleComparisonTests.A_winning_runner_is_recorded_for_every_non_batter_walk_off_and_is_the_last_scoring_runner [FAIL]
+  실패 StarPlayer.Simulation.Tests.InPlay.InPlayOracleComparisonTests.A_winning_runner_is_recorded_for_every_non_batter_walk_off_and_is_the_last_scoring_runner [964 ms]
+  오류 메시지:
+실패!  - 실패:     8, 통과:   146, 건너뜀:     0, 전체:   154, 기간: 6 s - StarPlayer.Simulation.Tests.dll (net8.0)

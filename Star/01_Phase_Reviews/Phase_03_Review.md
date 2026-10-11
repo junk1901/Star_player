@@ -21,6 +21,24 @@ tags:
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
 
+> [!success] 3-C2B-2 최종 승인 완료 (2026-10-12)
+> 작업 패키지 3-C2B-2는 **Codex Medium 집중 재검토 `PASS`**, **GPT Chat 최종 `PASS`**를 받았다. 승인 범위는 **3-C2B-2에만 한정**되며 Phase 3 전체 완료가 아니다(3-C2B-3·3-C3·Phase 4 미착수, **Phase 3 전체 Gate INCOMPLETE**). 이 문서의 최상위 status는 규칙에 따라 `검토 대기`로 유지한다. Commit 진행은 승인됐으나 실제 Commit/Push 결과는 Git 기록이 권위이며 Push는 미승인이다.
+> - 출처 구분: Codex Medium 집중 재검토 `PASS`는 사용자가 ChatGPT 대화에 전달한 독립 리뷰 보고이고, GPT Chat 최종 `PASS`(C2B-2 작업 패키지 한정 최종 승인 및 Git Commit 승인)는 GPT Chat이 실제로 내린 판정이며(2026-10-12 사용자 채팅으로 확인), 전체 xUnit·verify는 Claude Code 실행 결과이다.
+> - 근거: 기존 19개 인플레이 템플릿 구현, 양의 확률 45개 조합 검증, 기본 경기 1,080건·끝내기 가능 상황 4,320건 검증, 5,400건 독립 오라클 비교 불일치 0, `PendingAdvancement` 1,314건 분리 유지, 끝내기 공식 기록 축소 192건 검증, D5 결승 득점자 감사 계약 보완(`InPlayWinningRunner`), H0/H1/H2 RNG 계약 정정, 전체 xUnit 1,387 PASS(Claude Code 실행), `verify.ps1` 연속 2회 `GATE: PASS`(Claude Code 실행), Codex Medium 집중 재검토 `PASS`, GPT Chat 최종 `PASS`.
+> - 테스트 증거 구분: Codex가 직접 실행한 관련 테스트는 Simulation 87건 + Infrastructure 57건 = 144건 PASS(사용자 전달 보고, 이번 문서 작업에서 재실행하지 않음)이고, Claude Code가 실행한 전체 테스트는 1,387건 PASS이다. GPT Chat·Codex가 로컬 전체 테스트를 독립 실행한 것이 아니며 두 수치는 합산하지 않는다.
+> - 수정 이력: 과거 Codex `CHANGES REQUIRED`(Medium 1: 타자주자 결승 득점자 식별 불가, Low 1: RNG 문서 충돌)는 삭제하지 않고 수정 이력으로 보존한다(보고서 §17).
+> - 미해결: C2B-3의 복수 주자 Advancement 계약 F-1; `PendingAdvancement` 후속 판정 F-2; 추가 진루 이후 공식 기록 재계산 U-2; C3의 원자적 확정 및 EventId 재검사; KBO 2026 공식 규칙 인증 미완료; 원정팀 승리 제3아웃 상황의 `WinningRunner` null 전용 명명 테스트 미추가(비차단 NOTE).
+> - 문서: [보고서 §17–18](../../docs/reports/PHASE_3C2B2_REPORT.md), [ADR-007](../../docs/decisions/ADR-007.md), [game-engine §24](../../docs/game-engine.md).
+> - 아래 3-C2B-2 "구현 완료 — 검토 대기" 기록의 "검토 대기"·"승인 아님"·"미실시"·"스테이징·커밋·푸시 안 함" 표현은 승인 이전 시점의 기록이며 자체 판정과 증거 한계는 그대로 보존한다.
+
+> [!note] 3-C2B-2 구현 완료 — 검토 대기 (2026-10-12, `TASK.md`, 기준 HEAD `34c2028`)
+> 작업 패키지 3-C2B-2(기본 인플레이 계획·`walkoff-credit-v1`·`PendingAdvancement` 격리·인플레이 후보)는 구현·자체 검증을 마쳤고 **`검토 대기`**입니다(승인 아님). GPT Chat 검토 `미실시`, Codex 검토 `미실시`(자동 진행 안 함). 3-C2B-3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE, 이 문서의 최상위 status는 `검토 대기` 유지, 스테이징·커밋·푸시 안 함.
+> - **구현:** `InPlayTemplateCatalog`(19 템플릿·승인 45 조합), `InPlayBasePlanner`(주자 이동·맥락 키), `InPlayOfficialCredit`(끝내기), `InPlayCandidateTypes`(`BaseInPlayPlan`·`InPlayPitchCandidate`·`PendingAdvancement`·`InPlayAudit`), `InPlayPitchPlanning`(`PlanBase`/`Build`/`Verify`); `PitchPreparation`은 준비 상태 검사를 `CheckPrepared`로 추출(코드·순서 불변).
+> - **검증(실제 실행):** 5,400건 필드 단위 일치(불일치 0; 일반 780/300, 끝내기 3,114/1,014/192), 신규 172 테스트, 주입 결함 32/32 검출, 전체 xUnit 1,377 통과(기준 1,205 +172), `verify.ps1` 연속 2회 `GATE: PASS`(로그 `PHASE_3C2B2_VERIFY_LOG_run1/2.md`). RNG 추가 소비 0·EventId 커서 불변·GameState/영수증 불변·취소 7단계 테스트 통과.
+> - **Codex 리뷰 수정(2026-10-12):** Medium(타자주자 결승 득점자 식별 불가)·Low(RNG H0/H1/H2 문서 충돌) 수정. 전체 xUnit 1,387 통과(신규 10), verify 2회 `GATE: PASS`. 증거: `docs/reports/PHASE_3C2B2_REPORT.md` §17. (이 수정 시점의 '재검토 미실시'는 이후 Codex 재검토 PASS로 대체됨: 위 최종 승인.)
+> - **NOTES:** F-1/F-2(3-C2B-3 필수), U-2, `WinningRunner` null(타자 결승) — Codex Medium 지적으로 `BatterRunner` 종류 구분 수정(2026-10-12, 보고서 §17, 재검토 `미실시`), 보류는 커서 미사용, 오라클 동일 작성자, KBO 미인증, 3-F `미실시`. 자체 판정 `PASS WITH NOTES`.
+> - 문서: [보고서](../../docs/reports/PHASE_3C2B2_REPORT.md), [ADR-007](../../docs/decisions/ADR-007.md), [game-engine §24](../../docs/game-engine.md), [RED](../../docs/reports/PHASE_3C2B2_RED_raw.txt), [변형 검사](../../docs/reports/PHASE_3C2B2_MUTATION_raw.txt).
+
 > [!note] 3-C2B-2-P 인플레이 정책 확정·템플릿 실현성 검증 — GPT Chat `PASS WITH NOTES`(검증 한정) (2026-10-12, `TASK.md`)
 > 소유자가 승인한 D1–D5 프로토타입 정책을 ADR-007·game-engine §23·SYSTEM_CONTRACTS C08에 기록하고, 모든 양의 확률 인플레이 조합이 실제 `GameReducer`에서 합법인지 테스트 전용 도구로 검증했다. **프로덕션 코드(`src/`)는 변경하지 않았고 3-C2B-2 구현은 미착수다.** GPT Chat 최종 검토 `PASS WITH NOTES`(3-C2B-2-P 정책·템플릿 실현성 검증에 한정; 수치는 Claude Code 제출 실행 결과이며 GPT Chat·Codex가 로컬 신규 테스트 전체를 독립 실행한 것이 아님), Codex 독립 리뷰 `미실시`(자동 진행 안 함), 3-C2B-3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE, 커밋·푸시 안 함. 이 문서의 최상위 status는 `검토 대기` 유지.
 > - **상태 구분:** D1–D5 소유자 정책 = 승인; 세부 템플릿 실현성 검증 = GPT Chat `PASS WITH NOTES`(구현 승인 아님); 3-C2B-2 구현 = 미착수; 3-C2B-3 = 미착수; 3-C3 = 미착수; Phase 3 전체 Gate = INCOMPLETE.

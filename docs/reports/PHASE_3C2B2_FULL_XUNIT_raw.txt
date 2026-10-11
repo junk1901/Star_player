@@ -1,0 +1,5 @@
+# dotnet test StarPlayer.sln -c Release (2026-10-12T01:37:18+09:00); bash on Windows 11, .NET SDK 8.0.425
+통과!  - 실패:     0, 통과:   263, 건너뜀:     0, 전체:   263, 기간: 145 ms - StarPlayer.Domain.Tests.dll (net8.0)
+통과!  - 실패:     0, 통과:   117, 건너뜀:     0, 전체:   117, 기간: 351 ms - StarPlayer.Application.Tests.dll (net8.0)
+통과!  - 실패:     0, 통과:   470, 건너뜀:     0, 전체:   470, 기간: 15 s - StarPlayer.Infrastructure.Tests.dll (net8.0)
+통과!  - 실패:     0, 통과:   527, 건너뜀:     0, 전체:   527, 기간: 16 s - StarPlayer.Simulation.Tests.dll (net8.0)

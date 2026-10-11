@@ -108,57 +108,10 @@ public static class PitchPreparation
         PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, CancellationToken cancellation = default)
     {
         cancellation.ThrowIfCancellationRequested();
-        if (prepared is null)
-            return Cand.Fail("PitchCandidate.prepared_missing", "준비된 투구가 없습니다.");
-        if (state is null)
-            return Cand.Fail("PitchCandidate.state_missing", "현재 경기 상태가 없습니다.");
-        if (rng is null)
-            return Cand.Fail("PitchCandidate.rng_missing", "현재 난수 스냅샷이 없습니다.");
-        if (tuning is null)
-            return Cand.Fail("PitchCandidate.tuning_missing", "현재 튜닝 프로필이 없습니다.");
-        if (batter is null)
-            return Cand.Fail("PitchCandidate.batter_sheet_missing", "현재 타자의 선수 정보가 없습니다.");
-        if (pitcher is null)
-            return Cand.Fail("PitchCandidate.pitcher_sheet_missing", "현재 투수의 선수 정보가 없습니다.");
-        var draft = prepared.Draft;
-        if (draft.ContractVersion != PitchBranchResolver.ContractVersion)
-            return Cand.Fail("PitchCandidate.draft_contract_unsupported", $"지원하지 않는 투구 분기 계약 버전입니다: '{draft.ContractVersion}'");
-
-        // 1-2: the same game, and a stream position that belongs to it
-        if (!string.Equals(state.GameId, prepared.GameId, StringComparison.Ordinal))
-            return Cand.Fail("PitchCandidate.game_mismatch", "준비한 투구의 경기와 현재 경기가 다릅니다.");
-        var restored = GameRandom.Restore(rng); // a structurally broken snapshot keeps the existing restore error
-        if (!restored.IsSuccess)
-            return Result<NonInPlayPitchCandidate>.Failure(restored.Error!.Value);
-        if (!string.Equals(restored.Value.ContextKey, state.GameId, StringComparison.Ordinal))
-            return Cand.Fail("PitchCandidate.rng_context_mismatch", "난수 스냅샷의 경기 맥락이 현재 경기와 다릅니다.");
-        // 3: the stream position is the one the draft started from (any other draw since then makes it stale)
-        if (!string.Equals(rng.StateHash, prepared.StartRngStateHash, StringComparison.Ordinal))
-            return Cand.Fail("PitchCandidate.rng_state_changed", "준비 이후 난수 위치가 바뀌어 준비한 투구를 쓸 수 없습니다.");
-
-        // 5: the current batter and pitcher (and their handedness) are still the prepared ones
-        if (CheckSheets(state, batter, pitcher, "PitchPrepare") is { } wrong)
-            return Result<NonInPlayPitchCandidate>.Failure(wrong);
-        if (batter.Id != prepared.BatterId)
-            return Cand.Fail("PitchCandidate.batter_changed", "준비 이후 타자가 바뀌었습니다.");
-        if (pitcher.Id != prepared.PitcherId)
-            return Cand.Fail("PitchCandidate.pitcher_changed", "준비 이후 투수가 바뀌었습니다.");
-        if (batter.Player.Bats != prepared.BatterDeclaredSide)
-            return Cand.Fail("PitchCandidate.batter_side_changed", "준비 이후 타자의 선언 타석 방향이 바뀌었습니다.");
-        if (pitcher.Player.Throws != prepared.PitcherThrows)
-            return Cand.Fail("PitchCandidate.pitcher_hand_changed", "준비 이후 투수의 투구 손이 바뀌었습니다.");
-
-        // 6: rules, tuning and probability model
-        if (state.Rules.Version != prepared.RulesVersion || state.Rules.ContentHash != prepared.RulesHash)
-            return Cand.Fail("PitchCandidate.rules_changed", "준비 이후 규칙 버전 또는 해시가 바뀌었습니다.");
-        if (tuning.Tuning.Value != prepared.TuningVersion || tuning.ContentHash != prepared.TuningHash)
-            return Cand.Fail("PitchCandidate.tuning_changed", "준비 이후 튜닝 버전 또는 해시가 바뀌었습니다.");
-        if (tuning.Model.Version.Value != prepared.ProbabilityModelVersion)
-            return Cand.Fail("PitchCandidate.probability_model_changed", "준비 이후 확률 모델 버전이 바뀌었습니다.");
-
-        // 1 (last, so the specific reasons above win): count, outs, bases, approach, applied events... the very same state object
-        if (!ReferenceEquals(state, prepared.State))
-            return Cand.Fail("PitchCandidate.state_stale", "준비 이후 경기 상태가 바뀌었거나 다시 만들어져 준비한 투구를 쓸 수 없습니다.");
+        if (CheckPrepared(prepared, state, rng, tuning, batter, pitcher) is { } stale)
+            return Result<NonInPlayPitchCandidate>.Failure(stale);
+        var draft = prepared!.Draft;                   // CheckPrepared proved that prepared and state exist (the null guard below only informs the compiler)
+        ArgumentNullException.ThrowIfNull(state);
 
         // the limits of this phase
         if (draft.Kind == PitchBranchKind.InPlay)
@@ -205,7 +158,70 @@ public static class PitchPreparation
         return Result<NonInPlayPitchCandidate>.Success(new NonInPlayPitchCandidate(candidate, step, draft.NextRng, draft.Kind, draft.NextBoundedCalls));
     }
 
-    private static int PitchesOf(GameState s, GameState original) =>
+    /// <summary>
+    /// The shared "is this preparation still the one the caller is looking at" contract of 3-C2B-1, in its original order: the inputs exist, the draft contract is supported, the same
+    /// game, a snapshot that belongs to it and sits where the draft started, the same current batter/pitcher and handedness, the same rules / tuning / probability model, and last
+    /// of all the very same state object. Returns the first problem or null. Used unchanged by the non-in-play builder and the in-play planner (3-C2B-2).
+    /// </summary>
+    internal static Error? CheckPrepared(PreparedPitch? prepared, GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning, PlayerSheet? batter, PlayerSheet? pitcher)
+    {
+        if (prepared is null)
+            return Fail("PitchCandidate.prepared_missing", "준비된 투구가 없습니다.");
+        if (state is null)
+            return Fail("PitchCandidate.state_missing", "현재 경기 상태가 없습니다.");
+        if (rng is null)
+            return Fail("PitchCandidate.rng_missing", "현재 난수 스냅샷이 없습니다.");
+        if (tuning is null)
+            return Fail("PitchCandidate.tuning_missing", "현재 튜닝 프로필이 없습니다.");
+        if (batter is null)
+            return Fail("PitchCandidate.batter_sheet_missing", "현재 타자의 선수 정보가 없습니다.");
+        if (pitcher is null)
+            return Fail("PitchCandidate.pitcher_sheet_missing", "현재 투수의 선수 정보가 없습니다.");
+        var draft = prepared.Draft;
+        if (draft.ContractVersion != PitchBranchResolver.ContractVersion)
+            return Fail("PitchCandidate.draft_contract_unsupported", $"지원하지 않는 투구 분기 계약 버전입니다: '{draft.ContractVersion}'");
+
+        // 1-2: the same game, and a stream position that belongs to it
+        if (!string.Equals(state.GameId, prepared.GameId, StringComparison.Ordinal))
+            return Fail("PitchCandidate.game_mismatch", "준비한 투구의 경기와 현재 경기가 다릅니다.");
+        var restored = GameRandom.Restore(rng); // a structurally broken snapshot keeps the existing restore error
+        if (!restored.IsSuccess)
+            return restored.Error!.Value;
+        if (!string.Equals(restored.Value.ContextKey, state.GameId, StringComparison.Ordinal))
+            return Fail("PitchCandidate.rng_context_mismatch", "난수 스냅샷의 경기 맥락이 현재 경기와 다릅니다.");
+        // 3: the stream position is the one the draft started from (any other draw since then makes it stale)
+        if (!string.Equals(rng.StateHash, prepared.StartRngStateHash, StringComparison.Ordinal))
+            return Fail("PitchCandidate.rng_state_changed", "준비 이후 난수 위치가 바뀌어 준비한 투구를 쓸 수 없습니다.");
+
+        // 5: the current batter and pitcher (and their handedness) are still the prepared ones
+        if (CheckSheets(state, batter, pitcher, "PitchPrepare") is { } wrong)
+            return wrong;
+        if (batter.Id != prepared.BatterId)
+            return Fail("PitchCandidate.batter_changed", "준비 이후 타자가 바뀌었습니다.");
+        if (pitcher.Id != prepared.PitcherId)
+            return Fail("PitchCandidate.pitcher_changed", "준비 이후 투수가 바뀌었습니다.");
+        if (batter.Player.Bats != prepared.BatterDeclaredSide)
+            return Fail("PitchCandidate.batter_side_changed", "준비 이후 타자의 선언 타석 방향이 바뀌었습니다.");
+        if (pitcher.Player.Throws != prepared.PitcherThrows)
+            return Fail("PitchCandidate.pitcher_hand_changed", "준비 이후 투수의 투구 손이 바뀌었습니다.");
+
+        // 6: rules, tuning and probability model
+        if (state.Rules.Version != prepared.RulesVersion || state.Rules.ContentHash != prepared.RulesHash)
+            return Fail("PitchCandidate.rules_changed", "준비 이후 규칙 버전 또는 해시가 바뀌었습니다.");
+        if (tuning.Tuning.Value != prepared.TuningVersion || tuning.ContentHash != prepared.TuningHash)
+            return Fail("PitchCandidate.tuning_changed", "준비 이후 튜닝 버전 또는 해시가 바뀌었습니다.");
+        if (tuning.Model.Version.Value != prepared.ProbabilityModelVersion)
+            return Fail("PitchCandidate.probability_model_changed", "준비 이후 확률 모델 버전이 바뀌었습니다.");
+
+        // 1 (last, so the specific reasons above win): count, outs, bases, approach, applied events... the very same state object
+        if (!ReferenceEquals(state, prepared.State))
+            return Fail("PitchCandidate.state_stale", "준비 이후 경기 상태가 바뀌었거나 다시 만들어져 준비한 투구를 쓸 수 없습니다.");
+        return null;
+    }
+
+    private static Error Fail(string code, string message) => new(code, message);
+
+    internal static int PitchesOf(GameState s, GameState original) =>
         s.Team(original.FieldingSide).PitcherUsages.Where(u => u.Pitcher == original.Fielding.Pitcher).Sum(u => u.PitchCount);
 
     /// <summary>The two sheets must be the state's current batter and pitcher. Only ids are compared; no further eligibility is invented.</summary>

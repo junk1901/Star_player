@@ -2,7 +2,7 @@
 type: project-dashboard
 project: Star Player
 current_phase: "03"
-phase_status: Phase 0–2 승인 완료 (3/30), Phase 3은 3-A(RNG)·3-B1(구역·규칙 데이터 계약) 승인(PASS WITH NOTES), 3-B2(확률·튜닝 계약) 승인(PASS WITH NOTES, Codex 최종 PASS), 3-C1(이벤트 위치·ef2·JSON v2) 승인(PASS WITH NOTES, Codex 최종 PASS WITH NOTES), 3-C2A(단일 투구 확률 분기·game/target@1) 승인(PASS WITH NOTES, Codex 최종 집중 재검토 PASS WITH NOTES; 3-C2A만), 3-C2B-1(준비된 투구·비인플레이 이벤트 후보) 승인(PASS WITH NOTES, Codex PASS WITH NOTES; 3-C2B-1만), 3-C2B-2-P(D1–D5 정책 확정·템플릿 실현성 검증; 구현 아님) 검증 완료·GPT Chat PASS WITH NOTES(검증 한정; Codex 미실시), Phase 3 전체 Gate INCOMPLETE, 3-C2B-2 구현·3-C2B-3·3-C3 미착수
+phase_status: 3-C2B-2(기본 인플레이 계획·끝내기 공식 기록·PendingAdvancement 격리·인플레이 후보) 최종 승인 완료(2026-10-12, Codex Medium PASS / GPT Chat 최종 PASS; 3-C2B-2만, Push 미승인), 이하 기존 기록 — Phase 0–2 승인 완료 (3/30), Phase 3은 3-A(RNG)·3-B1(구역·규칙 데이터 계약) 승인(PASS WITH NOTES), 3-B2(확률·튜닝 계약) 승인(PASS WITH NOTES, Codex 최종 PASS), 3-C1(이벤트 위치·ef2·JSON v2) 승인(PASS WITH NOTES, Codex 최종 PASS WITH NOTES), 3-C2A(단일 투구 확률 분기·game/target@1) 승인(PASS WITH NOTES, Codex 최종 집중 재검토 PASS WITH NOTES; 3-C2A만), 3-C2B-1(준비된 투구·비인플레이 이벤트 후보) 승인(PASS WITH NOTES, Codex PASS WITH NOTES; 3-C2B-1만), 3-C2B-2-P(D1–D5 정책 확정·템플릿 실현성 검증; 구현 아님) 검증 완료·GPT Chat PASS WITH NOTES(검증 한정; Codex 미실시), Phase 3 전체 Gate INCOMPLETE, 3-C2B-3·3-C3 미착수
 last_updated: 2026-10-12
 ---
 
@@ -24,8 +24,8 @@ last_updated: 2026-10-12
 | 구분 | 수량 | 내용 |
 |---|---:|---|
 | 승인 완료 | 3 | Phase 0, Phase 1, Phase 2 |
-| 검토 대기 | 0 | 상위 Phase 단위로는 없음 (Phase 3-A·3-B1·3-B2·3-C1 작업 패키지는 승인, 3-C2A 작업 패키지도 승인(2026-10-11), 3-C2B-1 작업 패키지도 승인(2026-10-11), Phase 3 전체는 미완료; 상위 status는 `검토 대기` 유지) |
-| 구현/기록 중 | 1 | Phase 3 (3-A·3-B1·3-B2·3-C1·3-C2A 승인 완료, 3-C2B-1 승인 완료, 3-C2B-2/3~3-F 미착수) |
+| 검토 대기 | 0 | 상위 Phase 단위로는 없음 (Phase 3-A·3-B1·3-B2·3-C1 작업 패키지는 승인, 3-C2A 작업 패키지도 승인(2026-10-11), 3-C2B-1 작업 패키지도 승인(2026-10-11), 3-C2B-2 작업 패키지도 승인(2026-10-12), Phase 3 전체는 미완료; 상위 status는 `검토 대기` 유지) |
+| 구현/기록 중 | 1 | Phase 3 (3-A·3-B1·3-B2·3-C1·3-C2A 승인 완료, 3-C2B-1 승인 완료, 3-C2B-2 승인 완료, 3-C2B-3~3-F 미착수) |
 | 미착수 | 26 | Phase 4–29 |
 
 ## Phase 0–29 현황
@@ -37,7 +37,7 @@ last_updated: 2026-10-12
 | 0 | Reproducible desktop foundation | 승인 완료 | [Phase_00_Review](01_Phase_Reviews/Phase_00_Review.md) |
 | 1 | Player identity, visibility, and baseball vocabulary | 승인 완료 (PASS WITH NOTES) | [Phase_01_Review](01_Phase_Reviews/Phase_01_Review.md) |
 | 2 | Baseball state transitions and scoring | 승인 완료 (PASS WITH NOTES, 2026-10-11) | [Phase_02_Review](01_Phase_Reviews/Phase_02_Review.md) |
-| 3 | Seeded game simulation / Prototype 1 | 3-A(RNG)·3-B1 PASS WITH NOTES / 승인, 3-B2 PASS WITH NOTES / 승인, 3-C1 PASS WITH NOTES / 승인, 3-C2A PASS WITH NOTES / 승인, 3-C2B-1 PASS WITH NOTES / 승인(3-C2B-1만) — Phase 3 전체 Gate INCOMPLETE, 3-C2B-2/3 이후 미착수 | [Phase_03_Review](01_Phase_Reviews/Phase_03_Review.md) |
+| 3 | Seeded game simulation / Prototype 1 | 3-A(RNG)·3-B1 PASS WITH NOTES / 승인, 3-B2 PASS WITH NOTES / 승인, 3-C1 PASS WITH NOTES / 승인, 3-C2A PASS WITH NOTES / 승인, 3-C2B-1 PASS WITH NOTES / 승인(3-C2B-1만) ; 3-C2B-2 승인 완료(Codex Medium PASS / GPT Chat 최종 PASS, 3-C2B-2만, 2026-10-12) — Phase 3 전체 Gate INCOMPLETE, 3-C2B-2/3 이후 미착수 | [Phase_03_Review](01_Phase_Reviews/Phase_03_Review.md) |
 | 4 | Datapack initialization and safe save spine | 미착수 | 미생성 |
 | 5 | One-player career loop / Prototype 2 | 미착수 | 미생성 |
 | 6 | Calendar, regular season, and basic discovery | 미착수 | 미생성 |
@@ -73,6 +73,8 @@ last_updated: 2026-10-12
 
 ## 검토 대기 중인 Phase
 
+- Phase 3 작업 패키지 **3-C2B-2 최종 승인 완료** (2026-10-12): Codex Medium 집중 재검토 `PASS`(사용자 전달 독립 리뷰 보고; Codex 직접 실행 Simulation 87 + Infrastructure 57 = 144건 PASS) / GPT Chat 최종 `PASS`(Commit 승인 포함, Push 미승인). 승인 범위는 3-C2B-2뿐, Phase 3 전체 Gate INCOMPLETE. 전체 xUnit 1,387 PASS와 verify 연속 2회 GATE PASS는 Claude Code 실행 결과(Codex·GPT Chat의 로컬 전체 독립 실행 아님). 과거 Codex `CHANGES REQUIRED`는 수정 이력으로 보존. 미해결: F-1, F-2, U-2, C3 원자적 확정·EventId 재검사, KBO 2026 인증, 원정팀 승리 제3아웃 `WinningRunner` null 전용 테스트(비차단). 아래 "구현 완료 / 검토 대기, 승인 아님" 표현은 승인 이전 기록이다.
+- Phase 3 작업 패키지 **3-C2B-2** (기본 인플레이 계획·끝내기 공식 기록·`PendingAdvancement` 격리·인플레이 후보, 2026-10-12, 소유자 `TASK.md`, 기준 HEAD `34c2028`): **구현 완료 / 검토 대기, 승인 아님** — 실제 `PreparedPitch`만 받는 `InPlayPitchPlanning.PlanBase`/`Build`가 19개 템플릿과 모든 기존 주자의 결정적 기본 이동, `walkoff-credit-v1` 공식 기록으로 `BaseInPlayPlan`을 만들고, 추가 진루 판단이 필요하면 이벤트·ID·영수증이 없는 `PendingAdvancement`, 아니면 `GameReducer.Apply`로 검증한 미확정 `InPlayPitchCandidate`(`ef2`)를 반환. C2A 이후 난수 소비 0, EventId 커서·GameState·영수증 불변. 5,400건 독립 오라클·원시 JSON·리듀서와 필드 단위 일치(일반 780/300, 끝내기 3,114/1,014/192), 신규 172 테스트, 주입 결함 32/32 검출, 전체 xUnit 1,377 통과(기준 1,205 +172), `verify.ps1` 연속 2회 `GATE: PASS`. GPT Chat·Codex 검토 `미실시`, 3-C2B-3(F-1 복수 주자 맥락·F-2)·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE, 커밋·푸시 안 함. [보고서](../docs/reports/PHASE_3C2B2_REPORT.md) · [Phase_03_Review](01_Phase_Reviews/Phase_03_Review.md). **Codex 리뷰 수정(2026-10-12):** 타자주자 결승 득점자 구분(`InPlayWinningRunner`)과 RNG H0/H1/H2 문서 정정만 반영, 전체 xUnit 1,387 통과·verify 2회 PASS, 상태 '재검토 대기'(Codex·GPT Chat 재검토 `미실시`, 승인 아님).
 - Phase 3 작업 패키지 **3-C2B-2-P** (인플레이 정책 확정·템플릿 실현성 검증, 2026-10-12, 소유자 `TASK.md`): D1–D5 소유자 정책을 ADR-007·game-engine §23에 기록하고, 양의 확률 45개 조합(확률 0 15개 별도)·템플릿 19개·일반 1,080건·끝내기 4,320건을 테스트 전용 도구로 실제 `GameReducer`에서 검증(거부 0, 결함 0). **프로덕션 코드 변경 없음, 3-C2B-2 구현 미착수, 구현 승인 아님**; GPT Chat 최종 검토 `PASS WITH NOTES`(3-C2B-2-P 정책·템플릿 실현성 검증에 한정; 수치는 Claude Code 제출 실행 결과이며 GPT Chat·Codex가 로컬 신규 테스트 전체를 독립 실행한 것이 아님), Codex 독립 리뷰 `미실시`; 3-C2B-3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE. 승인 구분: 정책 D1–D5 = 소유자 승인; 템플릿 실현성 검증 = GPT Chat `PASS WITH NOTES`; 3-C2B-2 구현 = 미승인·미착수. 기본 이벤트 5,400건 중 LEGAL_BASE 3,894 / PENDING_ADVANCEMENT 1,314. [보고서](../docs/reports/PHASE_3C2B2_POLICY_REPORT.md), [매트릭스](../docs/reports/PHASE_3C2B2_TEMPLATE_MATRIX.md), [리뷰](01_Phase_Reviews/Phase_03_Review.md).
 - Phase 3 작업 패키지 **3-C2B-1 최종 승인** (2026-10-11): GPT Chat `PASS WITH NOTES` / 최종 승인, 독립 Codex 리뷰 `PASS WITH NOTES`(신규 Critical/High/Medium 없음); 승인 범위는 비인플레이 후보 생성만, 3-C2B-2/3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE; 유지 NOTES는 [보고서 §16](../docs/reports/PHASE_3C2B1_REPORT.md) 참조(소유자 기록 인용: xUnit 1,176 PASS, Codex Release 63/63 PASS, verify 2회 GATE PASS; Commit/Push는 사용자 승인 대기). 아래는 승인 이전 구현 기록: 구현·자체 검증 완료, 신규 63 테스트, 스텁 대비 RED 60 실패/3 통과, 변형 검사 유효 18건 중 17건 검출(1건 생존: 도달 불가 `WasDuplicate` 방어 분기), 전체 xUnit 1,176 통과(기준 1,113에서 +63), `verify.ps1` 2회 GATE PASS, **`검토 대기` — 승인 아님**(승인 이전 기록), GPT Chat 검토 `미실시`, Codex 검토 `미실시`. 3-C2B-2/3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE, Commit/Push 미허가. [리뷰](01_Phase_Reviews/Phase_03_Review.md), [보고서](../docs/reports/PHASE_3C2B1_REPORT.md), [ADR-007](../docs/decisions/ADR-007.md) 3-C2B-1 절.
 - Phase 3 작업 패키지 **3-C2A 후속 수정** (2026-10-11): Codex `CHANGES REQUIRED` Medium 1건(해결기가 `GameState.GameId`와 RNG `ContextKey` 일치를 검사하지 않음)을 `PitchBranch.game_context_mismatch`로 수정, Fixture는 경기 ID 명시, Golden 불변, RED 9 실패/75 통과 → GREEN 84, 전체 xUnit 1113 통과(+11), `verify.ps1` 2회 GATE PASS. 이후 같은 날 GPT Chat `PASS WITH NOTES` / 최종 승인, Codex 최종 집중 재검토 `PASS WITH NOTES`로 **3-C2A 승인**(범위: 3-C2A만; 3-C2B·3-C3 미착수, Phase 3 Gate INCOMPLETE; 상위 리뷰 status는 `검토 대기` 유지). [보고서 §14](../docs/reports/PHASE_3C2A_REPORT.md)·[§15](../docs/reports/PHASE_3C2A_REPORT.md).
@@ -105,6 +107,7 @@ last_updated: 2026-10-12
 - KBO 규칙은 커리어에 동결되는 버전형 2026 KBO 지향 RuleProfile과 명시적 단순화를 사용합니다.
 - 장기 기록은 우선 보존하고 Phase 17/29 실측 후 필요한 경우에만 제한적으로 정리합니다.
 - Club Finance Lite가 Scope Lock의 단일 승인 예외로 추가되었습니다: C13 계약 기반 급여, KBO 샐러리캡, 성과형 구단 스폰서 수익, 규칙 기반 Club AI 연동, 읽기 전용 재정 화면.
+- Phase 3-C2B-2 구현 결정(최종 승인 완료 2026-10-12, 3-C2B-2만): [ADR-007](../docs/decisions/ADR-007.md) 3-C2B-2 구현 절 · [game-engine §24](../docs/game-engine.md) — 실제 `PreparedPitch`만 입력, C2B-1 공유 준비 상태 검사, 형제 타입 `InPlayPitchCandidate`/`PendingAdvancement`, 승인 45 조합 명시, 끝내기 공식 기록, 사후 `Verify`, 내부 감사 기록.
 - Phase 3-C2B-2 프로토타입 정책 D1–D5(소유자 승인, 구현 미착수): [ADR-007](../docs/decisions/ADR-007.md) 3-C2B-2 절 · [game-engine §23](../docs/game-engine.md) — `inplay-mapping-v1`(추첨된 장타는 잠재적 안타로 해석, 일반 상황은 원본 유지, 끝내기만 `walkoff-credit-v1`로 공식 루수 판정), 장외 홈런만 지원, 타자 실제 도달 루수 = 공식 인정 루수인 템플릿만 생성, 2026 OBR 임시 근거(KBO 미인증), 감사 기록은 Simulation 내부 증거(`ef1/ef2` 불변).
 - Phase 3-C2B-1 구현 결정(승인 2026-10-11, 3-C2B-1만): [ADR-007](../docs/decisions/ADR-007.md) 3-C2B-1 절 · [game-engine §22](../docs/game-engine.md) — `PreparedPitch`(외부 생성 불가, 기존 해결기 실제 호출), 현재 타자·투수 `PlayerSheet` ID 대조, 시작 RNG `StateHash`·동일 상태 객체 결합, 별도 작업용 `GameEventIds`, 다섯 비인플레이 분기 → `PitchEvent`/`TakeEvent`(`ef2`), 인플레이 명시적 미지원.
 - Phase 3-C2A 구현 결정: [ADR-007](../docs/decisions/ADR-007.md) 3-C2A 절 · [ADR-004](../docs/decisions/ADR-004.md) 항목 20 — 일곱째 스트림 `game/target@1`(투구당 목표 구역 추첨 1회, 위치 추첨보다 먼저), 목표→위치→타자 결정→콜/스윙→타구→수비 결과의 스트림별 `NextBounded(1,000,000)` 1회 계약, 스위치 타자는 투수 투구 손 반대쪽, 명시적 Take는 HBP 질량 유지, 결과는 `GameEvent`가 아닌 초안 (검토 대기).

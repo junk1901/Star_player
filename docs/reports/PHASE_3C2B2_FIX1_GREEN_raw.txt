@@ -1,0 +1,1 @@
+통과!  - 실패:     0, 통과:   154, 건너뜀:     0, 전체:   154, 기간: 6 s - StarPlayer.Simulation.Tests.dll (net8.0)
