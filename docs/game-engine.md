@@ -595,7 +595,7 @@ The reducer above is unchanged and still has no randomness. Phase 3-A adds only 
 | Type | Role |
 |---|---|
 | `Pcg32` | PCG32 XSH-RR 64/32, version `pcg32-xsh-rr-v1`; unbiased `NextBounded` by rejection sampling; `Draws` counter; `Advance` jump-ahead; `FromState` |
-| `RngStreamId`, `GameRngStreams` | stream identity `name@version`; the six game streams `game/pitch`, `game/contact`, `game/field`, `game/runner`, `game/location`, `game/ai` (all `@1`) |
+| `RngStreamId`, `GameRngStreams` | stream identity `name@version`; the six game streams `game/pitch`, `game/contact`, `game/field`, `game/runner`, `game/location`, `game/ai` (all `@1`); Phase 3-C2A adds a seventh, `game/target@1` (ADR-004 item 20) |
 | `StreamKeyDerivation` | `kd1`: SHA-256 of (master seed, context key, stream id) gives each stream's start; streams cannot affect each other |
 | `GameRandom`, `RngStream` | the streams of one game; lazy creation; `Atomically(work, token)` publishes a private working copy only on success; the original is locked while a scope runs |
 | `GameRandomSnapshot` | `rngset1` snapshot (only streams that have drawn) and `StateHash`; `GameRandom.Restore(snapshot)` is structure-only; `Restore(snapshot, expectedStateHash)` is the loading contract |
@@ -697,3 +697,39 @@ Receipts keep their own JSON (`EventReceiptJson`), which already stores `fingerp
 **Compatibility evidence.** `Ef1CorpusPinTests` holds two literals computed on the unchanged 3-B2 commit `ddbc999`: the SHA-256 over every receipt (id, kind, version, fingerprint) of the 30,974 events in the 100 Phase 2 games, and the SHA-256 over the bytes `WriteEvents` produces for those games. `EventIdentityTests` (literal `ef1` text and hash) and `ReplayContractTests` are unchanged and pass.
 
 **Handoff.** 3-C2: `target_zone` realisation (recommended own stream `game/target@1`, ADR-004 amendment), the `game/location@1` draw before the outcome, explicit-`Take` hit-by-pitch policy, switch-hitter side rule, checking that an event's side is possible for the batter. 3-C3: event-id sequence, reducer result, receipts and RNG cursors as one success unit; commit before publication; Phase 4 SQLite transaction and the expected RNG hash.
+
+## 21. Phase 3-C2A: the single-pitch probability branch (2026-10-11; decisions in `docs/decisions/ADR-007.md`, stream in `docs/decisions/ADR-004.md` item 20)
+
+Status `검토 대기`, not approved. This is the first part of the pitch resolver flow: it connects the 3-B2 probability model to the real seeded streams for ONE pitch and returns a **draft**. It creates no `GameEvent`, calls no `GameReducer`, changes no `GameState`, `ef1`/`ef2`, event JSON, rule profile, tuning number or RNG algorithm.
+
+**API** (`StarPlayer.Simulation.Baseball`, resolver-internal): `PitchBranchResolver.Resolve(PitchBranchRequest, CancellationToken)` returns `Result<PitchBranchDraft>`.
+
+| Input (`PitchBranchRequest`) | Meaning |
+|---|---|
+| `State` (`GameState`) | read only: supplies the rules (called-pitch mode, zone model), the game status and the plate-appearance stage |
+| `Tuning` (`TuningProfile`) | the virtual tuning whose baseline rows are the stage distributions (neutral inputs, no tendency, no modifier) |
+| `Intent` (`PitchIntent`) | `Balanced` / `Attack` / `Careful`: the `target_zone` condition, an explicit input |
+| `ExplicitTake` | the one-pitch Take action (`Start` / `Decision`) instead of a normal pitch (`InSequence`) |
+| `BatterDeclaredSide`, `PitcherThrows` | nullable on purpose: missing is an error. A switch hitter stands opposite the pitcher's throwing hand |
+| `Rng` (`GameRandomSnapshot`) | the caller's current position; the resolver continues from it on a private copy |
+
+**Draw order and streams** (each decision exactly one `NextBounded(1,000,000)`; unreached stages draw nothing; certain outcomes are still drawn):
+
+1. `target_zone` on `game/target@1`, condition = intent.
+2. `actual_location` on `game/location@1`, condition = target zone; the result becomes a `PitchLocation` through `PitchLocation.FromZone` with the applied side.
+3. `batter_decision` on `game/pitch@1`, condition = actual zone (`hit_by_pitch` / `take` / `swing`).
+4. `hit_by_pitch` ends the branch. `take` (or any non-HBP decision of an explicit Take) draws `called_pitch` on `game/pitch@1` with condition `automated:<zone>` or `non_automated:<zone>` from the declared mode. `swing` draws `swing_result` on `game/contact@1`.
+5. `in_play` draws `batted_ball` on `game/contact@1` (condition `heart` / `edge` / `outside`), then `defense_result` on `game/field@1` (condition = the batted-ball type).
+6. `advancement` (`game/runner@1`) is **not** drawn (3-C2B).
+
+Calls per pitch: hit by pitch 3; called ball/strike 4; swinging strike / foul 4; in play 6 (an explicit Take: 3 or 4). Raw draws can exceed calls (rejection sampling, about 0.0225% of raw outputs); the draft reports both, per step and per stream. `PitchBranchKind`: `HitByPitch`, `CalledBall`, `CalledStrike`, `SwingingStrike`, `Foul`, `InPlay` (the future mapping to `PitchSpec` / `InPlayEvent` is 3-C2B).
+
+**Same game required.** `GameState.GameId` must equal the snapshot's `ContextKey` exactly (ordinal); otherwise `PitchBranch.game_context_mismatch` is returned after the snapshot restore and before any draw.
+
+**Errors before the first draw:** `PitchBranch.request_missing`, `state_missing`, `tuning_missing`, `game_not_in_progress`, `take_not_legal`, `pitch_not_legal`, `called_pitch_mode_undeclared` (a `gamerules-v1` profile is never read as a mode), `zone_model_mismatch` / `zone_model_unsupported`, `probability_model_unsupported`, `tuning_version_unsupported`, `tuning_hash_invalid`, `intent_invalid`, `batter_side_missing` / `batter_side_invalid`, `pitcher_hand_missing` / `pitcher_hand_invalid`; and the `Rng.*` restore codes.
+
+**Draft** (`PitchBranchDraft`, `PitchBranchStep`, `PitchBranchStreamUse`): contract `pitch-branch-v1`, intent, explicit-Take flag, `TargetZone`, `PitchLocation`, kind, the five outcome texts (only reached ones), the ordered steps (stage, condition, outcome, stream, exact roll, raw draws, `ProbabilityTrace`), total `NextBounded` calls, per-stream calls and raw draws (ordinal order), `NextRng`, probability-model version, tuning version and hash, rules profile id / version / hash. It is resolver-internal (not in any Application / Infrastructure signature; the traces and rolls are audit data and never reach a UI, Gemini payload or news text) and is never a `GameEvent`.
+
+**Evidence.** Independent Python oracle `tests/Fixtures/generator/generate_pitch_branch_golden.py` (own PCG32 and `kd1`; reads the baseline rows directly) writes `tests/Fixtures/phase3c2a_pitch_branch_golden.json`: `game/target@1` key-derivation / output vectors, independence vectors of the six earlier streams, a rejection vector, and 28 scenarios / 55 pitches. Tests: `TargetStreamTests` (8), `PitchBranchResolverTests` (73) in `tests/StarPlayer.Infrastructure.Tests`; the Phase 3-A golden file and all its tests are unchanged.
+
+**Handoff (3-C2B).** Legal `GameEvent`s from a draft (defensive credits, force / tag, every runner's movement, outs order, third out, walk-off, error attribution), the `advancement` draw on `game/runner@1` against the real runner situation, event ids and `ef2` receipts, mandatory location for new data, and wiring the batter side / pitcher hand from the current lineup. 3-C3: joint atomicity of state, RNG, ids and receipts and automatic plate-appearance progression.

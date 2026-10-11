@@ -1,0 +1,4512 @@
+{
+ "generator": "tests/Fixtures/generator/generate_pitch_branch_golden.py",
+ "tuning_version": "tuning-virtual-proto-v1",
+ "roll_bound": 1000000,
+ "target_vectors": [
+  {
+   "seed": "0000000000000000",
+   "context": "game:KBO-T:fx-0001",
+   "stream": "game/target@1",
+   "initstate": "fd220b32fdd30531",
+   "initseq": "fee8daf80dc2337a",
+   "u32": [
+    "0xe73ba0eb",
+    "0x1883fd56",
+    "0x6711ed74",
+    "0x6c3e54a2",
+    "0x3796bf30",
+    "0x0692d907"
+   ],
+   "bounded_1000000": [
+    444715,
+    303254,
+    228148,
+    24226,
+    626224,
+    287111,
+    762338,
+    825783
+   ],
+   "draws_after_each": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "seed": "0000000000000001",
+   "context": "game:KBO-T:fx-0001",
+   "stream": "game/target@1",
+   "initstate": "59e9bbf5837a483e",
+   "initseq": "04dc176ced448ca0",
+   "u32": [
+    "0x4c2fe8af",
+    "0x43b32829",
+    "0x96ef8df3",
+    "0xb4090ed7",
+    "0xa7e4a3ba",
+    "0xc2a6fb26"
+   ],
+   "bounded_1000000": [
+    208175,
+    814697,
+    281843,
+    492503,
+    779194,
+    723174,
+    255575,
+    778077
+   ],
+   "draws_after_each": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "seed": "0123456789abcdef",
+   "context": "g",
+   "stream": "game/target@1",
+   "initstate": "7afefab2ae155ea1",
+   "initseq": "f763235c489caf34",
+   "u32": [
+    "0x363f3e53",
+    "0x1bfec56a",
+    "0x6f28f118",
+    "0xb83bc21d",
+    "0x547e2779",
+    "0x0314f432"
+   ],
+   "bounded_1000000": [
+    114387,
+    681514,
+    954136,
+    924061,
+    553785,
+    704882,
+    987377,
+    138197
+   ],
+   "draws_after_each": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "seed": "ffffffffffffffff",
+   "context": "game:3c2a:max_seed",
+   "stream": "game/target@1",
+   "initstate": "027df9ab280e8e10",
+   "initseq": "4ba386b28dcd96cf",
+   "u32": [
+    "0xa29381f9",
+    "0x0cd32c2f",
+    "0xad3e19e2",
+    "0xa39f3c18",
+    "0x10ee8e16",
+    "0x4ed70a90"
+   ],
+   "bounded_1000000": [
+    576057,
+    165999,
+    528226,
+    121816,
+    69398,
+    715792,
+    719618,
+    413215
+   ],
+   "draws_after_each": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "seed": "0000000078c3d9d1",
+   "context": "game:3c2a:target",
+   "stream": "game/target@1",
+   "initstate": "8dbf23b1d770d3ba",
+   "initseq": "019e43b60d8f9729",
+   "u32": [
+    "0xc04fdcc4",
+    "0x5e1b99ca",
+    "0x830b44ba",
+    "0xb6fe28ba",
+    "0x2a278e92",
+    "0x28dd2538"
+   ],
+   "bounded_1000000": [
+    459332,
+    867146,
+    553786,
+    109882,
+    235474,
+    581624,
+    411807,
+    568997
+   ],
+   "draws_after_each": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  }
+ ],
+ "independence_vectors": [
+  {
+   "stream": "game/pitch@1",
+   "u32": [
+    "0x965798a4",
+    "0x473a726b",
+    "0x67c35c12",
+    "0x53712259"
+   ]
+  },
+  {
+   "stream": "game/contact@1",
+   "u32": [
+    "0x4ac6def9",
+    "0x3feadbe3",
+    "0x54d2e879",
+    "0x5d831ae3"
+   ]
+  },
+  {
+   "stream": "game/field@1",
+   "u32": [
+    "0x9427da71",
+    "0xf6cf7273",
+    "0xa1a6b832",
+    "0x047aacb7"
+   ]
+  },
+  {
+   "stream": "game/runner@1",
+   "u32": [
+    "0x6fc29f74",
+    "0xefbeeb64",
+    "0x417ef340",
+    "0x3c7a0033"
+   ]
+  },
+  {
+   "stream": "game/location@1",
+   "u32": [
+    "0x41a180b8",
+    "0x2357b297",
+    "0x93adc358",
+    "0xe014bdb8"
+   ]
+  },
+  {
+   "stream": "game/ai@1",
+   "u32": [
+    "0x1bbd36dc",
+    "0xd0b5f3c6",
+    "0x771efc20",
+    "0x7cea87e7"
+   ]
+  }
+ ],
+ "rejection_vector": {
+  "seed": "0000000000001b7b",
+  "context": "game:3c2a:rejection",
+  "stream": "game/target@1",
+  "calls": 40,
+  "raw_draws": 41,
+  "bounded_1000000": [
+   963928,
+   488098,
+   556107,
+   50710,
+   786676,
+   276495,
+   275130,
+   971119,
+   976996,
+   622801,
+   861556,
+   320291,
+   529265,
+   397860,
+   681008,
+   895313,
+   968904,
+   143292,
+   20282,
+   92665,
+   958234,
+   560069,
+   49155,
+   142993,
+   631375,
+   230221,
+   409416,
+   536668,
+   198793,
+   806613,
+   826330,
+   270516,
+   311833,
+   384179,
+   115797,
+   65334,
+   328477,
+   788459,
+   702908,
+   585635
+  ],
+  "raw_draws_per_call": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   2,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "rejected_call_index": 26
+ },
+ "scenarios": [
+  {
+   "id": "p00",
+   "seed": "0000000078c3d9d1",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c2",
+      "location_zone": "in.r3c2",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "line_medium",
+      "defense_result": "out",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r3c2",
+        "stream": "game/target@1",
+        "roll": 585554,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c2",
+        "outcome": "in.r3c2",
+        "stream": "game/location@1",
+        "roll": 764758,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c2",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 926281,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r3c2",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 697933,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "edge",
+        "outcome": "line_medium",
+        "stream": "game/contact@1",
+        "roll": 347388,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "line_medium",
+        "outcome": "out",
+        "stream": "game/field@1",
+        "roll": 259825,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3d9d1|game:3c2a:probe\ngame/contact@1|1d68b52dbb742d83|85088f7161207a2b|2\ngame/field@1|f46dd74723de0500|ae792f55212c437b|1\ngame/location@1|25928e99824225d1|80813aaa8e08add5|1\ngame/pitch@1|a04d717dc789263c|7f1294c68f478d49|1\ngame/target@1|539f62ee704457b4|1615b4329ecd8593|1",
+   "final_state_hash": "6ac0de2e82eb32f23ea6c176cb5d1128d430cc85695ea02fbd661b3f46e1e6d2"
+  },
+  {
+   "id": "p01",
+   "seed": "0000000078c3d9d2",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.low_in",
+      "location_zone": "out.low_in",
+      "applied_side": "right",
+      "boundary": "clear",
+      "decision": "take",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "out.low_in",
+        "stream": "game/target@1",
+        "roll": 643790,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.low_in",
+        "outcome": "out.low_in",
+        "stream": "game/location@1",
+        "roll": 723488,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.low_in",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 428950,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:out.low_in",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 323594,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": true,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c2",
+      "location_zone": "in.r3c1",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "in.r2c2",
+        "stream": "game/target@1",
+        "roll": 256122,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c2",
+        "outcome": "in.r3c1",
+        "stream": "game/location@1",
+        "roll": 744923,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 798396,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r3c1",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 609527,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3d9d2|game:3c2a:probe\ngame/location@1|5d6401efc00fe921|a30793c1cdbb00f1|2\ngame/pitch@1|d3701efaed46814a|cfd8143aa0d0098f|4\ngame/target@1|43cb8d677c030920|28695b95f8212a5b|2",
+   "final_state_hash": "f92781be740330f07c0e9626f4bb72581a7e958c3b07eb03c0d240d5391ed4e8"
+  },
+  {
+   "id": "p02",
+   "seed": "0000000078c3d9d3",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": false,
+      "batter_side": "left",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c2",
+      "location_zone": "in.r1c1",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "foul",
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "foul",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "in.r2c2",
+        "stream": "game/target@1",
+        "roll": 224914,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c2",
+        "outcome": "in.r1c1",
+        "stream": "game/location@1",
+        "roll": 28039,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 958580,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r1c1",
+        "outcome": "foul",
+        "stream": "game/contact@1",
+        "roll": 251105,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": true,
+      "batter_side": "left",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c3",
+      "location_zone": "in.r3c3",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r3c3",
+        "stream": "game/target@1",
+        "roll": 653314,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c3",
+        "outcome": "in.r3c3",
+        "stream": "game/location@1",
+        "roll": 295481,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 943997,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r3c3",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 188616,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": false,
+      "batter_side": "left",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c1",
+      "location_zone": "in.r1c1",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "in.r2c1",
+        "stream": "game/target@1",
+        "roll": 173355,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c1",
+        "outcome": "in.r1c1",
+        "stream": "game/location@1",
+        "roll": 27412,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c1",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 281917,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r1c1",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 663407,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3d9d3|game:3c2a:probe\ngame/contact@1|5a5c4e13794e0d13|33185cea9673c7eb|1\ngame/location@1|352ac22b0593eaa3|ce7ed7d031936303|3\ngame/pitch@1|1b1f1846e4d4f0c5|727504a0d5f13f4b|5\ngame/target@1|c02b92dc0d78d858|5f7a7bbf783f2cc3|3",
+   "final_state_hash": "6de574ca9069800b0d8a48dabcd6bb0c31dad3f00fc7331a3e4ddf981df4d28c"
+  },
+  {
+   "id": "p03",
+   "seed": "0000000078c3d9d4",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": true,
+      "batter_side": "left",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.high_out",
+      "location_zone": "out.high",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "out.high_out",
+        "stream": "game/target@1",
+        "roll": 999420,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.high_out",
+        "outcome": "out.high",
+        "stream": "game/location@1",
+        "roll": 522420,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.high",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 182023,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:out.high",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 565158,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3d9d4|game:3c2a:probe\ngame/location@1|8d294025b625f4ff|425f68ed770e9feb|1\ngame/pitch@1|c88c335363aa5013|7d3cb9ed8500da57|2\ngame/target@1|e6b2070b317c9bf0|8ffe280a6b76459d|1",
+   "final_state_hash": "dadbbb378922178572f5ba7a8099d7ff93fd8d0d26751073e0041c38bb9a9716"
+  },
+  {
+   "id": "p04",
+   "seed": "0000000078c3d9d6",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": false,
+      "batter_side": "switch",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "out.in",
+      "location_zone": "in.r1c2",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "out.in",
+        "stream": "game/target@1",
+        "roll": 618868,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.in",
+        "outcome": "in.r1c2",
+        "stream": "game/location@1",
+        "roll": 112414,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c2",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 71261,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r1c2",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 238621,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": true,
+      "batter_side": "switch",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r1c1",
+      "location_zone": "in.r1c1",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r1c1",
+        "stream": "game/target@1",
+        "roll": 3318,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r1c1",
+        "outcome": "in.r1c1",
+        "stream": "game/location@1",
+        "roll": 37215,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 962136,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r1c1",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 73013,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3d9d6|game:3c2a:probe\ngame/location@1|e1719f9b043917bc|28cb6c2bf5510f67|2\ngame/pitch@1|81825e71e189d4bc|091f19a939f302b1|4\ngame/target@1|7b24b8edd0868e76|f63cceed5fee18a9|2",
+   "final_state_hash": "1229ff42516dcefde46647e081be3e206ecb0ac68fe6c2fa9f783cd90261dbaf"
+  },
+  {
+   "id": "p05",
+   "seed": "0000000078c3d9d8",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": true,
+      "batter_side": "switch",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c2",
+      "location_zone": "in.r3c3",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "in.r3c2",
+        "stream": "game/target@1",
+        "roll": 314400,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c2",
+        "outcome": "in.r3c3",
+        "stream": "game/location@1",
+        "roll": 811371,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 806869,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r3c3",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 464773,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": true,
+      "batter_side": "switch",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "out.low",
+      "location_zone": "in.r3c2",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "out.low",
+        "stream": "game/target@1",
+        "roll": 780439,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.low",
+        "outcome": "in.r3c2",
+        "stream": "game/location@1",
+        "roll": 297290,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c2",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 101966,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r3c2",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 735159,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "switch",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "out.out",
+      "location_zone": "out.out",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "out.out",
+        "stream": "game/target@1",
+        "roll": 924145,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.out",
+        "outcome": "out.out",
+        "stream": "game/location@1",
+        "roll": 753048,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.out",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 429643,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:out.out",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 371109,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3d9d8|game:3c2a:probe\ngame/location@1|aef7af0b94700386|2e49c7fda9271393|3\ngame/pitch@1|759dff00b2df9b2e|ddeee5430b330ea5|6\ngame/target@1|bec5bb01bcb48f00|48623b6db07573c5|3",
+   "final_state_hash": "1927a02e08de99ba9737a2a8c58c85b53c5eb97e4fc9ea2fdd8b383ed68227b8"
+  },
+  {
+   "id": "p06",
+   "seed": "0000000078c3d9e7",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": false,
+      "batter_side": "left",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.in",
+      "location_zone": "out.low",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "miss",
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "swinging_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "out.in",
+        "stream": "game/target@1",
+        "roll": 567078,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.in",
+        "outcome": "out.low",
+        "stream": "game/location@1",
+        "roll": 986583,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.low",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 906588,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "out.low",
+        "outcome": "miss",
+        "stream": "game/contact@1",
+        "roll": 130126,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3d9e7|game:3c2a:probe\ngame/contact@1|7c3edd366a283b57|9f1235cf69d47ccd|1\ngame/location@1|c94fa97308e4b069|d80a8fe3215542eb|1\ngame/pitch@1|f619f237f13a9b37|74bec06ab9eec755|1\ngame/target@1|26526ddfef70d1c4|8f9847b50bdafd9d|1",
+   "final_state_hash": "a1a6821ac3dab267e27dbb1920932f936bebe650bc90347a85ae663ff3b32af6"
+  },
+  {
+   "id": "p07",
+   "seed": "0000000078c3dbf2",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": false,
+      "batter_side": "switch",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c1",
+      "location_zone": "out.in",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "hit_by_pitch",
+      "called_pitch": null,
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "hit_by_pitch",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "in.r2c1",
+        "stream": "game/target@1",
+        "roll": 185711,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c1",
+        "outcome": "out.in",
+        "stream": "game/location@1",
+        "roll": 922750,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.in",
+        "outcome": "hit_by_pitch",
+        "stream": "game/pitch@1",
+        "roll": 2162,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 3,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": true,
+      "batter_side": "switch",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r1c3",
+      "location_zone": "in.r1c3",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r1c3",
+        "stream": "game/target@1",
+        "roll": 173066,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r1c3",
+        "outcome": "in.r1c3",
+        "stream": "game/location@1",
+        "roll": 250561,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 739876,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r1c3",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 102478,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3dbf2|game:3c2a:probe\ngame/location@1|66b0931eb278e9b7|da4ab9a8579798fb|2\ngame/pitch@1|62caabc0e81fd379|3b79c4351e9c5e03|3\ngame/target@1|3220d84be6b67dc9|c05265b337d816a1|2",
+   "final_state_hash": "78e3fd12df85d60ad5c5f52787ac0ff24d9d6ab7a65bd37ac868ae33d798dcab"
+  },
+  {
+   "id": "p08",
+   "seed": "0000000078c3f9e0",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": true,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "out.in",
+      "location_zone": "out.in",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "hit_by_pitch",
+      "called_pitch": null,
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "hit_by_pitch",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "out.in",
+        "stream": "game/target@1",
+        "roll": 611392,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.in",
+        "outcome": "out.in",
+        "stream": "game/location@1",
+        "roll": 555122,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.in",
+        "outcome": "hit_by_pitch",
+        "stream": "game/pitch@1",
+        "roll": 13781,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 3,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": true,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "out.low_out",
+      "location_zone": "out.low_out",
+      "applied_side": "right",
+      "boundary": "clear",
+      "decision": "take",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "out.low_out",
+        "stream": "game/target@1",
+        "roll": 905368,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.low_out",
+        "outcome": "out.low_out",
+        "stream": "game/location@1",
+        "roll": 899628,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.low_out",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 670216,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:out.low_out",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 659783,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r1c2",
+      "location_zone": "in.r1c2",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "fly_medium",
+      "defense_result": "single",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "in.r1c2",
+        "stream": "game/target@1",
+        "roll": 83109,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r1c2",
+        "outcome": "in.r1c2",
+        "stream": "game/location@1",
+        "roll": 434807,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c2",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 345005,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r1c2",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 617232,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "edge",
+        "outcome": "fly_medium",
+        "stream": "game/contact@1",
+        "roll": 629718,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "fly_medium",
+        "outcome": "single",
+        "stream": "game/field@1",
+        "roll": 832637,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3f9e0|game:3c2a:probe\ngame/contact@1|f5cb37133116cd8c|33cd47e48b2eab2f|2\ngame/field@1|9b31c7623af68a62|7ded92a277946653|1\ngame/location@1|8fd299b38bb45f7e|b19c65de880e010d|3\ngame/pitch@1|cbf654122ce3d7d3|427d4eb831bcc4cd|4\ngame/target@1|eea3ce53ade0540a|6ea0915f57faa41d|3",
+   "final_state_hash": "03420123f1ddce79eb18f5312d863efa22d15a54b894d6ee9c62b6d2aba78900"
+  },
+  {
+   "id": "p09",
+   "seed": "0000000078c3f855",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "left",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c1",
+      "location_zone": "in.r2c2",
+      "applied_side": "left",
+      "boundary": "clear",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "fly_hard",
+      "defense_result": "home_run",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r2c1",
+        "stream": "game/target@1",
+        "roll": 274316,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c1",
+        "outcome": "in.r2c2",
+        "stream": "game/location@1",
+        "roll": 675338,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c2",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 842632,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r2c2",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 408723,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "heart",
+        "outcome": "fly_hard",
+        "stream": "game/contact@1",
+        "roll": 815816,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "fly_hard",
+        "outcome": "home_run",
+        "stream": "game/field@1",
+        "roll": 785549,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3f855|game:3c2a:probe\ngame/contact@1|4e5d12fc704bff9c|7428154be0176cc5|2\ngame/field@1|4666ce6c6c954d47|f694e2f8976546b7|1\ngame/location@1|330b9134abe94afa|28653b77ccf3bd45|1\ngame/pitch@1|18f4e639afd1a2cf|63abef759c3dce31|1\ngame/target@1|f3b238e1e731ec6d|e955117f6afd10f7|1",
+   "final_state_hash": "31ff0dad2b3dd2a55ebe9029d3f4001f947dab151ab1c679e8c915a2ac18fc0e"
+  },
+  {
+   "id": "p10",
+   "seed": "0000000078c3f85b",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c3",
+      "location_zone": "out.out",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "fly_medium",
+      "defense_result": "out",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r3c3",
+        "stream": "game/target@1",
+        "roll": 666816,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c3",
+        "outcome": "out.out",
+        "stream": "game/location@1",
+        "roll": 983672,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.out",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 871283,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "out.out",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 984331,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "outside",
+        "outcome": "fly_medium",
+        "stream": "game/contact@1",
+        "roll": 737081,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "fly_medium",
+        "outcome": "out",
+        "stream": "game/field@1",
+        "roll": 233672,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": true,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.in",
+      "location_zone": "in.r1c1",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "out.in",
+        "stream": "game/target@1",
+        "roll": 602355,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.in",
+        "outcome": "in.r1c1",
+        "stream": "game/location@1",
+        "roll": 24289,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 427841,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r1c1",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 725438,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3f85b|game:3c2a:probe\ngame/contact@1|f9890655b2bff6ea|5e5626b59742607f|2\ngame/field@1|440d882d7defd522|5569db2f3ebf0d7f|1\ngame/location@1|0858ec79ded22d28|4f2a5018e9c7a8b1|2\ngame/pitch@1|598e6f24c7b4195d|1770873a8048dbc1|3\ngame/target@1|e5146e3ff03f1ae8|776d4b62ee1b07fb|2",
+   "final_state_hash": "21d2628057e2658c0de1f704de7f7e1384114c7effa9ab679beac3baeeb3fb53"
+  },
+  {
+   "id": "p11",
+   "seed": "0000000078c3f875",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c2",
+      "location_zone": "in.r2c1",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "line_weak",
+      "defense_result": "double",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "in.r3c2",
+        "stream": "game/target@1",
+        "roll": 448010,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c2",
+        "outcome": "in.r2c1",
+        "stream": "game/location@1",
+        "roll": 112079,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 802771,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r2c1",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 624279,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "edge",
+        "outcome": "line_weak",
+        "stream": "game/contact@1",
+        "roll": 317813,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "line_weak",
+        "outcome": "double",
+        "stream": "game/field@1",
+        "roll": 950252,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": true,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.low_out",
+      "location_zone": "out.out",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "out.low_out",
+        "stream": "game/target@1",
+        "roll": 895821,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.low_out",
+        "outcome": "out.out",
+        "stream": "game/location@1",
+        "roll": 994461,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.out",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 990419,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:out.out",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 953583,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c3",
+      "location_zone": "in.r3c3",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "foul",
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "foul",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "in.r3c3",
+        "stream": "game/target@1",
+        "roll": 393387,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c3",
+        "outcome": "in.r3c3",
+        "stream": "game/location@1",
+        "roll": 688765,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 933035,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r3c3",
+        "outcome": "foul",
+        "stream": "game/contact@1",
+        "roll": 411587,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3f875|game:3c2a:probe\ngame/contact@1|df5ac04bf68966ca|25a3e29f659d513b|3\ngame/field@1|27b4bd585cd33bee|f3497313376e0c1d|1\ngame/location@1|50b9fe12e6692a6a|cc662ce40ee6d391|3\ngame/pitch@1|1516a7e95578807e|bbd8aa611fe0b481|4\ngame/target@1|c7c465bc92c9177f|4af84b613dc4b0a9|3",
+   "final_state_hash": "c9bc2a8f594dd5ec72bb528678ee3be35ad0442520527d434405d239726d3c8c"
+  },
+  {
+   "id": "p12",
+   "seed": "0000000078c3f878",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": false,
+      "batter_side": "left",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.high",
+      "location_zone": "in.r2c3",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "ground_hard",
+      "defense_result": "single",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "out.high",
+        "stream": "game/target@1",
+        "roll": 502151,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.high",
+        "outcome": "in.r2c3",
+        "stream": "game/location@1",
+        "roll": 385407,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 641904,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r2c3",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 908133,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "edge",
+        "outcome": "ground_hard",
+        "stream": "game/contact@1",
+        "roll": 288336,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "ground_hard",
+        "outcome": "single",
+        "stream": "game/field@1",
+        "roll": 744092,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3f878|game:3c2a:probe\ngame/contact@1|abf3441cb58f507c|19342104455121df|2\ngame/field@1|e005b6f6288f03d9|92876dfdfec319c9|1\ngame/location@1|1299249bd29b1d46|262a80f57f70e50f|1\ngame/pitch@1|489fbe03f82e7692|11e9bbf4d021687f|1\ngame/target@1|cf4642773c21da42|67d3d9f6cd0815ab|1",
+   "final_state_hash": "330c322312dadfbce48186b59618deadc137246c2ce473b8168ab79f8e5b4096"
+  },
+  {
+   "id": "p13",
+   "seed": "0000000078c3f9eb",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": false,
+      "batter_side": "left",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c3",
+      "location_zone": "in.r2c3",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "ground_weak",
+      "defense_result": "reached_on_error",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "in.r2c3",
+        "stream": "game/target@1",
+        "roll": 218948,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c3",
+        "outcome": "in.r2c3",
+        "stream": "game/location@1",
+        "roll": 697558,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 915227,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r2c3",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 943433,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "edge",
+        "outcome": "ground_weak",
+        "stream": "game/contact@1",
+        "roll": 96111,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "ground_weak",
+        "outcome": "reached_on_error",
+        "stream": "game/field@1",
+        "roll": 981487,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": true,
+      "batter_side": "left",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r1c3",
+      "location_zone": "in.r2c1",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "in.r1c3",
+        "stream": "game/target@1",
+        "roll": 112369,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r1c3",
+        "outcome": "in.r2c1",
+        "stream": "game/location@1",
+        "roll": 588070,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 734730,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r2c1",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 255291,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3f9eb|game:3c2a:probe\ngame/contact@1|23da37d72944f961|405e555e659fab77|2\ngame/field@1|58a906a66591fb22|32a483dcdc0230b9|1\ngame/location@1|0f389ad6cde719b5|8779ec4556849391|2\ngame/pitch@1|36239a653d7482c8|60d5f47067221569|3\ngame/target@1|1efd69834aba5453|584f21046d0c7f55|2",
+   "final_state_hash": "e626d032cd55d6a4e29a9ff0b970eb2d22be9c248cb65cd20751fc7af900e637"
+  },
+  {
+   "id": "p14",
+   "seed": "0000000078c4010a",
+   "context": "game:3c2a:probe",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c2",
+      "location_zone": "in.r2c2",
+      "applied_side": "right",
+      "boundary": "clear",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "fly_hard",
+      "defense_result": "triple",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r2c2",
+        "stream": "game/target@1",
+        "roll": 334448,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c2",
+        "outcome": "in.r2c2",
+        "stream": "game/location@1",
+        "roll": 504410,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c2",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 401967,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r2c2",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 666066,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "heart",
+        "outcome": "fly_hard",
+        "stream": "game/contact@1",
+        "roll": 842794,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "fly_hard",
+        "outcome": "triple",
+        "stream": "game/field@1",
+        "roll": 623764,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": true,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.in",
+      "location_zone": "in.r2c1",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "out.in",
+        "stream": "game/target@1",
+        "roll": 571995,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.in",
+        "outcome": "in.r2c1",
+        "stream": "game/location@1",
+        "roll": 191363,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 961403,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r2c1",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 671821,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r1c3",
+      "location_zone": "in.r2c2",
+      "applied_side": "right",
+      "boundary": "clear",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "fly_medium",
+      "defense_result": "out",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "in.r1c3",
+        "stream": "game/target@1",
+        "roll": 120710,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r1c3",
+        "outcome": "in.r2c2",
+        "stream": "game/location@1",
+        "roll": 604682,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c2",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 500784,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r2c2",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 801321,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "heart",
+        "outcome": "fly_medium",
+        "stream": "game/contact@1",
+        "roll": 702622,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "fly_medium",
+        "outcome": "out",
+        "stream": "game/field@1",
+        "roll": 724583,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c4010a|game:3c2a:probe\ngame/contact@1|1a77cbd48ffa4a0a|3f1b9d7839878bbb|4\ngame/field@1|86bc69e6e8ebc04a|c1d5e8556b158775|2\ngame/location@1|af3a88ed43c5badc|6f87b5aea3d2ce1b|3\ngame/pitch@1|b84c7d21c095c828|7401545bb186f953|4\ngame/target@1|9d1ca6d435bdaea5|e5e43ee68534fc8f|3",
+   "final_state_hash": "b6274b65f21307d200aac99b98b593baafffb39e22e02bc505236fbee771e7d1"
+  },
+  {
+   "id": "p15",
+   "seed": "0000000078c3fa3c",
+   "context": "game:3c2a:s15",
+   "prior_calls": {
+    "game/target@1": 4,
+    "game/pitch@1": 0,
+    "game/contact@1": 2,
+    "game/location@1": 1
+   },
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": true,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.out",
+      "location_zone": "in.r1c1",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "out.out",
+        "stream": "game/target@1",
+        "roll": 965843,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.out",
+        "outcome": "in.r1c1",
+        "stream": "game/location@1",
+        "roll": 6315,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 800405,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r1c1",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 147558,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa3c|game:3c2a:s15\ngame/contact@1|30b26399b365b9d3|b18f320d3ada2c35|2\ngame/location@1|c6200f3a319bfa2c|94ed1b46f6422a3b|2\ngame/pitch@1|33f944285138831e|d982c9084fe2ad6b|2\ngame/target@1|123970d284295138|a8e9b8322755561d|5",
+   "final_state_hash": "9bdbf773b602a01b93a565841d8d3aac4505069d8627d346fe91cfa54a28335e"
+  },
+  {
+   "id": "p16",
+   "seed": "0000000078c3fa3d",
+   "context": "game:3c2a:s16",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c2",
+      "location_zone": "in.r1c1",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "line_weak",
+      "defense_result": "single",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r2c2",
+        "stream": "game/target@1",
+        "roll": 360988,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c2",
+        "outcome": "in.r1c1",
+        "stream": "game/location@1",
+        "roll": 12172,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 556602,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r1c1",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 873911,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "edge",
+        "outcome": "line_weak",
+        "stream": "game/contact@1",
+        "roll": 318990,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "line_weak",
+        "outcome": "single",
+        "stream": "game/field@1",
+        "roll": 566868,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": true,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r1c2",
+      "location_zone": "in.r2c3",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "in.r1c2",
+        "stream": "game/target@1",
+        "roll": 92070,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r1c2",
+        "outcome": "in.r2c3",
+        "stream": "game/location@1",
+        "roll": 729582,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c3",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 63576,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r2c3",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 85275,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa3d|game:3c2a:s16\ngame/contact@1|7e932f333cbd4815|fbfdeb5be4ac25f9|2\ngame/field@1|7830348b04bba91d|bfe10c0808ce39f9|1\ngame/location@1|a069d33eb1cf28fb|801bcca2b57c3d5d|2\ngame/pitch@1|7463987434cbf795|ac867b6a37858723|3\ngame/target@1|cf2c5d7c4d1dec56|71d80291998c293f|2",
+   "final_state_hash": "9dfb12d8493d8f793c9b8faf54c291cf15159f645bd0d469612132578e97ba6c"
+  },
+  {
+   "id": "p17",
+   "seed": "0000000078c3fa3e",
+   "context": "game:3c2a:s17",
+   "prior_calls": {
+    "game/target@1": 2,
+    "game/pitch@1": 2,
+    "game/contact@1": 2,
+    "game/location@1": 1
+   },
+   "pitches": [
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c3",
+      "location_zone": "in.r3c3",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "in.r3c3",
+        "stream": "game/target@1",
+        "roll": 408986,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c3",
+        "outcome": "in.r3c3",
+        "stream": "game/location@1",
+        "roll": 294782,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c3",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 107510,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r3c3",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 190947,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": true,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.high_out",
+      "location_zone": "in.r2c3",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "out.high_out",
+        "stream": "game/target@1",
+        "roll": 990615,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.high_out",
+        "outcome": "in.r2c3",
+        "stream": "game/location@1",
+        "roll": 354094,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 885424,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r2c3",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 737079,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.high",
+      "location_zone": "out.out",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "out.high",
+        "stream": "game/target@1",
+        "roll": 687199,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.high",
+        "outcome": "out.out",
+        "stream": "game/location@1",
+        "roll": 931015,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.out",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 317043,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:out.out",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 149318,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa3e|game:3c2a:s17\ngame/contact@1|587abb21b020d360|f68d8287fb462989|2\ngame/location@1|7e8028ef19367b80|ce37af7461e2a69b|4\ngame/pitch@1|4665c9b8526a5190|5ee2bed5a024a7f3|8\ngame/target@1|78b773acd8cc2097|14ab66a9f8ddafc5|5",
+   "final_state_hash": "a69c3f96329a692929ddb204720c91d43d2d7a9da32960745aea4cacee767b23"
+  },
+  {
+   "id": "p18",
+   "seed": "0000000078c3fa3f",
+   "context": "game:3c2a:s18",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "out.in",
+      "location_zone": "in.r3c2",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "out.in",
+        "stream": "game/target@1",
+        "roll": 597740,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.in",
+        "outcome": "in.r3c2",
+        "stream": "game/location@1",
+        "roll": 417947,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c2",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 137222,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r3c2",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 973168,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa3f|game:3c2a:s18\ngame/location@1|276cef99266f4a9a|0cc905ed271b4771|1\ngame/pitch@1|03343a5aea133366|fafe26c7055b8857|2\ngame/target@1|188e60f9fe419ae9|cbd8227234babbe7|1",
+   "final_state_hash": "50088413b34880f604d7c4435d55cf8464b8416698cb6a2f33d459372662ad75"
+  },
+  {
+   "id": "p19",
+   "seed": "0000000078c3fa40",
+   "context": "game:3c2a:s19",
+   "prior_calls": {
+    "game/target@1": 4,
+    "game/pitch@1": 1,
+    "game/contact@1": 2,
+    "game/location@1": 1
+   },
+   "pitches": [
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "left",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c1",
+      "location_zone": "in.r2c1",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "ground_hard",
+      "defense_result": "out",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r3c1",
+        "stream": "game/target@1",
+        "roll": 463215,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c1",
+        "outcome": "in.r2c1",
+        "stream": "game/location@1",
+        "roll": 104512,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 739056,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r2c1",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 794145,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "edge",
+        "outcome": "ground_hard",
+        "stream": "game/contact@1",
+        "roll": 291869,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "ground_hard",
+        "outcome": "out",
+        "stream": "game/field@1",
+        "roll": 336333,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": true,
+      "batter_side": "left",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r1c1",
+      "location_zone": "in.r1c1",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "in.r1c1",
+        "stream": "game/target@1",
+        "roll": 26474,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r1c1",
+        "outcome": "in.r1c1",
+        "stream": "game/location@1",
+        "roll": 498210,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c1",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 156220,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r1c1",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 43160,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa40|game:3c2a:s19\ngame/contact@1|89bcd29df93a57f0|218730cbe6e9cc49|4\ngame/field@1|ca951b856235aca9|aeb39b89fa76596b|1\ngame/location@1|7d9714932f35ecc1|ba1b9c5efb892de3|3\ngame/pitch@1|8cc27ddea2bd94f9|e22a7fe5678329f7|4\ngame/target@1|111028dc793c3dfa|65ff89800a4c5207|6",
+   "final_state_hash": "ffd745b1c60f5a22786ac1dd76d07b1da3b311e77970f5673130a23e2f152dc7"
+  },
+  {
+   "id": "p20",
+   "seed": "0000000078c3fa41",
+   "context": "game:3c2a:s20",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": true,
+      "batter_side": "left",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "out.low",
+      "location_zone": "out.low",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "out.low",
+        "stream": "game/target@1",
+        "roll": 682200,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.low",
+        "outcome": "out.low",
+        "stream": "game/location@1",
+        "roll": 733364,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.low",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 787393,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:out.low",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 638049,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": true,
+      "batter_side": "left",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c1",
+      "location_zone": "in.r3c1",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "in.r3c1",
+        "stream": "game/target@1",
+        "roll": 388989,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c1",
+        "outcome": "in.r3c1",
+        "stream": "game/location@1",
+        "roll": 603070,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 523982,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r3c1",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 228268,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "left",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c3",
+      "location_zone": "in.r1c3",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r2c3",
+        "stream": "game/target@1",
+        "roll": 427855,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c3",
+        "outcome": "in.r1c3",
+        "stream": "game/location@1",
+        "roll": 91545,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c3",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 210565,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r1c3",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 453795,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa41|game:3c2a:s20\ngame/location@1|41f24e899a074382|dc3a77fec8629a4f|3\ngame/pitch@1|36c991584e7652b2|a8b5ced724150e43|6\ngame/target@1|d72457e36a5c59ea|97c38aa9243c9197|3",
+   "final_state_hash": "f7ceb465029652ca55dfd5bbb616e55cd2b72ac0d2d3aa7d0c59a6d70a574999"
+  },
+  {
+   "id": "p21",
+   "seed": "0000000078c3fa42",
+   "context": "game:3c2a:s21",
+   "prior_calls": {
+    "game/target@1": 2,
+    "game/pitch@1": 0,
+    "game/contact@1": 2,
+    "game/location@1": 1
+   },
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": false,
+      "batter_side": "left",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.low_in",
+      "location_zone": "in.r3c1",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "foul",
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "foul",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "out.low_in",
+        "stream": "game/target@1",
+        "roll": 662942,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.low_in",
+        "outcome": "in.r3c1",
+        "stream": "game/location@1",
+        "roll": 316595,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 970197,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r3c1",
+        "outcome": "foul",
+        "stream": "game/contact@1",
+        "roll": 233281,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa42|game:3c2a:s21\ngame/contact@1|059a6a668b2984e4|5d70de3dffa6f92b|3\ngame/location@1|cd68818939172b93|c024dda04bdc64a9|2\ngame/pitch@1|da75b25f0efb5c7d|4bd6d3b1c8e8648d|1\ngame/target@1|ed43ea13a497621e|776490f7f266f45b|3",
+   "final_state_hash": "d14bded2f96b10e4e3107765e2daa113cfd72b8bff3445c84b20cf8b55faf86c"
+  },
+  {
+   "id": "p22",
+   "seed": "0000000078c3fa43",
+   "context": "game:3c2a:s22",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "left",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "out.low",
+      "location_zone": "out.low",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "out.low",
+        "stream": "game/target@1",
+        "roll": 848912,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.low",
+        "outcome": "out.low",
+        "stream": "game/location@1",
+        "roll": 619091,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.low",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 255554,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:out.low",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 515956,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": true,
+      "batter_side": "left",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "out.low",
+      "location_zone": "out.low",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "out.low",
+        "stream": "game/target@1",
+        "roll": 709294,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.low",
+        "outcome": "out.low",
+        "stream": "game/location@1",
+        "roll": 649295,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.low",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 154455,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:out.low",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 246090,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa43|game:3c2a:s22\ngame/location@1|d806633563dec847|e7ed9e8eb2b93da5|2\ngame/pitch@1|6b676a1556bbf80b|ea72deace920d723|4\ngame/target@1|ba17395f721a6c27|c8e53ec1168a0063|2",
+   "final_state_hash": "955f7434c0ba4ece662b10b9b30f860e297f82a15fcc917df85e1e27bbd4fcfa"
+  },
+  {
+   "id": "p23",
+   "seed": "0000000078c3fa44",
+   "context": "game:3c2a:s23",
+   "prior_calls": {
+    "game/target@1": 4,
+    "game/pitch@1": 2,
+    "game/contact@1": 2,
+    "game/location@1": 1
+   },
+   "pitches": [
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": false,
+      "batter_side": "switch",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "out.in",
+      "location_zone": "out.in",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "out.in",
+        "stream": "game/target@1",
+        "roll": 536815,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.in",
+        "outcome": "out.in",
+        "stream": "game/location@1",
+        "roll": 569735,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.in",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 241669,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:out.in",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 840863,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": true,
+      "batter_side": "switch",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r1c2",
+      "location_zone": "in.r1c2",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "in.r1c2",
+        "stream": "game/target@1",
+        "roll": 65665,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r1c2",
+        "outcome": "in.r1c2",
+        "stream": "game/location@1",
+        "roll": 443727,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r1c2",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 465952,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r1c2",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 990851,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "switch",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c3",
+      "location_zone": "in.r3c3",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "miss",
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "swinging_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r3c3",
+        "stream": "game/target@1",
+        "roll": 654520,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c3",
+        "outcome": "in.r3c3",
+        "stream": "game/location@1",
+        "roll": 303540,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 429650,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r3c3",
+        "outcome": "miss",
+        "stream": "game/contact@1",
+        "roll": 186677,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa44|game:3c2a:s23\ngame/contact@1|094a4eb8da0aae09|502434701c79377d|3\ngame/location@1|aab98942fb41bd8e|1ac5f996291c9697|4\ngame/pitch@1|52c1899270fa483f|b09c2d1e1a1f7991|7\ngame/target@1|b68d6235ad6d9fbd|643c8142cdcc4467|7",
+   "final_state_hash": "511961547cc74d3a2d3cfa3d86a2f76095ec9c7168b3ec9ee5f93867a2790441"
+  },
+  {
+   "id": "p24",
+   "seed": "0000000078c3fa45",
+   "context": "game:3c2a:s24",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": false,
+      "batter_side": "switch",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c1",
+      "location_zone": "in.r2c1",
+      "applied_side": "left",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "in_play",
+      "batted_ball": "ground_weak",
+      "defense_result": "out",
+      "kind": "in_play",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "in.r2c1",
+        "stream": "game/target@1",
+        "roll": 192031,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c1",
+        "outcome": "in.r2c1",
+        "stream": "game/location@1",
+        "roll": 377019,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c1",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 465804,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r2c1",
+        "outcome": "in_play",
+        "stream": "game/contact@1",
+        "roll": 829396,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batted_ball",
+        "condition": "edge",
+        "outcome": "ground_weak",
+        "stream": "game/contact@1",
+        "roll": 70269,
+        "raw_draws": 1
+       },
+       {
+        "stage": "defense_result",
+        "condition": "ground_weak",
+        "outcome": "out",
+        "stream": "game/field@1",
+        "roll": 349161,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 6,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 2,
+       "game/field@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa45|game:3c2a:s24\ngame/contact@1|08a8432404e7fce7|1afd9d3136b7d073|2\ngame/field@1|05d17a4877325fc7|25f5c8006bbc8bd5|1\ngame/location@1|5f17eb3606bd9f50|952b02c8dd9ba499|1\ngame/pitch@1|0705b56e926071f1|54d7c07241a1b457|1\ngame/target@1|75bab642e8e2835f|18443dd58f3f1369|1",
+   "final_state_hash": "f31ab14bbd2c1c53143a6df963e08c7537aa8708ec1e085f856dcfa5e108090b"
+  },
+  {
+   "id": "p25",
+   "seed": "0000000078c3fa46",
+   "context": "game:3c2a:s25",
+   "prior_calls": {
+    "game/target@1": 2,
+    "game/pitch@1": 1,
+    "game/contact@1": 2,
+    "game/location@1": 1
+   },
+   "pitches": [
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": true,
+      "batter_side": "switch",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c1",
+      "location_zone": "in.r2c3",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r3c1",
+        "stream": "game/target@1",
+        "roll": 494137,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c1",
+        "outcome": "in.r2c3",
+        "stream": "game/location@1",
+        "roll": 202234,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 575450,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:in.r2c3",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 182469,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": true,
+      "batter_side": "switch",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "automated"
+     },
+     "expected": {
+      "target_zone": "in.r2c1",
+      "location_zone": "out.high_in",
+      "applied_side": "right",
+      "boundary": "clear",
+      "decision": "take",
+      "called_pitch": "ball",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_ball",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "in.r2c1",
+        "stream": "game/target@1",
+        "roll": 160444,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r2c1",
+        "outcome": "out.high_in",
+        "stream": "game/location@1",
+        "roll": 881510,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "out.high_in",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 538077,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "automated:out.high_in",
+        "outcome": "ball",
+        "stream": "game/pitch@1",
+        "roll": 351983,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa46|game:3c2a:s25\ngame/contact@1|eefeaae0f1d6a1a2|682cc642366ae587|2\ngame/location@1|ada63a8f09f648ac|c7c68f8d590afa3b|3\ngame/pitch@1|c2bbf5275293af48|031427683cddd44d|5\ngame/target@1|d7f5b359a3e400a2|b227db797e3b5e09|4",
+   "final_state_hash": "91adc858728affa009128606faf3c916b220ab776927430a1f4a7eb89fa3496b"
+  },
+  {
+   "id": "p26",
+   "seed": "0000000078c3fa47",
+   "context": "game:3c2a:s26",
+   "prior_calls": {},
+   "pitches": [
+    {
+     "spec": {
+      "intent": "careful",
+      "explicit_take": false,
+      "batter_side": "switch",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r1c3",
+      "location_zone": "in.r2c3",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "miss",
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "swinging_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "careful",
+        "outcome": "in.r1c3",
+        "stream": "game/target@1",
+        "roll": 149053,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r1c3",
+        "outcome": "in.r2c3",
+        "stream": "game/location@1",
+        "roll": 706906,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 539575,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r2c3",
+        "outcome": "miss",
+        "stream": "game/contact@1",
+        "roll": 110059,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": true,
+      "batter_side": "switch",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "out.low_out",
+      "location_zone": "in.r3c2",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "out.low_out",
+        "stream": "game/target@1",
+        "roll": 847405,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "out.low_out",
+        "outcome": "in.r3c2",
+        "stream": "game/location@1",
+        "roll": 249560,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c2",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 829775,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r3c2",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 517300,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    },
+    {
+     "spec": {
+      "intent": "attack",
+      "explicit_take": false,
+      "batter_side": "switch",
+      "pitcher_hand": "left",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c2",
+      "location_zone": "in.r3c3",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "take",
+      "called_pitch": "strike",
+      "swing_result": null,
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "called_strike",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "attack",
+        "outcome": "in.r3c2",
+        "stream": "game/target@1",
+        "roll": 568642,
+        "raw_draws": 1
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c2",
+        "outcome": "in.r3c3",
+        "stream": "game/location@1",
+        "roll": 820446,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r3c3",
+        "outcome": "take",
+        "stream": "game/pitch@1",
+        "roll": 161293,
+        "raw_draws": 1
+       },
+       {
+        "stage": "called_pitch",
+        "condition": "non_automated:in.r3c3",
+        "outcome": "strike",
+        "stream": "game/pitch@1",
+        "roll": 822984,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      },
+      "draws_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 2
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000078c3fa47|game:3c2a:s26\ngame/contact@1|9855e9aee139c27c|c28678723a7b552b|1\ngame/location@1|fb5d4f723893dfc7|1b66168046f244a1|3\ngame/pitch@1|9f7b8b46cbc80858|0251aeff516cad7b|5\ngame/target@1|746ddfdd8340e87c|732a541f09fe7139|3",
+   "final_state_hash": "008aaa39c23c51acb9296eaee42f1401099f1be7cc0aa305d89e8397fff93c25"
+  },
+  {
+   "id": "rejection",
+   "seed": "0000000000001b7b",
+   "context": "game:3c2a:rejection",
+   "prior_calls": {
+    "game/target@1": 26
+   },
+   "pitches": [
+    {
+     "spec": {
+      "intent": "balanced",
+      "explicit_take": false,
+      "batter_side": "right",
+      "pitcher_hand": "right",
+      "called_pitch_mode": "non_automated"
+     },
+     "expected": {
+      "target_zone": "in.r3c2",
+      "location_zone": "in.r2c3",
+      "applied_side": "right",
+      "boundary": "borderline",
+      "decision": "swing",
+      "called_pitch": null,
+      "swing_result": "foul",
+      "batted_ball": null,
+      "defense_result": null,
+      "kind": "foul",
+      "steps": [
+       {
+        "stage": "target_zone",
+        "condition": "balanced",
+        "outcome": "in.r3c2",
+        "stream": "game/target@1",
+        "roll": 409416,
+        "raw_draws": 2
+       },
+       {
+        "stage": "actual_location",
+        "condition": "in.r3c2",
+        "outcome": "in.r2c3",
+        "stream": "game/location@1",
+        "roll": 198569,
+        "raw_draws": 1
+       },
+       {
+        "stage": "batter_decision",
+        "condition": "in.r2c3",
+        "outcome": "swing",
+        "stream": "game/pitch@1",
+        "roll": 811155,
+        "raw_draws": 1
+       },
+       {
+        "stage": "swing_result",
+        "condition": "in.r2c3",
+        "outcome": "foul",
+        "stream": "game/contact@1",
+        "roll": 312160,
+        "raw_draws": 1
+       }
+      ],
+      "total_calls": 4,
+      "calls_by_stream": {
+       "game/target@1": 1,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      },
+      "draws_by_stream": {
+       "game/target@1": 2,
+       "game/location@1": 1,
+       "game/pitch@1": 1,
+       "game/contact@1": 1
+      }
+     }
+    }
+   ],
+   "final_canonical": "rngset1|pcg32-xsh-rr-v1|kd1|0000000000001b7b|game:3c2a:rejection\ngame/contact@1|181e1dc86aa86296|e9e77ca81f509763|1\ngame/location@1|e254ca4b6fc58bc3|6944bd74f5c9bee3|1\ngame/pitch@1|651debaa835cf0a6|36802a208d33873f|1\ngame/target@1|0e707599df48dca1|dd9357675192e8f1|28",
+   "final_state_hash": "7b0f6a24bec660c6a8417313ca99820db01bbcf69384c30a84d4e868c4b7ee21"
+  }
+ ]
+}

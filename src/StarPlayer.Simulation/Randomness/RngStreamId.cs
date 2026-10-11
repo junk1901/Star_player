@@ -45,6 +45,9 @@ public readonly record struct RngStreamId
 /// drawn BEFORE that pitch's outcome draws on the other streams, in strict game pitch order, one location draw sequence per actual pitch
 /// (an in-play pitch is one pitch, never two). The number of draws per pitch is fixed by the location model version defined in 3-B/3-C;
 /// any change of that count or order requires <c>game/location@2</c>.</item>
+/// <item><c>game/target</c> (added in Phase 3-C2A, ADR-004 amendment) the pitcher's target-zone draw ONLY: exactly one <c>NextBounded(1,000,000)</c> call per actual
+/// pitch, drawn BEFORE that pitch's <c>game/location</c> draw. It is a separate stream so that neither <c>game/location</c> nor <c>game/ai</c> changes meaning
+/// (a deterministic pitcher policy would consume nothing). A change of its call count or order requires <c>game/target@2</c>.</item>
 /// <item><c>game/ai</c> simple legal AI strategy/substitution policy tie-breaks, only where a deterministic rule leaves a choice.</item>
 /// </list>
 /// </summary>
@@ -56,4 +59,5 @@ public static class GameRngStreams
     public static readonly RngStreamId Runner = RngStreamId.Known("game/runner", 1);
     public static readonly RngStreamId Location = RngStreamId.Known("game/location", 1);
     public static readonly RngStreamId Ai = RngStreamId.Known("game/ai", 1);
+    public static readonly RngStreamId Target = RngStreamId.Known("game/target", 1);
 }

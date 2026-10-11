@@ -1,14 +1,14 @@
 ---
 type: phase-review
 phase: "03"
-phase_name: "Seeded game simulation / Prototype 1 — 작업 패키지 3-A (RNG), 3-B1 (구역·규칙 데이터 계약), 3-B2 (확률·튜닝 계약), 3-C1 (이벤트 위치·ef2·JSON v2)"
+phase_name: "Seeded game simulation / Prototype 1 — 작업 패키지 3-A (RNG), 3-B1 (구역·규칙 데이터 계약), 3-B2 (확률·튜닝 계약), 3-C1 (이벤트 위치·ef2·JSON v2), 3-C2A (단일 투구 확률 분기·game/target@1)"
 status: 검토 대기
 started: "2026-10-11"
 completed: ""
 developer_ai: Claude Code
 reviewed_by: ""
 branch: "main"
-commit: "3-C1 커밋됨 (기준 HEAD ddbc999c4c8640dd22b458062e98c0bf7fbe46f6 위의 단일 커밋 `feat: add phase 3c1 located events and ef2 contracts`; SHA는 git log 참조; 3-B2는 ddbc999로 커밋됨)"
+commit: "3-C2A: 'feat: add phase 3c2a deterministic pitch branch resolver' (기준 HEAD d3570b76e93246076253681568b709d3ea1d5a3b 다음 커밋; SHA는 git log 참조 — 문서가 자기 커밋 SHA를 담을 수 없음; 3-C1은 d3570b7)"
 roadmap_anchor: "phase-3--seeded-game-simulation--prototype-1"
 last_updated: "2026-10-11"
 tags:
@@ -20,6 +20,29 @@ tags:
 
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
+
+> [!success] 3-C2A 최종 승인 (2026-10-11, 소유자 `TASK.md`)
+> 작업 패키지 3-C2A는 **GPT Chat `PASS WITH NOTES` / 최종 승인**, **Codex 최종 집중 재검토 `PASS WITH NOTES`**를 받았다. 기존 Codex `CHANGES REQUIRED`(Medium 1)는 해결·재검증됐고 새 Critical/High/Medium 결함은 없다(아래 판정과 수정 이력 보존). 근거(소유자 기록 인용): 전체 xUnit 1,113 PASS(Claude 실행), Codex 직접 실행 Release 92/92 PASS, `verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행·Codex 로그 확인), 독립 Python 골든 검증 PASS, 3-A 골든 바이트 불변, `game/target@1` 독립성·정상 분기 RNG 호출 수·원본 GameState/RNG 스냅샷 불변성 확인. **승인 범위는 3-C2A뿐**이며 3-C2 전체·Phase 3 전체 완료가 아니다: 3-C2B·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE. 이 문서의 최상위 status는 규칙에 따라 `검토 대기`로 유지한다.
+> - **비차단 NOTES(유지):** 수정 전 RED 9 실패/75 통과는 원시 로그 없이 요약만 확인됨; 변형 검사 15건 원시 출력의 독립 검토 한계; 분기 중간 오류·늦은 취소 추가 검증; 실제 타자·투수와 요청 입력 연결(3-C2B); 초안→합법 `GameEvent` 변환(3-C2B); `advancement`·주자 이동 검증(3-C2B); 이벤트 ID·영수증·RNG·`GameState` 공동 원자성(3-C3); DB 트랜잭션·RNG 기대 해시(Phase 4); 100,000 PA / 100경기 통계 보정(3-F).
+> - 문서: [보고서 §15](../../docs/reports/PHASE_3C2A_REPORT.md), [ADR-007](../../docs/decisions/ADR-007.md).
+> - 아래 "검토 대기"·"미실시"·"Commit/Push 안 함" 표현은 승인 이전 시점의 기록이다.
+
+> [!note] 3-C2A 구현 완료 — 검토 대기 (2026-10-11, `TASK.md`)
+> 작업 패키지 3-C2A(단일 투구 확률 분기 + `game/target@1`)는 구현·자체 검증을 마쳤고 **`검토 대기`**입니다(승인 아님). GPT Chat 검토 `미실시`, Codex 독립 검토 `미실시`(자동 진행 안 함). 3-C2B·3-C3·Phase 4는 미착수, Phase 3 전체 Gate는 INCOMPLETE. 이 문서의 최상위 status는 `검토 대기`로 유지한다.
+> - **구현:** 일곱째 스트림 `game/target@1`(투구마다 `NextBounded(1,000,000)` 1회, `game/location@1`보다 먼저; 알고리즘·`kd1`·`rngset1`·3-A Golden Vector 불변)과 `PitchBranchResolver.Resolve`: 목표 구역 → 실제 위치(`PitchLocation.FromZone`) → 타자 결정 → 콜 또는 스윙 결과 → 타구 → 수비 결과를 각각 계약된 스트림에서 정확히 1회 추첨(도달하지 않은 단계는 추첨 없음, 확률 100% 단계도 추첨, `advancement`는 3-C2B). 스위치 타자는 투수 투구 손의 반대쪽(투구마다, RNG 없음), 명시적 Take는 일반 타자 결정(HBP 질량 유지) 뒤 콜만(스윙·타구·수비 없음). 결과는 `PitchBranchDraft`이며 `GameEvent`·`GameState`가 아니다.
+> - **테스트(실제 실행):** 전체 xUnit 1102 통과(Domain 263, Simulation 383, Application 117, Infrastructure 339; 기준 1021에서 +81), 실패 0. 기대값은 독립 Python 오라클(28 시나리오·55 투구, 거부 샘플링 벡터). 스텁 대비 RED 69 실패/12 통과, 변형 검사 15건 모두 검출. `tools/verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, 로그 `PHASE_3C2A_VERIFY_LOG_run1/2.md`).
+> - **NOTES:** 스트림 계약은 자체 RED 실행이 없음, 변형 검사 원시 출력 미보존, 분기 중간 실패 주입·늦은 취소 미테스트, 오라클은 C#과 작성자·계약 해석을 공유, 해결기는 호출자가 준 타석 방향·투구 손을 상태의 타자·투수와 대조하지 않음, Take/투구 단계 규칙은 리듀서와 코드 공유 없이 재진술, 통계 보정 미실시(3-F).
+> - **3-C2B/3-C3 인계:** 합법 `GameEvent` 변환(수비 기록·진루·아웃 순서·제3아웃·끝내기·실책 귀속), `advancement` 추첨, 이벤트 ID·`ef2` 영수증, 새 데이터의 위치 필수화, 타석 방향·투구 손의 라인업 연결, 타석 자동 진행, 상태+RNG+ID+영수증 공동 원자성, Phase 4 트랜잭션·RNG 기대 해시.
+> - 문서: [ADR-007](../../docs/decisions/ADR-007.md) 3-C2A 절, [ADR-004](../../docs/decisions/ADR-004.md) 항목 20, [game-engine §21](../../docs/game-engine.md), [보고서](../../docs/reports/PHASE_3C2A_REPORT.md), [RED·변형 요약](../../docs/reports/PHASE_3C2A_RED_EVIDENCE.md).
+
+> [!warning] 3-C2A Codex 지적 수정 — 검토 대기 유지 (2026-10-11, `TASK.md`)
+> 3-C2A에 대해 GPT Chat 1차 검토는 `PASS WITH NOTES`, Codex 독립 검토는 **`CHANGES REQUIRED` — Medium 1건**이었다(위 3-C2A 기록과 NOTES는 보존). 최종 승인은 보류 상태이며 이번 수정 후에도 **`검토 대기`**다(`승인 완료` 아님).
+> - **결함:** `PitchBranchResolver`가 `GameState.GameId`와 RNG 스냅샷 `ContextKey`를 비교하지 않아 `g001` + `game:3c2a:probe`처럼 서로 다른 경기의 입력도 성공했다. 테스트 Fixture가 GameId를 `g001`로 고정해 이를 가려 왔다.
+> - **수정:** 스냅샷 복원 성공 후·첫 추첨 전에 `string.Equals(GameId, ContextKey, Ordinal)` 검사, 불일치 시 `PitchBranch.game_context_mismatch`(정규화·ID 변경·기본값 대체 없음). 정상 입력의 확률·RNG 소비·다음 스냅샷은 그대로(HBP 3 / 볼·루킹 4 / 헛스윙·파울 4 / 인플레이 6회). 기존 `Rng.*` 오류 코드 유지.
+> - **Fixture·Golden:** 상태 생성 helper가 경기 ID를 명시적으로 받는다(임의 덮어쓰기 helper 없음). Phase 3-A Golden Vector와 3-C2A Golden JSON·Python 오라클은 변경하지 않았다(골든 `context`를 GameId로 사용).
+> - **테스트(실제 실행):** RED 9 실패/75 통과(84), GREEN 84 통과. 전체 xUnit **1113 통과**(Domain 263, Simulation 383, Application 117, Infrastructure 350; 기준 1102에서 +11), 실패 0. `tools/verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, 로그 `PHASE_3C2A_FIX_VERIFY_LOG_run1/2.md`). `git diff --check` 오류 없음.
+> - **미실시:** Codex 재검토 `미실시`(자동 진행 안 함), GPT Chat의 수정 검토 `미실시`. 3-C2B·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE, Commit/Push 안 함.
+> - 문서: [보고서 §14](../../docs/reports/PHASE_3C2A_REPORT.md), [RED 증거](../../docs/reports/PHASE_3C2A_RED_EVIDENCE.md), [ADR-007](../../docs/decisions/ADR-007.md) 항목 13.
 
 > [!success] 3-C1 승인 (2026-10-11)
 > 작업 패키지 3-C1(이벤트 위치 payload·`ef2`·이벤트 JSON 버전 2)은 **PASS WITH NOTES / GPT Chat 최종 승인**, Codex 최종 집중 재검토 **PASS WITH NOTES**. 기존 Medium(`ReadEventsV2` 명시적 null)과 추가 중첩 컬렉션 null 오류는 해결·재검증(이전 `CHANGES REQUIRED` 판정과 수정 이력은 아래 보존). 전체 xUnit 1,021 PASS(Claude 실행), Codex 직접 실행 83 PASS(Infrastructure 61, Simulation 22), `verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, Codex 로그 확인), 30,974개 `ef1` 영수증 다이제스트·레거시 writer 바이트 유지, 신규 `ef2` 지문·충돌·JSON 호환성 확인. **이 승인은 3-C1 작업 패키지에만 적용되며 Phase 3 전체 Gate는 INCOMPLETE, 3-C2/3-C3 미착수다. 이 문서의 최상위 status는 `검토 대기`로 유지한다.** ADR-007은 3-C1 한정 Accepted. 유지 NOTES:
