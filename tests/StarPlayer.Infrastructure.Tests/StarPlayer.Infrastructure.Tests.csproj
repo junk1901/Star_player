@@ -13,6 +13,10 @@
     <ProjectReference Include="..\..\src\StarPlayer.Application\StarPlayer.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <!-- The same public-graph audit as Domain.Tests, so the tuning profile is checked with identical code. -->
+    <Compile Include="..\StarPlayer.Domain.Tests\ImmutabilityAudit.cs" Link="ImmutabilityAudit.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 </Project>

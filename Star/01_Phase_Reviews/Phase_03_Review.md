@@ -1,14 +1,14 @@
 ---
 type: phase-review
 phase: "03"
-phase_name: "Seeded game simulation / Prototype 1 — 작업 패키지 3-A (RNG), 3-B1 (구역·규칙 데이터 계약)"
+phase_name: "Seeded game simulation / Prototype 1 — 작업 패키지 3-A (RNG), 3-B1 (구역·규칙 데이터 계약), 3-B2 (확률·튜닝 계약)"
 status: 검토 대기
 started: "2026-10-11"
 completed: ""
 developer_ai: Claude Code
 reviewed_by: ""
 branch: "main"
-commit: "미커밋 (기준 커밋 b1e6b73ecf299147ab1b6b4dc2697ff463c66a1b 위의 작업 트리에만 존재)"
+commit: "feat: add phase 3b2 probability and tuning contracts (기준 HEAD 7756442946f01694b27aa6e5311e7810f07d0278 위; SHA는 git log 참조)"
 roadmap_anchor: "phase-3--seeded-game-simulation--prototype-1"
 last_updated: "2026-10-11"
 tags:
@@ -21,11 +21,39 @@ tags:
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
 
+> [!success] 3-B2 승인 (2026-10-11)
+> 작업 패키지 3-B2(확률·튜닝 계약)는 **PASS WITH NOTES / GPT Chat 승인**, Codex 최종 집중 재검토 **PASS**. 이전 Codex `CHANGES REQUIRED`(High 2, Medium 1)는 해결·재검증(이력은 아래 보존). 전체 xUnit 955 PASS(Claude 실행), Codex 직접 실행 71 PASS(Domain 31, Infrastructure 40), `verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, Codex 로그 확인). **Phase 3 전체는 승인되지 않았다 — 이 문서의 최상위 상태는 `검토 대기`로 유지, Phase 3 Gate INCOMPLETE, 3-C 미착수.** 유지하는 NOTES:
+> - 3-C: target_zone 선택 방식 및 RNG 스트림 계약
+> - 3-C: NextBounded 호출 수와 실제 Draws 구분
+> - 3-C: 실제 투구 결과, 이벤트, ef2 및 공동 원자성
+> - 3-D: 코스 성향의 실제 확률 연결
+> - 3-D 이전: 구장 Hits 계수의 단타 전용 매핑에 대한 소유자 결정
+> - 3-E: Framing 상한 및 실제 계산
+> - 3-F: 100,000 PA, 100경기, 8개 집계 목표 검증
+> - Phase 4: RNG 기대 해시 및 경기 상태·영수증의 트랜잭션 저장
+> - 확률표의 이전 설계 조정 이력(목표 구역 가중치 두 차례 조정)과 독립 검증의 한계 유지
+
 > [!success] 3-A 승인 (2026-10-11)
 > 작업 패키지 3-A(RNG)는 **PASS WITH NOTES / GPT Chat 승인**, Codex 최종 집중 재검토 **PASS WITH NOTES**. 전체 xUnit 709 PASS(Claude 실행), Randomness 111 PASS(Codex 독립 재실행), `verify.ps1` 2회 `GATE: PASS`(Claude 실행, Codex 로그 확인). 마지막 비차단 노트(`GameRandomSnapshot.cs`의 오래된 주석)는 주석만 수정했고 RNG 동작·알고리즘·직렬화는 변경 없음. **Phase 3 전체 Gate는 INCOMPLETE, Phase 3-B 미착수.** 아래 `검토 대기`·`미승인`·`미실시` 표기는 승인 이전 라운드의 기록이며 3-A에 한해 이 블록이 최신이다. 승인 근거: GPT Chat 최종 판정(소유자 전달, `TASK.md`).
 
 > [!important] 범위
 > 소유자는 **Phase 3-A RNG 구현만** 승인했다(`TASK.md`). 3-B~3-F와 Phase 4는 미승인·미착수다. 이 문서는 **Phase 3 전체 Gate를 PASS로 기록하지 않는다.** Phase 3 Gate(100,000 PA, 100경기, 보정 구간, Pitch Zone Lite 검사 등)는 전부 `미검증`/INCOMPLETE다.
+
+## 3-B2 진행 상황 (2026-10-11, `TASK.md` — 정수 확률·가상 튜닝 계약)
+
+> [!warning] Codex 결함 수정 라운드 (2026-10-11)
+> Codex 독립 리뷰 결과 **`CHANGES REQUIRED`** (High 2, Medium 1). ① `Distribution`이 내부 배열을 그대로 노출(형변환으로 공개 표만 바꿔 `Select`와 불일치) ② 공유 `ProbabilityModel.V1`의 중첩 목록과 `TuningProfile.Modifier().Table`이 외부에서 변경 가능(계산값이 바뀌어도 `ContentHash` 불변) ③ `"baselines": null` 입력에서 `NullReferenceException`. 세 건 모두 수정 전 코드에서 **RED 재현**(분포 `int[] [0, 600000]`, swing 320388 → 348837 ppm·해시 불변, NRE; [증거](../../docs/reports/PHASE_3B2_FIX_RED_EVIDENCE.md))한 뒤 수정했다: 공개 컬렉션 전부를 생성 시 복사한 `ImmutableArray`로 바꾸고(모델·튜닝·추적 포함, 반사 기반 감사 테스트), 리더는 필수 항목 null을 `Fixture.field_missing`으로 반환한다. 확률 모델·정규화·상한·튜닝 수치·시나리오·목표·튜닝 해시 `5b70dca7…3ea5`는 **불변**이며, 수정 전 코드에서 만든 105개 조건 전체 결과의 골든 다이제스트가 수정 후에도 동일하다. 신규 테스트 46개, Release 전체 xUnit 955 통과(909 + 46, Claude 실행). 자세한 내용은 [보고서 Part G](../../docs/reports/PHASE_3B2_REPORT.md), [ADR-006 항목 13–15](../../docs/decisions/ADR-006.md). **여전히 `검토 대기`(승인 아님), Codex 재검토 `미실시`, Phase 3 전체 Gate INCOMPLETE, Commit/Push·3-C 미착수.** 아래 본문의 테스트 수(909)와 "Codex `미실시`"는 수정 이전 기록이다.
+
+> [!note] 상태
+> 3-B2는 구현·자체 검증을 마쳤고 **`검토 대기`**입니다(승인 아님). GPT Chat 검토 `미실시`, Codex 독립 검토 `미실시`(권장: 확률 산술과 튜닝 식별은 이후 모든 리졸버 패키지의 기반). Phase 3 전체 Gate는 INCOMPLETE이며 3-C 이후·Phase 4·Git Commit/Push는 미착수/미허가입니다. 실제 투구·타격 판정, RNG 소비, 이벤트·`ef1`/`ef2`·리듀서·GameRules·RNG 스트림 변경, 영속화, 10만 PA/100경기 보정은 **하지 않았습니다.**
+
+- **구현(계약만):** `src/StarPlayer.Domain/Baseball/Probability/` — 정수 확률 척도(ppm, 분모 1,000,000, 최대 잔여값 정규화·낮은 인덱스 우선·반올림 half-up·128비트 중간 연산, 부동소수점 없음), `prob-model-v1` 8개 단계(ROADMAP §4.1 순서, 단계별 독립 분모), 고정 순서·슬롯별 상한·결합 상한 `[0.8, 1.25]`의 보정 슬롯, Pitch Zone Lite 코스 성향(정확한 질량 이동, 상한 60,000/40,000 ppm, 창 보호, 기준 분포 가중 정확 중립 — 리그 평균 중립은 주장하지 않음), `ProbabilityTrace`, 버전형 **가상 프로토타입** 튜닝 `tuning-virtual-proto-v1`(`content/tuning/virtual_tuning_v1.json`, 해시 `5b70dca7…3ea5`, 독립 Python 스크립트로도 계산해 일치). 포수·배터리·구장 효과는 중립 입력만 받는 예약 슬롯(수치 권한 없음).
+- **결정/계약:** [ADR-006](../../docs/decisions/ADR-006.md), [game-engine.md §19](../../docs/game-engine.md), [보고서](../../docs/reports/PHASE_3B2_REPORT.md). ADR-005 상태 줄만 승인 이력에 맞게 정리(결정 내용 불변).
+- **테스트(실제 실행):** `dotnet test StarPlayer.sln` — 909 통과(Domain 253, Simulation 371, Application 117, Infrastructure 168; 기준 813에서 +96), 실패·건너뜀 0. 변형 검사 8건: 7건 즉시 검출, 1건("`batter.power` 타깃 추가") 처음 생존 → 슬롯 카탈로그 고정 테스트 추가 후 검출. 사전 선언 시나리오 4건(고정 시드 2026101101–04, 200,000 표본, 이항 4.5σ)은 첫 실행에 통과, 시드·허용치 조정 없음. `tools/verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, 2026-10-11 12:15·12:18; Release 909 통과, Godot 진단·Windows Export·QHD 확인 통과, 링크 검사 69개 파일; 로그 `docs/reports/PHASE_3B2_VERIFY_LOG_run1.md`·`_run2.md`, 보고서 §5.1). 독립 재실행은 `미실시`.
+- **공개해야 할 설계 이력:** 목표 구역 가중치 1안은 정확 산술 점검에서 존 안 투구 비율 0.738(의도 0.45–0.65)이어서, 동결(해시 확정)·표본 실행 이전에 바깥쪽으로 두 차례 조정(최종 균형 0.640). 보정이 아니라 표 설계이며, 고정 해시는 최종 표만 포함.
+- **미검증/미실시:** Phase 3 Gate 항목 전부, 10만 PA·100경기, 3-F 통계 목표 평가(8개 목표는 선언만, `declared_for_3f_not_evaluated`), 수동 UI·FHD(UI 변경 없음), Codex 독립 검토, GPT Chat 검토, 성능 측정.
+- **이월/주의:** ① 3-C: `target_zone` 실현 방식과 RNG 스트림(제안 `game/ai@1`, `game/location@1`을 쓰면 ADR-004 항목 7 문구 수정 필요), 결정 수는 `NextBounded` 호출 수로 센다(원시 소모는 약 0.0225% 더 많을 수 있음) ② 3-D: 성향 문맥 연동, 구장 슬롯 활성화 전 C46 `Hits`의 의미(현재 단타 한정 매핑) 소유자 확인 ③ 3-E: Framing 상한 ④ 3-F: 가상 수치 교체·보정, 분포 가중 성향 기준 ⑤ ADR-004 헤더는 여전히 `Proposed`(미수정).
+- **승인자 또는 승인 근거:** (작성 당시 "없음 — 미승인") → 2026-10-11 GPT Chat `PASS WITH NOTES` 승인 + Codex 최종 집중 재검토 `PASS`(`TASK.md`). 위 "3-B2 승인" 콜아웃 참조.
 
 ## 3-B1 진행 상황 (2026-10-11, `TASK.md` — Pitch Zone Lite 위치·규칙 데이터 계약)
 

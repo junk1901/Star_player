@@ -1,5 +1,6 @@
 using System.Reflection;
 using StarPlayer.Domain.Baseball.PitchZone;
+using StarPlayer.Domain.Baseball.Probability;
 using StarPlayer.Infrastructure.Fixtures;
 
 namespace StarPlayer.Application.Tests;
@@ -28,7 +29,12 @@ public class HiddenTendencyBoundaryTests
                     yield return inner;
     }
 
-    private static bool IsHidden(Type type) => Mentions(type).Any(t => t == typeof(BatterZoneTendency) || t == typeof(ZoneReferenceDistribution));
+    // Phase 3-B2 adds the resolver-internal probability types that carry or derive from the hidden vector: the tendency context (zone + vector), and the calculation trace /
+    // stage result (which records the signed tendency shift of one zone). None of them may appear in an Application or Infrastructure member signature.
+    private static readonly Type[] HiddenTypes =
+        [typeof(BatterZoneTendency), typeof(ZoneReferenceDistribution), typeof(TendencyContext), typeof(ProbabilityTrace), typeof(StageResult)];
+
+    private static bool IsHidden(Type type) => Mentions(type).Any(t => HiddenTypes.Contains(t));
 
     [Fact]
     public void No_application_or_infrastructure_member_signature_names_the_tendency_or_reference_types()
@@ -56,6 +62,9 @@ public class HiddenTendencyBoundaryTests
         Assert.True(IsHidden(typeof(List<BatterZoneTendency>)));
         Assert.True(IsHidden(typeof(BatterZoneTendency[])));
         Assert.True(IsHidden(typeof(Dictionary<string, ZoneReferenceDistribution>)));
+        Assert.True(IsHidden(typeof(TendencyContext)));
+        Assert.True(IsHidden(typeof(IReadOnlyList<ProbabilityTrace>)));
+        Assert.True(IsHidden(typeof(Task<StageResult>)));
         Assert.False(IsHidden(typeof(PitchLocation)));
     }
 

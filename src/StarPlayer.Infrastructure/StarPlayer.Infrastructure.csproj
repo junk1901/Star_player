@@ -12,6 +12,8 @@
     <EmbeddedResource Include="..\..\content\fictional\phase2_diagnostic_games.json" LogicalName="phase2_diagnostic_games.json" />
     <!-- Phase 3-B1: gamerules-v2 profiles (called-pitch mode + Pitch Zone Lite zone model); fictional test variants only. -->
     <EmbeddedResource Include="..\..\content\rules\game_rules_profiles_v2.json" LogicalName="game_rules_profiles_v2.json" />
+    <!-- Phase 3-B2: virtual prototype tuning data for the conditional probability model (prob-model-v1). -->
+    <EmbeddedResource Include="..\..\content\tuning\virtual_tuning_v1.json" LogicalName="virtual_tuning_v1.json" />
   </ItemGroup>
   <ItemGroup>
     <!-- Raw fixture/world types are internal; only these test assemblies may see them (the Godot client may not). -->
