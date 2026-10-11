@@ -1,0 +1,36 @@
+# C2B-1 mutation checks (raw one-line results; batch 1 = first run, compile-clean ones only; batch 2 = rerun of the ones whose first build failed from CS0162, plus M7)
+
+## batch 1
+M1_no_state_identity: (no result: the mutant failed to compile, CS0162 warning-as-error; NOT counted as detected)
+M2_no_rng_hash: (no result: the mutant failed to compile, CS0162 warning-as-error; NOT counted as detected)
+M3_foul_as_ball: 실패!  - 실패:     5, 통과:    58, 건너뜀:     0, 전체:    63, 기간: 85 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M4_drop_location: 실패!  - 실패:    33, 통과:    30, 건너뜀:     0, 전체:    63, 기간: 76 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M5_no_id_collision: (no result: the mutant failed to compile, CS0162 warning-as-error; NOT counted as detected)
+M6_take_always_pitchevent: 실패!  - 실패:    20, 통과:    43, 건너뜀:     0, 전체:    63, 기간: 92 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M7_trust_caller_side: (no result: the mutant failed to compile, CS0162 warning-as-error; NOT counted as detected)
+M8_no_inplay_limit: (no result: the mutant failed to compile, CS0162 warning-as-error; NOT counted as detected)
+M9_no_tuning_check: (no result: the mutant failed to compile, CS0162 warning-as-error; NOT counted as detected)
+M10_no_rules_check: (no result: the mutant failed to compile, CS0162 warning-as-error; NOT counted as detected)
+M11_no_batter_id_check: (no result: the mutant failed to compile, CS0162 warning-as-error; NOT counted as detected)
+M12_wrong_next_rng: 실패!  - 실패:    25, 통과:    38, 건너뜀:     0, 전체:    63, 기간: 92 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M13_ignore_reducer_error: (no result: the mutant failed to compile, CS0162 warning-as-error; NOT counted as detected)
+M14_off_by_one_id: 실패!  - 실패:    28, 통과:    35, 건너뜀:     0, 전체:    63, 기간: 80 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+
+## batch 2 (+M7)
+M1_no_state_identity: 실패!  - 실패:     3, 통과:    60, 건너뜀:     0, 전체:    63, 기간: 94 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M2_no_rng_hash: 실패!  - 실패:     1, 통과:    62, 건너뜀:     0, 전체:    63, 기간: 82 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M5_no_id_collision: 실패!  - 실패:     1, 통과:    62, 건너뜀:     0, 전체:    63, 기간: 117 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M8_no_inplay_limit: 실패!  - 실패:    12, 통과:    51, 건너뜀:     0, 전체:    63, 기간: 84 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M9_no_tuning_check: 실패!  - 실패:     1, 통과:    62, 건너뜀:     0, 전체:    63, 기간: 95 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M10_no_rules_check: 실패!  - 실패:     1, 통과:    62, 건너뜀:     0, 전체:    63, 기간: 91 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M11_no_batter_id_check: 실패!  - 실패:     2, 통과:    61, 건너뜀:     0, 전체:    63, 기간: 86 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M13_ignore_reducer_error: 실패!  - 실패:     1, 통과:    62, 건너뜀:     0, 전체:    63, 기간: 80 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M15_no_take_swing_check: 실패!  - 실패:     1, 통과:    62, 건너뜀:     0, 전체:    63, 기간: 92 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M16_no_duplicate_check: 통과!  - 실패:     0, 통과:    63, 건너뜀:     0, 전체:    63, 기간: 112 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M17_no_ctx_check: 실패!  - 실패:     1, 통과:    62, 건너뜀:     0, 전체:    63, 기간: 86 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+M18_no_draft_contract: 실패!  - 실패:     1, 통과:    62, 건너뜀:     0, 전체:    63, 기간: 81 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\PitchPreparation.cs(97,100): error CS8602: null 가능 참조에 대한 역참조입니다. [E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj]
+E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\PitchPreparation.cs(97,111): error CS8602: null 가능 참조에 대한 역참조입니다. [E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj]
+실패!  - 실패:    14, 통과:    49, 건너뜀:     0, 전체:    63, 기간: 71 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
+
+Line-ending/whitespace note: the verify logs were normalised from CR/CRLF to LF and the empty results above were annotated so that `git diff --cached --check` passes; no result value was changed.

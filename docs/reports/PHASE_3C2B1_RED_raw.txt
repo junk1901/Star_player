@@ -1,0 +1,581 @@
+  복원할 프로젝트를 확인하는 중...
+  복원할 모든 프로젝트가 최신 상태입니다.
+  StarPlayer.Domain -> E:\Madegame\Star_player\src\StarPlayer.Domain\bin\Release\net8.0\StarPlayer.Domain.dll
+  StarPlayer.Simulation -> E:\Madegame\Star_player\src\StarPlayer.Simulation\bin\Release\net8.0\StarPlayer.Simulation.dll
+  StarPlayer.Application -> E:\Madegame\Star_player\src\StarPlayer.Application\bin\Release\net8.0\StarPlayer.Application.dll
+  StarPlayer.Infrastructure -> E:\Madegame\Star_player\src\StarPlayer.Infrastructure\bin\Release\net8.0\StarPlayer.Infrastructure.dll
+  StarPlayer.Infrastructure.Tests -> E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\bin\Release\net8.0\StarPlayer.Infrastructure.Tests.dll
+E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\bin\Release\net8.0\StarPlayer.Infrastructure.Tests.dll(.NETCoreApp,Version=v8.0)에 대한 테스트 실행
+지정된 패턴과 일치한 총 테스트 파일 수는 1개입니다.
+[xUnit.net 00:00:00.48]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p05") [FAIL]
+[xUnit.net 00:00:00.49]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p08") [FAIL]
+[xUnit.net 00:00:00.49]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p09") [FAIL]
+[xUnit.net 00:00:00.49]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p04") [FAIL]
+[xUnit.net 00:00:00.49]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p06") [FAIL]
+[xUnit.net 00:00:00.49]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p07") [FAIL]
+[xUnit.net 00:00:00.49]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p12") [FAIL]
+[xUnit.net 00:00:00.49]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p25") [FAIL]
+[xUnit.net 00:00:00.49]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p21") [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p05") [258 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p08") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p09") [1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p04") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p06") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p07") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p12") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p25") [3 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p21") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:00.50]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p14") [FAIL]
+[xUnit.net 00:00:00.50]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p15") [FAIL]
+[xUnit.net 00:00:00.50]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p26") [FAIL]
+[xUnit.net 00:00:00.50]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p02") [FAIL]
+[xUnit.net 00:00:00.50]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p11") [FAIL]
+[xUnit.net 00:00:00.50]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p01") [FAIL]
+[xUnit.net 00:00:00.50]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p16") [FAIL]
+[xUnit.net 00:00:00.50]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p13") [FAIL]
+[xUnit.net 00:00:00.50]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p22") [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p14") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p15") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p26") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p02") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p11") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p01") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p16") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p13") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p22") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p24") [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p18") [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p00") [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p20") [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p03") [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p10") [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p23") [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p19") [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p17") [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p24") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p18") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p00") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p20") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p03") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p10") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p23") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p19") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "p17") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "rejection") [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Another_game_id_rules_hash_or_tuning_hash_makes_the_prepared_pitch_unusable [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Left, throws: Left, applied: Left) [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Right, throws: Left, applied: Right) [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Left, throws: Right, applied: Left) [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Right, throws: Right, applied: Right) [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Switch, throws: Right, applied: Left) [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Switch, throws: Left, applied: Right) [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_sequence_limit_and_an_invalid_cursor_are_refused_without_wrapping [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(id: "rejection") [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(String id) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 406
+   at InvokeStub_PitchPreparationTests.Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Another_game_id_rules_hash_or_tuning_hash_makes_the_prepared_pitch_unusable [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Another_game_id_rules_hash_or_tuning_hash_makes_the_prepared_pitch_unusable() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 273
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Left, throws: Left, applied: Left) [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(BattingSide bats, ThrowingHand throws, AppliedBatterSide applied) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 121
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Right, throws: Left, applied: Right) [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(BattingSide bats, ThrowingHand throws, AppliedBatterSide applied) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 121
+   at InvokeStub_PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Left, throws: Right, applied: Left) [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(BattingSide bats, ThrowingHand throws, AppliedBatterSide applied) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 121
+   at InvokeStub_PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Right, throws: Right, applied: Right) [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(BattingSide bats, ThrowingHand throws, AppliedBatterSide applied) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 121
+   at InvokeStub_PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Switch, throws: Right, applied: Left) [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(BattingSide bats, ThrowingHand throws, AppliedBatterSide applied) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 121
+   at InvokeStub_PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(bats: Switch, throws: Left, applied: Right) [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(BattingSide bats, ThrowingHand throws, AppliedBatterSide applied) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 121
+   at InvokeStub_PitchPreparationTests.The_applied_batter_side_comes_from_the_sheets_never_from_the_caller(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_sequence_limit_and_an_invalid_cursor_are_refused_without_wrapping [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_sequence_limit_and_an_invalid_cursor_are_refused_without_wrapping() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 365
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_candidate_the_reducer_rejects_is_a_failure_with_the_reducers_error [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_colliding_or_stale_last_sequence_is_refused_and_a_duplicate_is_never_a_new_success [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_ball_at_three_balls_is_a_walk_and_a_third_strike_is_a_strikeout_through_the_reducer [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Sheets_with_another_player_or_another_handedness_are_refused [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Build_changes_neither_the_state_nor_the_snapshot_and_the_next_rng_is_the_drafts [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.An_explicit_take_with_a_swing_or_foul_draft_is_refused_and_in_play_is_an_explicit_limit_without_side_effects [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_hit_by_pitch_puts_the_batter_on_first_and_a_foul_with_two_strikes_keeps_the_count [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_candidate_the_reducer_rejects_is_a_failure_with_the_reducers_error [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_candidate_the_reducer_rejects_is_a_failure_with_the_reducers_error() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 536
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_colliding_or_stale_last_sequence_is_refused_and_a_duplicate_is_never_a_new_success [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_colliding_or_stale_last_sequence_is_refused_and_a_duplicate_is_never_a_new_success() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 349
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_ball_at_three_balls_is_a_walk_and_a_third_strike_is_a_strikeout_through_the_reducer [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_ball_at_three_balls_is_a_walk_and_a_third_strike_is_a_strikeout_through_the_reducer() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 472
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Sheets_with_another_player_or_another_handedness_are_refused [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Sheets_with_another_player_or_another_handedness_are_refused() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 287
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Build_changes_neither_the_state_nor_the_snapshot_and_the_next_rng_is_the_drafts [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Build_changes_neither_the_state_nor_the_snapshot_and_the_next_rng_is_the_drafts() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 547
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.An_explicit_take_with_a_swing_or_foul_draft_is_refused_and_in_play_is_an_explicit_limit_without_side_effects [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.An_explicit_take_with_a_swing_or_foul_draft_is_refused_and_in_play_is_an_explicit_limit_without_side_effects() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 516
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_hit_by_pitch_puts_the_batter_on_first_and_a_foul_with_two_strikes_keeps_the_count [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_hit_by_pitch_puts_the_batter_on_first_and_a_foul_with_two_strikes_keeps_the_count() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 491
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_cancelled_build_throws_and_changes_nothing [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Missing_inputs_are_refused_with_explicit_codes [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.An_unsupported_draft_contract_and_missing_inputs_are_refused [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_cancelled_prepare_throws_and_changes_nothing [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_candidate_id_is_the_exact_next_sequence_and_repeats_for_the_same_input [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Exactly_one_actual_pitch_is_counted_for_the_pitcher [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Take_and_approach_legality_and_a_finished_game_keep_the_resolvers_own_errors [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_game_and_rng_context_mismatch_and_a_broken_snapshot_keep_the_resolvers_own_errors [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepare_is_deterministic_and_changes_neither_the_state_nor_the_snapshot [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_cancelled_build_throws_and_changes_nothing [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_cancelled_build_throws_and_changes_nothing() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 562
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Missing_inputs_are_refused_with_explicit_codes [1 ms]
+  오류 메시지:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "PitchPrepare.state_missing"
+Actual:   "stub.not_implemented"
+           ↑ (pos 0)
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Missing_inputs_are_refused_with_explicit_codes() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 146
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.An_unsupported_draft_contract_and_missing_inputs_are_refused [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.An_unsupported_draft_contract_and_missing_inputs_are_refused() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 303
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_cancelled_prepare_throws_and_changes_nothing [3 ms]
+  오류 메시지:
+   Assert.Throws() Failure: No exception was thrown
+Expected: typeof(System.OperationCanceledException)
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_cancelled_prepare_throws_and_changes_nothing() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 199
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_candidate_id_is_the_exact_next_sequence_and_repeats_for_the_same_input [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.The_candidate_id_is_the_exact_next_sequence_and_repeats_for_the_same_input() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 332
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Exactly_one_actual_pitch_is_counted_for_the_pitcher [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Exactly_one_actual_pitch_is_counted_for_the_pitcher() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 505
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Take_and_approach_legality_and_a_finished_game_keep_the_resolvers_own_errors [< 1 ms]
+  오류 메시지:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "PitchBranch.pitch_not_legal"
+Actual:   "stub.not_implemented"
+           ↑ (pos 0)
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Take_and_approach_legality_and_a_finished_game_keep_the_resolvers_own_errors() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 171
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_game_and_rng_context_mismatch_and_a_broken_snapshot_keep_the_resolvers_own_errors [< 1 ms]
+  오류 메시지:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "PitchBranch.game_context_mismatch"
+Actual:   "stub.not_implemented"
+           ↑ (pos 0)
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_game_and_rng_context_mismatch_and_a_broken_snapshot_keep_the_resolvers_own_errors() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 160
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepare_is_deterministic_and_changes_neither_the_state_nor_the_snapshot [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepare_is_deterministic_and_changes_neither_the_state_nor_the_snapshot() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 182
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Another_rng_position_or_context_makes_the_prepared_pitch_unusable [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.An_applied_event_makes_the_previous_prepared_pitch_unusable [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_sheet_for_another_batter_or_pitcher_is_refused [FAIL]
+[xUnit.net 00:00:00.51]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Building_a_candidate_never_moves_the_authoritative_id_cursor [FAIL]
+[xUnit.net 00:00:00.52]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepare_calls_the_real_resolver_with_the_sheets_handedness_and_keeps_the_start_position [FAIL]
+[xUnit.net 00:00:00.52]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_state_rebuilt_by_replay_is_a_different_instance_and_the_prepared_pitch_is_refused [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_changed_count_batter_pitcher_or_approach_makes_the_prepared_pitch_unusable [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_matching_state_snapshot_and_sheets_build_a_candidate [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Another_rng_position_or_context_makes_the_prepared_pitch_unusable [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Another_rng_position_or_context_makes_the_prepared_pitch_unusable() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 261
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.An_applied_event_makes_the_previous_prepared_pitch_unusable [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.An_applied_event_makes_the_previous_prepared_pitch_unusable() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 251
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_sheet_for_another_batter_or_pitcher_is_refused [< 1 ms]
+  오류 메시지:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "PitchPrepare.batter_mismatch"
+Actual:   "stub.not_implemented"
+           ↑ (pos 0)
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_sheet_for_another_batter_or_pitcher_is_refused() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 134
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Building_a_candidate_never_moves_the_authoritative_id_cursor [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Building_a_candidate_never_moves_the_authoritative_id_cursor() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 377
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepare_calls_the_real_resolver_with_the_sheets_handedness_and_keeps_the_start_position [12 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepare_calls_the_real_resolver_with_the_sheets_handedness_and_keeps_the_start_position() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 96
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_state_rebuilt_by_replay_is_a_different_instance_and_the_prepared_pitch_is_refused [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_state_rebuilt_by_replay_is_a_different_instance_and_the_prepared_pitch_is_refused() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 225
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_changed_count_batter_pitcher_or_approach_makes_the_prepared_pitch_unusable [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Find(GameState state, Boolean take, Func`2 want) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 71
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_changed_count_batter_pitcher_or_approach_makes_the_prepared_pitch_unusable() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 235
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_matching_state_snapshot_and_sheets_build_a_candidate [< 1 ms]
+  오류 메시지:
+   stub.not_implemented stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.PitchPreparationTests.Prepared(GameState state, GameRandomSnapshot rng, Boolean take, PitchIntent intent, BattingSide bats, ThrowingHand throws) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 45
+   at StarPlayer.Infrastructure.Tests.PitchPreparationTests.A_matching_state_snapshot_and_sheets_build_a_candidate() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\PitchPreparationTests.cs:line 211
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+실패!  - 실패:    60, 통과:     3, 건너뜀:     0, 전체:    63, 기간: 42 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)

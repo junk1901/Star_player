@@ -21,6 +21,21 @@ tags:
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
 
+> [!success] 3-C2B-1 최종 승인 (2026-10-11, 소유자 `TASK.md`)
+> 작업 패키지 3-C2B-1은 **GPT Chat `PASS WITH NOTES` / 최종 승인**, **독립 Codex 리뷰 `PASS WITH NOTES`**(신규 Critical/High/Medium 결함 없음)를 받았다. 승인 범위는 **3-C2B-1 비인플레이 후보 생성에만 한정**되며 3-C2B-2/3·3-C2B 전체·Phase 3 전체 완료가 아니다(3-C2B-2/3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE). 이 문서의 최상위 status는 규칙에 따라 `검토 대기`로 유지한다.
+> - 근거(소유자 기록 인용, 이번 문서 작업에서 재실행하지 않음): 전체 xUnit 1,176 PASS(Claude 실행), Codex 직접 실행 Release 63/63 PASS, `verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, Codex 로그 확인), 3-C2A Golden Vector 유지, 기존 RNG·`ef1`/`ef2`·`GameReducer` 계약 유지.
+> - 유지 NOTES: `PlayerSheet`가 권위 있는 공급원에서 왔는지 확인하는 책임은 호출 경계; 마지막 발급 EventId 순번은 3-C3에서 최종 재검사; `GameState`/RNG/ID/영수증 공동 원자성은 3-C3; M16 변형 검사 생존(선행 ID 충돌 검사로 도달 불가능한 `WasDuplicate` 방어 분기); 변경된 `HiddenTendencyBoundaryTests`의 Codex 독립 신규 빌드는 NuGet 접근 문제로 `미실시`; 인플레이 후보 생성·주자 이동·수비 템플릿·`advancement` 미구현; 끝내기 장타 공식 기록 정책 미확정; Phase 3-F 통계 보정 `미실시`.
+> - 문서: [보고서 §16](../../docs/reports/PHASE_3C2B1_REPORT.md), [ADR-007](../../docs/decisions/ADR-007.md) 3-C2B-1 절.
+> - 아래 3-C2B-1 "구현 완료 — 검토 대기" 기록의 "검토 대기"·"승인 아님"·"미실시" 표현은 승인 이전 시점의 기록이며 자체 판정과 증거 한계는 그대로 보존한다.
+
+> [!note] 3-C2B-1 구현 완료 — 검토 대기 (2026-10-11, `TASK.md`)
+> 작업 패키지 3-C2B-1(준비된 투구 + 비인플레이 이벤트 후보)은 구현·자체 검증을 마쳤고 **`검토 대기`**입니다(승인 아님). GPT Chat 검토 `미실시`, Codex 독립 검토 `미실시`(자동 진행 안 함). 3-C2B-2/3(설계 미확정)·3-C3·Phase 4는 미착수, Phase 3 전체 Gate는 INCOMPLETE. 이 문서의 최상위 status는 `검토 대기`로 유지한다. 3-C2A 최종 승인 기록은 아래에 그대로 보존한다.
+> - **구현:** `src/StarPlayer.Simulation/Baseball/PitchPreparation.cs`(신규). `Prepare`는 현재 타자·투수 `PlayerSheet`의 ID를 상태와 대조하고 `Player.Bats`/`Player.Throws`로 기존 `PitchBranchResolver.Resolve`를 실제 호출, 외부에서 생성·변경할 수 없는 `PreparedPitch`를 만든다. `BuildNonInPlayCandidate`는 경기 ID·RNG 맥락·시작 `StateHash`·타자/투수·투타 방향·규칙/튜닝/확률 모델·동일 `GameState` 객체를 재확인하고 다섯 분기를 `PitchEvent`/`TakeEvent`(`ef2`)로 바꾸며 별도 작업용 `GameEventIds`로 후보 ID를 발급, 기존 `GameReducer.Apply`로 원본 상태에서 검증한다. 인플레이는 `in_play_not_supported_yet`, 추가 RNG 0, 상태·RNG·ID 커서 불변.
+> - **변경 파일:** `PitchPreparation.cs`(신규), `PitchPreparationTests.cs`(신규), `HiddenTendencyBoundaryTests.cs`(신규 타입 2개를 시그니처 가드에 추가), 문서(보고서·ADR-007·game-engine §22·SYSTEM_CONTRACTS C08·CURRENT_STATE·이 리뷰·대시보드). `GameReducer`·`PitchBranchResolver`·이벤트/JSON/RNG/튜닝/Golden은 변경 없음.
+> - **테스트(실제 실행):** 신규 63 테스트; 스텁 대비 RED 60 실패/3 통과; 변형 검사 유효 18건 중 17건 검출, 1건 생존(M16: 사전 ID 충돌 검사 때문에 도달 불가한 `WasDuplicate` 방어 분기); 전체 xUnit 1,176 통과(Domain 263, Simulation 383, Application 117, Infrastructure 413; 기준 1,113에서 +63), 실패 0; `tools/verify.ps1` 연속 2회 `GATE: PASS`; 3-C2A 기존 테스트·Golden 불변. 원시 로그와 상세는 [보고서](../../docs/reports/PHASE_3C2B1_REPORT.md) §11~12.
+> - **NOTES:** 위 M16 생존; `PreparedPitch`의 상태 객체 동일성은 단기 메모리 가드일 뿐 Phase 4 무결성·3-C3 공동 원자성을 대신하지 않음; 신뢰 가능한 `PlayerSheet` 공급은 호출자 책임; 3-C3는 후보의 ID를 바꾸지 않고 채택해야 함; 인플레이·`advancement`·주자 이동·수비 기록·타석 자동 진행 미구현(3-C2B-2/3, 3-C3); 통계 보정 3-F.
+> - 문서: [ADR-007](../../docs/decisions/ADR-007.md) 3-C2B-1 절, [game-engine §22](../../docs/game-engine.md), [보고서](../../docs/reports/PHASE_3C2B1_REPORT.md).
+
 > [!success] 3-C2A 최종 승인 (2026-10-11, 소유자 `TASK.md`)
 > 작업 패키지 3-C2A는 **GPT Chat `PASS WITH NOTES` / 최종 승인**, **Codex 최종 집중 재검토 `PASS WITH NOTES`**를 받았다. 기존 Codex `CHANGES REQUIRED`(Medium 1)는 해결·재검증됐고 새 Critical/High/Medium 결함은 없다(아래 판정과 수정 이력 보존). 근거(소유자 기록 인용): 전체 xUnit 1,113 PASS(Claude 실행), Codex 직접 실행 Release 92/92 PASS, `verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행·Codex 로그 확인), 독립 Python 골든 검증 PASS, 3-A 골든 바이트 불변, `game/target@1` 독립성·정상 분기 RNG 호출 수·원본 GameState/RNG 스냅샷 불변성 확인. **승인 범위는 3-C2A뿐**이며 3-C2 전체·Phase 3 전체 완료가 아니다: 3-C2B·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE. 이 문서의 최상위 status는 규칙에 따라 `검토 대기`로 유지한다.
 > - **비차단 NOTES(유지):** 수정 전 RED 9 실패/75 통과는 원시 로그 없이 요약만 확인됨; 변형 검사 15건 원시 출력의 독립 검토 한계; 분기 중간 오류·늦은 취소 추가 검증; 실제 타자·투수와 요청 입력 연결(3-C2B); 초안→합법 `GameEvent` 변환(3-C2B); `advancement`·주자 이동 검증(3-C2B); 이벤트 ID·영수증·RNG·`GameState` 공동 원자성(3-C3); DB 트랜잭션·RNG 기대 해시(Phase 4); 100,000 PA / 100경기 통계 보정(3-F).

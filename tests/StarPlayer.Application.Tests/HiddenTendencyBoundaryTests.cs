@@ -32,9 +32,11 @@ public class HiddenTendencyBoundaryTests
     // Phase 3-B2 adds the resolver-internal probability types that carry or derive from the hidden vector: the tendency context (zone + vector), and the calculation trace /
     // stage result (which records the signed tendency shift of one zone). None of them may appear in an Application or Infrastructure member signature.
     // Phase 3-C2A adds the pitch-branch draft, which carries the per-step traces and exact rolls: it is resolver-internal as well.
+    // Phase 3-C2B-1 adds the prepared pitch (it holds the draft) and the unconfirmed event candidate: both stay Simulation-internal too.
     private static readonly Type[] HiddenTypes =
         [typeof(BatterZoneTendency), typeof(ZoneReferenceDistribution), typeof(TendencyContext), typeof(ProbabilityTrace), typeof(StageResult),
-         typeof(StarPlayer.Simulation.Baseball.PitchBranchDraft), typeof(StarPlayer.Simulation.Baseball.PitchBranchStep)];
+         typeof(StarPlayer.Simulation.Baseball.PitchBranchDraft), typeof(StarPlayer.Simulation.Baseball.PitchBranchStep),
+         typeof(StarPlayer.Simulation.Baseball.PreparedPitch), typeof(StarPlayer.Simulation.Baseball.NonInPlayPitchCandidate)];
 
     private static bool IsHidden(Type type) => Mentions(type).Any(t => HiddenTypes.Contains(t));
 
