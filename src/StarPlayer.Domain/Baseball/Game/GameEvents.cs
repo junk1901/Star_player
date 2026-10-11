@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using StarPlayer.Domain.Baseball.PitchZone;
 using StarPlayer.Domain.Common;
 using StarPlayer.Domain.Players;
 
@@ -72,9 +73,13 @@ public sealed record RunnerMove(int From, int To, MoveCause Cause = MoveCause.Pl
     public ImmutableList<PositionCredit> CreditList => Credits ?? ImmutableList<PositionCredit>.Empty;
 }
 
-/// <summary>Facts of one actual pitch. A dropped third strike is only legal with first base open or two outs; the batter then reaches first.</summary>
+/// <summary>
+/// Facts of one actual pitch. A dropped third strike is only legal with first base open or two outs; the batter then reaches first.
+/// <c>Location</c> is the confirmed Pitch Zone Lite location (zone, applied batter side, boundary class; never the pitcher's target). Phase 2 events have
+/// none (legacy data, never inferred); the Phase 3 pitch resolver always supplies one. An event with a location is identified by fingerprint <c>ef2</c>.
+/// </summary>
 public sealed record PitchSpec(PitchOutcome Outcome, PitchMishap Mishap = PitchMishap.None, ImmutableList<RunnerMove>? Moves = null,
-    PitchMishap DroppedThirdStrike = PitchMishap.None, ImmutableList<PositionCredit>? StrikeoutCredits = null)
+    PitchMishap DroppedThirdStrike = PitchMishap.None, ImmutableList<PositionCredit>? StrikeoutCredits = null, PitchLocation? Location = null)
 {
     public ImmutableList<RunnerMove> MoveList => Moves ?? ImmutableList<RunnerMove>.Empty;
 }
@@ -92,10 +97,11 @@ public sealed record TakeEvent(string Id, PitchSpec Spec) : GameEvent(Id);
 
 /// <summary>
 /// A batted-ball result that ends the plate appearance. <c>BatterSequence</c> orders the batter's own out or home run among the play's other
-/// outs and runs (see <see cref="RunnerMove"/>); a batter caught out on a fly/line/pop ball is always first.
+/// outs and runs (see <see cref="RunnerMove"/>); a batter caught out on a fly/line/pop ball is always first. It stands for one actual pitch by itself
+/// (no <see cref="PitchEvent"/> precedes it), so its optional <c>Location</c> is that pitch's confirmed location (see <see cref="PitchSpec"/>).
 /// </summary>
 public sealed record InPlayEvent(string Id, BattedBallType Batted, InPlayResult Result, bool Sacrifice = false, ImmutableList<RunnerMove>? Moves = null,
-    ImmutableList<PositionCredit>? BatterCredits = null, ImmutableList<FieldPosition>? Errors = null, int? BatterSequence = null) : GameEvent(Id)
+    ImmutableList<PositionCredit>? BatterCredits = null, ImmutableList<FieldPosition>? Errors = null, int? BatterSequence = null, PitchLocation? Location = null) : GameEvent(Id)
 {
     public ImmutableList<RunnerMove> MoveList => Moves ?? ImmutableList<RunnerMove>.Empty;
     public ImmutableList<PositionCredit> BatterCreditList => BatterCredits ?? ImmutableList<PositionCredit>.Empty;
@@ -115,3 +121,15 @@ public sealed record RunnerPlayEvent(string Id, RunnerPlayKind Kind, ImmutableLi
 /// brings <c>Player</c> (bench, or a lineup player who may legally pitch) to the mound.
 /// </summary>
 public sealed record SubstitutionEvent(string Id, SubstitutionKind Kind, TeamSide Team, PlayerId Player = default, int? Base = null, int? Slot = null, int? Slot2 = null) : GameEvent(Id);
+
+/// <summary>The pitch location an event carries, if any. Only <see cref="PitchEvent"/>, <see cref="TakeEvent"/> (through <see cref="PitchSpec"/>) and <see cref="InPlayEvent"/> can carry one; no other event ever does.</summary>
+public static class GameEventLocation
+{
+    public static PitchLocation? Of(GameEvent e) => e switch
+    {
+        PitchEvent p => p.Spec.Location,
+        TakeEvent t => t.Spec.Location,
+        InPlayEvent i => i.Location,
+        _ => null,
+    };
+}

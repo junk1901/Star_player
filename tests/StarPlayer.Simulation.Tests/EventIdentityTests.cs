@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Reflection;
 using StarPlayer.Domain.Baseball.Game;
+using StarPlayer.Domain.Baseball.PitchZone;
 using StarPlayer.Domain.Players;
 using StarPlayer.Simulation.Baseball;
 using static StarPlayer.Simulation.Tests.Script;
@@ -119,8 +120,12 @@ public class EventIdentityTests
                 new PitchEvent("x", new PitchSpec(PitchOutcome.Ball, DroppedThirdStrike: PitchMishap.WildPitch)),
                 new PitchEvent("x", new PitchSpec(PitchOutcome.Ball, StrikeoutCredits: [Po(FieldPosition.Catcher)])),
                 new PitchEvent("x", new PitchSpec(PitchOutcome.Ball, StrikeoutCredits: [])),
+                new PitchEvent("x", new PitchSpec(PitchOutcome.Ball, Location: PitchLocation.FromZone(ZoneModelVersion.Pzl1, PitchZoneId.Create("in.r2c2").Value, AppliedBatterSide.Right).Value)),
             ]),
-            [nameof(TakeEvent)] = (new TakeEvent("x", new PitchSpec(PitchOutcome.Ball)), [new TakeEvent("x", new PitchSpec(PitchOutcome.CalledStrike))]),
+            [nameof(TakeEvent)] = (new TakeEvent("x", new PitchSpec(PitchOutcome.Ball)), [
+                new TakeEvent("x", new PitchSpec(PitchOutcome.CalledStrike)),
+                new TakeEvent("x", new PitchSpec(PitchOutcome.Ball, Location: PitchLocation.FromZone(ZoneModelVersion.Pzl1, PitchZoneId.Create("in.r2c2").Value, AppliedBatterSide.Left).Value)),
+            ]),
             [nameof(InPlayEvent)] = (Sample(), [
                 Sample() with { Batted = BattedBallType.Fly },
                 Sample() with { Result = InPlayResult.Single },
@@ -129,6 +134,7 @@ public class EventIdentityTests
                 Sample() with { BatterCredits = [Po(FieldPosition.SecondBase)] },
                 Sample() with { Errors = [FieldPosition.Shortstop] },
                 Sample() with { BatterSequence = 4 },
+                Sample() with { Location = PitchLocation.FromZone(ZoneModelVersion.Pzl1, PitchZoneId.Create("in.r1c1").Value, AppliedBatterSide.Right).Value },
             ]),
             [nameof(RunnerPlayEvent)] = (new RunnerPlayEvent("x", RunnerPlayKind.Steal, [M(1, 2, MoveCause.Steal)]), [
                 new RunnerPlayEvent("x", RunnerPlayKind.Balk, [M(1, 2, MoveCause.Steal)]),
@@ -159,7 +165,7 @@ public class EventIdentityTests
             {
                 nameof(PitchEvent) or nameof(TakeEvent) => 1,
                 nameof(ApproachEvent) => 1,
-                nameof(InPlayEvent) => 7,
+                nameof(InPlayEvent) => 8, // 3-C1 added the optional Location
                 nameof(RunnerPlayEvent) => 3,
                 _ => 6,
             };

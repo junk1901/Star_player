@@ -127,6 +127,8 @@ Every processed event leaves an `EventReceipt(EventId, Kind, FingerprintVersion,
 of another fingerprint version = `Game.event_fingerprint_version_mismatch`. A rejected event leaves no receipt, so a corrected event may reuse its id.
 A format change must bump `EventFingerprint.Version`; a literal-text/hash test (`EventIdentityTests`) fails on any silent change.
 
+**`ef2` (Phase 3-C1, ADR-007).** An event that carries a pitch location (`PitchEvent`/`TakeEvent` through `PitchSpec.Location`, `InPlayEvent.Location`) is identified by `ef2`: `ef2|kind|<the ef1 field list>|zone_model=..|zone=..|side=..|boundary=..` (same escaping and enum rules). All other events, including legacy pitches without a location, keep `ef1` exactly; a receipt is never converted. Because `Apply` compares the stored receipt version first, an `ef1` receipt id re-delivered with a location added and an `ef2` receipt id re-delivered with its location removed are both `Game.event_fingerprint_version_mismatch`; an `ef2` event with another zone, side or other content is `Game.event_id_conflict`; an unchanged `ef2` event is a duplicate. Section 20 has the JSON side.
+
 **Resumable game fixture (no SQLite before Phase 4):** a game is its start data (rules profile id + hash, both `TeamSetup`s) plus the ordered
 events as JSON (`ScriptedGameJson.WriteEvents/ReadEvents`, same shape as a scripted game's `events`) plus the receipts as JSON
 (`EventReceiptJson`: `[{event_id, kind, fingerprint_version, fingerprint}]`). Replaying the events rebuilds the identical state including each
@@ -671,3 +673,27 @@ The class is **virtual and categorical**: it is a property of the region, not a 
 **Compatibility.** `GameRules` v1 and v2 hashes, the RNG algorithm / key derivation / snapshot format / stream names and the golden vectors are unchanged (pinned by tests); `ef1`/`ef2` and the reducer were not touched.
 
 **Handoff.** 3-C: realise `target_zone` (deterministic policy or one sampled decision, with its stream chosen and ADR-004 item 7 amended if it is `game/location`), draw the actual location with one `NextBounded(1,000,000)` on `game/location@1` before the outcome draws, switch-hitter side rule, `ef2`. 3-D: tendency context for every inner-zone pitch, park caps (C46 `Hits` mapped to singles only here - owner confirmation needed). 3-E: Framing cap on `Borderline` pitches in `non_automated` mode. 3-F: statistical calibration against the declared targets (a changed number is a new tuning version). Not done in 3-B2: any sampled calibration, 100,000-PA or 100-game run.
+
+## 20. Phase 3-C1: pitch location on events, `ef2` and event JSON format 2 (2026-10-11; decisions in `docs/decisions/ADR-007.md`)
+
+3-C1 is the data and identity half of the pitch resolver flow. It adds no resolver: **no pitch is resolved, no random number is drawn, and no rule profile, RNG stream, `GameEventIds` value, `ef1` byte or reducer rule changed.** Status `검토 대기`; 3-C2 and 3-C3 are not started.
+
+**Payload.** `PitchSpec` and `InPlayEvent` end with an optional `PitchLocation? Location = null` (existing parameters and defaults untouched). `PitchLocation` is the 3-B1 type: model version, zone, the batter side actually applied, boundary class, validated by its factory; the pitcher's `TargetZone` is a different type. Phase 2 events carry none (legacy; never inferred). An `InPlayEvent` is its own single pitch: its location describes that pitch and no `PitchEvent` precedes it. The reducer counts exactly as before (test: same stats and pitch totals with and without locations).
+
+**Identity.** Section 3a. `GameEventLocation.Of(event)` (Domain) is the one accessor used by the fingerprint and by the JSON writers.
+
+**Event JSON.**
+
+| | Legacy (format 1) | Format 2 |
+|---|---|---|
+| Shape | bare array `[ {id, type, ...} ]`; scripted games `format_version: 1` | `{"format_version": 2, "events": [ ... ]}` |
+| Read | `ScriptedGameJson.ReadEvents`; a `location` member is an unknown member (error); a version-2 envelope is `Fixture.version_unsupported` | `ReadEventsV2`; a bare array is `Fixture.version_unsupported`; other `format_version` values are `Fixture.version_unsupported` |
+| Location | never created | required on `pitch`, `take`, `in_play` (`Fixture.location_missing` if absent or `null`); refused on other events (`Fixture.location_unexpected`) |
+| Location content | - | `{zone_model, zone, side, boundary}` rebuilt through `PitchLocation.Create`: unsupported model `ZoneModelVersion.unsupported`, unknown zone `PitchZoneId.unknown`, bad enum text `Fixture.enum_invalid`, boundary that is not the zone's class `PitchLocation.boundary_mismatch`; nothing is corrected |
+| Write | `WriteEvents`; refuses a located event (`Fixture.location_requires_v2`) | `WriteEventsV2`; refuses a pitch-bearing event without a location (`Fixture.location_missing`) |
+
+Receipts keep their own JSON (`EventReceiptJson`), which already stores `fingerprint_version` per receipt; `ef1` and `ef2` receipts mix freely.
+
+**Compatibility evidence.** `Ef1CorpusPinTests` holds two literals computed on the unchanged 3-B2 commit `ddbc999`: the SHA-256 over every receipt (id, kind, version, fingerprint) of the 30,974 events in the 100 Phase 2 games, and the SHA-256 over the bytes `WriteEvents` produces for those games. `EventIdentityTests` (literal `ef1` text and hash) and `ReplayContractTests` are unchanged and pass.
+
+**Handoff.** 3-C2: `target_zone` realisation (recommended own stream `game/target@1`, ADR-004 amendment), the `game/location@1` draw before the outcome, explicit-`Take` hit-by-pitch policy, switch-hitter side rule, checking that an event's side is possible for the batter. 3-C3: event-id sequence, reducer result, receipts and RNG cursors as one success unit; commit before publication; Phase 4 SQLite transaction and the expected RNG hash.

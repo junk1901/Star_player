@@ -2,7 +2,7 @@
 type: project-dashboard
 project: Star Player
 current_phase: "03"
-phase_status: Phase 0–2 승인 완료 (3/30), Phase 3은 3-A(RNG)·3-B1(구역·규칙 데이터 계약) 승인(PASS WITH NOTES), 3-B2(확률·튜닝 계약) 승인(PASS WITH NOTES, Codex 최종 PASS), Phase 3 전체 Gate INCOMPLETE, 3-C 이후 미착수
+phase_status: Phase 0–2 승인 완료 (3/30), Phase 3은 3-A(RNG)·3-B1(구역·규칙 데이터 계약) 승인(PASS WITH NOTES), 3-B2(확률·튜닝 계약) 승인(PASS WITH NOTES, Codex 최종 PASS), 3-C1(이벤트 위치·ef2·JSON v2) 승인(PASS WITH NOTES, Codex 최종 PASS WITH NOTES), Phase 3 전체 Gate INCOMPLETE, 3-C2 이후 미착수
 last_updated: 2026-10-11
 ---
 
@@ -17,15 +17,15 @@ last_updated: 2026-10-11
 - 계획 범위: Phase 0–29, 총 30개 Phase
 - 현재 상태: **Phase 0 · Phase 1 · Phase 2 완료·승인 (3/30)**. Phase 2는 2026-10-11 `PASS WITH NOTES` / 승인 완료(상세는 아래 "완료된 Phase"와 [Phase_02_Review](01_Phase_Reviews/Phase_02_Review.md)). 후속 NOTES: C33, C38, C42, C44, D2 정책, Phase 4 엔진 규칙 버전·영속화.
 - 현재 개발 중인 Phase: **Phase 3 — 3-A(RNG) PASS WITH NOTES / GPT Chat 승인 (2026-10-11), Codex 최종 검토 PASS WITH NOTES; 3-B1(Pitch Zone Lite 데이터 계약·호출 판정 모드) PASS WITH NOTES / GPT Chat 승인 (2026-10-11), Codex 집중 재검토 PASS WITH NOTES** (3-B2 정수 확률·가상 튜닝 계약은 2026-10-11 구현·자체 검증 완료, 검토 대기 — 승인 아님; 3-C~3-F, Phase 4 미착수; Phase 3 전체 Gate INCOMPLETE)
-- 다음 후보: **3-B2는 2026-10-11 GPT Chat `PASS WITH NOTES` / Codex 최종 `PASS`로 승인됨(전체 xUnit 955 PASS, verify 2회 GATE PASS). 3-C는 소유자의 별도 지시로만 착수 (현재 미착수); 유지 NOTES는 CURRENT_STATE 참조**
+- 다음 후보: **3-C1(이벤트 위치 payload·`ef2`·이벤트 JSON 버전 2)은 2026-10-11 GPT Chat `PASS WITH NOTES` 최종 승인 / Codex 최종 집중 재검토 `PASS WITH NOTES`로 승인됨(전체 xUnit 1,021 PASS, verify 2회 GATE PASS; 이전 `CHANGES REQUIRED` 수정 이력 보존). 3-C2·3-C3는 소유자의 별도 지시로만 착수 (현재 미착수); 유지 NOTES는 CURRENT_STATE 참조**
 
 ## 진행 요약
 
 | 구분 | 수량 | 내용 |
 |---|---:|---|
 | 승인 완료 | 3 | Phase 0, Phase 1, Phase 2 |
-| 검토 대기 | 0 | 상위 Phase 단위로는 없음 (Phase 3-A·3-B1·3-B2 작업 패키지는 승인, Phase 3 전체는 미완료) |
-| 구현/기록 중 | 1 | Phase 3 (3-A·3-B1·3-B2 승인 완료, 3-C~3-F 미착수) |
+| 검토 대기 | 0 | 상위 Phase 단위로는 없음 (Phase 3-A·3-B1·3-B2·3-C1 작업 패키지는 승인, Phase 3 전체는 미완료) |
+| 구현/기록 중 | 1 | Phase 3 (3-A·3-B1·3-B2·3-C1 승인 완료, 3-C2~3-F 미착수) |
 | 미착수 | 26 | Phase 4–29 |
 
 ## Phase 0–29 현황
@@ -37,7 +37,7 @@ last_updated: 2026-10-11
 | 0 | Reproducible desktop foundation | 승인 완료 | [Phase_00_Review](01_Phase_Reviews/Phase_00_Review.md) |
 | 1 | Player identity, visibility, and baseball vocabulary | 승인 완료 (PASS WITH NOTES) | [Phase_01_Review](01_Phase_Reviews/Phase_01_Review.md) |
 | 2 | Baseball state transitions and scoring | 승인 완료 (PASS WITH NOTES, 2026-10-11) | [Phase_02_Review](01_Phase_Reviews/Phase_02_Review.md) |
-| 3 | Seeded game simulation / Prototype 1 | 3-A(RNG)·3-B1 PASS WITH NOTES / 승인, 3-B2 PASS WITH NOTES / 승인 — Phase 3 전체 Gate INCOMPLETE, 3-C 이후 미착수 | [Phase_03_Review](01_Phase_Reviews/Phase_03_Review.md) |
+| 3 | Seeded game simulation / Prototype 1 | 3-A(RNG)·3-B1 PASS WITH NOTES / 승인, 3-B2 PASS WITH NOTES / 승인, 3-C1 PASS WITH NOTES / 승인 — Phase 3 전체 Gate INCOMPLETE, 3-C2 이후 미착수 | [Phase_03_Review](01_Phase_Reviews/Phase_03_Review.md) |
 | 4 | Datapack initialization and safe save spine | 미착수 | 미생성 |
 | 5 | One-player career loop / Prototype 2 | 미착수 | 미생성 |
 | 6 | Calendar, regular season, and basic discovery | 미착수 | 미생성 |
@@ -73,7 +73,8 @@ last_updated: 2026-10-11
 
 ## 검토 대기 중인 Phase
 
-- Phase 3 작업 패키지 **3-B2** (정수 확률 모델·가상 튜닝 계약, 2026-10-11): 구현·자체 검증 완료, 전체 xUnit 955 통과(기준 813에서 +142; Codex `CHANGES REQUIRED` High 2·Medium 1 수정 라운드 포함 — 불변성 2건·JSON null 1건을 RED 재현 후 수정, 튜닝 해시·확률 결과 불변), **`검토 대기` — 승인 아님**, GPT Chat 검토 `미실시`, Codex 재검토 `미실시`. Phase 3 전체가 아니며 Gate INCOMPLETE, 3-C 이후 미착수, Commit/Push 미허가. [리뷰](01_Phase_Reviews/Phase_03_Review.md), [보고서](../docs/reports/PHASE_3B2_REPORT.md), [ADR-006](../docs/decisions/ADR-006.md).
+- Phase 3 작업 패키지 **3-C1** (이벤트 위치 payload·`ef2`·이벤트 JSON 버전 2)는 2026-10-11 GPT Chat `PASS WITH NOTES` 최종 승인, Codex 최종 집중 재검토 `PASS WITH NOTES` (전체 xUnit 1,021 PASS, Codex 직접 실행 83 PASS, `verify.ps1` 2회 GATE PASS, `ef1` 영수증 30,974건·레거시 writer 바이트 유지). 이전 `CHANGES REQUIRED`(Codex Medium 1, GPT Chat 중첩 null) 수정 이력은 [보고서](../docs/reports/PHASE_3C1_REPORT.md) Part G·H·I에 보존. Phase 3 전체는 아님, Gate INCOMPLETE, 3-C2·3-C3 미착수. 유지 NOTES는 CURRENT_STATE 참조.
+- Phase 3 작업 패키지 3-B2(정수 확률 모델·가상 튜닝 계약)는 2026-10-11 GPT Chat `PASS WITH NOTES` 승인, Codex 최종 집중 재검토 `PASS`(전체 xUnit 955 PASS, `verify.ps1` 2회 GATE PASS). 이전 Codex `CHANGES REQUIRED` 수정 이력은 [보고서](../docs/reports/PHASE_3B2_REPORT.md)에 보존. 유지 NOTES는 CURRENT_STATE 참조.
 - 없음 — Phase 3 작업 패키지 3-B1은 2026-10-11 GPT Chat `PASS WITH NOTES` 승인, Codex 집중 재검토 PASS WITH NOTES (전체 xUnit 813 PASS(Claude 실행), 관련 xUnit 104 PASS(Codex 직접 실행), `verify.ps1` 2회 GATE PASS, 새 필수 코드 수정 없음; Phase 3 전체는 아님, Gate INCOMPLETE, 3-B2 미착수). 이력: 3-B1 (Pitch Zone Lite 데이터 계약·호출 판정 모드) — 2026-10-11 구현·자체 검증 완료 후 Codex 리뷰(CHANGES REQUIRED: High 1, Low 1)를 반영한 보완 라운드 완료(전체 xUnit 813 통과, 기준 분포 ID와 가중치를 불변 대응으로 고정, 기존 규칙 프로필 해시 7개 불변; Codex 재검토 미실시). Phase 3-B 전체가 아니며 Gate는 평가하지 않음. 커밋·푸시 없음. [리뷰](01_Phase_Reviews/Phase_03_Review.md), [보고서](../docs/reports/PHASE_3B1_REPORT.md), [ADR-005](../docs/decisions/ADR-005.md).
 - Phase 3 작업 패키지 3-A(RNG)는 2026-10-11 GPT Chat `PASS WITH NOTES` 승인, Codex 최종 검토 PASS WITH NOTES (전체 xUnit 709 PASS(Claude 실행), Randomness 111 PASS(Codex 독립 재실행), `verify.ps1` 2회 GATE PASS). Phase 3 전체는 아님, Gate INCOMPLETE. [리뷰](01_Phase_Reviews/Phase_03_Review.md), [보고서](../docs/reports/PHASE_3A_REPORT.md), [ADR-004](../docs/decisions/ADR-004.md).
 - Phase 2는 2026-10-11 `승인 완료`(PASS WITH NOTES)로 이 목록에서 제외되었습니다.
@@ -86,7 +87,7 @@ last_updated: 2026-10-11
 
 ## 주요 선행 조건과 미해결 항목
 
-- Phase 3-B2 이후와 Phase 4 이상은 소유자의 별도 구현 지시가 필요합니다 (Phase 0–2 승인 완료; Phase 3은 3-A와 3-B1만 착수). D2 `GameRules` 운영 부분 집합은 KBO 규정집·기록규칙 확보 후 인증해야 합니다(현재 비인증 프로필; 연장 11회 한도와 R02 운영 근거만 확인).
+- Phase 3-C2 이후와 Phase 4 이상은 소유자의 별도 구현 지시가 필요합니다 (Phase 0–2 승인 완료; Phase 3은 3-A·3-B1·3-B2 승인, 3-C1 승인). D2 `GameRules` 운영 부분 집합은 KBO 규정집·기록규칙 확보 후 인증해야 합니다(현재 비인증 프로필; 연장 11회 한도와 R02 운영 근거만 확인).
 - 각 소비 Phase는 구현 전에 필요한 KBO RuleProfile 상세 규칙과 명시적 단순화를 확정해야 합니다.
 - 개인 KBO 2026 팩은 Phase 27에서 정확한 `as_of_date`, 증거 기준일, 제공 데이터와 출처를 인증해야 합니다.
 - 툴체인(.NET 8.0.425, Godot 4.7.2 Mono)과 Windows Export 가능성은 Phase 0에서 검증되었습니다 — [toolchain](../docs/toolchain.md).
@@ -100,6 +101,7 @@ last_updated: 2026-10-11
 - KBO 규칙은 커리어에 동결되는 버전형 2026 KBO 지향 RuleProfile과 명시적 단순화를 사용합니다.
 - 장기 기록은 우선 보존하고 Phase 17/29 실측 후 필요한 경우에만 제한적으로 정리합니다.
 - Club Finance Lite가 Scope Lock의 단일 승인 예외로 추가되었습니다: C13 계약 기반 급여, KBO 샐러리캡, 성과형 구단 스폰서 수익, 규칙 기반 Club AI 연동, 읽기 전용 재정 화면.
+- Phase 3-C 설계 계약·3-C1 구현 결정: [ADR-007](../docs/decisions/ADR-007.md) — 3-C1~3-C3 구분, 위치 payload의 선택적 후미 필드, `ef1`/`ef2` 공존(위치가 있는 이벤트만 `ef2`), 이벤트 JSON `format_version: 2`의 엄격한 위치 검증과 레거시 분리, 3-C2 `game/target@1` 권장안, 3-C3 공동 원자성·Phase 4 트랜잭션 인계 (3-C1 승인).
 - Phase 3-B2 구현 결정: [ADR-006](../docs/decisions/ADR-006.md) — 확률 분모 1,000,000(ppm)과 최대 잔여값 정규화 규칙, `prob-model-v1` 8단계 조건부 구조, 보정 슬롯의 고정 순서·상한·결합 상한, 코스 성향의 정확한 질량 이동(기준 분포 가중 정확 중립, 리그 평균 중립 미주장), 해시로 식별되는 **가상 프로토타입** 튜닝 `tuning-virtual-proto-v1`과 사전 선언 시나리오·목표 (검토 요청; Codex 검토 권장).
 - Phase 3-B1 구현 결정: [ADR-005](../docs/decisions/ADR-005.md) — 구역 모델 `pzl-zones-v1`(17구역, 경계 분류 표는 구역의 함수), 타석 방향 규칙, 숨김·유계·평균 중립 타자 성향 벡터, `CalledPitchMode`와 `gamerules-v2`(구형 프로필은 미선언·해시 불변) (검토 요청; Codex 검토 권장).
 - Phase 3-A 구현 결정: [ADR-004](../docs/decisions/ADR-004.md) — PCG32 `pcg32-xsh-rr-v1`, SHA-256 `kd1` 스트림 유도, 6개 `game/*` 스트림(`game/location@1` 규약 포함), `rngset1` 스냅샷, 원자적 작업 범위, 결정적 ID (검토 요청; Codex 검토 권장).

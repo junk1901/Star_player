@@ -1,14 +1,14 @@
 ---
 type: phase-review
 phase: "03"
-phase_name: "Seeded game simulation / Prototype 1 — 작업 패키지 3-A (RNG), 3-B1 (구역·규칙 데이터 계약), 3-B2 (확률·튜닝 계약)"
+phase_name: "Seeded game simulation / Prototype 1 — 작업 패키지 3-A (RNG), 3-B1 (구역·규칙 데이터 계약), 3-B2 (확률·튜닝 계약), 3-C1 (이벤트 위치·ef2·JSON v2)"
 status: 검토 대기
 started: "2026-10-11"
 completed: ""
 developer_ai: Claude Code
 reviewed_by: ""
 branch: "main"
-commit: "feat: add phase 3b2 probability and tuning contracts (기준 HEAD 7756442946f01694b27aa6e5311e7810f07d0278 위; SHA는 git log 참조)"
+commit: "3-C1 커밋됨 (기준 HEAD ddbc999c4c8640dd22b458062e98c0bf7fbe46f6 위의 단일 커밋 `feat: add phase 3c1 located events and ef2 contracts`; SHA는 git log 참조; 3-B2는 ddbc999로 커밋됨)"
 roadmap_anchor: "phase-3--seeded-game-simulation--prototype-1"
 last_updated: "2026-10-11"
 tags:
@@ -20,6 +20,18 @@ tags:
 
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
+
+> [!success] 3-C1 승인 (2026-10-11)
+> 작업 패키지 3-C1(이벤트 위치 payload·`ef2`·이벤트 JSON 버전 2)은 **PASS WITH NOTES / GPT Chat 최종 승인**, Codex 최종 집중 재검토 **PASS WITH NOTES**. 기존 Medium(`ReadEventsV2` 명시적 null)과 추가 중첩 컬렉션 null 오류는 해결·재검증(이전 `CHANGES REQUIRED` 판정과 수정 이력은 아래 보존). 전체 xUnit 1,021 PASS(Claude 실행), Codex 직접 실행 83 PASS(Infrastructure 61, Simulation 22), `verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, Codex 로그 확인), 30,974개 `ef1` 영수증 다이제스트·레거시 writer 바이트 유지, 신규 `ef2` 지문·충돌·JSON 호환성 확인. **이 승인은 3-C1 작업 패키지에만 적용되며 Phase 3 전체 Gate는 INCOMPLETE, 3-C2/3-C3 미착수다. 이 문서의 최상위 status는 `검토 대기`로 유지한다.** ADR-007은 3-C1 한정 Accepted. 유지 NOTES:
+> - 최초 3-C1 구현의 RED 로그 부재
+> - 최초 및 이후 변형 검사 원시 출력의 독립 검증 한계
+> - 이벤트 외부 JSON 입력 검증의 별도 안정화
+> - 3-C2: `game/target@1` 및 목표 구역 선택
+> - 3-C2: 실제 투구 위치 필수화와 타자 방향 검증
+> - 3-C2: `NextBounded` 호출 수와 `Draws` 구분
+> - 3-C2: 명시적 `Take` 및 스위치 타자 정책
+> - 3-C3: GameState·RNG·이벤트 ID·영수증 공동 원자성
+> - Phase 4: DB 트랜잭션 및 복구
 
 > [!success] 3-B2 승인 (2026-10-11)
 > 작업 패키지 3-B2(확률·튜닝 계약)는 **PASS WITH NOTES / GPT Chat 승인**, Codex 최종 집중 재검토 **PASS**. 이전 Codex `CHANGES REQUIRED`(High 2, Medium 1)는 해결·재검증(이력은 아래 보존). 전체 xUnit 955 PASS(Claude 실행), Codex 직접 실행 71 PASS(Domain 31, Infrastructure 40), `verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, Codex 로그 확인). **Phase 3 전체는 승인되지 않았다 — 이 문서의 최상위 상태는 `검토 대기`로 유지, Phase 3 Gate INCOMPLETE, 3-C 미착수.** 유지하는 NOTES:
@@ -38,6 +50,25 @@ tags:
 
 > [!important] 범위
 > 소유자는 **Phase 3-A RNG 구현만** 승인했다(`TASK.md`). 3-B~3-F와 Phase 4는 미승인·미착수다. 이 문서는 **Phase 3 전체 Gate를 PASS로 기록하지 않는다.** Phase 3 Gate(100,000 PA, 100경기, 보정 구간, Pitch Zone Lite 검사 등)는 전부 `미검증`/INCOMPLETE다.
+
+## 3-C1 진행 상황 (2026-10-11, `TASK.md` — 이벤트 위치 payload·`ef2`·이벤트 JSON 버전 2)
+
+> [!warning] 2차 결함 수정 라운드 — 중첩 이벤트 목록의 null 요소 (2026-10-11)
+> GPT Chat 추가 검토 **`CHANGES REQUIRED`**. 1차 수정의 탐색에서 발견된 결함: 이벤트 내부 목록(`moves`, `strikeout_credits`, `batter_credits`, 이동의 `credits`)과 시나리오 `events`의 **null 요소**가 `NullReferenceException`(`errors: [null]`은 경로 없는 `Fixture.enum_invalid`)을 일으킨다. **세 reader(레거시 `ReadEvents`, `ReadEventsV2`, 경기 시나리오 reader) 모두에서 직접 실행으로 재현**(추정 아님). 회귀 테스트 24건을 먼저 작성해 **RED 19 실패 / 5 통과**(5건은 호환성 보호) → 공통 변환 함수(`Item`·`Credits`·`Moves`·`Errors`·`Events`) 수정 → **GREEN 24/24**, 신규 변형 검사 6건 모두 검출. 오류는 `Fixture.field_missing` + 정확한 경로(`events[0].moves[1].credits[0]`, 시나리오는 `g001.events[2]` 접두사 유지), 전체 입력 실패. 목록 자체가 null인 선택 항목은 그대로 허용(`strikeout_credits: null`은 기존 의미 유지, 빈 목록으로 바꾸지 않음). 전체 xUnit 1021 통과(Domain 263, Simulation 383, Application 117, Infrastructure 258; 997에서 +24). `ef1`/`ef2`·30,974 다이제스트·Golden Vector·`GameEvents`·`GameReducer`·RNG 불변(고정 테스트 통과). `tools/verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, 로그 `PHASE_3C1_FIX2_VERIFY_LOG_run1/2.md`). **Codex 재검토 `미실시`, 3-C1 최종 승인 대기, 상태는 `검토 대기` 유지.** 유지 노트: 최초 3-C1 RED 로그 부재, 최초 변형 검사 7건 원시 로그 미검토, 이벤트 밖 null 멤버(라인업·벤치·expected, 다른 변환기) 미조사, 신규 verify 로그의 CRLF·단독 CR 후행 공백. 근거: [보고서 Part H](../../docs/reports/PHASE_3C1_REPORT.md), [RED 요약](../../docs/reports/PHASE_3C1_FIX2_RED_EVIDENCE.md). 아래 1차 수정 라운드의 "수정하지 않은 관련 노트"는 이 라운드로 해결됨.
+
+> [!warning] Codex 결함 수정 라운드 (2026-10-11)
+> 3-C1 코드에 대한 Codex 독립 리뷰 결과 **`CHANGES REQUIRED`** (Medium 1). `ReadEventsV2`가 `{"format_version":2,"events":null}`에서 `ArgumentNullException`, `"events":[null]`에서 `NullReferenceException`을 던졌다(`required`는 명시적 JSON null을 허용). 회귀 테스트를 먼저 작성해 **RED(5건 실패 / 23건 통과)** 를 확인하고 `ReadEventsV2`만 수정 → **GREEN 28/28**. null 목록·null 요소는 `Fixture.field_missing`(경로 `events` / `events[i]`)으로 전체 읽기 실패, 부분 성공·기본값 대체 없음. 전체 xUnit 997 통과(Domain 263, Simulation 383, Application 117, Infrastructure 234; 기준 985에서 +12). `ef1`/`ef2`·Golden Vector·`Location` 계약·`GameReducer`·레거시 reader/writer 불변(고정 테스트 통과). `tools/verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, 로그 `PHASE_3C1_FIX_VERIFY_LOG_run1/2.md`). **Codex 재검토 `미실시`, 3-C1 최종 승인 대기, 상태는 `검토 대기` 유지.** 수정하지 않은 관련 노트: 이벤트 내부 목록의 명시적 null(`moves: [null]`, `strikeout_credits: [null]` 등)은 `ReadEventsV2`·레거시 `ReadEvents`·시나리오 reader에서 여전히 예외(별도 지시 필요). 최초 3-C1 RED 로그 부재와 변형 검사 7건 원시 로그 미검토 노트는 그대로 유지. 근거: [보고서 Part G](../../docs/reports/PHASE_3C1_REPORT.md), [RED 요약](../../docs/reports/PHASE_3C1_FIX_RED_EVIDENCE.md).
+
+> [!note] 상태
+> 3-C1은 구현·자체 검증을 마쳤고 **`검토 대기`**입니다(승인 아님). GPT Chat 검토 `미실시`, 3-C1 코드에 대한 Codex 독립 검토 `미실시`(Codex는 3-C *아키텍처*만 검토: `READY WITH NOTES`). 이 문서의 최상위 상태는 `검토 대기`이며 Phase 3 전체 Gate는 INCOMPLETE, 3-C2·3-C3·Phase 4는 미착수다.
+
+- **구현:** `PitchSpec`(→ `PitchEvent`/`TakeEvent`)와 `InPlayEvent`의 맨 끝에 선택적 `PitchLocation? Location = null` 추가(기존 인자 순서·기본값 불변, `InPlayEvent`는 자체가 투구 1회). 위치가 있는 이벤트는 `ef2`(`ef2|kind|<ef1 필드 그대로>|zone_model|zone|side|boundary`), 그 밖의 모든 이벤트는 `ef1` 그대로. `GameReducer.Apply`는 수정하지 않았다(영수증 버전 → 종류·지문 순서 비교가 이미 있음). 이벤트 JSON `format_version: 2`(`ReadEventsV2`/`WriteEventsV2`, 투구 이벤트에 위치 필수·엄격 검증, 비투구 이벤트에는 위치 불허)와 레거시 배열 형식 분리, 레거시 writer는 위치가 있는 이벤트를 조용히 버리지 않고 거부.
+- **결정/계약:** [ADR-007](../../docs/decisions/ADR-007.md), [game-engine.md §20](../../docs/game-engine.md), [보고서](../../docs/reports/PHASE_3C1_REPORT.md). ROADMAP §1.14·C08의 "ef1 영수증에서 위치 제거" 부정확 문장을 계약 변경 없이 정정(ef1 영수증은 위치를 가진 적이 없음: ef1+위치 추가 / ef2−위치 제거 = 버전 불일치, 위치 변경 = 내용 충돌).
+- **테스트(실제 실행):** `dotnet test StarPlayer.sln -c Release` 985 통과(Domain 263, Simulation 383, Application 117, Infrastructure 222; 기준 955에서 +30), 실패·건너뜀 0. `ddbc999`(3-B2)에서 계산한 두 리터럴(Phase 2 100경기 30,974개 영수증 SHA-256, 레거시 `WriteEvents` 바이트 SHA-256)이 현재 트리에서도 동일. 변형 검사 7건 모두 검출. RED 로그는 없음(구현 후 테스트 작성; 변형 검사와 HEAD 계산 해시가 대체 증거). `tools/verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, 로그 `PHASE_3C1_VERIFY_LOG_run1/2.md`).
+- **기존 테스트 변경:** `EventIdentityTests`의 "모든 생성자 매개변수가 지문을 바꾼다" 테스트에 `Location` 변형을 추가하고 `InPlayEvent` 매개변수 개수 가드를 7→8로 갱신(기존 `ef1` 기대값은 변경 없음).
+- **미검증/미실시:** Phase 3 Gate 전부, 3-C 해결기 흐름(3-C2), 공동 원자성(3-C3), Codex 코드 검토, GPT Chat 검토, 수동 UI·FHD(UI 변경 없음).
+- **이월/주의:** 3-C2 — `game/target@1`(권장, ADR-004 개정+골든 벡터), `target_zone` 실현, `NextBounded` 호출 수와 실제 Draws 구분, 명시적 Take의 HBP 정책, 스위치 타자 타석 방향 정책, 이벤트 방향의 타자 적합성 검증. 3-C3 — 이벤트 ID·리듀서 결과·영수증·RNG 커서 공동 원자성, Phase 4 트랜잭션·RNG 기대 해시. 리듀서는 위치 없는 새 투구를 거부하지 않는다(새 데이터의 위치 필수는 v2 reader/writer와 3-C2 해결기가 담당).
+- **승인자 또는 승인 근거:** 없음 — 3-C1은 미승인.
 
 ## 3-B2 진행 상황 (2026-10-11, `TASK.md` — 정수 확률·가상 튜닝 계약)
 

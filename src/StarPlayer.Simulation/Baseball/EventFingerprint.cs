@@ -18,12 +18,22 @@ namespace StarPlayer.Simulation.Baseball;
 /// ordinally. A null list and an empty list are the same, except <c>StrikeoutCredits</c> where null means "default catcher putout".
 /// The fingerprint is the lower-case hex SHA-256 of the UTF-8 canonical text. Any change to this format must change <see cref="Version"/>.
 /// </para>
+/// <para>
+/// Format <see cref="VersionV2"/> <c>ef2</c> (Phase 3-C1) is used only for an event that carries a pitch location (<c>PitchEvent</c>/<c>TakeEvent</c> through
+/// <c>PitchSpec.Location</c>, and <c>InPlayEvent.Location</c>): <c>ef2|kind|</c> + exactly the <c>ef1</c> field list of that event + <c>|zone_model=..|zone=..|side=..|boundary=..</c>
+/// in that order, with the same escaping and enum rules. Every other event keeps the <c>ef1</c> text and hash byte-for-byte; an <c>ef1</c> receipt is never converted.
+/// </para>
 /// </summary>
 public static class EventFingerprint
 {
     public const string Version = "ef1";
 
-    public static EventReceipt Receipt(GameEvent e) => new(e.Id, KindName(e), Version, Hash(Canonical(e)));
+    public const string VersionV2 = "ef2";
+
+    /// <summary>The fingerprint version that identifies this event: <c>ef2</c> when it carries a pitch location, otherwise <c>ef1</c>.</summary>
+    public static string VersionOf(GameEvent e) => GameEventLocation.Of(e) is null ? Version : VersionV2;
+
+    public static EventReceipt Receipt(GameEvent e) => new(e.Id, KindName(e), VersionOf(e), Hash(Canonical(e)));
 
     public static string KindName(GameEvent e) => e switch
     {
@@ -57,7 +67,9 @@ public static class EventFingerprint
             },
             _ => throw new ArgumentOutOfRangeException(nameof(e), "알 수 없는 사건 종류입니다."),
         };
-        return $"{Version}|{KindName(e)}|{string.Join("|", fields)}";
+        if (GameEventLocation.Of(e) is { } l)
+            fields = [.. fields, F("zone_model", Esc(l.Model.Value)), F("zone", Esc(l.Zone.Value)), F("side", Name(l.Side)), F("boundary", Name(l.Boundary))];
+        return $"{VersionOf(e)}|{KindName(e)}|{string.Join("|", fields)}";
     }
 
     private static string Hash(string canonical) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(canonical))).ToLowerInvariant();

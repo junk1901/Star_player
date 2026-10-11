@@ -107,7 +107,7 @@ internal sealed class MoveDto
     public string? OutMethod { get; set; }
 }
 
-internal sealed class EventDto
+internal class EventDto
 {
     public required string Id { get; set; }
     public required string Type { get; set; }
@@ -129,6 +129,26 @@ internal sealed class EventDto
     public int? Base { get; set; }
     public int? Slot { get; set; }
     public int? Slot2 { get; set; }
+}
+
+// Event format 2 (Phase 3-C1): the legacy EventDto plus the pitch location. Kept as a separate type so that the legacy reader still rejects a "location" member.
+internal sealed class EventLocationDto
+{
+    public required string ZoneModel { get; set; }
+    public required string Zone { get; set; }
+    public required string Side { get; set; }
+    public required string Boundary { get; set; }
+}
+
+internal sealed class EventV2Dto : EventDto
+{
+    public EventLocationDto? Location { get; set; }
+}
+
+internal sealed class EventsV2Dto
+{
+    public required int FormatVersion { get; set; }
+    public required List<EventV2Dto> Events { get; set; }
 }
 
 internal sealed class ExpectedDto
@@ -274,35 +294,61 @@ internal static class ScriptedGameJson
     {
         var rule = rules.FirstOrDefault(r => r.ProfileId == g.Rules) ?? throw new GameJsonException("Game.rules_profile_unknown", $"{g.Id}: 규칙 프로필 '{g.Rules}'이(가) 없습니다.");
         return new ScriptedGame(g.Id, g.Title, rule, Team(g.Away, $"{g.Id}.away"), Team(g.Home, $"{g.Id}.home"),
-            g.Events.Select((e, i) => ToEvent(e, $"{g.Id}.events[{i}]")).ToList(), g.Expected is null ? null : ToExpected(g.Expected));
+            Events(g.Events, $"{g.Id}.events", (e, where) => ToEvent(e, where)), g.Expected is null ? null : ToExpected(g.Expected));
     }
 
     private static TeamSetup Team(TeamDto t, string where) => new(
         t.Lineup.Select(s => new LineupSlot(s.Order, Player(s.Player, where), EnumText.Parse<FieldPosition>(s.Position, where))).ToList(),
         Player(t.Pitcher, where), t.Bench.Select(b => Player(b, where)).ToList());
 
-    private static ImmutableList<PositionCredit>? Credits(List<CreditDto>? list, string where) =>
-        list?.Select(c => new PositionCredit(EnumText.Parse<FieldPosition>(c.Position, where), EnumText.Parse<CreditKind>(c.Kind, where))).ToImmutableList();
+    // `required` and List<T> only guarantee that a member is present: an explicit JSON null passes both, as a whole list and as an element of one.
+    // An optional list that is null stays legal (the callers keep its meaning); a null ELEMENT is always an error with the exact path, never skipped or defaulted.
+    private static T Item<T>(T? item, string path) where T : class =>
+        item ?? throw new GameJsonException("Fixture.field_missing", $"필수 항목이 비어 있습니다(null): {path}");
+
+    /// <summary>Builds the events of a list ("events" of a legacy array, a format 2 envelope or a scripted game). A null list or a null element fails the whole read.</summary>
+    private static List<GameEvent> Events<T>(List<T>? list, string path, Func<T, string, GameEvent> make) where T : class
+    {
+        var checkedList = list is null ? throw new GameJsonException("Fixture.field_missing", $"필수 항목이 비어 있습니다(null): {path}") : list;
+        var events = new List<GameEvent>(checkedList.Count);
+        for (var i = 0; i < checkedList.Count; i++)
+            events.Add(make(Item(checkedList[i], $"{path}[{i}]"), $"{path}[{i}]"));
+        return events;
+    }
+
+    private static ImmutableList<PositionCredit>? Credits(List<CreditDto>? list, string where, string field) =>
+        list?.Select((c, i) =>
+        {
+            var credit = Item(c, $"{where}.{field}[{i}]");
+            return new PositionCredit(EnumText.Parse<FieldPosition>(credit.Position, where), EnumText.Parse<CreditKind>(credit.Kind, where));
+        }).ToImmutableList();
+
+    private static ImmutableList<FieldPosition>? Errors(List<string>? list, string where) =>
+        list?.Select((p, i) => EnumText.Parse<FieldPosition>(Item(p, $"{where}.errors[{i}]"), where)).ToImmutableList();
 
     private static ImmutableList<RunnerMove>? Moves(List<MoveDto>? list, string where) =>
-        list?.Select(m => new RunnerMove(m.From, m.To, m.Cause is null ? MoveCause.Play : EnumText.Parse<MoveCause>(m.Cause, where),
-            m.OutKind is null ? null : EnumText.Parse<OutKind>(m.OutKind, where), Credits(m.Credits, where), m.Sequence, m.OutAt,
-            m.OutMethod is null ? null : EnumText.Parse<OutMethod>(m.OutMethod, where))).ToImmutableList();
+        list?.Select((entry, i) =>
+        {
+            var m = Item(entry, $"{where}.moves[{i}]");
+            return new RunnerMove(m.From, m.To, m.Cause is null ? MoveCause.Play : EnumText.Parse<MoveCause>(m.Cause, where),
+                m.OutKind is null ? null : EnumText.Parse<OutKind>(m.OutKind, where), Credits(m.Credits, where, $"moves[{i}].credits"), m.Sequence, m.OutAt,
+                m.OutMethod is null ? null : EnumText.Parse<OutMethod>(m.OutMethod, where));
+        }).ToImmutableList();
 
-    private static GameEvent ToEvent(EventDto e, string where)
+    private static GameEvent ToEvent(EventDto e, string where, PitchLocation? location = null)
     {
         PitchSpec Spec() => new(EnumText.Parse<PitchOutcome>(e.Outcome, where),
             e.Mishap is null ? PitchMishap.None : EnumText.Parse<PitchMishap>(e.Mishap, where), Moves(e.Moves, where),
-            e.DroppedThird is null ? PitchMishap.None : EnumText.Parse<PitchMishap>(e.DroppedThird, where), Credits(e.StrikeoutCredits, where));
+            e.DroppedThird is null ? PitchMishap.None : EnumText.Parse<PitchMishap>(e.DroppedThird, where), Credits(e.StrikeoutCredits, where, "strikeout_credits"), location);
         return e.Type switch
         {
             "approach" => new ApproachEvent(e.Id, EnumText.Parse<ApproachKind>(e.Approach, where)),
             "pitch" => new PitchEvent(e.Id, Spec()),
             "take" => new TakeEvent(e.Id, Spec()),
             "in_play" => new InPlayEvent(e.Id, EnumText.Parse<BattedBallType>(e.Batted, where), EnumText.Parse<InPlayResult>(e.Result, where), e.Sacrifice ?? false,
-                Moves(e.Moves, where), Credits(e.BatterCredits, where), e.Errors?.Select(p => EnumText.Parse<FieldPosition>(p, where)).ToImmutableList(), e.BatterSequence),
+                Moves(e.Moves, where), Credits(e.BatterCredits, where, "batter_credits"), Errors(e.Errors, where), e.BatterSequence, location),
             "runner_play" => new RunnerPlayEvent(e.Id, EnumText.Parse<RunnerPlayKind>(e.Kind, where), Moves(e.Moves, where),
-                e.Errors?.Select(p => EnumText.Parse<FieldPosition>(p, where)).ToImmutableList()),
+                Errors(e.Errors, where)),
             "substitution" => new SubstitutionEvent(e.Id, EnumText.Parse<SubstitutionKind>(e.Kind, where), EnumText.Parse<TeamSide>(e.Team, where),
                 e.Player is null ? default : Player(e.Player, where), e.Base, e.Slot, e.Slot2),
             _ => throw new GameJsonException("Fixture.event_type_unknown", $"{where}: 알 수 없는 사건 종류 '{e.Type}'입니다."),
@@ -311,13 +357,16 @@ internal static class ScriptedGameJson
 
     // ---------------------------------------------------------------- events and event receipts (resume contract, docs/game-engine.md section 3a)
 
-    /// <summary>Reads a JSON array of events (the same shape as the <c>events</c> member of a scripted game).</summary>
+    /// <summary>Reads a legacy (format 1) JSON array of events (the same shape as the <c>events</c> member of a scripted game). Events have no location and get none.</summary>
     public static Result<IReadOnlyList<GameEvent>> ReadEvents(string json)
     {
         try
         {
+            using (var document = JsonDocument.Parse(json))
+                if (document.RootElement.ValueKind == JsonValueKind.Object)
+                    throw new GameJsonException("Fixture.version_unsupported", "이 읽기는 사건 배열(레거시)만 읽습니다. format_version을 가진 사건 묶음은 버전 2 읽기로 읽어야 합니다.");
             var dtos = JsonSerializer.Deserialize<List<EventDto>>(json, WorldJson.Options) ?? throw new GameJsonException("Fixture.json_invalid", "JSON 내용이 비어 있습니다.");
-            return Result<IReadOnlyList<GameEvent>>.Success(dtos.Select((e, i) => ToEvent(e, $"events[{i}]")).ToList());
+            return Result<IReadOnlyList<GameEvent>>.Success(Events(dtos, "events", (e, where) => ToEvent(e, where)));
         }
         catch (GameJsonException e)
         {
@@ -329,7 +378,87 @@ internal static class ScriptedGameJson
         }
     }
 
-    public static string WriteEvents(IEnumerable<GameEvent> events) => JsonSerializer.Serialize(events.Select(ToDto).ToList(), WorldJson.Options);
+    /// <summary>Writes the legacy array. It cannot carry a location, so an event with one is refused (<c>Fixture.location_requires_v2</c>) instead of losing it.</summary>
+    public static string WriteEvents(IEnumerable<GameEvent> events)
+    {
+        var list = events.ToList();
+        if (list.FirstOrDefault(e => GameEventLocation.Of(e) is not null) is { } located)
+            throw new GameJsonException("Fixture.location_requires_v2", $"사건 '{located.Id}'는 투구 위치를 가지고 있어 레거시 사건 배열로 쓸 수 없습니다. 버전 2 쓰기를 사용하세요.");
+        return JsonSerializer.Serialize(list.Select(ToDto).ToList(), WorldJson.Options);
+    }
+
+    public const int EventFormatV2 = 2;
+
+    private static bool IsPitchBearing(string? type) => type is "pitch" or "take" or "in_play";
+
+    /// <summary>
+    /// Reads the format 2 event envelope <c>{format_version: 2, events: [...]}</c>. Every pitch-bearing event (<c>pitch</c>, <c>take</c>, <c>in_play</c>) must carry a valid
+    /// <c>location</c>; nothing is defaulted or corrected. A non-pitch event must not carry one. A bare array (legacy) is not accepted here and is never promoted.
+    /// </summary>
+    public static Result<IReadOnlyList<GameEvent>> ReadEventsV2(string json)
+    {
+        try
+        {
+            using (var document = JsonDocument.Parse(json))
+                if (document.RootElement.ValueKind != JsonValueKind.Object)
+                    throw new GameJsonException("Fixture.version_unsupported", "버전 2 사건 묶음은 format_version을 가진 객체여야 합니다. 사건 배열은 레거시 형식이며 위치를 만들어 주지 않습니다.");
+            var dto = JsonSerializer.Deserialize<EventsV2Dto>(json, WorldJson.Options) ?? throw new GameJsonException("Fixture.json_invalid", "JSON 내용이 비어 있습니다.");
+            if (dto.FormatVersion != EventFormatV2)
+                throw new GameJsonException("Fixture.version_unsupported", $"지원하지 않는 사건 형식 버전입니다: {dto.FormatVersion}");
+            return Result<IReadOnlyList<GameEvent>>.Success(Events(dto.Events, "events", ToEventV2));
+        }
+        catch (GameJsonException e)
+        {
+            return Result<IReadOnlyList<GameEvent>>.Failure(new Error(e.Code, e.Message));
+        }
+        catch (JsonException e)
+        {
+            return Result<IReadOnlyList<GameEvent>>.Failure(new Error("Fixture.json_invalid", $"JSON 형식이 올바르지 않습니다: {e.Message}"));
+        }
+    }
+
+    private static GameEvent ToEventV2(EventV2Dto e, string where)
+    {
+        if (!IsPitchBearing(e.Type))
+            return e.Location is null ? ToEvent(e, where) : throw new GameJsonException("Fixture.location_unexpected", $"{where}: 투구가 아닌 사건('{e.Type}')에는 위치가 없습니다.");
+        var l = e.Location ?? throw new GameJsonException("Fixture.location_missing", $"{where}: 투구 사건('{e.Type}')에는 위치(location)가 필요합니다.");
+        var model = ZoneModelVersion.Create(l.ZoneModel);
+        if (!model.IsSuccess)
+            throw new GameJsonException(model.Error!.Value.Code, $"{where}.location.zone_model: {model.Error.Value.Message}");
+        var zone = PitchZoneId.Create(l.Zone);
+        if (!zone.IsSuccess)
+            throw new GameJsonException(zone.Error!.Value.Code, $"{where}.location.zone: {zone.Error.Value.Message}");
+        var made = PitchLocation.Create(model.Value, zone.Value, EnumText.Parse<AppliedBatterSide>(l.Side, $"{where}.location.side"),
+            EnumText.Parse<BoundaryClass>(l.Boundary, $"{where}.location.boundary"));
+        if (!made.IsSuccess)
+            throw new GameJsonException(made.Error!.Value.Code, $"{where}.location: {made.Error.Value.Message}");
+        return ToEvent(e, where, made.Value);
+    }
+
+    /// <summary>Writes the format 2 envelope. A pitch-bearing event without a location is refused (<c>Fixture.location_missing</c>): new output never lacks one.</summary>
+    public static string WriteEventsV2(IEnumerable<GameEvent> events) => JsonSerializer.Serialize(new EventsV2Dto
+    {
+        FormatVersion = EventFormatV2,
+        Events = events.Select(ToDtoV2).ToList(),
+    }, WorldJson.Options);
+
+    private static EventV2Dto ToDtoV2(GameEvent e)
+    {
+        var location = GameEventLocation.Of(e);
+        if (location is null && e is PitchEvent or TakeEvent or InPlayEvent)
+            throw new GameJsonException("Fixture.location_missing", $"사건 '{e.Id}'는 투구 사건이지만 위치가 없어 버전 2로 쓸 수 없습니다.");
+        var d = ToDto(e);
+        return new EventV2Dto
+        {
+            Id = d.Id, Type = d.Type, Approach = d.Approach, Outcome = d.Outcome, Mishap = d.Mishap, DroppedThird = d.DroppedThird, Moves = d.Moves,
+            StrikeoutCredits = d.StrikeoutCredits, Batted = d.Batted, Result = d.Result, Sacrifice = d.Sacrifice, BatterCredits = d.BatterCredits, Errors = d.Errors,
+            BatterSequence = d.BatterSequence, Kind = d.Kind, Team = d.Team, Player = d.Player, Base = d.Base, Slot = d.Slot, Slot2 = d.Slot2,
+            Location = location is null ? null : new EventLocationDto
+            {
+                ZoneModel = location.Model.Value, Zone = location.Zone.Value, Side = Text(location.Side), Boundary = Text(location.Boundary),
+            },
+        };
+    }
 
     private static string Text<T>(T value) where T : struct, Enum => SnakeCase.From(value.ToString());
 
