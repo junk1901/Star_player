@@ -746,3 +746,78 @@ Status: **approved 2026-10-11 for 3-C2B-1 only** (GPT Chat `PASS WITH NOTES`, Co
 - RNG: no new draw; `NextRng` equals the draft's next position. The candidate carries the reducer result as an unconfirmed `UnconfirmedStep`; adopting state, RNG and id together is 3-C3.
 
 Handoff: in-play events, `advancement` (`game/runner@1`), runner movement and fielding credits (3-C2B-2/3, design not fixed); joint atomicity and automatic plate-appearance progression (3-C3); persistence and expected RNG hash (Phase 4).
+
+## 23. Phase 3-C2B-2-P: in-play generation policy and template feasibility (2026-10-12; decisions in `docs/decisions/ADR-007.md` "Decisions (3-C2B-2 prototype policy)")
+
+Status: **policy Owner Accepted (D1–D5, owner instruction `TASK.md`); detailed templates verified by test-only tooling, GPT Chat `PASS WITH NOTES` (feasibility verification only; Codex review `미실시`; not an implementation approval); 3-C2B-2 is NOT implemented.** Nothing in `src/` changed. This section is the contract the 3-C2B-2 implementation must meet if the owner later approves it; it is not a description of working code. The evidence is `docs/reports/PHASE_3C2B2_POLICY_REPORT.md`, `PHASE_3C2B2_TEMPLATE_MATRIX.md` and the raw results `PHASE_3C2B2_FEASIBILITY_RAW.json`.
+
+**Versions.** Generation policy `inplay-mapping-v1`; official record of a game-ending hit `walkoff-credit-v1`; template catalogue `inplay-template-v1`. Rule basis: the confirmed 2026 OBR as a *temporary* prototype basis (9.06(a)(f)(g), 7.01(e)(3) and its exception, the Infield Fly definition); the 2026 KBO clauses are **not** certified (D4).
+
+**1. Inputs and the 45 combinations.** The in-play branch of a 3-C2A draft supplies a batted ball (`ground|line|fly` x `weak|medium|hard`, `popup`: 10 values) and a defence result (`out`, `single`, `double`, `triple`, `home_run`, `reached_on_error`: 6 values). In `tuning-virtual-proto-v1` 45 of the 60 combinations have a positive probability and 15 are exactly 0 ppm (ground weak: double, triple, home run; ground medium and hard: triple, home run; line weak: triple, home run; line medium: home run; fly weak: triple, home run; popup: double, triple, home run). Every positive combination maps to one of **19 templates** `ipt1.<class>.<result>` (class `ground|line|fly|pop`; intensity selects only the probability row and stays in the audit). A tuning change that makes a zero combination positive needs a template and a re-run of the matrix. The defence-result distribution never yields a fielder's choice.
+
+**2. Templates (fixed fielders; prototype simplification).**
+
+| Class | Out | Reached on error | Hits |
+|---|---|---|---|
+| ground | SS fields, throws to 1B: assist SS, **one** putout 1B | E6 (SS) | single (to LF), double (left-field corner) |
+| line | SS catches: putout SS | E6 (SS) | single (CF), double (RF gap), triple (RF corner), out-of-the-park home run |
+| fly | CF catches: putout CF | E8 (CF) | single (CF), double (CF gap), triple (RF), out-of-the-park home run |
+| pop | 2B catches: putout 2B | E8 (CF): a ball beyond the infielders' ordinary effort that the CF could ordinarily catch | single: drops in shallow CF beyond the infielders' ordinary effort |
+
+Rules: an out template has exactly one putout (the batter's); an assist exists only where the template contains a throw (only the ground out); a hit has no putout, assist or error; a reached-on-error template has one error at one position and is never reclassified as a fielder's choice or a compound error; the positions must exist in the current defence (checked on every run against `GameState.DefenderAt`).
+
+**3. Base runner movement (every existing runner has exactly one `RunnerMove`; holds are explicit).** From the lead runner back; `n>n` holds; 4 = scored.
+
+| Runners | Ground out, 0-1 outs | Any other out, or any out with 2 outs | Single | Double | Triple, home run | Reached on error |
+|---|---|---|---|---|---|---|
+| none | - | - | - | - | - | - |
+| 1B | 1>2 | 1>1 | 1>2 | 1>3 | 1>4 | 1>2 |
+| 2B | 2>2 | 2>2 | 2>3 | 2>4 | 2>4 | 2>2 |
+| 1B,2B | 2>3,1>2 | 2>2,1>1 | 2>3,1>2 | 2>4,1>3 | 2>4,1>4 | 2>3,1>2 |
+| 3B | 3>3 | 3>3 | 3>4 | 3>4 | 3>4 | 3>3 |
+| 1B,3B | 3>3,1>2 | 3>3,1>1 | 3>4,1>2 | 3>4,1>3 | 3>4,1>4 | 3>3,1>2 |
+| 2B,3B | 3>3,2>2 | 3>3,2>2 | 3>4,2>3 | 3>4,2>4 | 3>4,2>4 | 3>3,2>2 |
+| loaded | 3>4,2>3,1>2 | 3>3,2>2,1>1 | 3>4,2>3,1>2 | 3>4,2>4,1>3 | 3>4,2>4,1>4 | 3>4,2>3,1>2 |
+
+Policies: `RP-OUT-GROUND-FORCED` (a runner is forced when every base behind him is occupied; the batter's run to first forces him along, a non-forced runner holds; with two outs the batter's out is the third out and everyone holds), `RP-OUT-HOLD` (line, fly, pop out: no tag-up, no double-off), `RP-HIT-PLUS-1/2/3` (each runner advances the bases of the hit, capped at home), `RP-HR-ALL-SCORE`, `RP-ROE-FORCED-PUSH` (forced runners move one base). Causes: hits, outs and holds `MoveCause.Play`; a runner pushed by a reaching batter on a reached-on-error `MoveCause.Forced`. The batter-runner of a hit or an error gets **no** `RunnerMove` (his destination is the result; the reducer rejects a batter move that is not a post-hit out); a batter out is the event's own out with its credits. No `OutKind`, putout or assist is attached to any move: a base plan never puts a runner out. **No `Sequence` is ever needed:** a base plan never contains a run together with the third out (the third-out play holds every runner).
+
+**4. Official record.** Ordinary situations (any inning that is not the last half of the final or an extra inning): official result = drawn result. Last half of the final or an extra inning, with `need = away runs - home runs + 1` runs required to take the lead (`inplay-mapping-v1` / `walkoff-credit-v1`):
+- Drawn `double` or `triple` with `k` bases: let the runners that score under the drawn template (base `b` scores iff `b + k >= 4`) be listed lead runner first. If there are at least `need` of them, the *winning-run scorer* is the `need`-th; the official bases are `min(k, 4 - his starting base)` (OBR 9.06(f): only as many bases as the winning-run scorer advanced). When this is smaller than `k` the official result is the template of the smaller hit and **the facts of the play are those of that template** (the batter stops where the record says, D3); the run count then equals `need` exactly. The drawn result stays in the audit.
+- Drawn `single`, `out`, `reached_on_error`: unchanged. Drawn `home_run`: out-of-the-park, batter and every runner score (D2; 9.06(g)); never converted.
+- A non-home-run walk-off scores exactly `need` runs; the reducer refuses more (`Game.run_after_winning_run`) and the policy never produces more.
+- Trailing runners and the batter-runner are recorded at the destinations of the official template at the moment the game ends (they count as left on base under the profile rule `CountWalkOffRunnersAsLeftOnBase`).
+
+Worked examples: tied, runner on 3B, drawn double: need 1, scorers [3B], credit `min(2, 1) = 1` -> official **single**, one run, batter on 1B. Tied, runner on 2B, drawn triple: credit `min(3, 2) = 2` -> official **double** (the 9.06(f) comment: the batter-runner reaches second in the natural course of play). Tied, runner on 1B, drawn triple: credit 3 -> triple unchanged. Two behind, bases loaded, triple: need 3, winner from 1B, credit 3 -> triple, 3 runs. Tied, bases loaded, 2 outs, reached on error: the forced run from 3B scores, the result stays `ReachedOnError`, no RBI.
+
+**5. When advancement is required (decision for 3-C2B-3).** A base plan is `AdvancementRequired` exactly when the situation is one of the four declared `advancement` contexts of `prob-model-v1` and the base plan does **not** already end the game and is not a third-out play: `single_runner_on_first` / `single_runner_on_second` (official single with a runner on 1B or 2B), `double_runner_on_first` (official double with a runner on 1B), `fly_out_runner_on_third` (fly-ball out with a runner on 3B and fewer than two outs). If the base plan ends the game, later advancement is moot and not required. The base plan of a required case is complete and legal (the reducer accepts it) but **must not** be given to 3-C3: whether the runner takes the extra base or is thrown out is the `advancement` draw. Acceptance by the reducer never turns `PENDING_ADVANCEMENT` into `LEGAL_BASE`. Cases with more than one runner are composite: the model declares no context, order or interaction for them (U-1).
+
+**6. Popup and the Infield Fly rule.** The reducer does not model the Infield Fly rule; the templates keep the two situations apart by premise. *Pop out* (2B catches with ordinary effort): with first and second occupied (or bases loaded) and fewer than two outs this is an Infield Fly (OBR definition); the batter is out either way and the caught ball gives the same record; runners hold in the base plan (they may advance at their own risk, which is 3-C2B-3). *Pop single* and *pop reached-on-error*: the ball is beyond any infielder's ordinary effort (shallow center field), so **no** Infield Fly by premise, whatever the runners; the error of the reached-on-error template is the outfielder's (E8) and the ball is one the outfielder could ordinarily catch. A pop-up error by an infielder in an Infield Fly situation is **not** a generated play (the batter would be out).
+
+**7. Type boundary for 3-C2B-2/3 (design only; no production code is written).**
+- `BaseInPlayPlan` (Simulation, resolver-internal): the `PreparedPitch` and its in-play draft, the batted-ball class and intensity, the drawn defence result, the drawn and the official template, the batter's final base, the ordered runner moves, whether the half-inning or the game ends, the walk-off effect, the advancement-required flag with its context keys and a composite marker, the policy versions and the audit evidence. No RNG is drawn to build it.
+- `PendingAdvancement`: a `BaseInPlayPlan` whose advancement is required. It is **not** a candidate: it has no event id, produces no `GameEvent` or receipt, cannot be adopted by 3-C3, and its RNG position is the draft's start position unchanged (the next `game/runner@1` draw must start there; a changed position is refused).
+- `InPlayPitchCandidate`: every runner decision made, official record made, the event (an `InPlayEvent` with the draft's location, so `ef2`) accepted by the unchanged `GameReducer.Apply` on the original state, the receipt, the unconfirmed `GameStep` and `NextRng`. Adopting it with the state, ids and RNG is 3-C3.
+
+**8. Audit and replay contract (design; Simulation-internal; not in `ef1`/`ef2`, event JSON or any hash).**
+
+| Field (snake_case) | Content |
+|---|---|
+| `inplay_policy_version`, `walkoff_credit_version`, `template_catalog_version` | `inplay-mapping-v1`, `walkoff-credit-v1` (or `not_applicable`), `inplay-template-v1` |
+| `game_id`, `candidate_event_id` | the game and the final candidate event id |
+| `original_batted_ball`, `original_defense_result` | e.g. `fly_hard`, `triple` |
+| `official_result` | the final `InPlayResult` |
+| `drawn_template_id`, `official_template_id` | equal unless `walkoff-credit-v1` changed the credit |
+| `pre_play_state` | outs, runners with their runner keys, score, inning, half |
+| `batter_final_base` | equals the credited base (D3) |
+| `runner_moves` | runner key, from, to, cause, in scoring order |
+| `winning_run` | the winning-run scorer (runner key, starting base) or none |
+| `record_change_reason` | `none` or `walkoff_credit_reduced` with the drawn bases and the winner's advance |
+| `rules_*`, `tuning_*`, `probability_model_version` | identities and hashes in force |
+| `start_rng_state_hash`, `final_rng_state_hash` | equal for a base plan (no draw); different after a 3-C2B-3 advancement draw |
+| `advancement` | `not_required`, `pending(context keys, composite)` or `resolved(...)` (3-C2B-3) |
+
+3-C3 settles this record, the `GameEvent`, the receipt, the state, the RNG and the ids together; Phase 4 stores them durably. Neither is part of this package.
+
+**9. Evidence of this package (test-only; details in the report).** 45 positive and 15 zero combinations read from the tuning JSON; 19 templates cross-checked against an independent Python oracle; the 1,080 ordinary cases (45 x 8 x 3) and the 4,320 walk-off cases (45 x 8 x 3 x 4) all executed through the real `GameReducer.Apply`, 0 refused, 0 defects, results equal to the oracle in every field; ten hand-derived cases; counterexamples (the reducer accepting a wrong walk-off credit, refusing excess runs, a phantom assist caught only by the template check); 12 injected defects all detected. `PENDING_ADVANCEMENT`: 300 of 1,080 ordinary and 1,014 of 4,320 walk-off cases. `NEEDS_WALKOFF_POLICY` (legal only through the credit rule): 192 walk-off cases. These are policy-feasibility facts, not statistics.
+
+**10. Handoff.** 3-C2B-2: implement the plan and candidate generation to this contract, with its own tests and the matrix as acceptance data. 3-C2B-3: the `advancement` draw, composite contexts (U-1), recomputing the record and the third-out order (U-2). 3-C3: joint atomicity, automatic plate-appearance progression, the last issued event sequence (U-7). 3-F: calibration of fielder selection and extra-base behaviour (U-3). KBO certification of any rule used remains open (D4).

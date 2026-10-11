@@ -10,7 +10,7 @@ reviewed_by: ""
 branch: "main"
 commit: "3-C2A: 'feat: add phase 3c2a deterministic pitch branch resolver' (기준 HEAD d3570b76e93246076253681568b709d3ea1d5a3b 다음 커밋; SHA는 git log 참조 — 문서가 자기 커밋 SHA를 담을 수 없음; 3-C1은 d3570b7)"
 roadmap_anchor: "phase-3--seeded-game-simulation--prototype-1"
-last_updated: "2026-10-11"
+last_updated: "2026-10-12"
 tags:
   - star-player
   - phase-review
@@ -20,6 +20,13 @@ tags:
 
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
+
+> [!note] 3-C2B-2-P 인플레이 정책 확정·템플릿 실현성 검증 — GPT Chat `PASS WITH NOTES`(검증 한정) (2026-10-12, `TASK.md`)
+> 소유자가 승인한 D1–D5 프로토타입 정책을 ADR-007·game-engine §23·SYSTEM_CONTRACTS C08에 기록하고, 모든 양의 확률 인플레이 조합이 실제 `GameReducer`에서 합법인지 테스트 전용 도구로 검증했다. **프로덕션 코드(`src/`)는 변경하지 않았고 3-C2B-2 구현은 미착수다.** GPT Chat 최종 검토 `PASS WITH NOTES`(3-C2B-2-P 정책·템플릿 실현성 검증에 한정; 수치는 Claude Code 제출 실행 결과이며 GPT Chat·Codex가 로컬 신규 테스트 전체를 독립 실행한 것이 아님), Codex 독립 리뷰 `미실시`(자동 진행 안 함), 3-C2B-3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE, 커밋·푸시 안 함. 이 문서의 최상위 status는 `검토 대기` 유지.
+> - **상태 구분:** D1–D5 소유자 정책 = 승인; 세부 템플릿 실현성 검증 = GPT Chat `PASS WITH NOTES`(구현 승인 아님); 3-C2B-2 구현 = 미착수; 3-C2B-3 = 미착수; 3-C3 = 미착수; Phase 3 전체 Gate = INCOMPLETE.
+> - **검증(실제 실행):** 60개 명목 조합 = 양의 확률 45 + 확률 0 15; 템플릿 19개; 일반 1,080건·끝내기 4,320건 전부 실행(거부 0, 결함 0, 독립 Python 오라클 일치); 분류 일반 LEGAL_BASE 780 / PENDING_ADVANCEMENT 300, 끝내기 LEGAL_BASE 3,114 / PENDING_ADVANCEMENT 1,014 / NEEDS_WALKOFF_POLICY 192; 손으로 정한 대표 10건 일치; 주입 결함 12종 검출; 신규 29 테스트, 전체 xUnit 1,205 통과(Domain 263, Simulation 412, Application 117, Infrastructure 413; 기준 1,176에서 +29), 실패 0; `verify.ps1` 연속 2회 `GATE: PASS`(로그 `PHASE_3C2B2P_VERIFY_LOG_run1/2.md`).
+> - **발견·NOTES:** F-1 복수 주자 `advancement` 맥락 미정(3-C2B-3 설계), F-2 일반 인플레이 27.8%가 보류라 3-C2B-3 필수, F-3 수비수 고정 선택 통계 편향·병살/야수선택/희생 없음, F-5 인필드 플라이는 템플릿 전제로만 구분, KBO 2026 조항 미인증(OBR 임시 근거), 오라클은 C# 코드와 작성자·정책 해석 공유. 자체 판정 `PASS WITH NOTES`(GPT Chat이 같은 판정으로 확인). 기본 이벤트 5,400건 중 LEGAL_BASE 3,894 / PENDING_ADVANCEMENT 1,314. 추가 미해결: 후보 API의 RNG 0회 추가 소비·EventId 불변·취소/실패 불변성 미검증, 3-C3 공동 원자성 미구현. 기존 자체 검토·과거 Codex `CHANGES REQUIRED` 기록은 유지.
+> - 문서: [ADR-007](../../docs/decisions/ADR-007.md) 3-C2B-2 절, [game-engine §23](../../docs/game-engine.md), [보고서](../../docs/reports/PHASE_3C2B2_POLICY_REPORT.md), [템플릿 매트릭스](../../docs/reports/PHASE_3C2B2_TEMPLATE_MATRIX.md), [원시 결과](../../docs/reports/PHASE_3C2B2_FEASIBILITY_RAW.json).
 
 > [!success] 3-C2B-1 최종 승인 (2026-10-11, 소유자 `TASK.md`)
 > 작업 패키지 3-C2B-1은 **GPT Chat `PASS WITH NOTES` / 최종 승인**, **독립 Codex 리뷰 `PASS WITH NOTES`**(신규 Critical/High/Medium 결함 없음)를 받았다. 승인 범위는 **3-C2B-1 비인플레이 후보 생성에만 한정**되며 3-C2B-2/3·3-C2B 전체·Phase 3 전체 완료가 아니다(3-C2B-2/3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE). 이 문서의 최상위 status는 규칙에 따라 `검토 대기`로 유지한다.

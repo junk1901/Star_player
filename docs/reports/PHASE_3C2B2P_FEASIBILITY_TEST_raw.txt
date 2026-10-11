@@ -1,0 +1,46 @@
+  복원할 프로젝트를 확인하는 중...
+  복원할 모든 프로젝트가 최신 상태입니다.
+  StarPlayer.Domain -> E:\Madegame\Star_player\src\StarPlayer.Domain\bin\Release\net8.0\StarPlayer.Domain.dll
+  StarPlayer.Simulation -> E:\Madegame\Star_player\src\StarPlayer.Simulation\bin\Release\net8.0\StarPlayer.Simulation.dll
+  StarPlayer.Simulation.Tests -> E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\bin\Release\net8.0\StarPlayer.Simulation.Tests.dll
+E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\bin\Release\net8.0\StarPlayer.Simulation.Tests.dll(.NETCoreApp,Version=v8.0)에 대한 테스트 실행
+지정된 패턴과 일치한 총 테스트 파일 수는 1개입니다.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.31)
+[xUnit.net 00:00:00.04]   Discovering: StarPlayer.Simulation.Tests
+[xUnit.net 00:00:00.09]   Discovered:  StarPlayer.Simulation.Tests
+[xUnit.net 00:00:00.09]   Starting:    StarPlayer.Simulation.Tests
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_reducer_accepts_a_tied_third_base_double_but_the_official_record_must_be_a_single [153 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_python_oracle_agrees_on_the_combinations_and_the_template_catalogue [9 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_reducer_refuses_the_malformed_runner_plans_a_wrong_template_could_produce_and_leaves_the_state_alone [5 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.Write_the_raw_results_when_asked [< 1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.A_forced_runner_that_is_not_pushed_by_a_reached_on_error_is_refused_by_the_reducer [1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.A_batter_who_touched_third_but_is_credited_a_double_cannot_be_expressed_and_is_excluded_by_policy_D3 [1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_unmodified_triple_in_a_tied_bases_loaded_walk_off_is_refused_by_the_reducer [2 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_fifteen_zero_probability_combinations_are_exactly_the_hand_derived_list [< 1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.A_forced_runner_pushed_by_a_reached_on_error_has_the_Forced_cause_and_the_others_hold_with_Play [3 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.Popup_templates_and_the_Infield_Fly_rule_are_kept_apart_by_an_explicit_premise [136 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_planner_and_the_harness_use_no_random_numbers_no_clock_and_no_id_counter [< 1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_base_running_table_matches_the_hand_derived_table_for_all_eight_situations [1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.Outs_of_the_batter_that_end_the_inning_keep_every_runner_in_place_and_score_nothing [131 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.Ten_representative_cases_match_their_hand_derived_expectations [22 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.Template_shapes_follow_the_credit_rules [7 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.Pending_cases_are_exactly_the_four_declared_advancement_contexts [152 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_1080_ordinary_cases_are_all_legal_and_match_the_independent_oracle [133 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.A_popup_reached_on_error_by_an_infielder_is_detected_as_a_premise_violation [120 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.A_missing_or_doubled_putout_a_phantom_assist_an_unneeded_error_and_a_missing_error_are_all_caught [< 1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.Every_positive_combination_has_a_declared_versioned_template_and_every_template_is_used [< 1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.Case_9_the_bases_loaded_push_is_a_Forced_run_with_no_hit_and_an_E8_error [1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_4320_walk_off_combinations_are_all_executable_and_match_the_oracle [893 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_same_1080_cases_also_hold_for_the_home_half_a_game_without_a_designated_hitter_and_a_full_count [598 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_tuning_has_10_balls_x_6_results_60_combinations_45_positive_and_15_zero [1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.Every_injected_defect_is_detected_and_the_unmodified_planner_has_none [3 s]
+[xUnit.net 00:00:06.31]   Finished:    StarPlayer.Simulation.Tests
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.Quietly_replacing_a_drawn_long_hit_by_a_single_is_caught_in_ordinary_play [36 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.The_first_extra_inning_behaves_like_the_ninth [141 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.A_base_plan_that_invents_an_extra_advance_is_caught_even_though_the_reducer_accepts_it [< 1 ms]
+  통과 StarPlayer.Simulation.Tests.InPlayFeasibility.InPlayFeasibilityTests.A_home_team_that_stays_behind_loses_after_the_third_out_and_a_tied_game_goes_on [184 ms]
+
+테스트를 실행했습니다.
+총 테스트 수: 29
+     통과: 29
+ 총 시간: 6.6209 초
