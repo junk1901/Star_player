@@ -1,0 +1,60 @@
+{
+  "format_version": 2,
+  "note": "Phase 3-B1 gamerules-v2 profiles: the Phase 2 field set plus the required 'called_pitch_mode' and 'zone_model' (Pitch Zone Lite, ROADMAP 1.14). These are invented 'fictional_test' variants used only to exercise the new fields. They are NOT the 2026 KBO rules, they make no claim about the real KBO ABS, and the legacy game_rules_profiles.json (format_version 1, which declares no called-pitch mode) is unchanged.",
+  "profiles": [
+    {
+      "profile_id": "test-pzl-automated",
+      "version": "test-v2",
+      "status": "fictional_test",
+      "provenance": "테스트용 가상 규칙(gamerules-v2): 지명타자·투타 겸업 허용, 11회 한도 무승부, 자동 호출 판정(프레이밍 영향 0). 실제 KBO ABS 규정이 아님",
+      "open_items": [
+        "단위/시나리오 테스트 전용 가상 프로필: 호출 판정 모드 필드 시험용"
+      ],
+      "outs_per_half_inning": 3,
+      "balls_for_walk": 4,
+      "strikes_for_strikeout": 3,
+      "regulation_innings": 9,
+      "extra_innings_limit": 11,
+      "tie_allowed": true,
+      "designated_hitter": true,
+      "two_way_player_rule": true,
+      "starter_win_min_outs": 15,
+      "save_max_lead": 3,
+      "save_min_outs": 3,
+      "save_long_outs": 9,
+      "dh_may_be_forfeited": false,
+      "count_walk_off_runners_as_left_on_base": true,
+      "fielder_to_mound_forfeits_dh": false,
+      "rule_policy": "fictional-test-v1",
+      "called_pitch_mode": "automated",
+      "zone_model": "pzl-zones-v1"
+    },
+    {
+      "profile_id": "test-pzl-non-automated",
+      "version": "test-v2",
+      "status": "fictional_test",
+      "provenance": "테스트용 가상 규칙(gamerules-v2): 지명타자·투타 겸업 허용, 11회 한도 무승부, 비자동(심판) 호출 판정(프레이밍은 경계 투구에만, 상한은 3-E에서 정함). 실제 KBO 규정이 아님",
+      "open_items": [
+        "단위/시나리오 테스트 전용 가상 프로필: 호출 판정 모드 필드 시험용"
+      ],
+      "outs_per_half_inning": 3,
+      "balls_for_walk": 4,
+      "strikes_for_strikeout": 3,
+      "regulation_innings": 9,
+      "extra_innings_limit": 11,
+      "tie_allowed": true,
+      "designated_hitter": true,
+      "two_way_player_rule": true,
+      "starter_win_min_outs": 15,
+      "save_max_lead": 3,
+      "save_min_outs": 3,
+      "save_long_outs": 9,
+      "dh_may_be_forfeited": false,
+      "count_walk_off_runners_as_left_on_base": true,
+      "fielder_to_mound_forfeits_dh": false,
+      "rule_policy": "fictional-test-v1",
+      "called_pitch_mode": "non_automated",
+      "zone_model": "pzl-zones-v1"
+    }
+  ]
+}

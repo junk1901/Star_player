@@ -1,7 +1,7 @@
 ---
 type: phase-review
 phase: "03"
-phase_name: "Seeded game simulation / Prototype 1 — 작업 패키지 3-A (RNG)"
+phase_name: "Seeded game simulation / Prototype 1 — 작업 패키지 3-A (RNG), 3-B1 (구역·규칙 데이터 계약)"
 status: 검토 대기
 started: "2026-10-11"
 completed: ""
@@ -26,6 +26,23 @@ tags:
 
 > [!important] 범위
 > 소유자는 **Phase 3-A RNG 구현만** 승인했다(`TASK.md`). 3-B~3-F와 Phase 4는 미승인·미착수다. 이 문서는 **Phase 3 전체 Gate를 PASS로 기록하지 않는다.** Phase 3 Gate(100,000 PA, 100경기, 보정 구간, Pitch Zone Lite 검사 등)는 전부 `미검증`/INCOMPLETE다.
+
+## 3-B1 진행 상황 (2026-10-11, `TASK.md` — Pitch Zone Lite 위치·규칙 데이터 계약)
+
+> [!success] 3-B1 최종 승인 (2026-10-11)
+> 내부 작업 패키지 3-B1은 **PASS WITH NOTES / GPT Chat 승인**, Codex 집중 재검토 **PASS WITH NOTES**. 기존 High 결함(기준 분포 ID와 가중치 대응)은 해결되었고 Codex 독립 재검토를 통과했으며, 새로 필요한 코드 수정은 없다. 전체 xUnit 813 PASS(Claude 실행), 관련 xUnit 104 PASS(Codex 직접 실행), `verify.ps1` 연속 2회 `GATE: PASS`(Claude 실행, Codex 로그 검토). **이 승인은 3-B1에만 해당한다 — Phase 3 전체 Gate는 INCOMPLETE, 3-B2 미착수, 이 문서의 최상위 상태(`status`)는 `검토 대기` 유지.** 아래의 `검토 대기`·`미승인`·`미실시` 표기와 Codex `CHANGES REQUIRED` 판정은 승인 이전 라운드의 이력이며 3-B1에 한해 이 블록이 최신이다.
+> 유지하는 후속 NOTES: ① `UniformV1`은 ID·가중치 의미가 고정된 기준이며 다른 분포는 새 ID로 등록 ② 3-B2: 확률 분모·기준 확률·상한·보정 시드 확정 ③ 3-C: v2 규칙 팩의 경기 연동, 투구별 타석 방향 ④ 3-E: Borderline/Framing 영향 상한 ⑤ Application 조회 DTO 연결 시 숨겨진 성향 값의 직렬화 노출 검사 ⑥ 운영용 KBO `CalledPitchMode`의 공식 근거 미확정.
+
+> [!note] 상태
+> 3-B1은 구현·자체 검증을 마쳤고 **`검토 대기`**입니다(승인 아님). GPT Chat 검토 `미실시`, Codex 검토 `미실시`. Phase 3-B 전체·3-B2 이후·Phase 4는 미착수이며 Phase 3 전체 Gate는 INCOMPLETE입니다. 이 구간에서 위치 추첨, 이벤트·`ef1`/`ef2`·리듀서·RNG·확률 변경은 없습니다.
+
+- **구현:** `src/StarPlayer.Domain/Baseball/PitchZone/` — `ZoneModelVersion` `pzl-zones-v1`, 17개 `PitchZoneId`와 버전형 Clear/Borderline 표(경계선과 변을 공유하면 Borderline: 12개, 나머지 5개 Clear), `PitchLocation`(구역·실제 타석 방향·경계 분류, 허용되지 않는 조합 거부), `TargetZone`, `AppliedBatterSideRules`(스위치 타자), 숨김·유계(`-100..+100`)·평균 중립 `BatterZoneTendency`와 `ZoneReferenceDistribution`. C40 `CalledPitchMode`(`Automated`/`NonAutomated`)와 구역 모델을 짝으로 요구하는 `gamerules-v2`(JSON `format_version` 2, 가상 프로필 2개). 구형 프로필은 판정 모드를 선언하지 않은 사실을 유지하고 7개 `ContentHash`가 변경 전 독립 계산값과 같음.
+- **Codex 독립 리뷰와 보완 라운드:** Codex 결과 `CHANGES REQUIRED`(High 1, Low 1). High — `ZoneReferenceDistribution`이 같은 ID(`pzl-ref-uniform-v1`)에 다른 가중치를 허용해 저장된 `ReferenceId`의 의미가 둘일 수 있었음(반례: 가중치 `[3,1,1,...]`에서 `[1,-3,0,...]`가 중립으로 통과, 정식 UniformV1에서는 합 -2). 수정 — ID와 가중치를 한 쌍의 불변 등록 정의로 고정(`pzl-ref-uniform-v1` = `[1]*9`만, 미등록 ID·다른 가중치는 생성 단계에서 거부, 미등록 기준을 만드는 공개 경로 없음, 입력 배열 복사). 새 기준은 새 ID와 고정 가중치로 등록([ADR-005](../../docs/decisions/ADR-005.md) 결정 9). Low — `HiddenTendencyBoundaryTests`의 이름·주석을 실제 보장 범위(Application/Infrastructure 시그니처의 타입 노출)로 정리하고, 실제 직렬화 출력 검사는 Phase 3-D/5 DTO 연결 시점으로 인계. RED 7/232 실패(Codex 반례 포함) → GREEN. `dotnet test StarPlayer.sln -c Release` 813 통과(Domain 232, Simulation 371, Application 117, Infrastructure 93). Codex 재검토 `미실시`, 상태는 계속 `검토 대기`. 상세: [보고서](../../docs/reports/PHASE_3B1_REPORT.md) Part F.
+- **변경 파일:** [PHASE_3B1_REPORT.md](../../docs/reports/PHASE_3B1_REPORT.md) §5. 결정: [ADR-005](../../docs/decisions/ADR-005.md). 계약: [game-engine.md §18](../../docs/game-engine.md).
+- **테스트(실제 실행):** `dotnet test StarPlayer.sln -c Release` — 797 통과(Domain 216, Simulation 371, Application 117, Infrastructure 93; 기준 709에서 +88), 실패·건너뜀 0. 변형 검사 15건 모두 검출(처음 1건 생존 → 상·하한 각각 검증하는 테스트 추가 후 검출). `tools/verify.ps1` 결과는 보고서 Part 10. RED 로그는 없음(테스트가 타입 부재로 컴파일되지 않아 별도 RED 실행을 남기지 못함; 변형 검사로 대체).
+- **미검증/미실시:** Phase 3 Gate 항목(100,000 PA, 100경기, 보정, 나머지 Pitch Zone Lite 검사), 수동 UI·FHD(UI 변경 없음), 데이터 계약의 독립 형식 검토(Codex 권장), 성능 측정.
+- **이월/주의:** 12/17이 Borderline이라 분류가 거칠다 — Framing 크기는 3-E 상한이 담당하고 더 세밀한 표는 새 모델 버전(ADR-005 결정 2). `UniformV1`은 임시 기준 분포. 3-B2는 확률 척도·성향 상한·기준 분포·기준 확률을 보정 전에 확정해야 하며, 운영 KBO 프로필이 선언할 `CalledPitchMode`는 근거와 소유자 결정이 필요(구형 프로필은 미선언 유지).
+- **승인자 또는 승인 근거:** (승인 이전 기록: 3-B1 미승인.) 최종: GPT Chat PASS WITH NOTES 승인 + Codex 집중 재검토 PASS WITH NOTES (2026-10-11, 소유자 전달 `TASK.md`).
 
 ## 최종 보완 라운드 (2026-10-11, `TASK.md` — Codex 독립 리뷰 2회 통합 수정)
 

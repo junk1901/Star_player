@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Text.Json;
 using StarPlayer.Application.Ports;
 using StarPlayer.Domain.Baseball.Game;
+using StarPlayer.Domain.Baseball.PitchZone;
 using StarPlayer.Domain.Common;
 using StarPlayer.Domain.Players;
 
@@ -17,7 +18,7 @@ internal sealed class RuleProfilesDto
     public required List<RuleProfileEntryDto> Profiles { get; set; }
 }
 
-internal sealed class RuleProfileEntryDto
+internal class RuleProfileEntryDto
 {
     public required string ProfileId { get; set; }
     public required string Version { get; set; }
@@ -40,6 +41,20 @@ internal sealed class RuleProfileEntryDto
     public required bool CountWalkOffRunnersAsLeftOnBase { get; set; }
     public required bool FielderToMoundForfeitsDh { get; set; }
     public required string RulePolicy { get; set; }
+}
+
+// gamerules-v2 (format_version 2): the Phase 2 fields plus the two required Pitch Zone Lite fields. A format 1 file still rejects them as unknown members.
+internal sealed class RuleProfilesV2Dto
+{
+    public required int FormatVersion { get; set; }
+    public required string Note { get; set; }
+    public required List<RuleProfileEntryV2Dto> Profiles { get; set; }
+}
+
+internal sealed class RuleProfileEntryV2Dto : RuleProfileEntryDto
+{
+    public required string CalledPitchMode { get; set; }
+    public required string ZoneModel { get; set; }
 }
 
 internal sealed class GameSetDto
@@ -154,24 +169,18 @@ internal sealed class GameJsonException(string code, string message) : Exception
 
 internal static class GameRulesJson
 {
+    public const int LegacyFormat = 1;
+    public const int PitchZoneFormat = 2;
+
+    /// <summary>Reads a GameRules profile file. Format 1 is the Phase 2 field set (no called-pitch mode); format 2 requires the called-pitch mode and zone model of every profile.</summary>
     public static Result<IReadOnlyList<GameRuleSnapshot>> Read(string json)
     {
         try
         {
-            var dto = JsonSerializer.Deserialize<RuleProfilesDto>(json, WorldJson.Options) ?? throw new GameJsonException("Fixture.json_invalid", "JSON 내용이 비어 있습니다.");
-            if (dto.FormatVersion != 1)
-                throw new GameJsonException("Fixture.version_unsupported", $"지원하지 않는 규칙 프로필 형식 버전입니다: {dto.FormatVersion}");
-            var list = new List<GameRuleSnapshot>();
-            foreach (var p in dto.Profiles)
-            {
-                var made = GameRuleSnapshot.Create(p.ProfileId, p.Version, EnumText.Parse<GameRulesStatus>(p.Status, $"profiles[{p.ProfileId}].status"), p.Provenance, p.OpenItems,
-                    p.OutsPerHalfInning, p.BallsForWalk, p.StrikesForStrikeout, p.RegulationInnings, p.ExtraInningsLimit, p.TieAllowed, p.DesignatedHitter,
-                    p.TwoWayPlayerRule, p.StarterWinMinOuts, p.SaveMaxLead, p.SaveMinOuts, p.SaveLongOuts, p.DhMayBeForfeited, p.CountWalkOffRunnersAsLeftOnBase, p.FielderToMoundForfeitsDh, p.RulePolicy);
-                if (!made.IsSuccess)
-                    throw new GameJsonException(made.Error!.Value.Code, $"profiles[{p.ProfileId}]: {made.Error.Value.Message}");
-                list.Add(made.Value);
-            }
-
+            var format = PeekFormat(json);
+            if (format is { } known && known != LegacyFormat && known != PitchZoneFormat)
+                throw new GameJsonException("Fixture.version_unsupported", $"지원하지 않는 규칙 프로필 형식 버전입니다: {known}");
+            var list = format == PitchZoneFormat ? ReadV2(json) : ReadV1(json);
             if (list.Select(r => r.ProfileId).Distinct().Count() != list.Count)
                 throw new GameJsonException("Fixture.duplicate_id", "규칙 프로필 ID가 중복되었습니다.");
             return Result<IReadOnlyList<GameRuleSnapshot>>.Success(list);
@@ -184,6 +193,50 @@ internal static class GameRulesJson
         {
             return Result<IReadOnlyList<GameRuleSnapshot>>.Failure(new Error("Fixture.json_invalid", $"JSON 형식이 올바르지 않습니다: {e.Message}"));
         }
+    }
+
+    // Only chooses the reader; a missing or non-number format_version (null) falls through to the legacy reader, which reports it as before.
+    private static int? PeekFormat(string json)
+    {
+        using var document = JsonDocument.Parse(json);
+        return document.RootElement.ValueKind == JsonValueKind.Object
+            && document.RootElement.TryGetProperty("format_version", out var format)
+            && format.ValueKind == JsonValueKind.Number && format.TryGetInt32(out var number) ? number : null;
+    }
+
+    private static List<GameRuleSnapshot> ReadV1(string json)
+    {
+        var dto = JsonSerializer.Deserialize<RuleProfilesDto>(json, WorldJson.Options) ?? throw new GameJsonException("Fixture.json_invalid", "JSON 내용이 비어 있습니다.");
+        if (dto.FormatVersion != LegacyFormat)
+            throw new GameJsonException("Fixture.version_unsupported", $"지원하지 않는 규칙 프로필 형식 버전입니다: {dto.FormatVersion}");
+        return dto.Profiles.Select(p => Build(p, null, default)).ToList();
+    }
+
+    private static List<GameRuleSnapshot> ReadV2(string json)
+    {
+        var dto = JsonSerializer.Deserialize<RuleProfilesV2Dto>(json, WorldJson.Options) ?? throw new GameJsonException("Fixture.json_invalid", "JSON 내용이 비어 있습니다.");
+        var list = new List<GameRuleSnapshot>();
+        foreach (var p in dto.Profiles)
+        {
+            var mode = EnumText.Parse<CalledPitchMode>(p.CalledPitchMode, $"profiles[{p.ProfileId}].called_pitch_mode");
+            var zone = ZoneModelVersion.Create(p.ZoneModel);
+            if (!zone.IsSuccess)
+                throw new GameJsonException(zone.Error!.Value.Code, $"profiles[{p.ProfileId}].zone_model: {zone.Error.Value.Message}");
+            list.Add(Build(p, mode, zone.Value));
+        }
+
+        return list;
+    }
+
+    private static GameRuleSnapshot Build(RuleProfileEntryDto p, CalledPitchMode? mode, ZoneModelVersion zone)
+    {
+        var made = GameRuleSnapshot.Create(p.ProfileId, p.Version, EnumText.Parse<GameRulesStatus>(p.Status, $"profiles[{p.ProfileId}].status"), p.Provenance, p.OpenItems,
+            p.OutsPerHalfInning, p.BallsForWalk, p.StrikesForStrikeout, p.RegulationInnings, p.ExtraInningsLimit, p.TieAllowed, p.DesignatedHitter,
+            p.TwoWayPlayerRule, p.StarterWinMinOuts, p.SaveMaxLead, p.SaveMinOuts, p.SaveLongOuts, p.DhMayBeForfeited, p.CountWalkOffRunnersAsLeftOnBase, p.FielderToMoundForfeitsDh, p.RulePolicy,
+            mode, zone);
+        if (!made.IsSuccess)
+            throw new GameJsonException(made.Error!.Value.Code, $"profiles[{p.ProfileId}]: {made.Error.Value.Message}");
+        return made.Value;
     }
 }
 
