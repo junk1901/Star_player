@@ -10,7 +10,7 @@ reviewed_by: ""
 branch: "main"
 commit: "3-C2A: 'feat: add phase 3c2a deterministic pitch branch resolver' (기준 HEAD d3570b76e93246076253681568b709d3ea1d5a3b 다음 커밋; SHA는 git log 참조 — 문서가 자기 커밋 SHA를 담을 수 없음; 3-C1은 d3570b7)"
 roadmap_anchor: "phase-3--seeded-game-simulation--prototype-1"
-last_updated: "2026-10-12"
+last_updated: "2026-10-13"
 tags:
   - star-player
   - phase-review
@@ -20,6 +20,12 @@ tags:
 
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
+
+> [!info] 3-C3 설계 승인 반영 (2026-10-13, `TASK.md` — 설계만, 구현 승인 아님)
+> 소유자가 C3 설계 결정 **D-1~D-8과 추가 계약 A~F를 일괄 승인**했다(승인 날짜 2026-10-13은 프로젝트 소유자의 채팅 승인에 근거하며 `TASK.md` 수정 시각은 승인 증거가 아님). **C3-A / C3-B / C3-C 및 C3 프로덕션 구현은 `NOT STARTED / NOT AUTHORIZED`**, 이 문서의 최상위 status는 `검토 대기` 유지, **Phase 3 Gate `INCOMPLETE`**. `src/`·테스트·Reducer·RNG·`ef1`/`ef2`·ROADMAP 불변, 스테이징·커밋·푸시 없음, C3 설계에 대한 Codex 독립 검토 `미실시`.
+> - 핵심: `AuthoritativeGame`(명시적 `LastEventSequence`·단조 `Revision`), 새 EventId = 마지막 확정 순번 + 1, 모든 공식 이벤트 단일 Stage/Publish, `GameReducer.Apply` 재실행 결과 채택(미리보기는 구조적 비교용), 종료 이벤트의 `Finalize` 동일 Stage·동일 Publish, 참조 CAS, RNG 증분(RawDraws) 검증(해시 일치는 경로 증명 아님), 비인플레이 `(PreparedPitch, Candidate)` 쌍, 불변 `CommitRecord`, 영속화는 Phase 4 인수인계, PA 구동기는 3-F 하네스(D-4).
+> - ROADMAP 차이(수정 안 함): D-4의 3-F 하네스 배정은 Phase 3 작업 3·4와 Gate에는 맞지만 3-F 라벨 문구와 다르다 — 소유자 조정 대상.
+> - 문서: [game-engine §27](../../docs/game-engine.md), [ADR-007](../../docs/decisions/ADR-007.md), [결정 기록](../02_Decisions/2026-10-13_C3_Design_Approval.md). 아래 3-C2B-3 블록의 "3-C3 미착수"는 구현 기준으로 유효하다.
 
 > [!success] 3-C2B-3 기술 승인 — Git 반영 전 (2026-10-12, `TASK.md` 최종 검토 후속)
 > 작업 패키지 3-C2B-3은 **Codex Medium 독립 집중 리뷰 `PASS WITH NOTES`**(Critical/High/Medium 0), **GPT Chat 기술 검토 `PASS WITH NOTES`**를 받았다(두 판정은 분리 기록, 사용자 전달; GPT Chat은 전체 테스트를 직접 실행하지 않았고 1,513건은 Claude Code 실행 결과). 승인 범위는 **3-C2B-3 기술 검토에 한정**되며 **Git 반영(스테이징·커밋·푸시) 전**이다. **3-C3 NOT STARTED / NOT AUTHORIZED, Phase 3 Gate INCOMPLETE.** 이 문서의 최상위 status는 `검토 대기` 유지. Low 문서 불일치 2건(M15 변형 검사 분류, ADR-007 테스트 수 1,511 → 1,513 및 단계 A 21 → 23)을 정정했다([보고서 §21](../../docs/reports/PHASE_3C2B3_REPORT.md)). 프로덕션 코드·테스트·원시 증거는 수정하지 않았다. 아래 "검토 대기"·"미실시" 표현은 승인 이전 시점의 기록이다.

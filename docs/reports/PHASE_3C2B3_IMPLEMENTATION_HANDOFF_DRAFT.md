@@ -177,6 +177,7 @@ Resolver 순서(앞 단계가 끝나기 전에 뒤 단계를 하지 않는다): 
 - 호출 순서: `InPlayPitchPlanning.Build(...)` → `PendingAdvancement`이면 호출자가 **같은 `state`·`rng`(H0)·튜닝·타자/투수 시트와 읽기 전용 마지막 발급 순번**으로 `AdvancementPlanning.Resolve(pending, state, rng, tuning, batter, pitcher, last, ct)`를 호출한다. `Build`와 C2B-2 계약(RNG 0회, ID 미발급, 영수증 없음)은 그대로다.
 - `Resolve`는 H1에서 시작해 H2를 반환값 `NextRng`로만 준다. 입력 `PendingAdvancement`, `GameState`, `rng`, ID 커서, 영수증은 바꾸지 않는다.
 - C3가 맡는 것: 상태·RNG(H2)·ID·영수증의 원자적 채택, **권위 RNG가 아직 H0인지·마지막 발급 순번이 그대로인지의 재검사**, 타석 진행, 감사 영속화. Phase 4: 내구 저장. C3의 재검사는 `Resolve` 검증의 대체가 아니다.
+- **(2026-10-13 주석, 이 초안은 이력으로 보존)** 위 "C3가 맡는 것"의 확정 설계는 소유자가 승인했다(설계만, 구현 `NOT STARTED / NOT AUTHORIZED`): [game-engine §27](../game-engine.md)·[ADR-007](../decisions/ADR-007.md) "Decisions (3-C3 design approval)". 특히 "타석 진행"은 D-4로 C3에서 제외되어 3-F 하네스 책임이고, 재검사는 마지막 확정 순번 + 1 정확 일치와 `Apply` 재실행 결과 채택으로 구체화됐다.
 
 ## 8. 구현 순서 (승인 후, TDD)
 
