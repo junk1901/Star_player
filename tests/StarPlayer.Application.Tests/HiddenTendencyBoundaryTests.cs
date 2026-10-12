@@ -39,7 +39,9 @@ public class HiddenTendencyBoundaryTests
          typeof(StarPlayer.Simulation.Baseball.PitchBranchDraft), typeof(StarPlayer.Simulation.Baseball.PitchBranchStep),
          typeof(StarPlayer.Simulation.Baseball.PreparedPitch), typeof(StarPlayer.Simulation.Baseball.NonInPlayPitchCandidate),
          typeof(StarPlayer.Simulation.Baseball.BaseInPlayPlan), typeof(StarPlayer.Simulation.Baseball.InPlayAudit), typeof(StarPlayer.Simulation.Baseball.InPlayPlanOutcome),
-         typeof(StarPlayer.Simulation.Baseball.InPlayPitchCandidate), typeof(StarPlayer.Simulation.Baseball.PendingAdvancement)];
+         typeof(StarPlayer.Simulation.Baseball.InPlayPitchCandidate), typeof(StarPlayer.Simulation.Baseball.PendingAdvancement),
+         // Phase 3-C2B-3 adds the advancement audit (exact rolls, RNG hashes, drawn versus applied results), which is Simulation-internal as well
+         typeof(StarPlayer.Simulation.Baseball.AdvancementAudit), typeof(StarPlayer.Simulation.Baseball.AdvancementDecisionAudit), typeof(StarPlayer.Simulation.Baseball.AdvancementMoveAudit)];
 
     private static bool IsHidden(Type type) => Mentions(type).Any(t => HiddenTypes.Contains(t));
 

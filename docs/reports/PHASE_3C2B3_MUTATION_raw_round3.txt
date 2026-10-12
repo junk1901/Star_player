@@ -1,0 +1,5 @@
+M15 counted-run comparison with the reducer removed DETECTED 1
+
+SUMMARY
+M15 | counted-run comparison with the reducer removed | DETECTED failures=1
+restored: True

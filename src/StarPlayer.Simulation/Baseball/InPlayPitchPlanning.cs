@@ -113,16 +113,9 @@ public static class InPlayPitchPlanning
     /// </summary>
     internal static Error? Verify(InPlayPlanFacts facts, GameState original, InPlayEvent candidate, Result<GameStep> applied)
     {
-        if (!applied.IsSuccess)
-            return applied.Error;
+        if (VerifyApplied(original, candidate, applied) is { } basic)
+            return basic;
         var step = applied.Value;
-        if (step.WasDuplicate)
-            return new Error("InPlayCandidate.event_duplicate", "이미 적용된 사건과 같은 내용이라 새 후보로 인정할 수 없습니다.");
-        var receipt = step.State.AppliedEvents.LastOrDefault();
-        if (receipt is null || receipt.EventId != candidate.Id || receipt.FingerprintVersion != EventFingerprint.VersionV2 || GameEventLocation.Of(candidate) is null)
-            return new Error("InPlayCandidate.receipt_invalid", "후보의 영수증이 위치를 담은 ef2 형식이 아닙니다.");
-        if (PitchPreparation.PitchesOf(step.State, original) != PitchPreparation.PitchesOf(original, original) + 1)
-            return new Error("InPlayCandidate.pitch_count_invalid", "후보가 실제 투구를 정확히 한 번 세지 않았습니다.");
 
         var play = step.NewPlays.Count == 1 ? step.NewPlays[0] : null;
         var officialOk = play is not null
@@ -134,6 +127,26 @@ public static class InPlayPitchPlanning
             && (play.OutsAfter >= original.Rules.OutsPerHalfInning) == facts.EndsHalfInning
             && (!facts.WalkOffEndsGame || (step.State.Status == GameStatus.Final && step.State.Outcome == GameOutcome.HomeWin));
         return officialOk ? null : new Error("InPlayCandidate.official_record_invalid", "리듀서가 확정한 공식 기록이 계획과 다릅니다.");
+    }
+
+    /// <summary>
+    /// The checks every in-play candidate shares (the base plan here, the resolved advancement in 3-C2B-3), in this order: the reducer's own refusal is passed through; a
+    /// duplicate is never a new candidate; the receipt must be the candidate's own <c>ef2</c> receipt; exactly one actual pitch must have been counted for the ORIGINAL
+    /// fielding team's pitcher. Returns the first problem or null.
+    /// </summary>
+    internal static Error? VerifyApplied(GameState original, InPlayEvent candidate, Result<GameStep> applied)
+    {
+        if (!applied.IsSuccess)
+            return applied.Error;
+        var step = applied.Value;
+        if (step.WasDuplicate)
+            return new Error("InPlayCandidate.event_duplicate", "이미 적용된 사건과 같은 내용이라 새 후보로 인정할 수 없습니다.");
+        var receipt = step.State.AppliedEvents.LastOrDefault();
+        if (receipt is null || receipt.EventId != candidate.Id || receipt.FingerprintVersion != EventFingerprint.VersionV2 || GameEventLocation.Of(candidate) is null)
+            return new Error("InPlayCandidate.receipt_invalid", "후보의 영수증이 위치를 담은 ef2 형식이 아닙니다.");
+        if (PitchPreparation.PitchesOf(step.State, original) != PitchPreparation.PitchesOf(original, original) + 1)
+            return new Error("InPlayCandidate.pitch_count_invalid", "후보가 실제 투구를 정확히 한 번 세지 않았습니다.");
+        return null;
     }
 
     private static Result<InPlayPlanOutcome> Fail(string code, string message) => Result<InPlayPlanOutcome>.Failure(new Error(code, message));

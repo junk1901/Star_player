@@ -1,0 +1,55 @@
+M01 contexts processed trailing runner first (P-01 violated) DETECTED 17
+M02 a decision after the end is recorded as Hold instead of Void DETECTED 6
+M03 a drawn out onto an occupied base is not blocked (P-02 R1 coupling dropped) DETECTED 34
+M04 Hold attribution reason lost DETECTED 4
+M05 winning run does not end the play DETECTED 4
+M06 third out does not end the play DETECTED 8
+M07 occupancy of the target base ignored DETECTED 36
+M08 pattern missing
+M09 no explicit sequence BUILD-ERROR (counts as detected only if intended) 1000
+M10 pattern missing
+M11 draws start from the authoritative H0 instead of the pending's H1 DETECTED 3
+M12 wrong random stream DETECTED 3
+M13 pattern missing
+M14 pattern missing
+M15 counted-run comparison with the reducer removed BUILD-ERROR (counts as detected only if intended) 1000
+M16 out recorded at the wrong base DETECTED 37
+M17 pattern missing
+M18 winner is the first run instead of the need-th DETECTED 2
+M19 event id off by one DETECTED 3
+M20 H2 is H1 (the draws are not carried) DETECTED 3
+M21 pattern missing
+M22 pattern missing
+M23 pattern missing
+M24 pattern missing
+M25 outcome index reversed (extra and out swapped) DETECTED 3
+M26 audit walk-off effect not updated DETECTED 1
+
+SUMMARY
+M01 | contexts processed trailing runner first (P-01 violated) | DETECTED failures=17
+M02 | a decision after the end is recorded as Hold instead of Void | DETECTED failures=6
+M03 | a drawn out onto an occupied base is not blocked (P-02 R1 coupling dropped) | DETECTED failures=34
+M04 | Hold attribution reason lost | DETECTED failures=4
+M05 | winning run does not end the play | DETECTED failures=4
+M06 | third out does not end the play | DETECTED failures=8
+M07 | occupancy of the target base ignored | DETECTED failures=36
+M08 | sequence given trailing runner first (P-05 order reversed) | NOT-APPLIED (pattern missing)
+M09 | no explicit sequence | BUILD-ERROR (counts as detected only if intended) failures=1000
+M10 | one roll fewer than contexts (conditional consumption) | NOT-APPLIED (pattern missing)
+M11 | draws start from the authoritative H0 instead of the pending's H1 | DETECTED failures=3
+M12 | wrong random stream | DETECTED failures=3
+M13 | stale-input check removed | NOT-APPLIED (pattern missing)
+M14 | event id collision check removed | NOT-APPLIED (pattern missing)
+M15 | counted-run comparison with the reducer removed | BUILD-ERROR (counts as detected only if intended) failures=1000
+M16 | out recorded at the wrong base | DETECTED failures=37
+M17 | sacrifice fly never expected | NOT-APPLIED (pattern missing)
+M18 | winner is the first run instead of the need-th | DETECTED failures=2
+M19 | event id off by one | DETECTED failures=3
+M20 | H2 is H1 (the draws are not carried) | DETECTED failures=3
+M21 | stage hook removed | NOT-APPLIED (pattern missing)
+M22 | an out does not count as an out | NOT-APPLIED (pattern missing)
+M23 | overtaking not flagged | NOT-APPLIED (pattern missing)
+M24 | no-op control (must SURVIVE: proves the harness reports survivors) | NOT-APPLIED (pattern missing)
+M25 | outcome index reversed (extra and out swapped) | DETECTED failures=3
+M26 | audit walk-off effect not updated | DETECTED failures=1
+restored: True

@@ -1,0 +1,25 @@
+M08 sequence given trailing runner first (P-05 order reversed) DETECTED 5
+M09 no explicit sequence DETECTED 42
+M10 one roll fewer than contexts (conditional consumption) DETECTED 9
+M13 stale-input check removed DETECTED 1
+M14 event id collision check removed DETECTED 1
+M15 counted-run comparison with the reducer removed SURVIVED 0
+M17 sacrifice fly never expected DETECTED 6
+M21 stage hook removed DETECTED 2
+M22 an out does not count as an out DETECTED 47
+M23 overtaking not flagged DETECTED 1
+M24 no-op control (must SURVIVE: proves the harness reports survivors) SURVIVED 0
+
+SUMMARY
+M08 | sequence given trailing runner first (P-05 order reversed) | DETECTED failures=5
+M09 | no explicit sequence | DETECTED failures=42
+M10 | one roll fewer than contexts (conditional consumption) | DETECTED failures=9
+M13 | stale-input check removed | DETECTED failures=1
+M14 | event id collision check removed | DETECTED failures=1
+M15 | counted-run comparison with the reducer removed | SURVIVED failures=0
+M17 | sacrifice fly never expected | DETECTED failures=6
+M21 | stage hook removed | DETECTED failures=2
+M22 | an out does not count as an out | DETECTED failures=47
+M23 | overtaking not flagged | DETECTED failures=1
+M24 | no-op control (must SURVIVE: proves the harness reports survivors) | SURVIVED failures=0
+restored: True

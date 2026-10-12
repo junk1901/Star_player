@@ -21,6 +21,16 @@ tags:
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
 
+> [!success] 3-C2B-3 기술 승인 — Git 반영 전 (2026-10-12, `TASK.md` 최종 검토 후속)
+> 작업 패키지 3-C2B-3은 **Codex Medium 독립 집중 리뷰 `PASS WITH NOTES`**(Critical/High/Medium 0), **GPT Chat 기술 검토 `PASS WITH NOTES`**를 받았다(두 판정은 분리 기록, 사용자 전달; GPT Chat은 전체 테스트를 직접 실행하지 않았고 1,513건은 Claude Code 실행 결과). 승인 범위는 **3-C2B-3 기술 검토에 한정**되며 **Git 반영(스테이징·커밋·푸시) 전**이다. **3-C3 NOT STARTED / NOT AUTHORIZED, Phase 3 Gate INCOMPLETE.** 이 문서의 최상위 status는 `검토 대기` 유지. Low 문서 불일치 2건(M15 변형 검사 분류, ADR-007 테스트 수 1,511 → 1,513 및 단계 A 21 → 23)을 정정했다([보고서 §21](../../docs/reports/PHASE_3C2B3_REPORT.md)). 프로덕션 코드·테스트·원시 증거는 수정하지 않았다. 아래 "검토 대기"·"미실시" 표현은 승인 이전 시점의 기록이다.
+>
+> [!note] 3-C2B-3 구현 완료 — 검토 대기 (2026-10-12, `TASK.md`, 기준 HEAD `ab7147b`)
+> 작업 패키지 3-C2B-3(`advancement` 해결기)은 구현·자체 검증을 마쳤고 **`검토 대기`**입니다(승인 아님). 소유자가 승인한 P-01~P-10을 코드로 옮겼고 정책은 바꾸지 않았다. GPT Chat 검토 `미실시`, Codex 독립 검토 `미실시`(권장), 3-C3·Phase 4 미착수, **Phase 3 전체 Gate INCOMPLETE**, 이 문서의 최상위 status는 `검토 대기` 유지, 스테이징·커밋·푸시 안 함. 자체 판정 `PASS WITH NOTES`(외부 승인 아님).
+> - **구현:** `AdvancementTypes.cs`·`AdvancementRules.cs`·`AdvancementPlanning.cs`·`AdvancementEventBuilder.cs`(신규), `InPlayCandidateTypes.cs`(감사 선택 필드 `AdvancementDetail`, 후보 생성자 1개), `InPlayPitchPlanning.cs`(공용 검증 `VerifyApplied` 추출, 동작 불변). `AdvancementPlanning.Resolve`는 `CheckPrepared`를 가장 먼저 재사용하고, H1을 개인 사본으로 복원해 맥락마다 `game/runner@1` 1회를 항상 추첨하며(`Void`·`Hold` 포함), 선행 주자 우선 순차 조건부 합성 → 명시 `Sequence` → 실제 `InPlayResult` 이벤트 → 변경 없는 `GameReducer.Apply` → Reducer 파생 공식 기록 대조 → `InPlayPitchCandidate`(`NextRng` = H2)를 돌려준다.
+> - **검증(실제 실행):** 신규 59 테스트(단계 A 23, 단계 B 36); RED 20 실패→GREEN 23/23, RED 35 실패/1 통과→GREEN 36/36; 전체 xUnit 1,513 통과(기준 1,454 + 59); 원시 행동 벡터 5,562건(합법 4,722 / 불법 840 / 불법 중 Reducer 수락 480) 전수, 득점+제3아웃 318건은 선행 우선 순서에서만 득점 인정; 결함 주입 변이 25건 + 무변경 대조군 1건: 행동 수준 검출 24건, M15는 첫 유효 실행에서 생존 후 오류 메시지 검증으로만 검출(메시지 수준, 보고서 §21), 대조군은 의도대로 생존, `verify.ps1` 연속 2회 `GATE: PASS`(로그 `PHASE_3C2B3_VERIFY_LOG_run1/2.md`, Claude 실행, 최종 트리).
+> - **NOTES:** 3-C3 인수인계(H2·ID·영수증·상태 채택, 확정 직전 권위 RNG(H0)·실제 순번 재검사, 번호 건너뜀 감지 불가), KBO 2026 인증, 능력 연결(별도 계약)·보정(3-F), 감사 영속화(Phase 4), 선행 주자 득점이 항상 먼저라는 네 개 맥락 한정 가정. 일부 테스트는 RED 없이 첫 실행부터 통과(Reducer·규칙 위임 검증).
+> - 문서: [보고서](../../docs/reports/PHASE_3C2B3_REPORT.md), [ADR-007](../../docs/decisions/ADR-007.md), [game-engine §26](../../docs/game-engine.md), [해석 기록](../02_Decisions/2026-10-12_C2B3_Resolver_Interpretations.md), [RED A](../../docs/reports/PHASE_3C2B3_RED_A_raw.txt), [RED B](../../docs/reports/PHASE_3C2B3_RED_B_raw.txt), [변형 검사](../../docs/reports/PHASE_3C2B3_MUTATION_raw.txt).
+
 > [!note] 3-C2B-3-P 추가 진루 정책 검증 수행 — 승인 대기 (2026-10-12, `TASK.md`, 기준 HEAD `f669589`)
 > 정책 검증 단계이며 **구현이 아니다**: `src/` 불변, 3-C2B-3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE, GPT Chat·Codex 검토 `미실시`, 이 문서의 최상위 status는 `검토 대기` 유지, 커밋·푸시 안 함. 자체 판정 `POLICY_READY_FOR_REVIEW`(승인 아님).
 > - **검증(테스트 전용):** 보류 1,314건 재구성(열린 결정 2개는 270건), 원시 행동 벡터 5,562건을 실제 Reducer에 적용(합법 4,722 수락·일치 / 불법 840 중 480 수락), D3 A/B 비교(시도 결합 시 분포 동일), 사건 순서 민감도 318건, 끝내기 8사례, 선수 능력 `MISSING_INPUT`, 실제 `PreparedPitch` RNG 핸드오버(H1→H2) 4건. 신규 테스트 64, 전체 xUnit 1,451 통과(기준 1,387), 변이 검사 9/9(첫 라운드 생존 2건 이력 보존).

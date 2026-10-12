@@ -58,7 +58,8 @@ public sealed record InPlayAudit(
     InPlayPrePlay PrePlay, int BatterFinalBase, ImmutableArray<InPlayRunnerPlan> RunnerMoves, InPlayWinningRunner? WinningRunner, InPlayWalkOffEffect WalkOffEffect,
     string RecordChangeReason, ImmutableArray<string> VirtualFacts,
     string RulesProfileId, string RulesVersion, string RulesHash, string TuningVersion, string TuningHash, string ProbabilityModelVersion,
-    string StartRngStateHash, string FinalRngStateHash, string Advancement, ImmutableArray<string> AdvancementContextKeys, bool CompositeRunnerContext);
+    string StartRngStateHash, string FinalRngStateHash, string Advancement, ImmutableArray<string> AdvancementContextKeys, bool CompositeRunnerContext,
+    AdvancementAudit? AdvancementDetail = null);
 
 /// <summary>
 /// Everything the base plan decided, computed from a game state and a drawn (batted ball, defence result) only. No random number, event id or reducer call is involved. Internal:
@@ -165,12 +166,17 @@ public abstract class InPlayPlanOutcome
 /// </summary>
 public sealed class InPlayPitchCandidate : InPlayPlanOutcome
 {
-    internal InPlayPitchCandidate(BaseInPlayPlan plan, InPlayEvent gameEvent, GameStep unconfirmedStep, GameRandomSnapshot nextRng) : base(plan)
+    internal InPlayPitchCandidate(BaseInPlayPlan plan, InPlayEvent gameEvent, GameStep unconfirmedStep, GameRandomSnapshot nextRng) : this(plan, gameEvent, unconfirmedStep, nextRng, null)
+    {
+    }
+
+    /// <summary>The candidate of a resolved pending advancement (3-C2B-3): <paramref name="resolvedAudit"/> is the base plan's audit completed with the advancement decisions and H2.</summary>
+    internal InPlayPitchCandidate(BaseInPlayPlan plan, InPlayEvent gameEvent, GameStep unconfirmedStep, GameRandomSnapshot nextRng, InPlayAudit? resolvedAudit) : base(plan)
     {
         Event = gameEvent;
         UnconfirmedStep = unconfirmedStep;
         NextRng = nextRng;
-        Audit = plan.Audit with { CandidateEventId = gameEvent.Id };
+        Audit = (resolvedAudit ?? plan.Audit) with { CandidateEventId = gameEvent.Id };
     }
 
     public InPlayEvent Event { get; }

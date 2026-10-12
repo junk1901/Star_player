@@ -1,0 +1,208 @@
+E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\bin\Release\net8.0\StarPlayer.Simulation.Tests.dll(.NETCoreApp,Version=v8.0)에 대한 테스트 실행
+VSTest 버전 17.11.1 (x64)
+
+테스트 실행을 시작하는 중입니다. 잠시 기다려 주세요...
+지정된 패턴과 일치한 총 테스트 파일 수는 1개입니다.
+[xUnit.net 00:00:00.53]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_legal_raw_vector_is_composed_unchanged_and_an_illegal_one_is_always_changed_into_a_legal_play [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_fly_out_with_the_third_base_runner_scoring_makes_the_reducer_derive_a_sacrifice_fly_from_an_Out_event [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_walk_off_winner_is_the_needth_run_in_sequence_order_for_every_walk_off_vector [FAIL]
+[xUnit.net 00:00:00.54]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_context_describes_the_decision_the_independent_model_derives_from_the_same_base_plan [FAIL]
+[xUnit.net 00:00:00.54]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_rules_pre_check_flags_exactly_the_840_vectors_the_independent_judge_calls_illegal_and_none_of_the_4722_legal_ones [FAIL]
+[xUnit.net 00:00:00.54]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_walk_off_ends_the_play_at_the_winning_run_and_the_trailing_decision_is_void_while_a_failed_attempt_keeps_the_game_going [FAIL]
+[xUnit.net 00:00:00.54]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_rules_catch_a_passed_runner_a_duplicate_action_a_missing_source_and_a_wrong_target_in_hand_built_contexts [FAIL]
+[xUnit.net 00:00:00.54]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_third_out_voids_the_runs_when_it_is_a_force_out_or_the_batter_runner_before_first_and_otherwise_only_the_runs_made_before_it [FAIL]
+[xUnit.net 00:00:00.54]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_verification_refuses_a_composition_that_does_not_match_what_the_reducer_made_of_the_event [FAIL]
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_legal_raw_vector_is_composed_unchanged_and_an_illegal_one_is_always_changed_into_a_legal_play [367 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts(PendingCase c) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 34
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Drawn(PendingCase c, IReadOnlyDictionary`2 raw) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 41
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_legal_raw_vector_is_composed_unchanged_and_an_illegal_one_is_always_changed_into_a_legal_play() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 164
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_fly_out_with_the_third_base_runner_scoring_makes_the_reducer_derive_a_sacrifice_fly_from_an_Out_event [2 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Compose(InPlayPlanFacts facts, GameState state, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 16
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Compose(PendingCase c, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 45
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_fly_out_with_the_third_base_runner_scoring_makes_the_reducer_derive_a_sacrifice_fly_from_an_Out_event() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 455
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_walk_off_winner_is_the_needth_run_in_sequence_order_for_every_walk_off_vector [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts(PendingCase c) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 34
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Drawn(PendingCase c, IReadOnlyDictionary`2 raw) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 41
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_walk_off_winner_is_the_needth_run_in_sequence_order_for_every_walk_off_vector() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 410
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_context_describes_the_decision_the_independent_model_derives_from_the_same_base_plan [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts(PendingCase c) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 34
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_context_describes_the_decision_the_independent_model_derives_from_the_same_base_plan() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 100
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_rules_pre_check_flags_exactly_the_840_vectors_the_independent_judge_calls_illegal_and_none_of_the_4722_legal_ones [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts(PendingCase c) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 34
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_rules_pre_check_flags_exactly_the_840_vectors_the_independent_judge_calls_illegal_and_none_of_the_4722_legal_ones() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 136
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_walk_off_ends_the_play_at_the_winning_run_and_the_trailing_decision_is_void_while_a_failed_attempt_keeps_the_game_going [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Compose(InPlayPlanFacts facts, GameState state, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 16
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Compose(PendingCase c, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 45
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_walk_off_ends_the_play_at_the_winning_run_and_the_trailing_decision_is_void_while_a_failed_attempt_keeps_the_game_going() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 379
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_rules_catch_a_passed_runner_a_duplicate_action_a_missing_source_and_a_wrong_target_in_hand_built_contexts [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts(PendingCase c) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 34
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_rules_catch_a_passed_runner_a_duplicate_action_a_missing_source_and_a_wrong_target_in_hand_built_contexts() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 353
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_third_out_voids_the_runs_when_it_is_a_force_out_or_the_batter_runner_before_first_and_otherwise_only_the_runs_made_before_it [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementRules.CountedRuns(Int32 outsBefore, Int32 limit, IReadOnlyList`1 ordered) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementRules.cs:line 42
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.A_third_out_voids_the_runs_when_it_is_a_force_out_or_the_batter_runner_before_first_and_otherwise_only_the_runs_made_before_it() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 315
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_verification_refuses_a_composition_that_does_not_match_what_the_reducer_made_of_the_event [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Compose(InPlayPlanFacts facts, GameState state, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 16
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Compose(PendingCase c, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 45
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_verification_refuses_a_composition_that_does_not_match_what_the_reducer_made_of_the_event() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 481
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.An_unknown_context_key_or_a_missing_runner_is_a_failure_not_a_guess [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Every_out_and_run_of_a_play_carries_an_explicit_sequence_lead_runner_first_and_a_play_without_any_carries_none [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_rules_check_names_each_forbidden_situation [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts_are_in_lead_runner_first_order_even_though_the_stored_keys_are_trailing_runner_first [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_built_event_keeps_the_real_in_play_result_and_carries_the_out_details_of_a_thrown_out_runner [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_318_legal_vectors_with_a_run_and_a_third_out_count_their_run_only_because_of_the_lead_first_sequence [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Composition_is_deterministic_and_changes_neither_the_facts_nor_the_state [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Composition_refuses_a_Void_draw_and_a_wrong_number_of_draws [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Every_declared_context_appears_exactly_once_and_the_order_is_the_same_on_every_call [FAIL]
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.An_unknown_context_key_or_a_missing_runner_is_a_failure_not_a_guess [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.An_unknown_context_key_or_a_missing_runner_is_a_failure_not_a_guess() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 118
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Every_out_and_run_of_a_play_carries_an_explicit_sequence_lead_runner_first_and_a_play_without_any_carries_none [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts(PendingCase c) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 34
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Drawn(PendingCase c, IReadOnlyDictionary`2 raw) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 41
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Every_out_and_run_of_a_play_carries_an_explicit_sequence_lead_runner_first_and_a_play_without_any_carries_none() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 266
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_rules_check_names_each_forbidden_situation [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts(PendingCase c) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 34
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_rules_check_names_each_forbidden_situation() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 334
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts_are_in_lead_runner_first_order_even_though_the_stored_keys_are_trailing_runner_first [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts(PendingCase c) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 34
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts_are_in_lead_runner_first_order_even_though_the_stored_keys_are_trailing_runner_first() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 73
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_built_event_keeps_the_real_in_play_result_and_carries_the_out_details_of_a_thrown_out_runner [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Compose(InPlayPlanFacts facts, GameState state, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 16
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Compose(PendingCase c, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 45
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_built_event_keeps_the_real_in_play_result_and_carries_the_out_details_of_a_thrown_out_runner() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 436
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_318_legal_vectors_with_a_run_and_a_third_out_count_their_run_only_because_of_the_lead_first_sequence [1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts(PendingCase c) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 34
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Drawn(PendingCase c, IReadOnlyDictionary`2 raw) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 41
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_318_legal_vectors_with_a_run_and_a_third_out_count_their_run_only_because_of_the_lead_first_sequence() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 291
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Composition_is_deterministic_and_changes_neither_the_facts_nor_the_state [3 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Compose(InPlayPlanFacts facts, GameState state, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 16
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Compose(PendingCase c, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 45
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Composition_is_deterministic_and_changes_neither_the_facts_nor_the_state() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 507
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Composition_refuses_a_Void_draw_and_a_wrong_number_of_draws [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Compose(InPlayPlanFacts facts, GameState state, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 16
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Composition_refuses_a_Void_draw_and_a_wrong_number_of_draws() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 523
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Every_declared_context_appears_exactly_once_and_the_order_is_the_same_on_every_call [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Contexts(InPlayPlanFacts facts) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 14
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Contexts(PendingCase c) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 34
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Every_declared_context_appears_exactly_once_and_the_order_is_the_same_on_every_call() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 85
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Hold_and_Void_are_different_facts_blocked_base_versus_play_over [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_lead_runners_result_is_applied_before_the_trailing_runner_is_judged_so_a_vacated_base_can_be_attempted [FAIL]
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Hold_and_Void_are_different_facts_blocked_base_versus_play_over [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Compose(InPlayPlanFacts facts, GameState state, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 16
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Compose(PendingCase c, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 45
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Hold_and_Void_are_different_facts_blocked_base_versus_play_over() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 215
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_lead_runners_result_is_applied_before_the_trailing_runner_is_judged_so_a_vacated_base_can_be_attempted [< 1 ms]
+  오류 메시지:
+   System.NotImplementedException : The method or operation is not implemented.
+  스택 추적:
+     at StarPlayer.Simulation.Baseball.AdvancementPlanner.Compose(InPlayPlanFacts facts, GameState state, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\src\StarPlayer.Simulation\Baseball\AdvancementPlanning.cs:line 16
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.Compose(PendingCase c, IReadOnlyList`1 drawn) in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 45
+   at StarPlayer.Simulation.Tests.Advancement.AdvancementPlannerTests.The_lead_runners_result_is_applied_before_the_trailing_runner_is_judged_so_a_vacated_base_can_be_attempted() in E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\Advancement\AdvancementPlannerTests.cs:line 241
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+실패!  - 실패:    20, 통과:     0, 건너뜀:     0, 전체:    20, 기간: 19 ms - StarPlayer.Simulation.Tests.dll (net8.0)

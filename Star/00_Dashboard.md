@@ -2,7 +2,7 @@
 type: project-dashboard
 project: Star Player
 current_phase: "03"
-phase_status: 3-C2B-2(기본 인플레이 계획·끝내기 공식 기록·PendingAdvancement 격리·인플레이 후보) 최종 승인 완료(2026-10-12, Codex Medium PASS / GPT Chat 최종 PASS; 3-C2B-2만, Push 미승인), 이하 기존 기록 — Phase 0–2 승인 완료 (3/30), Phase 3은 3-A(RNG)·3-B1(구역·규칙 데이터 계약) 승인(PASS WITH NOTES), 3-B2(확률·튜닝 계약) 승인(PASS WITH NOTES, Codex 최종 PASS), 3-C1(이벤트 위치·ef2·JSON v2) 승인(PASS WITH NOTES, Codex 최종 PASS WITH NOTES), 3-C2A(단일 투구 확률 분기·game/target@1) 승인(PASS WITH NOTES, Codex 최종 집중 재검토 PASS WITH NOTES; 3-C2A만), 3-C2B-1(준비된 투구·비인플레이 이벤트 후보) 승인(PASS WITH NOTES, Codex PASS WITH NOTES; 3-C2B-1만), 3-C2B-2-P(D1–D5 정책 확정·템플릿 실현성 검증; 구현 아님) 검증 완료·GPT Chat PASS WITH NOTES(검증 한정; Codex 미실시), Phase 3 전체 Gate INCOMPLETE, 3-C2B-3·3-C3 미착수
+phase_status: 3-C2B-3(`advancement` 해결기) 구현 완료·검토 대기(2026-10-12, 자체 판정 PASS WITH NOTES; 승인 아님, GPT Chat·Codex 미실시, 3-C3 미착수, Phase 3 Gate INCOMPLETE), 이전 기록 — 3-C2B-2(기본 인플레이 계획·끝내기 공식 기록·PendingAdvancement 격리·인플레이 후보) 최종 승인 완료(2026-10-12, Codex Medium PASS / GPT Chat 최종 PASS; 3-C2B-2만, Push 미승인), 이하 기존 기록 — Phase 0–2 승인 완료 (3/30), Phase 3은 3-A(RNG)·3-B1(구역·규칙 데이터 계약) 승인(PASS WITH NOTES), 3-B2(확률·튜닝 계약) 승인(PASS WITH NOTES, Codex 최종 PASS), 3-C1(이벤트 위치·ef2·JSON v2) 승인(PASS WITH NOTES, Codex 최종 PASS WITH NOTES), 3-C2A(단일 투구 확률 분기·game/target@1) 승인(PASS WITH NOTES, Codex 최종 집중 재검토 PASS WITH NOTES; 3-C2A만), 3-C2B-1(준비된 투구·비인플레이 이벤트 후보) 승인(PASS WITH NOTES, Codex PASS WITH NOTES; 3-C2B-1만), 3-C2B-2-P(D1–D5 정책 확정·템플릿 실현성 검증; 구현 아님) 검증 완료·GPT Chat PASS WITH NOTES(검증 한정; Codex 미실시), Phase 3 전체 Gate INCOMPLETE, 3-C2B-3·3-C3 미착수
 last_updated: 2026-10-12
 ---
 
@@ -25,7 +25,7 @@ last_updated: 2026-10-12
 |---|---:|---|
 | 승인 완료 | 3 | Phase 0, Phase 1, Phase 2 |
 | 검토 대기 | 0 | 상위 Phase 단위로는 없음 (Phase 3-A·3-B1·3-B2·3-C1 작업 패키지는 승인, 3-C2A 작업 패키지도 승인(2026-10-11), 3-C2B-1 작업 패키지도 승인(2026-10-11), 3-C2B-2 작업 패키지도 승인(2026-10-12), Phase 3 전체는 미완료; 상위 status는 `검토 대기` 유지) |
-| 구현/기록 중 | 1 | Phase 3 (3-A·3-B1·3-B2·3-C1·3-C2A 승인 완료, 3-C2B-1 승인 완료, 3-C2B-2 승인 완료, 3-C2B-3~3-F 미착수) |
+| 구현/기록 중 | 1 | Phase 3 (3-A·3-B1·3-B2·3-C1·3-C2A 승인 완료, 3-C2B-1 승인 완료, 3-C2B-2 승인 완료, 3-C2B-3 구현 완료·검토 대기(승인 아님), 3-C3~3-F 미착수) |
 | 미착수 | 26 | Phase 4–29 |
 
 ## Phase 0–29 현황
@@ -37,7 +37,7 @@ last_updated: 2026-10-12
 | 0 | Reproducible desktop foundation | 승인 완료 | [Phase_00_Review](01_Phase_Reviews/Phase_00_Review.md) |
 | 1 | Player identity, visibility, and baseball vocabulary | 승인 완료 (PASS WITH NOTES) | [Phase_01_Review](01_Phase_Reviews/Phase_01_Review.md) |
 | 2 | Baseball state transitions and scoring | 승인 완료 (PASS WITH NOTES, 2026-10-11) | [Phase_02_Review](01_Phase_Reviews/Phase_02_Review.md) |
-| 3 | Seeded game simulation / Prototype 1 | 3-A(RNG)·3-B1 PASS WITH NOTES / 승인, 3-B2 PASS WITH NOTES / 승인, 3-C1 PASS WITH NOTES / 승인, 3-C2A PASS WITH NOTES / 승인, 3-C2B-1 PASS WITH NOTES / 승인(3-C2B-1만) ; 3-C2B-2 승인 완료(Codex Medium PASS / GPT Chat 최종 PASS, 3-C2B-2만, 2026-10-12) — Phase 3 전체 Gate INCOMPLETE, 3-C2B-2/3 이후 미착수 | [Phase_03_Review](01_Phase_Reviews/Phase_03_Review.md) |
+| 3 | Seeded game simulation / Prototype 1 | 3-A(RNG)·3-B1 PASS WITH NOTES / 승인, 3-B2 PASS WITH NOTES / 승인, 3-C1 PASS WITH NOTES / 승인, 3-C2A PASS WITH NOTES / 승인, 3-C2B-1 PASS WITH NOTES / 승인(3-C2B-1만) ; 3-C2B-2 승인 완료(Codex Medium PASS / GPT Chat 최종 PASS, 3-C2B-2만, 2026-10-12) ; 3-C2B-3(`advancement` 해결기) 구현 완료·검토 대기(2026-10-12, 승인 아님, 자체 판정 PASS WITH NOTES) — Phase 3 전체 Gate INCOMPLETE, 3-C3 이후 미착수 | [Phase_03_Review](01_Phase_Reviews/Phase_03_Review.md) |
 | 4 | Datapack initialization and safe save spine | 미착수 | 미생성 |
 | 5 | One-player career loop / Prototype 2 | 미착수 | 미생성 |
 | 6 | Calendar, regular season, and basic discovery | 미착수 | 미생성 |
@@ -73,6 +73,7 @@ last_updated: 2026-10-12
 
 ## 검토 대기 중인 Phase
 
+- Phase 3 작업 패키지 **3-C2B-3** (`advancement` 해결기, 2026-10-12, 소유자 `TASK.md`, 기준 HEAD `ab7147b`): **구현 완료 / 기술 승인(Codex 독립 리뷰 `PASS WITH NOTES`, GPT Chat 기술 검토 `PASS WITH NOTES` — 별개 판정, 사용자 전달), Git 반영 전; 3-C3 NOT STARTED / NOT AUTHORIZED** — 승인된 P-01~P-10을 코드로 구현(정책 불변): `AdvancementPlanning.Resolve`가 `CheckPrepared`를 먼저 재사용하고 H1 개인 사본에서 맥락마다 `game/runner@1` 1회(종료 후 `Void`·점유 `Hold` 포함)를 추첨, 선행 주자 우선 순차 합성·명시 `Sequence`·실제 `InPlayResult` 이벤트·변경 없는 `GameReducer` 검증·Reducer 파생 공식 기록 대조로 기존 `InPlayPitchCandidate`(`NextRng` = H2)를 반환. 신규 59 테스트(단계 A 23, 단계 B 36), 원시 행동 벡터 5,562건(합법 4,722 / 불법 840 / 불법 중 Reducer 수락 480) 전수, 득점+제3아웃 318건은 선행 우선 순서에서만 인정, 전체 xUnit 1,513 통과, 결함 주입 변이 25건 + 대조군 1건(행동 수준 검출 24건, M15는 오류 메시지 검증으로만 검출, 대조군 의도대로 생존), `verify.ps1` 연속 2회 `GATE: PASS`(로그 `PHASE_3C2B3_VERIFY_LOG_run1/2.md`, Claude 실행, 최종 트리). 자체 판정 `PASS WITH NOTES`; 최종 검토 후속으로 M15 분류·ADR-007 테스트 수(1,513) 문서 정정([보고서 §21](../docs/reports/PHASE_3C2B3_REPORT.md)); 3-C3·Phase 4 미착수; Phase 3 Gate INCOMPLETE; 커밋·푸시 안 함. [보고서](../docs/reports/PHASE_3C2B3_REPORT.md), [ADR-007](../docs/decisions/ADR-007.md), [game-engine §26](../docs/game-engine.md), [Phase_03_Review](01_Phase_Reviews/Phase_03_Review.md).
 - Phase 3 정책 검증 **3-C2B-3-P** (추가 진루 `advancement` 정책, 2026-10-12, 기준 HEAD `f669589`): **정책 검증 수행 / 승인 대기, 구현 아님** — `src/` 불변, 정책 P-01~P-10 최초 제출 시 `PROPOSED`(현재 P-05만 `OWNER APPROVED`, 78행 FIX2), 자체 판정 `POLICY_READY_FOR_REVIEW`(승인 아님), GPT Chat·Codex 검토 `미실시`, 3-C2B-3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE, 전체 xUnit 1,451 통과(신규 64). 문서: [검증 보고서](../docs/reports/PHASE_3C2B3_POLICY_VALIDATION_REPORT.md), [결정 초안](../docs/reports/PHASE_3C2B3_POLICY_DECISION_DRAFT.md), [인수인계 초안](../docs/reports/PHASE_3C2B3_IMPLEMENTATION_HANDOFF_DRAFT.md).
 - Phase 3 정책 검증 **3-C2B-3-P Codex 리뷰 수정** (2026-10-12): Codex Medium 2건(입력·최신 상태 검증 계약 / P-05) 문서·테스트 설계 보완 — `FIX_READY_FOR_REVIEW`(정책 승인 아님), **P-05 `OWNER_APPROVAL_REQUIRED`(이 시점 기록; FIX2에서 `OWNER APPROVED`로 정정)**, `src/` 불변, 전체 xUnit 1,454 통과(직접 실행), Codex 재검토 `미실시`, Phase 3 Gate INCOMPLETE. [검증 보고서 §18](../docs/reports/PHASE_3C2B3_POLICY_VALIDATION_REPORT.md).
 - Phase 3 정책 검증 **3-C2B-3-P FIX2** (2026-10-12): 재검토 Codex Medium 2건 정정(문서 계약만) — **P-05 `Prototype Sequence Policy v1` `OWNER APPROVED`(기존 네 개 맥락 한정, 관측 순서·KBO 인증 아님)**, P-01~P-04·P-06~P-10 `PROPOSED` 유지, C2B-3-P 전체 최종 승인 전, P-06은 이벤트 `InPlayResult`(`Out`)와 Reducer 파생 `BatterResult.SacrificeFly` 구분, `FIX2_READY_FOR_REVIEW`(승인 아님), `src/` 불변, 전체 xUnit 1,454 통과(직접 실행), Codex 재검토 `미실시`, 3-C2B-3·3-C3 미착수, Phase 3 Gate INCOMPLETE. [검증 보고서 §19](../docs/reports/PHASE_3C2B3_POLICY_VALIDATION_REPORT.md).

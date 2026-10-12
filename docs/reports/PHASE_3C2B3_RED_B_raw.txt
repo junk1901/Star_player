@@ -1,0 +1,488 @@
+E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\bin\Release\net8.0\StarPlayer.Infrastructure.Tests.dll(.NETCoreApp,Version=v8.0)에 대한 테스트 실행
+VSTest 버전 17.11.1 (x64)
+
+테스트 실행을 시작하는 중입니다. 잠시 기다려 주세요...
+지정된 패턴과 일치한 총 테스트 파일 수는 1개입니다.
+[xUnit.net 00:00:00.52]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_resolver_never_touches_the_event_json_or_the_fingerprint_contract [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "drawing", occurrence: 2) [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "before_reducer", occurrence: 1) [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "drawing", occurrence: 1) [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "verified", occurrence: 1) [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "validated", occurrence: 1) [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "start", occurrence: 1) [FAIL]
+[xUnit.net 00:00:00.53]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "restored", occurrence: 1) [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_resolver_never_touches_the_event_json_or_the_fingerprint_contract [283 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_resolver_never_touches_the_event_json_or_the_fingerprint_contract() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 784
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "drawing", occurrence: 2) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "before_reducer", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "drawing", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "verified", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "validated", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "start", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "restored", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "event_built", occurrence: 1) [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "after_reducer", occurrence: 1) [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "composed", occurrence: 1) [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "id_issued", occurrence: 1) [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "drawn", occurrence: 1) [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_drawn_results_are_the_approved_rows_applied_to_the_exact_rolls_and_the_ppm_are_the_neutral_baseline [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_blocked_extra_base_or_out_is_attributed_to_Hold_and_both_the_drawn_and_the_applied_result_are_kept [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_lone_runner_thrown_out_at_home_is_an_ordinary_out_with_zero_one_or_two_outs_and_ends_the_inning_only_with_two [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_fly_out_with_the_runner_from_third_scoring_has_an_Out_event_and_the_reducer_derives_the_sacrifice_fly [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "event_built", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "after_reducer", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "composed", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "id_issued", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(stage: "drawn", occurrence: 1) [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(String stage, Int32 occurrence) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 712
+   at InvokeStub_AdvancementPlanningTests.Cancelling_at_any_stage_returns_no_candidate_leaves_every_original_untouched_and_a_retry_gives_the_same_result(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_drawn_results_are_the_approved_rows_applied_to_the_exact_rolls_and_the_ppm_are_the_neutral_baseline [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_drawn_results_are_the_approved_rows_applied_to_the_exact_rolls_and_the_ppm_are_the_neutral_baseline() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 340
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_blocked_extra_base_or_out_is_attributed_to_Hold_and_both_the_drawn_and_the_applied_result_are_kept [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_blocked_extra_base_or_out_is_attributed_to_Hold_and_both_the_drawn_and_the_applied_result_are_kept() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 398
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_lone_runner_thrown_out_at_home_is_an_ordinary_out_with_zero_one_or_two_outs_and_ends_the_inning_only_with_two [1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_lone_runner_thrown_out_at_home_is_an_ordinary_out_with_zero_one_or_two_outs_and_ends_the_inning_only_with_two() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 461
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_fly_out_with_the_runner_from_third_scoring_has_an_Out_event_and_the_reducer_derives_the_sacrifice_fly [1 ms]
+  오류 메시지:
+   seed 1: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.First(Scenario s, Func`2 where) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 208
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_fly_out_with_the_runner_from_third_scoring_has_an_Out_event_and_the_reducer_derives_the_sacrifice_fly() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 483
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_pending_with_an_unknown_context_or_an_unusable_base_plan_is_refused_after_validation_without_any_side_effect [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_composite_play_is_resolved_lead_runner_first_and_every_reachable_combination_occurs_with_the_reducers_official_record [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_sacrifice_fly_can_win_the_game_and_the_scorer_is_the_runner_from_third [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_event_id_boundary_is_checked_after_validation_with_the_same_codes_as_the_candidate_builder [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_failed_extra_base_in_a_walk_off_context_keeps_the_game_going_and_the_base_plans_hold_of_the_winner_does_not_survive [FAIL]
+[xUnit.net 00:00:00.55]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_real_pending_advancement_becomes_one_reducer_validated_ef2_in_play_candidate_with_the_prepared_pitchs_location_and_H2 [FAIL]
+[xUnit.net 00:00:00.56]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_pending_cannot_be_mistaken_for_a_candidate_and_the_resolver_returns_the_sibling_candidate_type_only [FAIL]
+[xUnit.net 00:00:00.56]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_sacrifice_fly_that_scores_with_one_out_and_the_runner_thrown_out_for_the_third_out_are_kept_apart [FAIL]
+[xUnit.net 00:00:00.56]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Every_resolution_draws_exactly_one_roll_per_declared_context_on_the_runner_stream_even_when_the_play_is_over_or_the_base_is_blocked [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_pending_with_an_unknown_context_or_an_unusable_base_plan_is_refused_after_validation_without_any_side_effect [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_pending_with_an_unknown_context_or_an_unusable_base_plan_is_refused_after_validation_without_any_side_effect() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 677
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_composite_play_is_resolved_lead_runner_first_and_every_reachable_combination_occurs_with_the_reducers_official_record [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_composite_play_is_resolved_lead_runner_first_and_every_reachable_combination_occurs_with_the_reducers_official_record() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 374
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_sacrifice_fly_can_win_the_game_and_the_scorer_is_the_runner_from_third [12 ms]
+  오류 메시지:
+   seed 1: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.First(Scenario s, Func`2 where) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 208
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_sacrifice_fly_can_win_the_game_and_the_scorer_is_the_runner_from_third() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 564
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_event_id_boundary_is_checked_after_validation_with_the_same_codes_as_the_candidate_builder [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_event_id_boundary_is_checked_after_validation_with_the_same_codes_as_the_candidate_builder() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 657
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_failed_extra_base_in_a_walk_off_context_keeps_the_game_going_and_the_base_plans_hold_of_the_winner_does_not_survive [3 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.First(Scenario s, Func`2 where) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 208
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_failed_extra_base_in_a_walk_off_context_keeps_the_game_going_and_the_base_plans_hold_of_the_winner_does_not_survive() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 548
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_real_pending_advancement_becomes_one_reducer_validated_ef2_in_play_candidate_with_the_prepared_pitchs_location_and_H2 [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_real_pending_advancement_becomes_one_reducer_validated_ef2_in_play_candidate_with_the_prepared_pitchs_location_and_H2() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 229
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_pending_cannot_be_mistaken_for_a_candidate_and_the_resolver_returns_the_sibling_candidate_type_only [2 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_pending_cannot_be_mistaken_for_a_candidate_and_the_resolver_returns_the_sibling_candidate_type_only() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 296
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_sacrifice_fly_that_scores_with_one_out_and_the_runner_thrown_out_for_the_third_out_are_kept_apart [< 1 ms]
+  오류 메시지:
+   seed 1: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.First(Scenario s, Func`2 where) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 208
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_sacrifice_fly_that_scores_with_one_out_and_the_runner_thrown_out_for_the_third_out_are_kept_apart() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 509
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Every_resolution_draws_exactly_one_roll_per_declared_context_on_the_runner_stream_even_when_the_play_is_over_or_the_base_is_blocked [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Every_resolution_draws_exactly_one_roll_per_declared_context_on_the_runner_stream_even_when_the_play_is_over_or_the_base_is_blocked() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 307
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.56]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Resolving_changes_nothing_of_the_callers_state_rng_pending_or_cursor_and_the_same_inputs_give_the_same_candidate [FAIL]
+[xUnit.net 00:00:00.56]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_drawn_results_follow_the_approved_probabilities_for_a_lone_second_base_runner [FAIL]
+[xUnit.net 00:00:00.56]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_stages_run_in_the_documented_order_with_one_drawing_stage_per_decision [FAIL]
+[xUnit.net 00:00:00.57]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_walk_off_context_and_a_double_with_the_runner_from_first_scoring_keep_the_credited_double [FAIL]
+[xUnit.net 00:00:00.57]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_run_before_a_non_force_third_out_counts_because_the_lead_runner_comes_first_and_the_reducers_numbers_agree [FAIL]
+[xUnit.net 00:00:00.57]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.An_extra_base_that_scores_the_winning_run_ends_the_game_names_the_winner_and_voids_the_trailing_decision [FAIL]
+[xUnit.net 00:00:00.57]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_decision_after_the_third_out_is_Void_not_Hold_while_its_roll_is_still_consumed_and_recorded [FAIL]
+[xUnit.net 00:00:00.57]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_pending_made_for_other_inputs_is_refused_by_the_shared_stale_check_before_any_random_number_or_id_is_used [FAIL]
+[xUnit.net 00:00:00.57]     StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_call_with_an_already_cancelled_token_does_nothing [FAIL]
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Resolving_changes_nothing_of_the_callers_state_rng_pending_or_cursor_and_the_same_inputs_give_the_same_candidate [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Resolving_changes_nothing_of_the_callers_state_rng_pending_or_cursor_and_the_same_inputs_give_the_same_candidate() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 265
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_drawn_results_follow_the_approved_probabilities_for_a_lone_second_base_runner [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_drawn_results_follow_the_approved_probabilities_for_a_lone_second_base_runner() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 355
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_stages_run_in_the_documented_order_with_one_drawing_stage_per_decision [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.The_stages_run_in_the_documented_order_with_one_drawing_stage_per_decision() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 752
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_walk_off_context_and_a_double_with_the_runner_from_first_scoring_keep_the_credited_double [4 ms]
+  오류 메시지:
+   seed 51: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_walk_off_context_and_a_double_with_the_runner_from_first_scoring_keep_the_credited_double() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 580
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_run_before_a_non_force_third_out_counts_because_the_lead_runner_comes_first_and_the_reducers_numbers_agree [1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_run_before_a_non_force_third_out_counts_because_the_lead_runner_comes_first_and_the_reducers_numbers_agree() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 437
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.An_extra_base_that_scores_the_winning_run_ends_the_game_names_the_winner_and_voids_the_trailing_decision [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.First(Scenario s, Func`2 where) in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 208
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.An_extra_base_that_scores_the_winning_run_ends_the_game_names_the_winner_and_voids_the_trailing_decision() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 525
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_decision_after_the_third_out_is_Void_not_Hold_while_its_roll_is_still_consumed_and_recorded [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_decision_after_the_third_out_is_Void_not_Hold_while_its_roll_is_still_consumed_and_recorded() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 416
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_pending_made_for_other_inputs_is_refused_by_the_shared_stale_check_before_any_random_number_or_id_is_used [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_pending_made_for_other_inputs_is_refused_by_the_shared_stale_check_before_any_random_number_or_id_is_used() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 600
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  실패 StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_call_with_an_already_cancelled_token_does_nothing [< 1 ms]
+  오류 메시지:
+   seed 12: Advancement.not_implemented RED stub
+  스택 추적:
+     at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.<>c__DisplayClass1_0.<.ctor>b__0() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 178
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+--- End of stack trace from previous location ---
+   at System.Lazy`1.CreateValue()
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.Scenario.get_Hits() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 190
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.One() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 211
+   at StarPlayer.Infrastructure.Tests.AdvancementPlanningTests.A_call_with_an_already_cancelled_token_does_nothing() in E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\AdvancementPlanningTests.cs:line 738
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+실패!  - 실패:    35, 통과:     1, 건너뜀:     0, 전체:    36, 기간: 45 ms - StarPlayer.Infrastructure.Tests.dll (net8.0)
