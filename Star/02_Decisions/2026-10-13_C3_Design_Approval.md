@@ -1,7 +1,7 @@
 ---
 type: decision
 date: "2026-10-13"
-status: 소유자 승인 (설계만)
+status: 소유자 승인 (설계 D-1~D-8·계약 A~F + C3-A 세부 계약 O-1~O-9, 문서만 — 구현 승인 아님)
 related_phase: "03"
 tags:
   - star-player
@@ -52,11 +52,34 @@ D-1~D-8 `OWNER APPROVED` · C3 설계 및 계약 `OWNER APPROVED` · C3-A/B/C `N
 
 | # | 쟁점 | 확인된 사실 | 소유자 결정이 필요한 것 |
 |---|---|---|---|
-| 1 | 오류 코드와 우선순위 (D-6) | `CheckPrepared`는 `PitchCandidate.*` 코드(`event_id_in_use`, `event_duplicate`, `receipt_invalid`, `rng_state_changed`, `state_stale` 등 20여 개)를 이미 고정 순서로 사용한다. D-6은 이 코드·순서 불변을 요구한다. | 관문 고유 코드의 접두사·이름(개념 식별자 `already_committed` 등), 관문 검사와 `CheckPrepared`가 동시에 해당할 때의 승리 순서, 재제출이 `already_committed`와 기존 `state_stale`/`rng_state_changed` 중 어느 쪽으로 보고되는지 |
-| 2 | 비정규 ID 처리 | 게이트는 `{GameId}:e{6+ 자리}` 정규 ID만 받고 진단용 비정규 ID(`e1` 등)는 거절한다. `GameDiagnosticsService`는 C3 밖이다. | 비정규 ID가 섞인 복원 이력에서 `LastEventSequence` 정합성을 검사할지 복원 자체를 거절할지, 거절 시 코드·메시지 |
+| 1 | 오류 코드와 우선순위 (D-6) | `CheckPrepared`는 `PitchCandidate.*` 코드(`event_id_in_use`, `event_duplicate`, `receipt_invalid`, `rng_state_changed`, `state_stale` 등 20여 개)를 이미 고정 순서로 사용한다. D-6은 이 코드·순서 불변을 요구한다. **[정정 2026-10-13, 원문 보존: `event_id_in_use`·`event_duplicate`·`receipt_invalid`(및 `pitch_count_invalid`)는 `CheckPrepared`가 아니라 각 후보 빌더(`BuildNonInPlayCandidate`, `InPlayPitchPlanning.Build`, `AdvancementPlanning.Resolve`)가 검사한다. `rng_state_changed`·`state_stale` 등 나머지가 `CheckPrepared` 소속이다. 위 "20여 개"는 `PitchPrepare.*` 보조 코드를 포함한 근사치다.]** | 관문 고유 코드의 접두사·이름(개념 식별자 `already_committed` 등), 관문 검사와 `CheckPrepared`가 동시에 해당할 때의 승리 순서, 재제출이 `already_committed`와 기존 `state_stale`/`rng_state_changed` 중 어느 쪽으로 보고되는지 |
+| 2 | 비정규 ID 처리 | 게이트는 `{GameId}:e{6+ 자리}` 정규 ID만 받고 *(정정: 순번은 정확히 6자리, 최대 999999)* 진단용 비정규 ID(`e1` 등)는 거절한다. `GameDiagnosticsService`는 C3 밖이다. | 비정규 ID가 섞인 복원 이력에서 `LastEventSequence` 정합성을 검사할지 복원 자체를 거절할지, 거절 시 코드·메시지 |
 | 3 | CAS 보관 타입 | 설계는 "기대 집합체 참조 CAS"만 정했고 보관 타입은 미정이다(`Interlocked.CompareExchange` 대상 필드 소유자, 단일 직렬 기록자와의 관계). | 보관 타입의 종류·수명·소유자, 취소 토큰 통과 지점의 코드화 |
 | 4 | 구조적 비교 픽스처 | 비교 항목 목록은 승인됐으나 테스트 픽스처 목록은 없다. | 필수 픽스처 집합 |
 | 5 | `CommitRecord` 영속 필드 | 설계는 Phase 4 인수인계로만 남겼다. | Phase 4가 저장할 필드 목록 |
 | 6 | ROADMAP 3-F 라벨 (D-4) | ROADMAP 수정 금지 상태 유지. | 라벨 문구 조정 시점·방식 |
 
-기타 관찰(해결 아님): `docs/game-engine.md` 27.3은 `Revision`이 "마지막 변경이 확정화뿐인 Publish"에도 +1이라고 쓰나 D-5는 종료 확정이 같은 Stage의 단일 Publish라고 한다. 두 문장이 같은 Publish를 가리키는 것으로 읽히지만 구현 계약에서 한 문장으로 맞추는 편이 안전하다. 또 27.6 (5)의 후보 `UnconfirmedStep` 미리보기 비교는 후보가 있는 제안(투구·인플레이)에만 적용되며 `Approach`/`RunnerPlay`/`Substitution`은 미리보기 없이 재실행 결과만 채택한다는 점도 구현 계약에서 명시할 것.
+기타 관찰(해결 아님): `docs/game-engine.md` 27.3은 `Revision`이 "마지막 변경이 확정화뿐인 Publish"에도 +1이라고 쓰나 D-5는 종료 확정이 같은 Stage의 단일 Publish라고 한다. 두 문장이 같은 Publish를 가리키는 것으로 읽히지만 구현 계약에서 한 문장으로 맞추는 편이 안전하다. 또 27.6 (5)의 후보 `UnconfirmedStep` 미리보기 비교는 후보가 있는 제안(투구·인플레이)에만 적용되며 `Approach`/`RunnerPlay`/`Substitution`은 미리보기 없이 재실행 결과만 채택한다는 점도 구현 계약에서 명시할 것. *(위 두 문장은 아래 C3-A 세부 계약 절에서 해소: Revision은 Apply+Finalize 하나의 Publish에서 +1, 미리보기가 없는 세 이벤트는 재실행 결과를 직접 채택.)*
+
+## C3-A 세부 계약 O-1~O-9 승인 (2026-10-13, `TASK.md` "Phase 3-C3-A 세부 계약 최종 승인 반영", 기준 HEAD `5328917` — 문서만)
+
+> [!warning] 계약 승인 ≠ 구현 승인
+> 소유자가 O-1~O-9를 일괄 승인했다(날짜는 소유자의 채팅 승인에 근거; `TASK.md` 수정 시각은 증거가 아님). **C3-A 프로덕션, C3-B, C3-C는 `NOT STARTED / NOT AUTHORIZED`, Phase 3 Gate `INCOMPLETE`.** D-1~D-8과 계약 A~F의 의미는 바뀌지 않았다. 직전의 읽기 전용 계약 점검은 저장소 파일이 아닌 세션 보고서이며(실행 없이 코드를 읽은 결과), 권고와 승인 내용이 다르면 승인 내용이 우선하고 권고는 이력이다. Codex 독립 검토 `미실시`.
+
+상세 계약은 [game-engine §27.16](../../docs/game-engine.md)이 기준이며, 아래는 결정과 이유만 적는다. 근거: [ADR-007 "Decisions (3-C3-A detailed contract approval)"](../../docs/decisions/ADR-007.md).
+
+| ID | 결정 | 이유 · 기존 설계와의 관계 |
+|---|---|---|
+| O-1 | 오류 코드 `Commit.*`(Stage·Publish 구분, Publish는 `staged_missing`·`revision_stale`·`cas_lost`)와 `Authoritative.*`(생성·복원). `Id.*`·`Rng.*`·`Game.*`는 통과하고 대체하지 않음 | D-6이 남긴 "최종 코드 이름"을 확정. `event_id_in_use` 등 4개 코드는 후보 빌더 소속(위 정정) |
+| O-2 | 검증 순서 대안 C: 취소 → 입력 → 종류 → 집합체 정합 → ID 형식·경기 → `already_committed` → 순번 건너뜀 → [C3-B: 후보 연결·`CheckPrepared`] → `event_id_in_use` → `Apply`·영수증 → [C3-B: 미리보기·RNG] → `Finalize` → Revision·결과 | 재제출은 우연한 최신성 코드가 아니라 `already_committed`로, 오래된 후보는 기존 구체 코드로 보고. `Apply`가 종료 경기의 같은 ID를 성공(중복)으로 답하므로 5번이 9번보다 앞서야 함. `CheckPrepared` 코드·순서 불변 |
+| O-3 | 취소는 `OperationCanceledException`, 새 코드 없음, CAS 직전까지만; CAS 성공 뒤에는 검사·예외 전파 콜백 금지 | 기존 3-C2A~C2B-3 관례. 확정된 변경을 실패로 보고하지 않음(계약 B) |
+| O-4 | C3-A 허용: `ApproachEvent`·`RunnerPlayEvent`·`SubstitutionEvent`. `PitchEvent`·`TakeEvent`·`InPlayEvent`는 `Commit.event_kind_not_supported` | RNG 증거 없이 투구만 확정하는 우회 차단. D-3(공통 관문)은 유지, 투구는 C3-B에서 같은 관문으로 들어옴 |
+| O-5 | `Revision`은 EventId 순번과 독립, 복원에서 동일성 비강제, Publish마다 정확히 +1, `long.MaxValue`에서 거부. 종료 이벤트의 Apply+Finalize는 하나의 Publish이며 Finalize 전용 Publish 없음 | 27.3의 "Finalize만 바뀐 Publish도 +1" 문구를 D-5와 맞춤(27.3에 대체 표시, 이력 보존) |
+| O-6 | `StartNew`(빈 이력·0·0·null)와 `Restore` 검사 목록, 순번 정확히 6자리·최대 999999, 비정규·손상·불완전 종료(`Final == null`) 복원 거부, 복원 `LastCommit` = null | 자동 재번호·삭제·묵시 복구 금지. 영수증에 본문이 없어 ID·소속·연속성·형식만 검증 가능하고 지문↔본문 일치는 검증 불가임을 명시 |
+| O-7 | `public sealed` + `internal` 생성자, `HiddenTendencyBoundaryTests`에 고정 | 기존 `PreparedPitch` 관례. 숨김 타입 비노출(D-8) |
+| O-8 | 복원 시 `ScoredPlay.EventId`·`SubstitutionRecord.EventId`만 영수증과 대조. `StatEntry.SourceId`·`ScoredPlay.Id`는 EventId로 가정하지 않음 | 점검 보고서 권고(Stats 포함)를 코드 확인 후 좁힘: `SourceId`는 이벤트 ID라고 선언된 필드가 아님 |
+| O-9 | 최소 불변 `CommitRecord`(이벤트·영수증·순번·Revision 전후·RNG 해시 전후·Facts·Finalized), CAS 전에 구성해 `LastCommit`과 동일 인스턴스, 성공 후 반환 | `GameStatDelta`·Phase 4 영속 필드는 후속 계약 |
+
+**상태.** O-1~O-9 `OWNER APPROVED` · C3-A 세부 계약 `OWNER APPROVED` (문서) · D-1~D-8 `OWNER APPROVED` (불변) · C3-A 프로덕션 `NOT STARTED / NOT AUTHORIZED` · C3-B `NOT STARTED / NOT AUTHORIZED` · C3-C `NOT STARTED / NOT AUTHORIZED` · Phase 3 Gate `INCOMPLETE`.
+
+**아직 열려 있는 항목(여기서 결정하지 않음).** 구조적 비교 픽스처 목록(C3-B), `CommitRecord`·`GameStatDelta`의 Phase 4 영속 필드, ROADMAP 3-F 라벨과 D-4의 정합(소유자). 위 "구현 전 남은 결정" 중 오류 코드·우선순위, 비정규 ID가 섞인 복원 이력 검사, CAS 보관 타입은 C3-A 범위에서 이 절로 해소됐다(원문은 이력으로 보존).

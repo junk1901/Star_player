@@ -21,6 +21,12 @@ tags:
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
 
+> [!info] 3-C3-A 세부 계약 O-1~O-9 승인 반영 (2026-10-13, `TASK.md` — 문서만, 구현 승인 아님)
+> 소유자가 C3-A 세부 계약 **O-1~O-9를 일괄 승인**했다(날짜는 소유자의 채팅 승인에 근거). D-1~D-8·계약 A~F는 불변. **C3-A 프로덕션 / C3-B / C3-C는 `NOT STARTED / NOT AUTHORIZED`**, 이 문서의 최상위 status는 `검토 대기` 유지, **Phase 3 Gate `INCOMPLETE`**. `src/`·테스트·Reducer·RNG·`ef1`/`ef2`·ROADMAP 불변, 스테이징·커밋·푸시 없음, Codex 독립 검토 `미실시`.
+> - 핵심: 오류 `Commit.*`/`Authoritative.*`(기존 `Id.*`·`Rng.*`·`Game.*` 통과), 검증 순서 대안 C, 취소는 `OperationCanceledException`(CAS 이전만), C3-A는 `ApproachEvent`·`RunnerPlayEvent`·`SubstitutionEvent`만 확정(투구 3종은 `event_kind_not_supported`), 독립 `Revision`(Apply+Finalize = 하나의 Publish = +1), EventId 순번 정확히 6자리·최대 999999, 손상·불완전 종료 이력 복원 거부(영수증 검증은 ID·소속·연속성·형식까지, 지문↔본문 일치는 검증 불가), 최소 `CommitRecord`.
+> - 정정: `event_id_in_use` 등 4개 코드는 `CheckPrepared`가 아니라 후보 빌더 소속. 열린 항목: C3-B 구조 비교 픽스처, Phase 4 `CommitRecord`·`GameStatDelta` 영속 필드, ROADMAP 3-F 라벨(소유자).
+> - 문서: [game-engine §27.16](../../docs/game-engine.md), [ADR-007](../../docs/decisions/ADR-007.md), [결정 기록](../02_Decisions/2026-10-13_C3_Design_Approval.md).
+
 > [!info] 3-C3 설계 승인 반영 (2026-10-13, `TASK.md` — 설계만, 구현 승인 아님)
 > 소유자가 C3 설계 결정 **D-1~D-8과 추가 계약 A~F를 일괄 승인**했다(승인 날짜 2026-10-13은 프로젝트 소유자의 채팅 승인에 근거하며 `TASK.md` 수정 시각은 승인 증거가 아님). **C3-A / C3-B / C3-C 및 C3 프로덕션 구현은 `NOT STARTED / NOT AUTHORIZED`**, 이 문서의 최상위 status는 `검토 대기` 유지, **Phase 3 Gate `INCOMPLETE`**. `src/`·테스트·Reducer·RNG·`ef1`/`ef2`·ROADMAP 불변, 스테이징·커밋·푸시 없음, C3 설계에 대한 Codex 독립 검토 `미실시`.
 > - 핵심: `AuthoritativeGame`(명시적 `LastEventSequence`·단조 `Revision`), 새 EventId = 마지막 확정 순번 + 1, 모든 공식 이벤트 단일 Stage/Publish, `GameReducer.Apply` 재실행 결과 채택(미리보기는 구조적 비교용), 종료 이벤트의 `Finalize` 동일 Stage·동일 Publish, 참조 CAS, RNG 증분(RawDraws) 검증(해시 일치는 경로 증명 아님), 비인플레이 `(PreparedPitch, Candidate)` 쌍, 불변 `CommitRecord`, 영속화는 Phase 4 인수인계, PA 구동기는 3-F 하네스(D-4).
