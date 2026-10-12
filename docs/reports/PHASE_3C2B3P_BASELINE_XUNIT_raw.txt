@@ -1,0 +1,44 @@
+﻿  Determining projects to restore...
+  Restored E:\Madegame\Star_player\src\StarPlayer.Domain\StarPlayer.Domain.csproj (in 75 ms).
+  Restored E:\Madegame\Star_player\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj (in 78 ms).
+  Restored E:\Madegame\Star_player\src\StarPlayer.Application\StarPlayer.Application.csproj (in 78 ms).
+  Restored E:\Madegame\Star_player\src\StarPlayer.Infrastructure\StarPlayer.Infrastructure.csproj (in 657 ms).
+  Restored E:\Madegame\Star_player\game\StarPlayer.Client.csproj (in 658 ms).
+  4 of 9 projects are up-to-date for restore.
+  StarPlayer.Domain -> E:\Madegame\Star_player\src\StarPlayer.Domain\bin\Release\net8.0\StarPlayer.Domain.dll
+  StarPlayer.Domain.Tests -> E:\Madegame\Star_player\tests\StarPlayer.Domain.Tests\bin\Release\net8.0\StarPlayer.Domain.Tests.dll
+Test run for E:\Madegame\Star_player\tests\StarPlayer.Domain.Tests\bin\Release\net8.0\StarPlayer.Domain.Tests.dll (.NETCoreApp,Version=v8.0)
+  StarPlayer.Simulation -> E:\Madegame\Star_player\src\StarPlayer.Simulation\bin\Release\net8.0\StarPlayer.Simulation.dll
+VSTest version 17.11.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+  StarPlayer.Application -> E:\Madegame\Star_player\src\StarPlayer.Application\bin\Release\net8.0\StarPlayer.Application.dll
+  StarPlayer.Simulation.Tests -> E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\bin\Release\net8.0\StarPlayer.Simulation.Tests.dll
+Test run for E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\bin\Release\net8.0\StarPlayer.Simulation.Tests.dll (.NETCoreApp,Version=v8.0)
+VSTest version 17.11.1 (x64)
+
+
+Passed!  - Failed:     0, Passed:   263, Skipped:     0, Total:   263, Duration: 160 ms - StarPlayer.Domain.Tests.dll (net8.0)
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+  StarPlayer.Infrastructure -> E:\Madegame\Star_player\src\StarPlayer.Infrastructure\bin\Release\net8.0\StarPlayer.Infrastructure.dll
+  StarPlayer.Infrastructure.Tests -> E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\bin\Release\net8.0\StarPlayer.Infrastructure.Tests.dll
+Test run for E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\bin\Release\net8.0\StarPlayer.Infrastructure.Tests.dll (.NETCoreApp,Version=v8.0)
+  StarPlayer.Client -> E:\Madegame\Star_player\game\.godot\mono\temp\bin\Release\StarPlayer.Client.dll
+VSTest version 17.11.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+  StarPlayer.Application.Tests -> E:\Madegame\Star_player\tests\StarPlayer.Application.Tests\bin\Release\net8.0\StarPlayer.Application.Tests.dll
+Test run for E:\Madegame\Star_player\tests\StarPlayer.Application.Tests\bin\Release\net8.0\StarPlayer.Application.Tests.dll (.NETCoreApp,Version=v8.0)
+VSTest version 17.11.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   117, Skipped:     0, Total:   117, Duration: 378 ms - StarPlayer.Application.Tests.dll (net8.0)
+
+Passed!  - Failed:     0, Passed:   537, Skipped:     0, Total:   537, Duration: 8 s - StarPlayer.Simulation.Tests.dll (net8.0)
+
+Passed!  - Failed:     0, Passed:   470, Skipped:     0, Total:   470, Duration: 10 s - StarPlayer.Infrastructure.Tests.dll (net8.0)

@@ -1,0 +1,97 @@
+﻿=== dotnet test tests\StarPlayer.Simulation.Tests -c Release --no-build --filter FullyQualifiedName~AdvancementPolicy (normal verbosity) ===
+Test run for E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\bin\Release\net8.0\StarPlayer.Simulation.Tests.dll (.NETCoreApp,Version=v8.0)
+VSTest version 17.11.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.31)
+[xUnit.net 00:00:00.05]   Discovering: StarPlayer.Simulation.Tests
+[xUnit.net 00:00:00.11]   Discovered:  StarPlayer.Simulation.Tests
+[xUnit.net 00:00:00.11]   Starting:    StarPlayer.Simulation.Tests
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_loaded_bases_two_runners_thrown_out_with_the_lead_runs_before_both_outs [377 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_and_reducer_a_coupled_policy_reaches_only_legal_plays_the_reducer_accepts_with_the_judged_record(policy: "A-L-coupled-skip") [3 s]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_and_reducer_a_coupled_policy_reaches_only_legal_plays_the_reducer_accepts_with_the_judged_record(policy: "C-L-redraw-coupled") [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_and_reducer_a_coupled_policy_reaches_only_legal_plays_the_reducer_accepts_with_the_judged_record(policy: "B-L-coupled-skip") [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_and_reducer_a_coupled_policy_reaches_only_legal_plays_the_reducer_accepts_with_the_judged_record(policy: "B-T-pre-fixed") [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_and_reducer_a_coupled_policy_reaches_only_legal_plays_the_reducer_accepts_with_the_judged_record(policy: "B-L-coupled-fixed") [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_and_reducer_a_coupled_policy_reaches_only_legal_plays_the_reducer_accepts_with_the_judged_record(policy: "A-T-pre-fixed") [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_and_reducer_a_coupled_policy_reaches_only_legal_plays_the_reducer_accepts_with_the_judged_record(policy: "B-T-post-fixed") [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_and_reducer_a_coupled_policy_reaches_only_legal_plays_the_reducer_accepts_with_the_judged_record(policy: "A-L-coupled-fixed") [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyEvidence.Evidence_is_computed_and_written_on_request [4 s]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_resolver_outputs_stay_inside_the_exact_reachable_set_and_coupled_policies_only_ever_play_legal_accepted_events [1 s]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_nobody_out_first_and_second_extra_outs_are_ordinary_tag_outs_with_the_expected_record [5 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_walkoff_3_one_behind_second_and_third_single_the_second_base_runner_scoring_takes_the_lead [4 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Static_walkoff_7_no_extra_base_changes_the_credited_base_of_a_hit_in_any_pending_vector [220 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_walkoff_1_tied_ninth_runner_on_second_single_extra_base_wins_the_game_and_the_base_plan_winner_is_missing [2 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_a_runner_tagged_out_on_a_base_a_teammate_occupies_is_accepted_as_a_legal_event [1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_excluding_only_the_extra_base_still_lets_a_runner_be_thrown_out_on_an_occupied_base(policy: "A-L-extra-only-fixed") [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_excluding_only_the_extra_base_still_lets_a_runner_be_thrown_out_on_an_occupied_base(policy: "B-L-extra-only-fixed") [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_excluding_only_the_extra_base_still_lets_a_runner_be_thrown_out_on_an_occupied_base(policy: "C-L-redraw-extra-only") [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_walkoff_6_failed_extra_bases_never_end_the_game [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Static_the_production_context_key_order_is_trailing_runner_first_which_is_method_B_of_the_task [3 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_fixed_consumption_uses_exactly_one_roll_per_declared_context_whatever_the_outcome [24 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_a_fly_out_with_a_runner_out_at_home_counts_both_outs_and_a_runner_scoring_makes_it_a_sacrifice_fly [1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_the_same_seed_always_gives_the_same_actions_calls_and_final_position [12 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_the_advancement_draw_touches_only_the_runner_stream_and_never_moves_the_start_snapshot [1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Static_composite_is_not_the_same_as_two_decisions_864_composite_cases_hold_only_270_with_two_open_decisions [1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Static_missing_input_the_model_declares_the_speed_and_arm_slots_but_the_pitch_resolver_supplies_no_modifier_at_all [8 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_a_move_after_the_third_out_is_accepted_and_two_outs_after_two_are_refused [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_acceptance_is_not_baseball_legality_480_illegal_vectors_are_accepted_and_only_360_are_refused [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_independent_per_context_draws_without_repair_reach_illegal_plays [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_post_hoc_repair_in_the_production_key_order_equals_lead_first_sequential_drawing_in_all_1314_cases [10 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_resolver_frequencies_on_the_real_stream_match_the_exact_distribution_within_five_sigma(policy: "A-L-coupled-fixed") [122 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_resolver_frequencies_on_the_real_stream_match_the_exact_distribution_within_five_sigma(policy: "C-L-redraw-coupled") [91 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_resolver_frequencies_on_the_real_stream_match_the_exact_distribution_within_five_sigma(policy: "IND-L") [102 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_resolver_frequencies_on_the_real_stream_match_the_exact_distribution_within_five_sigma(policy: "B-L-coupled-fixed") [96 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_resolver_frequencies_on_the_real_stream_match_the_exact_distribution_within_five_sigma(policy: "B-T-post-fixed") [107 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Static_every_decision_attempts_exactly_one_base_beyond_the_base_plan_and_only_a_trailing_runner_can_be_blocked [4 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Static_walkoff_8_every_extra_base_winner_is_an_existing_runner_and_never_the_batter_runner [1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_a_run_made_before_a_non_force_third_out_counts_and_after_it_is_voided_and_the_order_must_be_explicit [2 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_two_outs_the_runner_thrown_out_at_home_is_the_third_out_and_the_batter_runner_is_left_on_base [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_walkoff_2_tied_ninth_runner_on_first_double_extra_base_scores_from_first_and_keeps_the_double [2 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_a_force_out_or_a_batter_runner_out_as_the_third_out_voids_every_run_whatever_the_order [3 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_when_the_play_is_over_the_remaining_contexts_are_void_and_never_moved [1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_blocked_runner_is_thrown_out_conditional_distribution_A_versus_B_when_only_the_extra_base_is_removed [2 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_every_rule_legal_raw_vector_is_accepted_with_exactly_the_record_the_independent_judge_expects [1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_walkoff_5_two_outs_a_runner_out_at_home_and_the_winning_run_in_one_play_depend_on_who_is_decided_first [1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_the_same_runner_cannot_move_twice_and_no_play_can_exceed_three_outs [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Static_the_approved_probabilities_are_the_four_rows_of_the_tuning_json_and_are_not_changed_by_any_policy [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_walkoff_4_two_behind_bases_loaded_double_the_runner_from_first_scoring_is_the_third_run_and_the_winner [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_advancement_changes_the_official_record_so_it_must_be_recomputed_from_the_reducers_final_play [1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Static_the_1314_pending_cases_are_the_C2B2_baseline_and_split_by_decision_count_as_derived_by_hand [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Reducer_building_and_applying_every_vector_leaves_the_state_the_event_was_applied_to_unchanged [14 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_rejection_sampling_may_use_extra_raw_draws_but_the_number_of_calls_stays_fixed_and_replays_are_identical [5 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Static_missing_input_the_game_state_holds_runners_and_defenders_as_ids_only_with_no_speed_or_arm [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_draw_order_changes_which_roll_belongs_to_which_runner_but_not_the_set_of_possible_plays [10 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_sequential_feasibility_in_the_production_key_order_makes_the_trailing_runners_extra_base_impossible [< 1 ms]
+[xUnit.net 00:00:05.87]   Finished:    StarPlayer.Simulation.Tests
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_exact_joint_distribution_of_first_and_second_occupied_with_nobody_out_matches_the_hand_derivation [1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Static_missing_input_the_planning_entry_points_receive_only_the_batter_and_pitcher_sheets [< 1 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_with_attempt_coupling_policies_A_and_B_give_the_same_exact_distribution_in_all_1314_cases [9 ms]
+  Passed StarPlayer.Simulation.Tests.AdvancementPolicy.AdvancementPolicyTests.Harness_skip_consumption_makes_the_final_rng_position_depend_on_the_outcome_and_redraw_can_exceed_the_context_count [14 ms]
+
+Test Run Successful.
+Total tests: 60
+     Passed: 60
+ Total time: 6.1967 Seconds
+
+=== dotnet test tests\StarPlayer.Infrastructure.Tests -c Release --no-build --filter FullyQualifiedName~AdvancementPolicyHandoffTests (normal verbosity) ===
+Test run for E:\Madegame\Star_player\tests\StarPlayer.Infrastructure.Tests\bin\Release\net8.0\StarPlayer.Infrastructure.Tests.dll (.NETCoreApp,Version=v8.0)
+VSTest version 17.11.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.31)
+[xUnit.net 00:00:00.05]   Discovering: StarPlayer.Infrastructure.Tests
+[xUnit.net 00:00:00.17]   Discovered:  StarPlayer.Infrastructure.Tests
+[xUnit.net 00:00:00.18]   Starting:    StarPlayer.Infrastructure.Tests
+[xUnit.net 00:00:00.52]   Finished:    StarPlayer.Infrastructure.Tests
+  Passed StarPlayer.Infrastructure.Tests.AdvancementPolicyHandoffTests.Planning_the_same_real_pitch_again_gives_the_same_draft_plan_and_H1_so_the_C2A_draw_is_unchanged [294 ms]
+  Passed StarPlayer.Infrastructure.Tests.AdvancementPolicyHandoffTests.A_real_pending_advancement_exposes_H1_not_H0_and_building_it_consumed_no_random_number [7 ms]
+  Passed StarPlayer.Infrastructure.Tests.AdvancementPolicyHandoffTests.A_failed_or_cancelled_future_draw_leaves_the_position_unchanged_and_a_retry_from_H1_repeats_the_same_rolls [6 ms]
+  Passed StarPlayer.Infrastructure.Tests.AdvancementPolicyHandoffTests.The_future_draw_from_H1_is_deterministic_touches_only_the_runner_stream_and_never_changes_H1 [5 ms]
+
+Test Run Successful.
+Total tests: 4
+     Passed: 4
+ Total time: 0.8654 Seconds

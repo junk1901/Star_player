@@ -21,6 +21,28 @@ tags:
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
 
+> [!note] 3-C2B-3-P 추가 진루 정책 검증 수행 — 승인 대기 (2026-10-12, `TASK.md`, 기준 HEAD `f669589`)
+> 정책 검증 단계이며 **구현이 아니다**: `src/` 불변, 3-C2B-3·3-C3·Phase 4 미착수, Phase 3 Gate INCOMPLETE, GPT Chat·Codex 검토 `미실시`, 이 문서의 최상위 status는 `검토 대기` 유지, 커밋·푸시 안 함. 자체 판정 `POLICY_READY_FOR_REVIEW`(승인 아님).
+> - **검증(테스트 전용):** 보류 1,314건 재구성(열린 결정 2개는 270건), 원시 행동 벡터 5,562건을 실제 Reducer에 적용(합법 4,722 수락·일치 / 불법 840 중 480 수락), D3 A/B 비교(시도 결합 시 분포 동일), 사건 순서 민감도 318건, 끝내기 8사례, 선수 능력 `MISSING_INPUT`, 실제 `PreparedPitch` RNG 핸드오버(H1→H2) 4건. 신규 테스트 64, 전체 xUnit 1,451 통과(기준 1,387), 변이 검사 9/9(첫 라운드 생존 2건 이력 보존).
+> - **정책 P-01~P-10: 최초 제출 시 모두 `PROPOSED`(현재는 아래 FIX2 참조: P-05만 `OWNER APPROVED`).** 승인 필요 핵심: P-05 사건 순서(득점 인정 여부를 뒤집음), P-08 선수 능력 연결 범위, P-03 D3(A/B), P-07 고정 소비.
+> - 문서: [검증 보고서](../../docs/reports/PHASE_3C2B3_POLICY_VALIDATION_REPORT.md), [정책 결정 초안](../../docs/reports/PHASE_3C2B3_POLICY_DECISION_DRAFT.md), [구현 인수인계 초안](../../docs/reports/PHASE_3C2B3_IMPLEMENTATION_HANDOFF_DRAFT.md).
+
+> [!note] 3-C2B-3-P Codex 리뷰 수정 (2026-10-12) — 재검토 `미실시`, `FIX_READY_FOR_REVIEW`(정책 승인 아님)
+> - FIX-1: `Resolve` 입력(GameState·H0 RNG·현재 타자/투수·튜닝·마지막 발급 순번)과 최신 상태 검증 계약을 인수인계 §6에 정의(`CheckPrepared` 재사용, H0/H1/H2 경계, EventId·영수증 충돌). 실제 Pending 기반 반례 테스트 3건 추가, 전체 xUnit 1,454 통과(직접 실행).
+> - FIX-2: P-05를 프로토타입 순서 정책 v1로 재정의(당시 `OWNER_APPROVAL_REQUIRED` — 이 시점 기록, FIX2에서 정정). `src/` 불변.
+
+> [!note] 3-C2B-3-P FIX2 (2026-10-12) — 문서 계약 정정, 재검토 `미실시`, `FIX2_READY_FOR_REVIEW`(승인 아님)
+> - 이력: 최초 Codex `CHANGES REQUIRED`(보존) → FIX-1 기술 계약 보완 → **P-05 소유자 승인 2026-10-12** → 재검토 Codex가 문서 상태 오류·P-06 이벤트 타입 오류 지적 → FIX2.
+> - FIX2-1: **P-05 `Prototype Sequence Policy v1` = `OWNER APPROVED`**(기존 네 개 맥락 한정, 선행 주자 우선·명시 `Sequence`, 실제 관측 순서·KBO 인증 아님, 시간 기반 모델로 교체 가능). **P-01~P-04·P-06~P-10은 `PROPOSED` 유지, C2B-3-P 전체는 최종 승인 전**, 3-C2B-3 프로덕션·3-C3 미착수, Phase 3 Gate INCOMPLETE. 소유자 승인 ≠ Codex 기술 PASS.
+> - FIX2-2: P-06을 "이벤트 입력 `InPlayResult`(뜬공 아웃은 `Out`) vs Reducer 파생 `BatterResult.SacrificeFly`"로 정정(`GameEvents.cs:26`에 `SacrificeFly` 없음, 파생은 `GameReducer.Plays.cs:383`). `Apply` 뒤 이벤트 수정 금지.
+> - 검증(직접 실행): 핸드오프 7/7, Simulation 정책 60/60, 전체 xUnit 1,454 통과. `src/`·테스트·증거 불변. [검증 보고서 §19](../../docs/reports/PHASE_3C2B3_POLICY_VALIDATION_REPORT.md).
+
+> [!note] 3-C2B-3-P 최종 정책 승인 반영 (2026-10-12) — 구현 승인 아님, `POLICY_DOCUMENTATION_READY`(자체 판정; 승인 아님)
+> - **P-01~P-10 전부 `OWNER APPROVED`**(P-05는 먼저 별도 승인·보존, 나머지는 일괄 승인; 사용자가 채팅으로 기록 확인). 위 FIX2 블록의 "다른 정책 `PROPOSED` 유지"는 그 시점의 기록이다.
+> - 상태: C2B-3-P 정책 소유자 승인 완료 / 구현 전 문서 정합성 점검. **3-C2B-3 프로덕션 `NOT STARTED / NOT AUTHORIZED`, 3-C3 `NOT STARTED`, Phase 3 Gate `INCOMPLETE`.**
+> - 구분: 소유자 정책 승인 ≠ GPT Chat FIX2 보고서 기반 `PASS WITH NOTES`(사용자 전달, 독립 확인 안 함) ≠ Codex 독립 검토(최초 `CHANGES REQUIRED`·FIX1/FIX2 이력 보존, FIX2 이후 Codex PASS 기록 없음 `미실시`).
+> - 반영 문서: 정책 결정 초안·인수인계 초안·[검증 보고서 §20](../../docs/reports/PHASE_3C2B3_POLICY_VALIDATION_REPORT.md)·[ADR-007](../../docs/decisions/ADR-007.md)·[game-engine §25](../../docs/game-engine.md)·SYSTEM_CONTRACTS C08·CURRENT_STATE. `src/`·테스트·이전 증거 불변.
+
 > [!success] 3-C2B-2 최종 승인 완료 (2026-10-12)
 > 작업 패키지 3-C2B-2는 **Codex Medium 집중 재검토 `PASS`**, **GPT Chat 최종 `PASS`**를 받았다. 승인 범위는 **3-C2B-2에만 한정**되며 Phase 3 전체 완료가 아니다(3-C2B-3·3-C3·Phase 4 미착수, **Phase 3 전체 Gate INCOMPLETE**). 이 문서의 최상위 status는 규칙에 따라 `검토 대기`로 유지한다. Commit 진행은 승인됐으나 실제 Commit/Push 결과는 Git 기록이 권위이며 Push는 미승인이다.
 > - 출처 구분: Codex Medium 집중 재검토 `PASS`는 사용자가 ChatGPT 대화에 전달한 독립 리뷰 보고이고, GPT Chat 최종 `PASS`(C2B-2 작업 패키지 한정 최종 승인 및 Git Commit 승인)는 GPT Chat이 실제로 내린 판정이며(2026-10-12 사용자 채팅으로 확인), 전체 xUnit·verify는 Claude Code 실행 결과이다.

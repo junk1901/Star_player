@@ -1,0 +1,26 @@
+Phase 3-C2B-3-P mutation checks. The mutated code is the TEST-ONLY harness / judge / event builder under tests/StarPlayer.Simulation.Tests/AdvancementPolicy/ (production src/ is never touched). One defect at a time; each run = build --no-incremental + the AdvancementPolicy tests; the file is restored afterwards and the project rebuilt.
+
+ROUND HISTORY (kept; nothing was hidden):
+Round 1 (54 AdvancementPolicy tests, first version of the tests):
+  M1 feasibility ignores an occupied target base ........ DETECTED (15 failed)
+  M2 judge forgets the attempt-into-occupied rule ........ SURVIVED (equivalent for the extra-base branch: the final-position rule flagged the same vector; the out-on-an-occupied-base branch was not the one removed)
+  M3 judge counts every run after a third out ............ NOT BUILDABLE (unused variable, CS0219)
+  M4 event builder omits OutAt ........................... NOT BUILDABLE (nullable dereference, CS8602)
+  M5 fixed consumption stops rolling for a void context .. DETECTED (1 failed)
+  M6 policy B maps an impossible draw to Extra ........... SURVIVED  <- a REAL test gap: no test judged what the RESOLVER (real RNG path) produces, only the exact enumeration
+  M7 third out voids the earlier run ..................... DETECTED (10 failed)
+  M8 post-hoc repair skipped .............................. DETECTED (2 failed)
+Fixes after round 1: added Harness_resolver_outputs_stay_inside_the_exact_reachable_set_and_coupled_policies_only_ever_play_legal_accepted_events and Harness_resolver_frequencies_on_the_real_stream_match_the_exact_distribution_within_five_sigma (5 cases) -> 60 tests; M3/M4/M2 re-expressed so they build; an assertion that an extra base onto an occupied third is named ATTEMPT_INTO_OCCUPIED_BASE (not only "two runners on one base").
+Round 2 (60 tests): M2a survived (the assertion above was still missing), M2b / M4 were not buildable as written -> re-expressed.
+Round 3 (60 tests, FINAL; below): 9 of 9 detected.
+
+FINAL ROUND RESULT:
+M1 feasibility ignores an occupied target base: failed=16 passed=44 -> DETECTED
+M2a judge forgets the extra-base-into-occupied-base rule (the final-position rule still sees it): failed=1 passed=59 -> DETECTED
+M2b judge forgets the thrown-out-on-an-occupied-base rule: failed=6 passed=54 -> DETECTED
+M3 judge counts every run even after a third out: failed=1 passed=59 -> DETECTED
+M4 event builder omits OutAt (reducer default from+1): failed=23 passed=37 -> DETECTED
+M5 fixed consumption stops rolling for a void context: failed=1 passed=59 -> DETECTED
+M6 policy B maps an impossible draw to Extra instead of Hold: failed=2 passed=58 -> DETECTED
+M7 judge: third out of a non-force runner voids the earlier run: failed=10 passed=50 -> DETECTED
+M8 post-hoc repair skips the repair: failed=3 passed=57 -> DETECTED
