@@ -44,7 +44,9 @@ public class HiddenTendencyBoundaryTests
          typeof(StarPlayer.Simulation.Baseball.AdvancementAudit), typeof(StarPlayer.Simulation.Baseball.AdvancementDecisionAudit), typeof(StarPlayer.Simulation.Baseball.AdvancementMoveAudit),
          // Phase 3-C3-A adds the authoritative game, its cursor, the staged commit and record and the gate: public types with internal construction, Simulation-internal as well (D-8)
          typeof(StarPlayer.Simulation.Baseball.AuthoritativeGame), typeof(StarPlayer.Simulation.Baseball.GameCursor), typeof(StarPlayer.Simulation.Baseball.StagedCommit),
-         typeof(StarPlayer.Simulation.Baseball.CommitRecord), typeof(StarPlayer.Simulation.Baseball.CommitGate)];
+         typeof(StarPlayer.Simulation.Baseball.CommitRecord), typeof(StarPlayer.Simulation.Baseball.CommitGate),
+         // Phase 3-C3-B adds the pitch entry: its signatures name the prepared pitch and the candidates, so it is Simulation-internal as well
+         typeof(StarPlayer.Simulation.Baseball.PitchCommitGate)];
 
     private static bool IsHidden(Type type) => Mentions(type).Any(t => HiddenTypes.Contains(t));
 

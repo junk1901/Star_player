@@ -9,7 +9,9 @@ namespace StarPlayer.Simulation.Baseball;
 /// The pure first half of confirming an official event (C3-A, game-engine 27.6 and 27.16 O-2 "alternative C"): from the current <see cref="AuthoritativeGame"/> and one
 /// proposed event it computes the next aggregate and the <see cref="CommitRecord"/>, touching nothing shared. A failure or a cancellation changes no state, RNG, id,
 /// revision or last commit. C3-A confirms only events that draw no random number (<see cref="ApproachEvent"/>, <see cref="RunnerPlayEvent"/>,
-/// <see cref="SubstitutionEvent"/>); a pitch event is refused so that no path confirms a pitch without its RNG (C3-B).
+/// <see cref="SubstitutionEvent"/>); a pitch event is refused so that no path confirms a pitch without its RNG. C3-B adds exactly one more way in, the internal
+/// <see cref="CommitEvidence"/> overload used by <see cref="PitchCommitGate"/>: the same steps in the same order, with the evidence's checks at steps 7, 9, 10 and its RNG
+/// position adopted at step 12.
 /// </summary>
 public static class CommitGate
 {
@@ -29,7 +31,15 @@ public static class CommitGate
     /// The same, with a hook that sees each stage name before the cancellation token is checked at it (tests cancel at a chosen stage). Finalize is always the real
     /// <see cref="GameReducer.Finalize"/>; <c>Commit.finalize_failed</c> and <c>Commit.final_state_incomplete</c> are defences the real reducer does not reach.
     /// </summary>
-    internal static Result<StagedCommit> Stage(AuthoritativeGame? expected, GameEvent? gameEvent, Action<string>? checkpoint, CancellationToken cancellation)
+    internal static Result<StagedCommit> Stage(AuthoritativeGame? expected, GameEvent? gameEvent, Action<string>? checkpoint, CancellationToken cancellation) =>
+        Stage(expected, gameEvent, null, checkpoint, cancellation);
+
+    /// <summary>
+    /// The common core (C3-B). Without <paramref name="evidence"/> it is the C3-A gate unchanged. With evidence (only <see cref="PitchCommitGate"/> makes it, per call) a pitch-carrying
+    /// event is allowed and steps 7a/7b, the pitch part of 9, 10a and 10b ask the evidence; the event is then confirmed by the very same reducer re-run, finalization, revision and
+    /// staged commit as any other event. Evidence never replaces a step: it only adds checks.
+    /// </summary>
+    internal static Result<StagedCommit> Stage(AuthoritativeGame? expected, GameEvent? gameEvent, CommitEvidence? evidence, Action<string>? checkpoint, CancellationToken cancellation)
     {
         void At(string name)
         {
@@ -40,15 +50,19 @@ public static class CommitGate
         // 0 cancellation
         At(StageName.Start);
 
-        // 1 the aggregate and the event exist
+        // 1 the aggregate, the candidate (evidence path) and the event exist
         if (expected is null)
             return Fail("Commit.authority_missing", "권위 있는 경기 상태가 없습니다.");
+        if (evidence is { CandidateMissing: true })
+            return Fail("Commit.candidate_missing", "확정할 투구 후보가 없습니다.");
         if (gameEvent is null)
             return Fail("Commit.event_missing", "확정할 사건이 없습니다.");
 
-        // 2 the kind is allowed (C3-A: only events without a random draw)
-        if (gameEvent is not (ApproachEvent or RunnerPlayEvent or SubstitutionEvent))
+        // 2 the kind is allowed: without evidence only events that draw no random number; with evidence only what the evidence covers
+        if (evidence is null && gameEvent is not (ApproachEvent or RunnerPlayEvent or SubstitutionEvent))
             return Fail("Commit.event_kind_not_supported", "이 단계에서는 투구·테이크·인플레이 사건을 확정할 수 없습니다.");
+        if (evidence is not null && !evidence.Covers(gameEvent))
+            return Fail("Commit.event_kind_not_supported", "이 증거로는 이 종류의 사건을 확정할 수 없습니다.");
 
         // 3 the aggregate is consistent
         if (!expected.IsConsistent())
@@ -74,7 +88,14 @@ public static class CommitGate
         if (sequence > expected.LastEventSequence + 1)
             return Fail("Commit.event_sequence_gap", $"사건 순번이 {expected.LastEventSequence + 1}이어야 하는데 {sequence}입니다.");
 
-        // 7 C3-B insertion point: candidate linkage and the unchanged PitchPreparation.CheckPrepared (not implemented in C3-A)
+        // 7a the unchanged preparation check, 7b the binding and the link of the candidate to its source (evidence path only)
+        if (evidence is not null)
+        {
+            if (evidence.CheckPrepared(expected) is { } stale)
+                return Result<StagedCommit>.Failure(stale);
+            if (evidence.CheckLink(expected, gameEvent) is { } link)
+                return Result<StagedCommit>.Failure(link);
+        }
 
         // 8 the same id with a different event
         if (existing is not null)
@@ -89,9 +110,15 @@ public static class CommitGate
         var receipts = step.State.AppliedEvents;
         if (step.WasDuplicate || receipts.Count != expected.State.AppliedEvents.Count + 1 || receipts[^1] != receipt)
             return Fail("Commit.receipt_mismatch", "리듀서가 이 사건의 영수증을 정확히 하나 추가하지 않았습니다.");
+        if (evidence?.CheckApplied(expected.State, step) is { } notCounted)
+            return Result<StagedCommit>.Failure(notCounted);
         At(StageName.Applied);
 
-        // 10 C3-B insertion point: structural preview comparison and the RNG checks (not implemented in C3-A; the three allowed events draw nothing)
+        // 10a the preview against the re-run (it is only compared, never adopted), 10b the RNG evidence; without evidence nothing draws and the position stays
+        if (evidence?.ComparePreview(step) is { } preview)
+            return Result<StagedCommit>.Failure(preview);
+        if (evidence?.CheckRng(expected) is { } rng)
+            return Result<StagedCommit>.Failure(rng);
 
         // 11 a game-ending event is finalized in the same stage
         var next = step.State;
@@ -119,9 +146,9 @@ public static class CommitGate
         cancellation.ThrowIfCancellationRequested();
 
         var revision = expected.Revision + 1;
-        var rngHash = expected.Rng.StateHash;
-        var record = new CommitRecord(gameEvent, receipt, sequence, expected.Revision, revision, rngHash, rngHash, facts, finalized);
-        var published = new AuthoritativeGame(next, expected.Rng, sequence, revision, record);
+        var adopted = evidence?.Final ?? expected.Rng;               // the verified position the candidate carries (H1 or H2); nothing is drawn here
+        var record = new CommitRecord(gameEvent, receipt, sequence, expected.Revision, revision, expected.Rng.StateHash, adopted.StateHash, facts, finalized);
+        var published = new AuthoritativeGame(next, adopted, sequence, revision, record);
         return Result<StagedCommit>.Success(new StagedCommit(expected, published, record));
     }
 
