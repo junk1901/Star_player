@@ -21,6 +21,12 @@ tags:
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
 
+> [!info] 3-C3-B 세부 계약 B-01~B-07 승인 반영 (2026-10-13, `TASK.md` "Phase 3-C3-B 설계 승인 문서 반영", 기준 HEAD `18ed60e` — 문서만, 구현 승인 아님)
+> 소유자가 C3-B 세부 계약 **B-01~B-07을 일괄 승인**했다(날짜는 소유자의 채팅 승인에 근거). D-1~D-8·A~F·O-1~O-9와 C3-A 코드·경계 테스트는 불변. **C3-B 프로덕션 / C3-C는 `NOT STARTED / NOT AUTHORIZED`, Phase 3 Gate `INCOMPLETE`**, 이 문서의 최상위 status는 `검토 대기` 유지. `src/`·`tests/` 불변, 스테이징·커밋·푸시 없음(푸시는 Phase 3 최종 Gate 후 별도 승인), Codex 독립 검토 `미실시`.
+> - 핵심: 대안 A(`PitchCommitGate` → 내부 불변 `CommitEvidence` → 공통 `CommitGate` 코어 → `StagedCommit` → 기존 `GameCursor.Publish`), O-2 순서 불변(7a `CheckPrepared`·7b 원본 연결·10a 구조적 미리보기·10b RNG 증거), 비인플레이·기본 인플레이는 `NextRng` 동일 인스턴스, 해결 인플레이는 감사 H0/H1/H2·`game/runner@1` 대조, 스트림별 `RawDraws` 증분(호출 수와 구분), `GameState`/`GameStep` 전 멤버 비교와 5개 타입 속성 목록 고정 테스트, 신규 오류 5개, `PendingAdvancement` 확정 불가, 해시 일치는 생성 경로 증명 아님.
+> - C3-A 상태: 구현 완료 / GPT Chat 기술 검토 `PASS WITH NOTES` / 로컬 커밋 `18ed60e`. C3-C 인계: M25 생존, 원래 변이 21건 최종 트리 미재실행.
+> - 문서: [game-engine §27.18](../../docs/game-engine.md), [ADR-007](../../docs/decisions/ADR-007.md), [결정 기록](../02_Decisions/2026-10-13_C3_Design_Approval.md).
+
 > [!info] 3-C3-A 구현 완료·검토 대기 (2026-10-13, `TASK.md` "Phase 3-C3-A 프로덕션 구현 지시서", 기준 HEAD `7456f44`) — 승인 아님
 > `AuthoritativeGame`·`CommitRecord`·`StagedCommit`·`CommitGate.Stage`·`GameCursor.Publish`를 승인된 계약(O-1~O-9)대로 구현했다. 신규 67 테스트(Finalize 교체 훅 제거로 69에서 2건 삭제), 전체 xUnit 1,580 통과(실행 결과), 결함 주입은 원래 26건 중 21건 최초 트리 결과·5건 재실행(M25 생존)·신규 M26 검출(보고서 §15·§25). **GPT Chat 기술 검토 `GPT_CHAT_TECHNICAL_PASS_WITH_NOTES`(소유자 전달; 이 문서의 최상위 status는 `검토 대기` 유지)**, C3-C 확인 사항: M25 방어 분기 커버리지 한계, `verify.ps1` 결과는 [보고서](../../docs/reports/PHASE_3C3A_REPORT.md) §16. **C3-B / C3-C / Phase 4는 `NOT STARTED / NOT AUTHORIZED`, Phase 3 Gate `INCOMPLETE`**, 이 문서의 최상위 status는 `검토 대기` 유지, GPT Chat·Codex 검토 `미실시`, 스테이징·커밋·푸시 안 함.
 

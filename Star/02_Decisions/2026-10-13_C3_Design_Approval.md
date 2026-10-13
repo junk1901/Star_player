@@ -1,7 +1,7 @@
 ---
 type: decision
 date: "2026-10-13"
-status: 소유자 승인 (설계 D-1~D-8·계약 A~F + C3-A 세부 계약 O-1~O-9, 문서만 — 구현 승인 아님)
+status: 소유자 승인 (설계 D-1~D-8·계약 A~F + C3-A 세부 계약 O-1~O-9 + C3-B 세부 계약 B-01~B-07, 문서만 — C3-B 구현 승인 아님)
 related_phase: "03"
 tags:
   - star-player
@@ -82,4 +82,23 @@ D-1~D-8 `OWNER APPROVED` · C3 설계 및 계약 `OWNER APPROVED` · C3-A/B/C `N
 
 **상태.** O-1~O-9 `OWNER APPROVED` · C3-A 세부 계약 `OWNER APPROVED` (문서) · D-1~D-8 `OWNER APPROVED` (불변) · C3-A 프로덕션 `NOT STARTED / NOT AUTHORIZED` · C3-B `NOT STARTED / NOT AUTHORIZED` · C3-C `NOT STARTED / NOT AUTHORIZED` · Phase 3 Gate `INCOMPLETE`.
 
-**아직 열려 있는 항목(여기서 결정하지 않음).** 구조적 비교 픽스처 목록(C3-B), `CommitRecord`·`GameStatDelta`의 Phase 4 영속 필드, ROADMAP 3-F 라벨과 D-4의 정합(소유자). 위 "구현 전 남은 결정" 중 오류 코드·우선순위, 비정규 ID가 섞인 복원 이력 검사, CAS 보관 타입은 C3-A 범위에서 이 절로 해소됐다(원문은 이력으로 보존).
+**아직 열려 있는 항목(여기서 결정하지 않음).** 구조적 비교 픽스처 목록(C3-B), `CommitRecord`·`GameStatDelta`의 Phase 4 영속 필드, ROADMAP 3-F 라벨과 D-4의 정합(소유자). 위 "구현 전 남은 결정" 중 오류 코드·우선순위, 비정규 ID가 섞인 복원 이력 검사, CAS 보관 타입은 C3-A 범위에서 이 절로 해소됐다(원문은 이력으로 보존). *(2026-10-13 후속: 구조적 비교 픽스처 목록은 아래 C3-B 절 B-03·B-06으로 해소. 이 문단의 C3-A 상태 표기는 그 시점 기록이며, C3-A 프로덕션은 이후 구현·GPT Chat 기술 검토 `PASS WITH NOTES`·로컬 커밋 `18ed60e`.)*
+
+## C3-B 세부 계약 B-01~B-07 승인 (2026-10-13, `TASK.md` "Phase 3-C3-B 설계 승인 문서 반영", 기준 HEAD `18ed60e` — 문서만)
+
+> [!warning] 계약 승인 ≠ 구현 승인
+> 소유자가 B-01~B-07을 일괄 승인했다(날짜는 소유자의 채팅 승인에 근거; `TASK.md` 수정 시각은 증거가 아님). **C3-B 프로덕션·C3-C는 `NOT STARTED / NOT AUTHORIZED`, Phase 3 Gate `INCOMPLETE`.** D-1~D-8·A~F·O-1~O-9와 C3-A 코드·경계 테스트는 바뀌지 않는다. 직전 읽기 전용 구현 전 분석은 세션 보고서(실행 없이 HEAD `18ed60e` 코드를 읽은 결과)이며, 권고와 승인 내용이 다르면 승인 내용이 우선한다. Codex 독립 검토 `미실시`. GitHub Push는 Phase 3 최종 Gate 후 소유자의 별도 승인으로만.
+
+상세 계약은 [game-engine §27.18](../../docs/game-engine.md)이 기준이며, 아래는 결정과 이유만 적는다. 근거: [ADR-007 "Decisions (3-C3-B detailed contract approval)"](../../docs/decisions/ADR-007.md).
+
+| ID | 결정 | 이유 · 기존 계약과의 관계 |
+|---|---|---|
+| B-01 | 비인플레이 `(PreparedPitch, NonInPlayPitchCandidate)` 쌍(타입 변경 없음), 인플레이 `Plan.Prepared`. 비인플레이·기본 인플레이는 후보 `NextRng`가 `Draft.NextRng`와 **같은 인스턴스**, 해결 인플레이는 감사(H0/H1/H2 해시·`game/runner@1`·결정·맥락 수·논리/원시 추첨 수·이벤트 일치·해결 여부)로 연결. 기록된 사실로 결정적 재구성은 검토, 원 추첨 재실행은 제외. `PendingAdvancement` 확정 불가 | 해시는 같은 추첨 수의 다른 준비를 구별하지 못함. 계약 D(쌍)·27.9 유지 |
+| B-02 | 스트림별 `RawDraws` 증분 검증(H0→H1 초안 사용량, H1→H2 진루 상세, 나머지 0), 호출 수와 RawDraws 구분, `Commit.rng_evidence_mismatch`(실패 스트림·항목을 메시지에) | `Restore`가 추첨 수에 대한 유일한 위치를 증명. 생성 경로는 증명하지 않음(신뢰 경계 기록). 계약 C 유지 |
+| B-03 | `GameState`·`GameStep` 모든 멤버 구조 비교(중첩 컬렉션 내용·순서), 5개 타입 속성 목록 고정 테스트, `Commit.preview_mismatch`(첫 차이 경로) | D-7 전체 범위. 재실행 결과만 채택 |
+| B-04 | **대안 A**: `PitchCommitGate` → 내부 불변 `CommitEvidence` → 공통 `CommitGate` 코어 → `StagedCommit` → 기존 `GameCursor.Publish`. 순서 O-2 대안 C(7a `CheckPrepared`, 7b 연결, 10a 미리보기, 10b RNG) | C3-A 경계 테스트 6건이 `CommitGate`를 고정하므로 B(테스트 약화)·C(partial, 리플렉션 실패) 기각. 증거는 결속·1회성·범용 토큰 금지·조기 검사 금지. 공통 코어임을 구조·테스트로 입증 |
+| B-05 | 신규 5개: `Commit.candidate_missing`·`candidate_link_mismatch`·`preview_mismatch`·`rng_evidence_mismatch`·`pitch_count_invalid`; `Commit.receipt_mismatch` 재사용(ef2·위치 포함) | 빌더 코드는 빌더 소속(O-1). 기존 `CheckPrepared`·`Id.*`·`Rng.*`·`Game.*` 코드·순서 불변 |
+| B-06 | 정상·실패·경쟁·취소 매트릭스(§27.18), 위조는 기존 internal 테스트 경계에서만, 프로덕션 우회 API 없음, C3-A 67·전체 1,580·`verify.ps1` 2회 회귀 | M25 생존·변이 21건 미재실행은 C3-C 인계 |
+| B-07 | Simulation 내부, 새 진입 타입만 `HiddenTendencyBoundaryTests`에 추가, PA 루프·생성기 재설계·Reducer/RNG/진루 규칙 변경·SQLite·Repository·UI·Phase 4·C3-C 하네스 제외 | D-8 유지 |
+
+**상태.** B-01~B-07 `OWNER APPROVED`(문서) · D-1~D-8·O-1~O-9 `OWNER APPROVED`(불변) · C3-A 프로덕션 구현 완료 / GPT Chat 기술 검토 `PASS WITH NOTES` / 로컬 커밋 `18ed60e` · C3-B 프로덕션 `NOT STARTED / NOT AUTHORIZED` · C3-C `NOT STARTED / NOT AUTHORIZED` · Phase 3 Gate `INCOMPLETE`.
