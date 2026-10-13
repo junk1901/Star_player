@@ -41,7 +41,10 @@ public class HiddenTendencyBoundaryTests
          typeof(StarPlayer.Simulation.Baseball.BaseInPlayPlan), typeof(StarPlayer.Simulation.Baseball.InPlayAudit), typeof(StarPlayer.Simulation.Baseball.InPlayPlanOutcome),
          typeof(StarPlayer.Simulation.Baseball.InPlayPitchCandidate), typeof(StarPlayer.Simulation.Baseball.PendingAdvancement),
          // Phase 3-C2B-3 adds the advancement audit (exact rolls, RNG hashes, drawn versus applied results), which is Simulation-internal as well
-         typeof(StarPlayer.Simulation.Baseball.AdvancementAudit), typeof(StarPlayer.Simulation.Baseball.AdvancementDecisionAudit), typeof(StarPlayer.Simulation.Baseball.AdvancementMoveAudit)];
+         typeof(StarPlayer.Simulation.Baseball.AdvancementAudit), typeof(StarPlayer.Simulation.Baseball.AdvancementDecisionAudit), typeof(StarPlayer.Simulation.Baseball.AdvancementMoveAudit),
+         // Phase 3-C3-A adds the authoritative game, its cursor, the staged commit and record and the gate: public types with internal construction, Simulation-internal as well (D-8)
+         typeof(StarPlayer.Simulation.Baseball.AuthoritativeGame), typeof(StarPlayer.Simulation.Baseball.GameCursor), typeof(StarPlayer.Simulation.Baseball.StagedCommit),
+         typeof(StarPlayer.Simulation.Baseball.CommitRecord), typeof(StarPlayer.Simulation.Baseball.CommitGate)];
 
     private static bool IsHidden(Type type) => Mentions(type).Any(t => HiddenTypes.Contains(t));
 

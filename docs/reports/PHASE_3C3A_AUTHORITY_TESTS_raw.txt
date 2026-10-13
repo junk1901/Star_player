@@ -1,0 +1,12 @@
+  복원할 프로젝트를 확인하는 중...
+  복원할 모든 프로젝트가 최신 상태입니다.
+  StarPlayer.Domain -> E:\Madegame\Star_player\src\StarPlayer.Domain\bin\Debug\net8.0\StarPlayer.Domain.dll
+  StarPlayer.Simulation -> E:\Madegame\Star_player\src\StarPlayer.Simulation\bin\Debug\net8.0\StarPlayer.Simulation.dll
+  StarPlayer.Simulation.Tests -> E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\bin\Debug\net8.0\StarPlayer.Simulation.Tests.dll
+E:\Madegame\Star_player\tests\StarPlayer.Simulation.Tests\bin\Debug\net8.0\StarPlayer.Simulation.Tests.dll(.NETCoreApp,Version=v8.0)에 대한 테스트 실행
+VSTest 버전 17.11.1 (x64)
+
+테스트 실행을 시작하는 중입니다. 잠시 기다려 주세요...
+지정된 패턴과 일치한 총 테스트 파일 수는 1개입니다.
+
+통과!  - 실패:     0, 통과:    67, 건너뜀:     0, 전체:    67, 기간: 940 ms - StarPlayer.Simulation.Tests.dll (net8.0)

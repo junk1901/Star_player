@@ -1,0 +1,46 @@
+Phase 3-C3-A fault-injection record (Claude Code, 2026-10-13, base HEAD 7456f44). Each mutant was applied to ONE line of the production file, the 69 Authority tests were run
+(dotnet test tests/StarPlayer.Simulation.Tests --filter FullyQualifiedName~Authority), and the file was restored byte-for-byte afterwards (cmp against a backup).
+"FAIL n" = the suite failed with n failing tests (mutant detected). Numbers are copied from the console summary of each run.
+
+Round 1
+M1  CAS replaced by a plain assignment                       FAIL 2
+M3  Revision raised by 2 instead of 1                        FAIL 12
+M6  sequence gap check off by one                            FAIL 2
+M8  cancellation check added after the swap                  FAIL 1
+M10 next aggregate gets a copied RNG snapshot (not the ref)  FAIL 4
+M12 evidence-without-receipt check disabled                  FAIL 1
+M13 id check moved before the kind check                     FAIL 1
+(M2, M4, M5, M9, M11 as first written used `if (false)`, which the compiler rejects (unreachable code, warnings are errors): BUILD ERROR, not a result; redone in round 2.)
+(M7 as first written was a semantically EQUIVALENT mutant (`Final is not null && Final is {...}`): 69 passed, 0 failed. It is not a survivor of real behaviour; replaced by M7a/M7b.)
+
+Round 2 (condition replaced by `Environment.ProcessId < 0`, always false)
+M2   stale check (ReferenceEquals Expected/Current) removed   FAIL 4
+M4   Finalize skipped for a finished game                     FAIL 4
+M5   already_committed check disabled                         FAIL 4
+M7a  final score not compared in the completeness rule        FAIL 1
+M7b  final GameId not compared in the completeness rule       FAIL 1
+M9   pitch/take/in-play kinds allowed                         FAIL 4
+M11  restore: sequence gap check removed                      FAIL 2
+M14  restore: repeated sequence check removed                 FAIL 1
+M15  receipt_mismatch check removed                           FAIL 1
+M16  event_id_in_use check removed                            FAIL 3
+M17  event_game_mismatch never reported                       FAIL 2
+M18  revision_exhausted check removed                         FAIL 2
+M19  GameCompleted fact added twice                           FAIL 1
+M20  cancellation check inside the stage hook removed         FAIL 1
+M21  restore: receipt form not checked                        FAIL 1
+M22  restore: last sequence vs receipt count not checked      FAIL 1
+M23  restore: RNG context vs GameId not checked               FAIL 2
+M24  gate: aggregate consistency check removed                FAIL 1
+M25  gate: finalize completeness check removed                FAIL 1
+
+Result: 26 real mutants (7 + 19), 26 detected, 0 survivors; 1 equivalent mutant identified and replaced. Production files restored (cmp identical to the pre-mutation copies).
+
+Round 3 (after the removal of the Finalize replacement hook; 67 Authority tests; 2026-10-13; only mutants touching Finalize / the final-state rule were re-run)
+M4   Finalize skipped for a finished game                     FAIL 3
+M7a  final score not compared in the completeness rule        FAIL 1
+M7b  final GameId not compared in the completeness rule       FAIL 1
+M19  GameCompleted fact added twice                           FAIL 1
+M25  gate: finalize completeness check removed                SURVIVES (67 passed, 0 failed): its only detector was the removed injection test; the branch is unreachable with the real reducer
+M26  (new) Finalize result discarded, Apply state adopted     FAIL 1
+The other 21 original mutants of rounds 1 and 2 (M1 M2 M3 M5 M6 M8 M9 M10 M11 M12 M13 M14 M15 M16 M17 M18 M20 M21 M22 M23 M24) do not involve Finalize and were not re-run; their results above are from the first-delivery tree (69 tests). M26 is new and is not one of the original 26. Production files restored byte-for-byte after each mutant.
