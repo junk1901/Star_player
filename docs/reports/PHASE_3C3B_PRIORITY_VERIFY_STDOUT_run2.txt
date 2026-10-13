@@ -1,0 +1,25 @@
+﻿[PASS] .NET SDK matches global.json (exit=0) SDK 8.0.425
+[PASS] Godot .NET present (exit=0) 4.7.2.stable.mono.official.ed1daf0bf
+[PASS] Export templates installed and byte-identical to the official archive (exit=0) 4.7.2.stable.mono
+[PASS] Release build (all 9 projects) (exit=0) warnings=0
+[PASS] Solutions map Release->Release and Debug->Debug for every project (exit=0) 
+[PASS] Client builds in the requested configuration into its own output path (exit=0) Release -> E:\Madegame\Star_player\game\.godot\mono\temp\bin\Release\StarPlayer.Client.dll (Optimize=true, not older than sources); Debug output untouched (Optimize=false); ExportRelease Optimize=true
+[PASS] Domain tests (exit=0) passed=263 failed=0 skipped=0 godot_processes=0
+[PASS] Simulation tests (exit=0) passed=697 failed=0 skipped=0 godot_processes=0
+[PASS] Application tests (includes architecture dependency checks) (exit=0) passed=117 failed=0 skipped=0 godot_processes=0
+[PASS] Architecture boundary tests (project refs, compiled client refs, presenter sources) (exit=0) passed=14 failed=0 skipped=0 godot_processes=0
+[PASS] Simulation determinism detector tests (exit=0) passed=48 failed=0 skipped=0 godot_processes=0
+[PASS] Infrastructure tests (real SQLite integration) (exit=0) passed=664 failed=0 skipped=0 godot_processes=0
+[PASS] Godot builds the C# solution headless (exit=0) 
+[PASS] Godot headless launch runs SQLite diagnostics (exit=0) 진단 결과: 통과 (8/8 단계)
+[PASS] Godot headless: Phase 1 player card self-check (7/7), no hidden-field leaks (exit=0) hidden_identifier_leaks=0 listed_players=10 own_player_cards=1
+[PASS] Godot headless: Phase 2 scripted games stepped to the end, box scores match independent expected results (7/7) (exit=0) games=6 finished_with_box_score=6 self_check=PASS
+[PASS] Windows Desktop release export (exit=0) bundled native: e_sqlite3.dll
+[PASS] Export is fresh and built from the ExportRelease configuration (exit=0) export folder recreated this run (pck 23:48:08); client DLL SHA-256 identical to ExportRelease publish output and different from Debug
+[PASS] Exported program: shell opens, SQLite commit/rollback/FK/backup/reopen pass (cold copy) (exit=0) screenshot=True; 진단 결과: 통과 (8/8 단계)
+[PASS] Exported program: Phase 1 player card at QHD (cold copy, embedded fictional pack, screenshots) (exit=0) screenshots=True
+[PASS] Exported program: Phase 2 game screen at QHD (cold copy, embedded fictional games, screenshots) (exit=0) screenshots=True
+[PASS] Relative markdown links in root docs, docs/ and Star/ resolve (exit=0) 124 files checked
+[INFO] Changed files vs HEAD (informational; no commit is made by this script) (exit=0) 14 entries
+[INFO] Build-server processes started during this run and still alive (informational, not part of the gate) (exit=0) none
+GATE: PASS

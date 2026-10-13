@@ -1,7 +1,7 @@
 ---
 type: decision
 date: "2026-10-13"
-status: 소유자 승인 (설계 D-1~D-8·계약 A~F + C3-A 세부 계약 O-1~O-9 + C3-B 세부 계약 B-01~B-07, 문서만 — C3-B 구현 승인 아님)
+status: 소유자 승인 (설계 D-1~D-8·계약 A~F + C3-A 세부 계약 O-1~O-9 + C3-B 세부 계약 B-01~B-07 + C3-C 검증 설계 OD-1~OD-4) — 승인은 수행이 아님; C3-A·C3-B 구현 완료(PASS WITH NOTES), C3-C NOT STARTED / NOT AUTHORIZED
 related_phase: "03"
 tags:
   - star-player
@@ -102,3 +102,25 @@ D-1~D-8 `OWNER APPROVED` · C3 설계 및 계약 `OWNER APPROVED` · C3-A/B/C `N
 | B-07 | Simulation 내부, 새 진입 타입만 `HiddenTendencyBoundaryTests`에 추가, PA 루프·생성기 재설계·Reducer/RNG/진루 규칙 변경·SQLite·Repository·UI·Phase 4·C3-C 하네스 제외 | D-8 유지 |
 
 **상태.** B-01~B-07 `OWNER APPROVED`(문서) · D-1~D-8·O-1~O-9 `OWNER APPROVED`(불변) · C3-A 프로덕션 구현 완료 / GPT Chat 기술 검토 `PASS WITH NOTES` / 로컬 커밋 `18ed60e` · C3-B 프로덕션 `NOT STARTED / NOT AUTHORIZED` · C3-C `NOT STARTED / NOT AUTHORIZED` · Phase 3 Gate `INCOMPLETE`.
+
+(이전 상태 — 위 C3-B 계약 승인 시점 기준. 2026-10-14 현재 상태는 아래 최종 절.)
+
+## C3-B 구현 완료 기록 · C3-C 검증 설계 OD-1~OD-4 승인 (2026-10-14, `TASK.md` "Phase 3-C3-C-0 문서 Closeout 및 검증 증거 보완", 기준 HEAD `8ed806f` — 문서만)
+
+> [!warning] 승인 ≠ 수행
+> OD-1~OD-4는 **소유자 승인 완료**지만 관련 구현·검증은 **아직 수행되지 않았다.** 승인 일시는 `TASK.md`에 기록돼 있지 않으며 이 절은 2026-10-14에 반영한 기록이다(날짜는 승인 시각의 증거가 아님). 이번 반영에서 코드·테스트·verify·Mutation 실행, 스테이징·커밋·푸시, Codex 호출은 없었다.
+
+**C3-B 구현.** 승인된 B-01~B-07이 계약 변경 없이 구현됐고 로컬 커밋 `8ed806f`(푸시 안 함)로 기록됐다. 기술 검토 `PASS WITH NOTES`는 소유자 전달 내용(검토 원문은 저장소에 없음), Codex 검토 `미실시`. 사후 Closeout 보고서: [PHASE_3C3B_REPORT](../../docs/reports/PHASE_3C3B_REPORT.md)(과거 원본의 재현이 아니며 증거 유형을 항목별로 표시). 상태 기록: [game-engine §27.19](../../docs/game-engine.md).
+
+| ID | 결정 (승인 완료) | 수행 상태 |
+|---|---|---|
+| OD-1 | C3-B Closeout을 C3-C-0 별도 문서 작업으로 분리 | C3-C-0 문서 반영으로 수행(이 절·보고서). 증거 일부는 `SUMMARY_ONLY`/`MISSING` |
+| OD-2 | C3-C 테스트 어셈블리 안의 제한된 고정 스크립트 연쇄 Fixture: 고정된 합법 이벤트 시퀀스·길이 제한·기존 `CommitGate`/`GameCursor` API·같은 Cursor에서 연속 확정·다음 후보는 `Cursor.Current`에서 준비. 금지: 경기 정책 결정 엔진, 새 PA 자동 진행기, 100,000 PA 실행기, Production 자동 루프 | 미착수 |
+| OD-3 | M7/M25는 전제 고정 테스트와 Codex 독립 리뷰를 조건으로 한 **잠정 비차단 NOTE**(무조건 PASS 아님). 도달 가능한 실제 위험이 확인되면 재분류 | 미착수 |
+| OD-4 | C3-A 초기 변이 21건 전체 재검증, M9/M10/M13을 현재 코드에 맞춰 재정의, 기존 변이 원본과 신규 정의 구별, C3-B 변이는 원본이 없으면 신규 정의로 재실행, 실제 Patch Diff 보존 | 미착수 |
+
+TC-08 재생 동등성 테스트는 Fixture에 보존된 실제 Event 본문을 사용하며 `EventReceipt`만으로 본문을 복원하지 않는다.
+
+**증거 공백(숨기지 않음).** 보존한 원본은 Priority verify Run 1/2 로그·stdout과 트리 매니페스트(Commit 이전 `654b5d9` dirty 트리에서 실행, Commit 이후 verify 없음). 전체 xUnit 단독 원본, Authority 67/77, C3-B 변이 13건(12건 검출, M7 생존) 원본은 없다(`SUMMARY_ONLY`/`MISSING`).
+
+**상태.** C3-A 설계·구현 `COMPLETE / PASS WITH NOTES`(`18ed60e`) · C3-B 설계 `OWNER APPROVED` · C3-B 구현 `COMPLETE / PASS WITH NOTES`(로컬 커밋 `8ed806f`) · C3-C OD-1~OD-4 `OWNER APPROVED` · C3-C 통합 테스트 구현 `NOT STARTED / NOT AUTHORIZED` · C3-C 변이 재실행 `NOT STARTED / NOT AUTHORIZED` · Codex Medium 리뷰 `NOT AUTHORIZED` · Phase 3 Gate `INCOMPLETE` · GitHub Push는 Phase 3 최종 Gate 후 소유자의 별도 승인.

@@ -10,7 +10,7 @@ reviewed_by: ""
 branch: "main"
 commit: "3-C2A: 'feat: add phase 3c2a deterministic pitch branch resolver' (기준 HEAD d3570b76e93246076253681568b709d3ea1d5a3b 다음 커밋; SHA는 git log 참조 — 문서가 자기 커밋 SHA를 담을 수 없음; 3-C1은 d3570b7)"
 roadmap_anchor: "phase-3--seeded-game-simulation--prototype-1"
-last_updated: "2026-10-13"
+last_updated: "2026-10-14"
 tags:
   - star-player
   - phase-review
@@ -21,7 +21,15 @@ tags:
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
 
-> [!info] 3-C3-B 세부 계약 B-01~B-07 승인 반영 (2026-10-13, `TASK.md` "Phase 3-C3-B 설계 승인 문서 반영", 기준 HEAD `18ed60e` — 문서만, 구현 승인 아님)
+> [!info] 3-C3-B 구현 완료 기록 · C3-C-0 문서 Closeout (2026-10-14, `TASK.md` "Phase 3-C3-C-0 문서 Closeout 및 검증 증거 보완", 기준 HEAD `8ed806f` — 문서만)
+> C3-B 프로덕션 구현은 **완료 / PASS WITH NOTES / 로컬 커밋 `8ed806f`**(푸시 안 함)로 기록한다. 기술 검토 `PASS WITH NOTES`는 소유자 전달 내용이며 검토 문서 원문은 저장소에 없다. 이 문서의 최상위 status는 **`검토 대기` 유지**(Phase 3 전체 검토 완료 아님), **Phase 3 Gate `INCOMPLETE`**, `승인 완료`로 바꾸지 않았다. 이번 단계에서 코드·테스트·verify·Mutation을 실행하지 않았고 스테이징·커밋·푸시·Codex 호출을 하지 않았다.
+> - 사후 Closeout 보고서: [PHASE_3C3B_REPORT](../../docs/reports/PHASE_3C3B_REPORT.md) — 과거 원본의 재현이 아니며 증거 유형(RAW_AVAILABLE / SUMMARY_ONLY / MISSING / DERIVED_VERIFICATION)을 항목별로 표시.
+> - 보존한 원본: Priority verify Run 1/2 로그·stdout, 트리 매니페스트 2개와 생성 스크립트(SHA-256 대조 일치). 두 verify는 Commit 이전 `654b5d9` dirty 트리에서 실행됐고 Commit 이후 verify는 없다. 현재 트리 해시 재계산은 매니페스트와 경로+해시 차이 0건(DERIVED).
+> - 원본 없음: 전체 xUnit 단독 원본(프로젝트별 수는 verify 로그에 있음, 합계 1,741), Authority 67/77 실행 원본, C3-B 변이 13건 중 12건 검출·M7 생존 원본.
+> - C3-C 인계: M7·M25 잠정 비차단 NOTE, C3-A 원래 변이 21건 최종 트리 미재실행, M9/M10/M13 재정의, C3-B 변이 재정의·재실행, Codex Medium 리뷰 필요. 소유자는 OD-1~OD-4를 승인했으나 **승인은 수행이 아니다**(C3-C 통합 테스트·변이 재실행 `NOT STARTED / NOT AUTHORIZED`).
+> - 문서: [game-engine §27.19–27.20](../../docs/game-engine.md), [ADR-007](../../docs/decisions/ADR-007.md), [결정 기록](../02_Decisions/2026-10-13_C3_Design_Approval.md).
+
+> [!info] (이전 상태) 3-C3-B 세부 계약 B-01~B-07 승인 반영 (2026-10-13, `TASK.md` "Phase 3-C3-B 설계 승인 문서 반영", 기준 HEAD `18ed60e` — 문서만, 구현 승인 아님)
 > 소유자가 C3-B 세부 계약 **B-01~B-07을 일괄 승인**했다(날짜는 소유자의 채팅 승인에 근거). D-1~D-8·A~F·O-1~O-9와 C3-A 코드·경계 테스트는 불변. **C3-B 프로덕션 / C3-C는 `NOT STARTED / NOT AUTHORIZED`, Phase 3 Gate `INCOMPLETE`**, 이 문서의 최상위 status는 `검토 대기` 유지. `src/`·`tests/` 불변, 스테이징·커밋·푸시 없음(푸시는 Phase 3 최종 Gate 후 별도 승인), Codex 독립 검토 `미실시`.
 > - 핵심: 대안 A(`PitchCommitGate` → 내부 불변 `CommitEvidence` → 공통 `CommitGate` 코어 → `StagedCommit` → 기존 `GameCursor.Publish`), O-2 순서 불변(7a `CheckPrepared`·7b 원본 연결·10a 구조적 미리보기·10b RNG 증거), 비인플레이·기본 인플레이는 `NextRng` 동일 인스턴스, 해결 인플레이는 감사 H0/H1/H2·`game/runner@1` 대조, 스트림별 `RawDraws` 증분(호출 수와 구분), `GameState`/`GameStep` 전 멤버 비교와 5개 타입 속성 목록 고정 테스트, 신규 오류 5개, `PendingAdvancement` 확정 불가, 해시 일치는 생성 경로 증명 아님.
 > - C3-A 상태: 구현 완료 / GPT Chat 기술 검토 `PASS WITH NOTES` / 로컬 커밋 `18ed60e`. C3-C 인계: M25 생존, 원래 변이 21건 최종 트리 미재실행.

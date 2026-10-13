@@ -1,0 +1,7 @@
+docs/reports/PHASE_3C3B_PRIORITY_VERIFY_LOG_run1.md -text whitespace=cr-at-eol
+docs/reports/PHASE_3C3B_PRIORITY_VERIFY_LOG_run2.md -text whitespace=cr-at-eol
+docs/reports/PHASE_3C3B_PRIORITY_VERIFY_STDOUT_run1.txt -text whitespace=cr-at-eol,-blank-at-eol
+docs/reports/PHASE_3C3B_PRIORITY_VERIFY_STDOUT_run2.txt -text whitespace=cr-at-eol,-blank-at-eol
+docs/reports/PHASE_3C3B_TREE_MANIFEST_snap0_before_run1.txt -text whitespace=cr-at-eol
+docs/reports/PHASE_3C3B_TREE_MANIFEST_snap3_before_commit.txt -text whitespace=cr-at-eol
+docs/reports/PHASE_3C3B_TREE_MANIFEST_snap.ps1.txt -text whitespace=cr-at-eol

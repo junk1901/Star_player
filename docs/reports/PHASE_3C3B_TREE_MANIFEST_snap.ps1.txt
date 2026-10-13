@@ -1,0 +1,7 @@
+﻿param([string]$Out)
+Set-Location E:\Madegame\Star_player
+$files = Get-ChildItem src,tests,game -Recurse -File | Where-Object { $_.FullName -notmatch '\\(bin|obj|\.godot)\\' -and $_.Extension -in '.cs','.csproj','.json','.tscn','.gd','.props','.targets' } | Sort-Object FullName
+$lines = $files | ForEach-Object { '{0} {1}' -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash, $_.FullName.Substring(25) }
+Set-Content $Out $lines -Encoding UTF8
+$all = (Get-FileHash $Out -Algorithm SHA256).Hash
+"count=$($files.Count) manifestSha=$all"
