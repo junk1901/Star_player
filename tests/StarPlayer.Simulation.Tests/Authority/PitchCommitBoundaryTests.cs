@@ -149,7 +149,7 @@ public class PitchCommitBoundaryTests
 
     [Fact]
     public void The_game_state_members_are_pinned() =>
-        Pinned(["Approach", "Away", "AwayLine", "AwayRuns", "AppliedEvents", "Bases", "Count", "Final", "GameId", "Half", "Home", "HomeLine", "HomeRuns", "Inning", "NextRunnerKey", "Outcome", "Outs",
+        Pinned(["Approach", "Away", "AwayLine", "AwayRuns", "AppliedEvents", "Bases", "Count", "Execution", "Final", "GameId", "Half", "Home", "HomeLine", "HomeRuns", "Inning", "NextRunnerKey", "Outcome", "Outs",
             "Plays", "Rules", "Stage", "Stats", "Status", "Substitutions", "WalkChargeOverride"], typeof(GameState));
 
     [Fact]

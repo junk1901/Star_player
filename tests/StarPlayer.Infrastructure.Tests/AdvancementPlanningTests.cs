@@ -764,14 +764,24 @@ public class AdvancementPlanningTests
         var root = Root;
         var sources = new[] { "AdvancementTypes.cs", "AdvancementRules.cs", "AdvancementPlanning.cs", "AdvancementEventBuilder.cs" }
             .Select(f => File.ReadAllText(Path.Combine(root, "src", "StarPlayer.Simulation", "Baseball", f))).ToList();
+        // Phase 3-D v2 (owner decisions R2-R4, S3): policy v2 hands the current runner's Speed and the Retriever's Arm to the stage - but ONLY through AdvancementSlots.cs, the one file that builds
+        // them. None of these four files builds an input or reads a rating, and the planner passes `inputs` only when the game pinned advancement-policy-v2; policy v1 (this test's subject,
+        // P-08) still hands the stage nothing at all.
         foreach (var source in sources)
         {
-            Assert.DoesNotContain("ModifierInput", source);
+            Assert.DoesNotContain("ModifierInput.", source);
             Assert.DoesNotContain("Ratings", source.Replace("PlayerSheet", ""));
             Assert.DoesNotContain(".Speed", source);
             Assert.DoesNotContain(".Arm", source);
             Assert.DoesNotContain("PlayerState", source);
         }
+
+        foreach (var source in new[] { sources[0], sources[1], sources[3] })
+            Assert.DoesNotContain("ModifierInput", source);                                              // only the planner's signature-level list type may name it
+        var planning = sources[2];
+        Assert.Contains("var policy = original.Execution?.AdvancementPolicyVersion ?? AdvancementPolicy.Version;", planning);
+        Assert.Contains("IReadOnlyList<ModifierInput>? inputs = null;", planning);                       // neutral unless the pinned policy is v2
+        Assert.Contains("if (policy == AdvancementPolicy.VersionV2)", planning);
 
         // and it never changes an approved number: the tuning file is byte-identical to what the policy validation used
         Assert.Equal("5b70dca79ec3a3c815f741b57c4c4490e93c5bcdca19900ad452732c66d73ea5", Tuning.ContentHash);

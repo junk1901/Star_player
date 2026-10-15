@@ -186,12 +186,14 @@ public class ProbabilityScaleTests
     public void Unknown_model_and_tuning_versions_are_rejected_never_defaulted()
     {
         Assert.True(ProbabilityModelVersion.Create("prob-model-v1").IsSuccess);
-        foreach (var bad in new[] { null, "", "prob-model-v2", "PROB-MODEL-V1", " prob-model-v1", "prob-model-v1 " })
+        Assert.True(ProbabilityModelVersion.Create("prob-model-v2").IsSuccess); // Phase 3-D (owner decision P4): v2 is a known version; this list pinned it as unknown before
+        foreach (var bad in new[] { null, "", "prob-model-v3", "PROB-MODEL-V1", " prob-model-v1", "prob-model-v1 " })
             Assert.Equal("ProbabilityModelVersion.unsupported", ProbabilityModelVersion.Create(bad).Error!.Value.Code);
         Assert.Equal("ProbabilityModelVersion.unsupported", ProbabilityModel.Resolve(default).Error!.Value.Code);
 
         Assert.True(TuningVersion.Create("tuning-virtual-proto-v1").IsSuccess);
-        foreach (var bad in new[] { null, "", "tuning-virtual-proto-v2", "tuning-real-kbo-v1" })
+        Assert.True(TuningVersion.Create("tuning-virtual-proto-v2").IsSuccess); // Phase 3-D (P4)
+        foreach (var bad in new[] { null, "", "tuning-virtual-proto-v3", "tuning-real-kbo-v1" })
             Assert.Equal("TuningVersion.unsupported", TuningVersion.Create(bad).Error!.Value.Code);
     }
 

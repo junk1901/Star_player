@@ -154,12 +154,12 @@ public static class AdvancementPlanning
     /// is 3-C3. A failure or a cancellation returns no candidate and leaves every input exactly as it was.
     /// </summary>
     public static Result<InPlayPitchCandidate> Resolve(PendingAdvancement? pending, GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning,
-        PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, CancellationToken cancellation = default) =>
-        Resolve(pending, state, rng, tuning, batter, pitcher, lastIssuedEventSequence, null, cancellation);
+        PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, CancellationToken cancellation = default, PlayerInputSet? playerInputs = null) =>
+        Resolve(pending, state, rng, tuning, batter, pitcher, lastIssuedEventSequence, null, cancellation, playerInputs);
 
     /// <summary>The same, with a hook that sees each stage name before the cancellation token is checked at it (tests cancel at a chosen stage).</summary>
     internal static Result<InPlayPitchCandidate> Resolve(PendingAdvancement? pending, GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning,
-        PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, Action<string>? checkpoint, CancellationToken cancellation)
+        PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, Action<string>? checkpoint, CancellationToken cancellation, PlayerInputSet? playerInputs = null)
     {
         void At(string stage)
         {
@@ -168,7 +168,7 @@ public static class AdvancementPlanning
         }
 
         At(Stage.Start);
-        if (PitchPreparation.CheckPrepared(pending?.Plan.Prepared, state, rng, tuning, batter, pitcher) is { } stale)
+        if (PitchPreparation.CheckPrepared(pending?.Plan.Prepared, state, rng, tuning, batter, pitcher, playerInputs) is { } stale)
             return Result<InPlayPitchCandidate>.Failure(stale);
         At(Stage.Validated);
         var plan = pending!.Plan;
@@ -190,10 +190,26 @@ public static class AdvancementPlanning
             return Result<InPlayPitchCandidate>.Failure(made.Error!.Value);
         var contexts = made.Value;
         var distributions = new Distribution[contexts.Length];
+        var abilities = new AdvancementAbilityAudit?[contexts.Length];
+
+        // The policy is the GAME's (pinned in its execution contract), never the latest one: v1 (also every legacy game) is the neutral policy P-08, v2 passes the current runner's Speed and
+        // the Retriever's Arm. Both slots go into ONE Compute call per context, so the row is multiplied and normalised exactly once (R4).
+        var policy = original.Execution?.AdvancementPolicyVersion ?? AdvancementPolicy.Version;
+        if (policy == AdvancementPolicy.VersionV2 && playerInputs is null)
+            return Fail("Advancement.player_inputs_missing", $"추가 진루 정책 '{AdvancementPolicy.VersionV2}'은 선수 입력 집합이 있어야 합니다.");
         for (var i = 0; i < contexts.Length; i++)
         {
-            // the approved row exactly as the tuning holds it: no ability input is supplied (P-08), so nothing changes it
-            var computed = StageProbability.Compute(tuning!, "advancement", contexts[i].Key);
+            IReadOnlyList<ModifierInput>? inputs = null;
+            if (policy == AdvancementPolicy.VersionV2)
+            {
+                var read = AdvancementSlots.For(contexts[i], original, playerInputs!);
+                if (!read.IsSuccess)
+                    return Result<InPlayPitchCandidate>.Failure(read.Error!.Value);
+                inputs = read.Value.Modifiers;
+                abilities[i] = read.Value.Audit;
+            }
+
+            var computed = StageProbability.Compute(tuning!, "advancement", contexts[i].Key, inputs);
             if (!computed.IsSuccess)
                 return Result<InPlayPitchCandidate>.Failure(computed.Error!.Value);
             if (!computed.Value.Distribution.Outcomes.SequenceEqual(AdvancementOutcomes))
@@ -257,9 +273,11 @@ public static class AdvancementPlanning
         At(Stage.AfterReducer);
         if (AdvancementEventBuilder.Verify(facts, original, composition, evt, applied, out var record) is { } problem)
             return Result<InPlayPitchCandidate>.Failure(problem);
+        var detail = Audit(plan, composition, rolls, rawDraws, distributions, h1, h2, evt, record!, policy, abilities, playerInputs?.Id);
+        if (policy == AdvancementPolicy.VersionV2 && AdvancementEventBuilder.ThrowOutCreditProblem(detail.Decisions, applied.Value.NewPlays[0], original) is { } armProblem)
+            return Result<InPlayPitchCandidate>.Failure(armProblem);
         At(Stage.Verified);
 
-        var detail = Audit(plan, composition, rolls, rawDraws, distributions, h1, h2, evt, record!);
         var audit = plan.Audit with
         {
             Advancement = "resolved", FinalRngStateHash = h2.StateHash, WinningRunner = composition.Winner,
@@ -271,11 +289,11 @@ public static class AdvancementPlanning
     private static readonly string[] AdvancementOutcomes = ["advance_extra", "hold", "out_on_bases"];
 
     private static AdvancementAudit Audit(BaseInPlayPlan plan, AdvancementComposition composition, uint[] rolls, long[] rawDraws, Distribution[] distributions,
-        GameRandomSnapshot h1, GameRandomSnapshot h2, InPlayEvent evt, AdvancementReducerRecord record)
+        GameRandomSnapshot h1, GameRandomSnapshot h2, InPlayEvent evt, AdvancementReducerRecord record, string policy, AdvancementAbilityAudit?[] abilities, string? playerInputsId)
     {
         var decisions = composition.Steps.Select((s, i) => new AdvancementDecisionAudit(
             i + 1, s.Context.Key, s.Context.RunnerKey, s.Context.Runner, s.Context.StartBase, s.Context.PlanTo, s.Context.TargetTo, rolls[i], rawDraws[i], [.. distributions[i].Ppm],
-            s.Drawn, s.Applied, s.Reason, s.FinalTo, composition.Moves.First(m => m.RunnerKey == s.Context.RunnerKey).Sequence)).ToImmutableArray();
+            s.Drawn, s.Applied, s.Reason, s.FinalTo, composition.Moves.First(m => m.RunnerKey == s.Context.RunnerKey).Sequence, abilities[i])).ToImmutableArray();
         var moves = composition.Moves.Select(m => new AdvancementMoveAudit(m.RunnerKey, m.Runner, m.From, m.BasePlanTo, m.To, m.Cause, m.Sequence, m.IsRun, m.IsOut)).ToImmutableArray();
 
         // what the extra-base decisions changed in the official record, compared with the base plan's own result
@@ -290,9 +308,9 @@ public static class AdvancementPlanning
             changes.Add("outs_changed_by_advancement");
 
         return new AdvancementAudit(
-            AdvancementPolicy.Version, AdvancementPolicy.SequenceVersion, AdvancementPolicy.HoldPolicy, AdvancementPolicy.CouplingRule, GameRngStreams.Runner.Canonical, rolls.Length,
+            policy, AdvancementPolicy.SequenceVersion, AdvancementPolicy.HoldPolicy, AdvancementPolicy.CouplingRule, GameRngStreams.Runner.Canonical, rolls.Length,
             rawDraws.Sum(), plan.Prepared.StartRngStateHash, h1.StateHash, h2.StateHash, decisions, moves, evt.Result, evt.Batted, record.Result, record.Runs, record.Rbi, record.AtBat,
-            record.OutsAfter, record.HalfOver, record.LeftOnBase, record.GameEnded, composition.Winner, changes.ToImmutable(), "reducer_verified");
+            record.OutsAfter, record.HalfOver, record.LeftOnBase, record.GameEnded, composition.Winner, changes.ToImmutable(), "reducer_verified", policy == AdvancementPolicy.VersionV2 ? playerInputsId : null);
     }
 
     private static Result<InPlayPitchCandidate> Fail(string code, string message) => Result<InPlayPitchCandidate>.Failure(new Error(code, message));

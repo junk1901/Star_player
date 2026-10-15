@@ -27,6 +27,12 @@ namespace StarPlayer.Simulation.Baseball;
 /// it (nine live slots; see there). Like the tendency this only changes the distribution a roll is read from.
 /// </para>
 /// <para>
+/// <b>Park and fielding (Phase 3-D v2).</b> In <c>defense_result</c> the stage also receives the three park slots of the game's retained <see cref="ParkFactorSnapshot"/> (read from
+/// <see cref="GameState.Execution"/>, never from a current stadium profile; model v2 only, with an explicit snapshot even for a neutral stadium) and, when fielding inputs were frozen for
+/// the pitch, <c>defense.fielding</c> with the base rating of the drawn batted ball's representative fielder (<see cref="DefenseSlots"/>). Neither adds a stage or a draw; a game's pinned
+/// versions, hash and player input set are checked here before the first draw.
+/// </para>
+/// <para>
 /// <b>Explicit Take</b> keeps the reducer's contract (ball, called strike, hit by pitch): the batter decision is drawn once exactly as in a normal pitch; a hit by pitch ends the
 /// branch, any other decision (take or swing) is treated as watching and draws the called pitch, and swing/contact/field are never drawn.
 /// </para>
@@ -71,6 +77,9 @@ public static class PitchBranchResolver
             var inputs = request.Abilities is { } abilities
                 ? PitchModifierInputs.For(stage, abilities, state.Count, state.Approach, side, request.PitcherThrows!.Value)
                 : null;
+            // Phase 3-D v2: in defense_result the game's own park snapshot (read from the GameState, never from a current stadium profile) and the representative fielder's base fielding
+            // rating (frozen before the pitch) join the stage's inputs
+            inputs = DefenseSlots.Extend(inputs, stage, condition, state, request.Fielding);
             var computed = StageProbability.Compute(tuning, stage, condition, inputs, tendency);
             if (!computed.IsSuccess)
                 return Result<string>.Failure(computed.Error!.Value);
@@ -195,6 +204,40 @@ public static class PitchBranchResolver
             return Fail("PitchBranch.tuning_version_unsupported", $"지원하지 않는 튜닝 버전입니다: '{tuning.Tuning}'");
         if (tuning.ContentHash is not { Length: 64 } hash || !hash.All(c => c is (>= '0' and <= '9') or (>= 'a' and <= 'f')))
             return Fail("PitchBranch.tuning_hash_invalid", "튜닝 내용 해시가 올바르지 않습니다.");
+
+        // Phase 3-D (P3/S2/S3): the game's execution contract is re-validated and the supplied tuning must be exactly the pinned one. A model-v2 tuning needs an explicit park snapshot
+        // even for a neutral stadium; a legacy game (no execution) can only run a v1 tuning. Nothing is converted, defaulted or clamped.
+        if (GameExecutionRules.Validate(state.Execution) is { } badExecution)
+            return Result<(GameState, TuningProfile, string, AppliedBatterSide)>.Failure(badExecution);
+        var modelV2 = tuning.Model.Version.Value == ProbabilityModelVersion.V2Text;
+        if (state.Execution is { } execution)
+        {
+            if (tuning.Model.Version.Value != execution.ProbabilityModelVersion || tuning.Tuning.Value != execution.TuningVersion || tuning.ContentHash != execution.TuningHash)
+                return Fail("PitchBranch.execution_mismatch", "경기가 고정한 확률 모델·튜닝 버전 또는 해시와 전달된 튜닝이 다릅니다.");
+        }
+        else if (modelV2)
+            return Fail("PitchBranch.park_snapshot_required", "확률 모델 v2의 경기는 중립 구장이라도 시작할 때 명시적인 구장 스냅샷(경기 실행 계약)이 있어야 합니다.");
+
+        // Phase 3-D v2 Part B (R1, S1): the fielding inputs of the pitch. When the game pins an input set the pitch must use exactly that set; the frozen entries must be the CURRENT
+        // defenders of the fielding team and plain 0-100 ratings. A game that pins none runs the fielding slot neutral unless the caller supplies an input set (legacy games).
+        if (request.Fielding is { } fielding)
+        {
+            if (state.Execution is { PlayerInputsId: null })
+                return Fail("PitchBranch.player_inputs_not_pinned", "경기 실행 계약이 선수 입력 집합을 고정하지 않았는데 수비 입력이 전달되었습니다.");
+            if (state.Execution is { PlayerInputsId: { } pinnedId } && pinnedId != fielding.InputSetId)
+                return Fail("PitchBranch.player_inputs_mismatch", "경기가 고정한 선수 입력 집합과 전달된 수비 입력의 집합이 다릅니다.");
+            if (fielding.Entries.IsDefault || !fielding.Entries.Select(e => e.Position).SequenceEqual(PitchFieldingInputs.Positions))
+                return Fail("PitchBranch.fielding_inputs_invalid", "수비 입력은 유격수·중견수·2루수 세 위치를 정확히 한 번씩 담아야 합니다.");
+            foreach (var entry in fielding.Entries)
+            {
+                if (entry.Fielding is < SkillValue.Min or > SkillValue.Max)
+                    return Fail("PitchBranch.ability_out_of_range", "수비 보정에 쓰는 기본 능력치는 0~100 범위여야 합니다.");
+                if (state.DefenderAt(state.FieldingSide, entry.Position) != entry.Player)
+                    return Fail("PitchBranch.fielder_mismatch", $"고정된 {entry.Position} 수비수가 현재 경기 상태의 수비수와 다릅니다.");
+            }
+        }
+        else if (state.Execution is { PlayerInputsId: not null })
+            return Fail("PitchBranch.player_inputs_missing", "경기 실행 계약이 선수 입력 집합을 고정했으므로 수비 입력이 있어야 합니다.");
 
         if (!Enum.IsDefined(request.Intent))
             return Fail("PitchBranch.intent_invalid", "투수 의도 값이 올바르지 않습니다.");

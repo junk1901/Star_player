@@ -49,6 +49,13 @@ internal sealed class Script
         State = GameReducer.Start(new GameStart("g1", Rules, Team("a", Rules.DesignatedHitter), Team("h", Rules.DesignatedHitter))).Value;
     }
 
+    /// <summary>A standard fictional game started under a Phase 3-D game execution contract (park snapshot and pinned versions).</summary>
+    public Script(GameExecution execution)
+    {
+        Rules = TestRules.Dh;
+        State = GameReducer.Start(new GameStart("g1", Rules, Team("a", Rules.DesignatedHitter), Team("h", Rules.DesignatedHitter), execution)).Value;
+    }
+
     public Script(GameRuleSnapshot rules, TeamSetup away, TeamSetup home)
     {
         Rules = rules;

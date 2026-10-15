@@ -65,6 +65,8 @@ public sealed class AuthoritativeGame
         var ids = GameEventIds.Create(state.GameId);
         if (!ids.IsSuccess)
             return Result<AuthoritativeGame>.Failure(ids.Error!.Value);
+        if (GameExecutionRules.Validate(state.Execution) is { } badExecution)
+            return Result<AuthoritativeGame>.Failure(badExecution); // a restored game's execution contract (park snapshot, pins) is validated again, never trusted
         var restored = GameRandom.Restore(rng);
         if (!restored.IsSuccess)
             return Result<AuthoritativeGame>.Failure(restored.Error!.Value);
@@ -108,7 +110,7 @@ public sealed class AuthoritativeGame
     internal static bool IsComplete(GameState state) => state.Status switch
     {
         GameStatus.Final => state.Outcome is { } outcome && state.Final is { } final && final.GameId == state.GameId && final.Outcome == outcome
-            && final.AwayRuns == state.AwayRuns && final.HomeRuns == state.HomeRuns,
+            && final.AwayRuns == state.AwayRuns && final.HomeRuns == state.HomeRuns && Equals(final.Execution, state.Execution),
         GameStatus.InProgress => state.Outcome is null && state.Final is null,
         _ => false,
     };

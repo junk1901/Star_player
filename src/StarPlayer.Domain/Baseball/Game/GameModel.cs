@@ -109,7 +109,23 @@ public sealed record EventReceipt(string EventId, string Kind, string Fingerprin
 /// <summary>Setup for one team at the start of a game.</summary>
 public sealed record TeamSetup(IReadOnlyList<LineupSlot> Lineup, PlayerId StartingPitcher, IReadOnlyList<PlayerId> Bench);
 
-public sealed record GameStart(string GameId, GameRuleSnapshot Rules, TeamSetup Away, TeamSetup Home);
+/// <summary>
+/// The execution contract of one game under the active probability model (Phase 3-D, owner decisions P3/P4 and S1-S3). It is fixed by <see cref="GameStart"/>, preserved by every state
+/// transition and copied to <see cref="FinalizedGame"/>; nothing re-reads a current stadium profile, tuning file or rating while the game runs.
+/// <para>
+/// <see cref="ProbabilityModelVersion"/>, <see cref="TuningVersion"/> and <see cref="TuningHash"/> name the exact probability data every pitch of the game uses. <see cref="AdvancementPolicyVersion"/>
+/// names the extra-base policy (<c>advancement-policy-v1</c> neutral, <c>advancement-policy-v2</c> with runner speed and fielder arm). <see cref="Park"/> is the resolved
+/// <see cref="ParkFactorSnapshot"/> of the venue; a neutral stadium still carries an explicit snapshot (1000 permille), so "not recorded" and "recorded neutral" differ.
+/// <see cref="PlayerInputsId"/> is the identity of the immutable player input set (base Fielding / Speed / Arm) the game uses, or <c>null</c> when none is wired (those slots stay neutral).
+/// </para>
+/// A game without this record (<c>null</c> on <see cref="GameState.Execution"/>) is a legacy game: no park recorded, neutral park effect, <c>prob-model-v1</c> and neutral advancement.
+/// Every value is validated when the game starts; a record is not a validated input merely because it is a record.
+/// </summary>
+public sealed record GameExecution(
+    string ProbabilityModelVersion, string TuningVersion, string TuningHash, string AdvancementPolicyVersion, ParkFactorSnapshot Park, string? PlayerInputsId);
+
+/// <summary>The inputs that start a game. <see cref="Execution"/> is optional: null starts a legacy (pre-3-D-v2) game with no recorded park.</summary>
+public sealed record GameStart(string GameId, GameRuleSnapshot Rules, TeamSetup Away, TeamSetup Home, GameExecution? Execution = null);
 
 /// <summary>
 /// The complete, resumable state of one game. It is immutable: every reducer call returns a new value and a rejected event
@@ -140,7 +156,8 @@ public sealed record GameState(
     int NextRunnerKey,
     GameStatus Status,
     GameOutcome? Outcome,
-    FinalizedGame? Final)
+    FinalizedGame? Final,
+    GameExecution? Execution = null)
 {
     public TeamSide BattingSide => Half == InningHalf.Top ? TeamSide.Away : TeamSide.Home;
 

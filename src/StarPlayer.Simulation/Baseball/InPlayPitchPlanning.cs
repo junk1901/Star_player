@@ -29,10 +29,10 @@ public static class InPlayPitchPlanning
     /// no reducer call. A pitch that did not end in play is refused (<c>InPlayPlan.not_in_play</c>); the draft's batted ball and defence result must be an approved combination.
     /// </summary>
     public static Result<BaseInPlayPlan> PlanBase(PreparedPitch? prepared, GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning,
-        PlayerSheet? batter, PlayerSheet? pitcher, CancellationToken cancellation = default)
+        PlayerSheet? batter, PlayerSheet? pitcher, CancellationToken cancellation = default, PlayerInputSet? playerInputs = null)
     {
         cancellation.ThrowIfCancellationRequested();
-        if (PitchPreparation.CheckPrepared(prepared, state, rng, tuning, batter, pitcher) is { } stale)
+        if (PitchPreparation.CheckPrepared(prepared, state, rng, tuning, batter, pitcher, playerInputs) is { } stale)
             return Result<BaseInPlayPlan>.Failure(stale);
         return Plan(prepared!, state!);
     }
@@ -43,12 +43,12 @@ public static class InPlayPitchPlanning
     /// result is a <see cref="InPlayPitchCandidate"/> or a <see cref="PendingAdvancement"/> (which has no event, id or receipt and ignores the cursor). Nothing is adopted anywhere.
     /// </summary>
     public static Result<InPlayPlanOutcome> Build(PreparedPitch? prepared, GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning,
-        PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, CancellationToken cancellation = default) =>
-        Build(prepared, state, rng, tuning, batter, pitcher, lastIssuedEventSequence, null, cancellation);
+        PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, CancellationToken cancellation = default, PlayerInputSet? playerInputs = null) =>
+        Build(prepared, state, rng, tuning, batter, pitcher, lastIssuedEventSequence, null, cancellation, playerInputs);
 
     /// <summary>The same, with a hook that sees each stage name before the cancellation token is checked at it (tests cancel at a chosen stage).</summary>
     internal static Result<InPlayPlanOutcome> Build(PreparedPitch? prepared, GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning,
-        PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, Action<string>? checkpoint, CancellationToken cancellation)
+        PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, Action<string>? checkpoint, CancellationToken cancellation, PlayerInputSet? playerInputs = null)
     {
         void At(string stage)
         {
@@ -57,7 +57,7 @@ public static class InPlayPitchPlanning
         }
 
         At(Stage.Start);
-        if (PitchPreparation.CheckPrepared(prepared, state, rng, tuning, batter, pitcher) is { } stale)
+        if (PitchPreparation.CheckPrepared(prepared, state, rng, tuning, batter, pitcher, playerInputs) is { } stale)
             return Result<InPlayPlanOutcome>.Failure(stale);
         At(Stage.Validated);
 

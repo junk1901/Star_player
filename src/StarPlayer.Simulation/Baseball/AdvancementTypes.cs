@@ -15,6 +15,12 @@ public static class AdvancementPolicy
     /// <summary>P-01 lead-runner-first draw order, P-02 sequential conditional composition, P-04 rule pre-check, P-07 fixed one-draw-per-context consumption, P-08 neutral abilities.</summary>
     public const string Version = "advancement-policy-v1";
 
+    /// <summary>
+    /// Phase 3-D (owner decisions R2-R4, S3): the same draw contract with the two ability slots wired. Each context passes the current runner's <c>runner.speed</c> and the Retriever's
+    /// <c>defense.arm</c> to ONE <c>advancement</c> computation; the policy is pinned per game by <see cref="GameExecution.AdvancementPolicyVersion"/>. v1 (above) stays the neutral policy.
+    /// </summary>
+    public const string VersionV2 = "advancement-policy-v2";
+
     /// <summary>P-05 `Prototype Sequence Policy v1`: a deterministic simulation assumption (lead runner's run before a trailing runner's non-force out), not an observed order.</summary>
     public const string SequenceVersion = "prototype-sequence-v1";
 
@@ -45,10 +51,20 @@ public enum AdvancementReason
     PlayOver,
 }
 
-/// <summary>One decision as drawn and as applied (P-09). <c>Order</c> is 1-based in processing order (lead runner first); <c>Roll</c> is the exact value of the one <c>NextBounded(1,000,000)</c> call.</summary>
+/// <summary>
+/// The two ability inputs one decision of <see cref="AdvancementPolicy.VersionV2"/> used (R2, R3): the runner standing on the start base NOW (a pinch runner is the current player; the
+/// <c>RunnerKey</c> of the decision names the runner slot, not the person) with his base Speed, and the fielder at the Retriever position NOW with his base Arm. The Retriever is the
+/// fielder credited with the assist of a throw-out; the BaseFielder (the receiver) is never an input.
+/// </summary>
+public sealed record AdvancementAbilityAudit(PlayerId Runner, int RunnerSpeed, FieldPosition Retriever, PlayerId RetrieverPlayer, int RetrieverArm);
+
+/// <summary>
+/// One decision as drawn and as applied (P-09). <c>Order</c> is 1-based in processing order (lead runner first); <c>Roll</c> is the exact value of the one <c>NextBounded(1,000,000)</c> call.
+/// <c>Abilities</c> is set only under <see cref="AdvancementPolicy.VersionV2"/> and says which two players' ratings produced <c>Ppm</c>; under v1 it is <c>null</c> (neutral abilities).
+/// </summary>
 public sealed record AdvancementDecisionAudit(
     int Order, string ContextKey, int RunnerKey, PlayerId Runner, int StartBase, int PlanTo, int TargetTo, uint Roll, long RawDraws, ImmutableArray<int> Ppm,
-    AdvancementOutcome Drawn, AdvancementOutcome Applied, AdvancementReason Reason, int FinalTo, int? Sequence);
+    AdvancementOutcome Drawn, AdvancementOutcome Applied, AdvancementReason Reason, int FinalTo, int? Sequence, AdvancementAbilityAudit? Abilities = null);
 
 /// <summary>One existing runner's final move on the play, with the event sequence it carries (null when the play has no sequenced out or run).</summary>
 public sealed record AdvancementMoveAudit(int RunnerKey, PlayerId Runner, int From, int BasePlanTo, int FinalTo, MoveCause Cause, int? Sequence, bool IsRun, bool IsOut);
@@ -62,7 +78,8 @@ public sealed record AdvancementAudit(
     string StartRngStateHash, string AfterPitchRngStateHash, string FinalRngStateHash,
     ImmutableArray<AdvancementDecisionAudit> Decisions, ImmutableArray<AdvancementMoveAudit> FinalMoves,
     InPlayResult EventResult, BattedBallType EventBatted, BatterResult ReducerBatterResult, int ReducerRuns, int ReducerRbi, bool ReducerAtBat, int ReducerOutsAfter,
-    bool ReducerHalfOver, int ReducerLeftOnBase, bool GameEnded, InPlayWinningRunner? WinningRunner, ImmutableArray<string> RecordChanges, string Verification);
+    bool ReducerHalfOver, int ReducerLeftOnBase, bool GameEnded, InPlayWinningRunner? WinningRunner, ImmutableArray<string> RecordChanges, string Verification,
+    string? PlayerInputsId = null);
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // internal working types of the pure planner

@@ -74,7 +74,7 @@ public static partial class GameReducer
             return Fail<FinalizeResult>("Game.not_over", "아직 끝나지 않은 경기는 확정할 수 없습니다.");
 
         var box = BoxScoreBuilder.Build(state);
-        var final = new FinalizedGame(state.GameId, outcome, state.AwayRuns, state.HomeRuns, state.Rules.ProfileId, state.Rules.ContentHash, box);
+        var final = new FinalizedGame(state.GameId, outcome, state.AwayRuns, state.HomeRuns, state.Rules.ProfileId, state.Rules.ContentHash, box, state.Execution);
         return Result<FinalizeResult>.Success(new FinalizeResult(state with { Final = final }, final, true));
     }
 

@@ -13,14 +13,19 @@ public readonly record struct ProbabilityModelVersion : IStringId<ProbabilityMod
 {
     public const string V1Text = "prob-model-v1";
 
+    /// <summary>Phase 3-D (owner decision P4): the same structure as v1 with the three park slots active. v1 is never edited.</summary>
+    public const string V2Text = "prob-model-v2";
+
     public static ProbabilityModelVersion V1 { get; } = new() { Value = V1Text };
+
+    public static ProbabilityModelVersion V2 { get; } = new() { Value = V2Text };
 
     public string Value { get; private init; }
 
     public static Result<ProbabilityModelVersion> Create(string? value) =>
-        string.Equals(value, V1Text, StringComparison.Ordinal)
-            ? Result<ProbabilityModelVersion>.Success(V1)
-            : Result<ProbabilityModelVersion>.Failure(new Error("ProbabilityModelVersion.unsupported", $"지원하지 않는 확률 모델 버전입니다: '{value}'"));
+        string.Equals(value, V1Text, StringComparison.Ordinal) ? Result<ProbabilityModelVersion>.Success(V1)
+        : string.Equals(value, V2Text, StringComparison.Ordinal) ? Result<ProbabilityModelVersion>.Success(V2)
+        : Result<ProbabilityModelVersion>.Failure(new Error("ProbabilityModelVersion.unsupported", $"지원하지 않는 확률 모델 버전입니다: '{value}'"));
 
     public override string ToString() => Value ?? "";
 }
@@ -30,14 +35,19 @@ public readonly record struct TuningVersion : IStringId<TuningVersion>
 {
     public const string VirtualProtoV1Text = "tuning-virtual-proto-v1";
 
+    /// <summary>Phase 3-D (owner decision P4): the tuning of <c>prob-model-v2</c>. v1 is never edited.</summary>
+    public const string VirtualProtoV2Text = "tuning-virtual-proto-v2";
+
     public static TuningVersion VirtualProtoV1 { get; } = new() { Value = VirtualProtoV1Text };
+
+    public static TuningVersion VirtualProtoV2 { get; } = new() { Value = VirtualProtoV2Text };
 
     public string Value { get; private init; }
 
     public static Result<TuningVersion> Create(string? value) =>
-        string.Equals(value, VirtualProtoV1Text, StringComparison.Ordinal)
-            ? Result<TuningVersion>.Success(VirtualProtoV1)
-            : Result<TuningVersion>.Failure(new Error("TuningVersion.unsupported", $"지원하지 않는 튜닝 버전입니다: '{value}'"));
+        string.Equals(value, VirtualProtoV1Text, StringComparison.Ordinal) ? Result<TuningVersion>.Success(VirtualProtoV1)
+        : string.Equals(value, VirtualProtoV2Text, StringComparison.Ordinal) ? Result<TuningVersion>.Success(VirtualProtoV2)
+        : Result<TuningVersion>.Failure(new Error("TuningVersion.unsupported", $"지원하지 않는 튜닝 버전입니다: '{value}'"));
 
     public override string ToString() => Value ?? "";
 }
@@ -130,7 +140,15 @@ public sealed class ProbabilityModel
 {
     public const string CondTarget = "@condition";
 
-    public static ProbabilityModel V1 { get; } = BuildV1();
+    public static ProbabilityModel V1 { get; } = Build(ProbabilityModelVersion.V1, parkActive: false);
+
+    /// <summary>Phase 3-D (P4): <c>prob-model-v2</c> = v1 with <c>park.home_runs</c>, <c>park.hits</c> and <c>park.extra_base_hits</c> active over <see cref="ParkInputMin"/>-<see cref="ParkInputMax"/> permille.</summary>
+    public static ProbabilityModel V2 { get; } = Build(ProbabilityModelVersion.V2, parkActive: true);
+
+    /// <summary>Inclusive park input range of the ACTIVE model (<see cref="V2"/>) in permille; the C46 domain keeps its own absolute bound (3000).</summary>
+    public const int ParkInputMin = 800;
+
+    public const int ParkInputMax = 1250;
 
     public ProbabilityModelVersion Version { get; }
     public IReadOnlyList<StageDef> Stages { get; }
@@ -149,9 +167,9 @@ public sealed class ProbabilityModel
     }
 
     public static Result<ProbabilityModel> Resolve(ProbabilityModelVersion version) =>
-        version.Value == ProbabilityModelVersion.V1Text
-            ? Result<ProbabilityModel>.Success(V1)
-            : Result<ProbabilityModel>.Failure(new Error("ProbabilityModelVersion.unsupported", $"지원하지 않는 확률 모델 버전입니다: '{version}'"));
+        version.Value == ProbabilityModelVersion.V1Text ? Result<ProbabilityModel>.Success(V1)
+        : version.Value == ProbabilityModelVersion.V2Text ? Result<ProbabilityModel>.Success(V2)
+        : Result<ProbabilityModel>.Failure(new Error("ProbabilityModelVersion.unsupported", $"지원하지 않는 확률 모델 버전입니다: '{version}'"));
 
     public StageDef? Stage(string id) => Stages.FirstOrDefault(s => string.Equals(s.Id, id, StringComparison.Ordinal));
 
@@ -159,7 +177,7 @@ public sealed class ProbabilityModel
 
     public TendencyStage? TendencyFor(string stage) => TendencyStages.FirstOrDefault(t => string.Equals(t.Stage, stage, StringComparison.Ordinal));
 
-    private static ProbabilityModel BuildV1()
+    private static ProbabilityModel Build(ProbabilityModelVersion version, bool parkActive)
     {
         var zoneIds = PitchZoneModel.V1.Zones.Select(z => z.Id.Value).ToList();
 
@@ -194,6 +212,11 @@ public sealed class ProbabilityModel
         ModifierSlot Table(string id, string stage, string[] targets, string[] order, string note) =>
             new(id, stage, targets, ModifierKind.Table, ZoneScope.All, 0, 0, true, order, false, note);
 
+        // v1: reserved (neutral input only, input domain 1-3000). v2 (owner decision P4): active over the model's own supported range; same slot id, stage and owned outcomes.
+        ModifierSlot Park(string id, string[] targets, string reservedNote, string activeNote) => parkActive
+            ? new(id, StageIds.DefenseResult, targets, ModifierKind.Linear, ZoneScope.All, ParkInputMin, ParkInputMax, true, noTable, false, activeNote)
+            : Reserved(id, StageIds.DefenseResult, targets, 1, 3000, reservedNote);
+
         var slots = new List<ModifierSlot>
         {
             Skill("pitcher.control", StageIds.ActualLocation, [CondTarget], true, ZoneScope.All, "Control raises the chance the pitch lands on the aimed zone. One slot only: Control feeds nothing else."),
@@ -209,9 +232,12 @@ public sealed class ProbabilityModel
             Skill("pitcher.velocity", StageIds.BattedBall, hard, false, ZoneScope.All, "Velocity lowers the share of hard contact."),
             Skill("batter.power", StageIds.BattedBall, hard, true, ZoneScope.All, "Power raises the share of hard contact. Power acts ONLY here: home runs are not boosted a second time in defense_result."),
             Skill("defense.fielding", StageIds.DefenseResult, ["out"], true, ZoneScope.All, "ONE effective fielding value supplied by the caller (rating combined with position proficiency ONCE); it must not be applied again elsewhere."),
-            Reserved("park.home_runs", StageIds.DefenseResult, ["home_run"], 1, 3000, "Reserved: C46 ParkFactorSnapshot.HomeRuns (permille). Owns home_run only. Owner: Phase 3-D. Neutral (1000) only."),
-            Reserved("park.hits", StageIds.DefenseResult, ["single"], 1, 3000, "Reserved: C46 ParkFactorSnapshot.Hits (permille). Owns single only (disjoint from HR and XBH). Owner: Phase 3-D. Neutral (1000) only."),
-            Reserved("park.extra_base_hits", StageIds.DefenseResult, ["double", "triple"], 1, 3000, "Reserved: C46 ParkFactorSnapshot.ExtraBaseHits (permille). Owns double and triple only. Owner: Phase 3-D. Neutral (1000) only."),
+            Park("park.home_runs", ["home_run"], "Reserved: C46 ParkFactorSnapshot.HomeRuns (permille). Owns home_run only. Owner: Phase 3-D. Neutral (1000) only.",
+                "Active in prob-model-v2: C46 ParkFactorSnapshot.HomeRuns (permille). Owns home_run only."),
+            Park("park.hits", ["single"], "Reserved: C46 ParkFactorSnapshot.Hits (permille). Owns single only (disjoint from HR and XBH). Owner: Phase 3-D. Neutral (1000) only.",
+                "Active in prob-model-v2 (owner decision P1): the game model's single-only weight; not a conversion of an external all-hits coefficient."),
+            Park("park.extra_base_hits", ["double", "triple"], "Reserved: C46 ParkFactorSnapshot.ExtraBaseHits (permille). Owns double and triple only. Owner: Phase 3-D. Neutral (1000) only.",
+                "Active in prob-model-v2: C46 ParkFactorSnapshot.ExtraBaseHits (permille). Owns double and triple only."),
             Skill("runner.speed", StageIds.Advancement, ["advance_extra"], true, ZoneScope.All, "Runner speed raises the chance of taking the extra base."),
             Skill("defense.arm", StageIds.Advancement, ["out_on_bases"], true, ZoneScope.All, "Fielder arm raises the chance the runner is thrown out."),
         };
@@ -222,7 +248,7 @@ public sealed class ProbabilityModel
             new(StageIds.BattedBall, hard, false),
         };
 
-        return new ProbabilityModel(ProbabilityModelVersion.V1, stages, slots, tendency);
+        return new ProbabilityModel(version, stages, slots, tendency);
 
     }
 

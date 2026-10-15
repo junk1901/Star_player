@@ -115,7 +115,8 @@ public sealed record BoxScore(
     ImmutableList<BatteryExposure> BatteryExposures);
 
 /// <summary>The one-time result of finishing a game. Finalizing again returns this same value, never a second one.</summary>
-public sealed record FinalizedGame(string GameId, GameOutcome Outcome, int AwayRuns, int HomeRuns, string RulesProfileId, string RulesContentHash, BoxScore BoxScore);
+public sealed record FinalizedGame(string GameId, GameOutcome Outcome, int AwayRuns, int HomeRuns, string RulesProfileId, string RulesContentHash, BoxScore BoxScore,
+    GameExecution? Execution = null);
 
 public enum GameActionKind { Approach, Take, Pitch, InPlay, RunnerPlay, Substitution, Finalize }
 

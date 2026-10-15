@@ -10,7 +10,7 @@ reviewed_by: ""
 branch: "main"
 commit: "3-C2A: 'feat: add phase 3c2a deterministic pitch branch resolver' (기준 HEAD d3570b76e93246076253681568b709d3ea1d5a3b 다음 커밋; SHA는 git log 참조 — 문서가 자기 커밋 SHA를 담을 수 없음; 3-C1은 d3570b7)"
 roadmap_anchor: "phase-3--seeded-game-simulation--prototype-1"
-last_updated: "2026-10-15"
+last_updated: "2026-10-16"
 tags:
   - star-player
   - phase-review
@@ -20,6 +20,9 @@ tags:
 
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
+
+> [!info] 3-D Park / Fielding / Advancement Policy v2 통합 구현 (2026-10-16, `TASK.md` "Star Player Phase 3-D Park / Fielding / Advancement v2 Integrated Implementation", 기준 HEAD `054704d`) — `IMPLEMENTED` · `TESTED` · `REVIEW_PENDING`
+> 소유자 결정 P1~P4(구장), R1~R5(수비·주자·송구·입력 오류), S1~S3(불변 입력·스냅샷 보존·버전/RNG)을 구현했다. Codex 아키텍처 검토 판정 `CODEX_PHASE3_D_ARCH_REVISIONS_REQUIRED`는 지시서가 명시한 것이며 검토 원문은 저장소에 없으므로 인용하지 않고 소유자 승인 계약으로만 기록했다. **A. Park:** `prob-model-v2`·`tuning-virtual-proto-v2`(해시 `7f02cb4f…dd70`, 독립 Python 계산과 일치) 신설, v1·해시 `5b70dca7…3ea5` 불변. ADR-006의 "새 튜닝 버전이면 충분"은 코드상 부족해(`Reserved`는 모델 속성, 입력 범위 1~3000이 결합 상한과 양립 불가) 모델 v2가 필요했음을 ADR-006 Addendum에 기록. 구장 3개 슬롯 활성(800~1250‰, 중립 1000, 1,000ppm/‰), `park.hits`는 모델의 단타 전용 가중치, 도메인 허용 3000‰ 같은 범위 밖 값은 경기 시작 전 거부(Clamp 없음). `GameExecution`이 `GameStart`→`GameState`→`FinalizedGame`에 불변 보존(레거시=null=기록 없음·중립, 활성 모델은 중립 구장도 명시적 스냅샷), Start·Restore·Resolver에서 검증, `PreviewComparison`에 포함, `Finalize`가 복사. **B. Fielding:** 불변 `PlayerInputSet`(선수 기본 Fielding/Speed/Arm, 식별자=정규 텍스트 SHA-256)과 `PreparedPitch`에 묶인 `PitchFieldingInputs`(유격수=땅볼·라인, 중견수=뜬공, 2루수=팝업; 기록상 풋아웃 선수와 같다고 주장하지 않음), `CheckPrepared` 6b가 CAS 전에 집합 식별과 현재 수비수·능력치를 다시 증명(CAS는 GameState만 보호). **C. Advancement:** `advancement-policy-v2`(대주자 반영 현재 주자 Speed + Retriever Arm을 1회 `Compute`·1회 정규화, 4개 맥락, 감사 기록·보살 크레딧 일치 검증), v1 불변. 새 Stage·Stream·Draw 없음, H1/H2·맥락당 1회 추첨 유지. 테스트: 전체 xUnit Release **2,036 PASS**(신규 129: Domain 5·Simulation 30·Infrastructure 94, 0 FAIL/SKIP), 독립 Oracle(수비 900·진루 784 케이스), 6개 조합 전체 경기 통합 검증(중립 v2 = 레거시와 사건 단위 동일), 로컬 Sabotage 15/15 검출·복구. 의도적 기존 테스트 변경 6건(v2 미지원 버전 리터럴 3건, 필드 목록 2건, P-08 정적 확인 1건)은 game-engine §31에 기록. **한계:** Phase 4 영속화(`GameExecution` 6개 값·선수 입력 집합 내용)·실제 경기 Runner·포지션 숙련도/컨디션·가상 수치의 균형(3-F)·3-E·3-F 미착수; Codex·Mutation·`verify.ps1`·대규모 시뮬레이션 `미실시`. 이 문서의 최상위 status는 `검토 대기` 유지, Phase 3 Gate `INCOMPLETE`. 상세: [game-engine §31](../../docs/game-engine.md), [ADR-007](../../docs/decisions/ADR-007.md) "Decisions (Park / Fielding / Advancement v2)", [ADR-006](../../docs/decisions/ADR-006.md) Addendum.
 
 > [!info] 3-D BatterTendency v2 통합 구현 (2026-10-15, `TASK.md` "Star Player Phase 3-D BatterTendency v2 Integrated Implementation", 기준 HEAD `ee9756a`) — `IMPLEMENTED_WITH_NOTES` · `TESTED` · `REVIEW_PENDING`
 > 소유자 D-T1~D-T6 승인 반영: DataPack `format_version: 2`(선택 `batter_zone_tendencies[]`, 희소·원본 순서 보존, v1 완전 호환·v1+신규 필드 거부, 생략/`[]` 형태 보존), 불변 `BatterZoneProfiles`(Domain, 누락=중립·손상=오류), `PlayerWorld.BatterTendencies`·`Format`(내부 보관), `PitchPreparation.PrepareFromProfiles`(GameState의 현재 타자 PlayerId → 기존 `CheckSheets` → 조회 → 기존 `Prepare`), HiddenTendencyBoundary 강화(정확한 두 지정 위치만 예외)·SourceScan 확장, RNG 계약 정정(성향은 stage·추첨을 추가하지 않으나 결과가 달라지면 후속 stage·총 호출 수가 달라질 수 있음). 신규 테스트 64건(Domain 14 · Application 10 · Infrastructure 40), 기존 테스트 어서션 수정 1건(`format_version: 2` 미지원 → 3/0 미지원), 전체 xUnit **1,907 PASS**(Domain 277 · Application 127 · Simulation 697 · Infrastructure 806; Release, FAIL 0, SKIP 0, 종료 코드 0). 골든·튜닝 해시·`ef1`/`ef2` 불변, 공식 v1 팩 불변. 로컬 sabotage 6건 모두 검출 후 복구. **한계:** 실제 경기 Runner·Phase 4 영속화(프로필 데이터 재현)·구장 `Hits`·수비/주자 보정·3-E·3-F 미착수; Codex·Mutation·`verify.ps1`·대규모 시뮬레이션 `미실시`. 이 문서의 최상위 status는 `검토 대기` 유지, Phase 3 Gate `INCOMPLETE`. 상세: [game-engine §30](../../docs/game-engine.md), [ADR-007](../../docs/decisions/ADR-007.md) "Decisions (BatterTendency v2)".
@@ -459,3 +462,11 @@ PCG32, 스트림 ID/키 유도, `GameRandom`(스트림 집합·스냅샷·복원
 - [x] [CURRENT_STATE.md](../../CURRENT_STATE.md)와 실제 상태 일치 확인
 - [x] GPT Chat 전달용 간략 요약 작성
 - [x] 다음 Phase를 자동 시작하지 않음
+
+## 부록 2026-10-16 — Codex F-01 (MAJOR) 수정 기록 (Claude Code 구현·자체 테스트, 독립 재검토 `미실시`)
+
+- 지적: `CommitEvidence.LinkAbilities`가 감사 기록을 실제 `AdvancementContext`와 결속하지 않음(동일 Speed 다른 주자, 동일 Arm 다른 송구 수비수 위조 통과).
+- 수정: `plan.Facts`에서 `AdvancementPlanner.Contexts`를 다시 도출해 결정 수·순서·키·RunnerKey·Runner·StartBase·PlanTo·TargetTo를 비교하고, v2는 `AdvancementSlots.For`로 기대 Abilities·Modifiers를 독립 도출해 비교. 새 오류 코드·RNG·공식 변경 없음. 상세는 [ADR-007](../../docs/decisions/ADR-007.md) 부록.
+- 신규 테스트 4개(`AdvancementAuditBindingTests`): 수정 전 4/4 실패 확인 → 수정 후 통과. Sabotage(새 비교 비활성화) 시 4/4 실패, 원본 복구(SHA 일치) 확인.
+- 전체 xUnit Release: Domain 282 / Application 127 / Simulation 727 / Infrastructure 904 = 2,040 통과, 실패 0, 건너뜀 0. Mutation 전체·verify.ps1은 `미검증`(미실행).
+- Phase 3 Gate: `INCOMPLETE` 유지. 상태: `검토 대기` 유지(승인 아님).

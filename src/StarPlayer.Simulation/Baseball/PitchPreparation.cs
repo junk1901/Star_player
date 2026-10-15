@@ -19,11 +19,12 @@ namespace StarPlayer.Simulation.Baseball;
 public sealed class PreparedPitch
 {
     internal PreparedPitch(GameState state, string gameId, string startRngStateHash, PlayerId batterId, PlayerId pitcherId, BattingSide batterDeclaredSide,
-        ThrowingHand pitcherThrows, PitchBranchDraft draft, string rulesVersion, string rulesHash, string probabilityModelVersion, string tuningVersion, string tuningHash)
+        ThrowingHand pitcherThrows, PitchBranchDraft draft, string rulesVersion, string rulesHash, string probabilityModelVersion, string tuningVersion, string tuningHash,
+        PitchFieldingInputs? fielding = null)
     {
         State = state; GameId = gameId; StartRngStateHash = startRngStateHash; BatterId = batterId; PitcherId = pitcherId; BatterDeclaredSide = batterDeclaredSide;
         PitcherThrows = pitcherThrows; Draft = draft; RulesVersion = rulesVersion; RulesHash = rulesHash; ProbabilityModelVersion = probabilityModelVersion;
-        TuningVersion = tuningVersion; TuningHash = tuningHash;
+        TuningVersion = tuningVersion; TuningHash = tuningHash; Fielding = fielding;
     }
 
     public GameState State { get; }
@@ -39,6 +40,15 @@ public sealed class PreparedPitch
     public string ProbabilityModelVersion { get; }
     public string TuningVersion { get; }
     public string TuningHash { get; }
+
+    /// <summary>
+    /// The immutable fielding inputs this pitch was drawn with (Phase 3-D v2, S1): three fielders, their base fielding ratings and the identity of the player input set they came from, or
+    /// <c>null</c> when the pitch was prepared with no player input set (the fielding slot was neutral).
+    /// </summary>
+    public PitchFieldingInputs? Fielding { get; }
+
+    /// <summary>The identity of the player input set the pitch was prepared with (null = none). Later stages must be given the very same set.</summary>
+    public string? PlayerInputsId => Fielding?.InputSetId;
 
     public override string ToString() => $"PreparedPitch({GameId} {Draft.Kind})";
 }
@@ -76,9 +86,12 @@ public static class PitchPreparation
     /// Supplying trusted sheets is the caller's responsibility (there is no player store yet). Changes nothing of the caller's.
     /// <paramref name="batterTendency"/> (Phase 3-D-1) is the batter's hidden zone tendency for the resolver only; null is neutral. The stored source is the world's per-player set, reached through <see cref="PrepareFromProfiles"/>.
     /// The two sheets' current base ratings become the ability modifier inputs (Phase 3-D, <see cref="PitchAbilities"/>); a sheet without the needed hitting or pitching ratings is refused.
+    /// <paramref name="playerInputs"/> (Phase 3-D v2, S1) is the game's immutable player input set: the three representative fielders are read from the state, their base fielding ratings from the
+    /// set, and both are frozen into the result (<see cref="PreparedPitch.Fielding"/>) together with the set's identity. A game whose execution contract pins an input set REQUIRES it
+    /// (and exactly that set); with none the fielding slot is neutral, as before.
     /// </summary>
     public static Result<PreparedPitch> Prepare(GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning, PitchIntent intent, bool explicitTake,
-        PlayerSheet? batter, PlayerSheet? pitcher, CancellationToken cancellation = default, BatterZoneTendency? batterTendency = null)
+        PlayerSheet? batter, PlayerSheet? pitcher, CancellationToken cancellation = default, BatterZoneTendency? batterTendency = null, PlayerInputSet? playerInputs = null)
     {
         cancellation.ThrowIfCancellationRequested();
         if (state is null)
@@ -95,13 +108,25 @@ public static class PitchPreparation
         var abilities = PitchAbilities.From(batter, pitcher);
         if (!abilities.IsSuccess)
             return Result<PreparedPitch>.Failure(abilities.Error!.Value);
-        var drafted = PitchBranchResolver.Resolve(new PitchBranchRequest(state, tuning, intent, explicitTake, batter!.Player.Bats, pitcher!.Player.Throws, rng, batterTendency, abilities.Value), cancellation);
+
+        PitchFieldingInputs? fielding = null;
+        if (playerInputs is not null)
+        {
+            var frozen = PitchFieldingInputs.Build(state, playerInputs, "PitchPrepare");
+            if (!frozen.IsSuccess)
+                return Result<PreparedPitch>.Failure(frozen.Error!.Value);
+            fielding = frozen.Value;
+        }
+        else if (state.Execution is { PlayerInputsId: not null })
+            return Prep.Fail("PitchPrepare.player_inputs_missing", "경기 실행 계약이 선수 입력 집합을 고정했으므로 투구를 준비하려면 그 집합이 필요합니다.");
+
+        var drafted = PitchBranchResolver.Resolve(new PitchBranchRequest(state, tuning, intent, explicitTake, batter!.Player.Bats, pitcher!.Player.Throws, rng, batterTendency, abilities.Value, fielding), cancellation);
         if (!drafted.IsSuccess)
             return Result<PreparedPitch>.Failure(drafted.Error!.Value);
 
         var draft = drafted.Value;
         return Result<PreparedPitch>.Success(new PreparedPitch(state, state.GameId, rng.StateHash, batter.Id, pitcher.Id, batter.Player.Bats, pitcher.Player.Throws, draft,
-            state.Rules.Version, state.Rules.ContentHash, tuning.Model.Version.Value, tuning.Tuning.Value, tuning.ContentHash));
+            state.Rules.Version, state.Rules.ContentHash, tuning.Model.Version.Value, tuning.Tuning.Value, tuning.ContentHash, fielding));
     }
 
     /// <summary>
@@ -113,7 +138,7 @@ public static class PitchPreparation
     /// batter gets his own entry (or none), never the previous batter's. A null set is refused: an EMPTY set is the way to say "nobody has a tendency".
     /// </summary>
     public static Result<PreparedPitch> PrepareFromProfiles(GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning, PitchIntent intent, bool explicitTake,
-        PlayerSheet? batter, PlayerSheet? pitcher, BatterZoneProfiles? profiles, CancellationToken cancellation = default)
+        PlayerSheet? batter, PlayerSheet? pitcher, BatterZoneProfiles? profiles, CancellationToken cancellation = default, PlayerInputSet? playerInputs = null)
     {
         cancellation.ThrowIfCancellationRequested();
         if (profiles is null)
@@ -124,7 +149,7 @@ public static class PitchPreparation
             tendency = profiles.Find(state.Batting.CurrentBatterSlot.Player);
         if (tendency is not null && rng is not null && tuning is not null && (tendency.ReferenceId != tuning.Reference.Id || tendency.Model != tuning.ZoneModel))
             return Prep.Fail("PitchPrepare.tendency_reference_mismatch", "타자 코스 성향의 구역 모델 또는 기준 분포가 이 튜닝과 다릅니다.");
-        return Prepare(state, rng, tuning, intent, explicitTake, batter, pitcher, cancellation, tendency); // every other error is Prepare's own
+        return Prepare(state, rng, tuning, intent, explicitTake, batter, pitcher, cancellation, tendency, playerInputs); // every other error is Prepare's own
     }
 
     /// <summary>
@@ -134,10 +159,10 @@ public static class PitchPreparation
     /// limit of C2B-1. The result is not adopted anywhere.
     /// </summary>
     public static Result<NonInPlayPitchCandidate> BuildNonInPlayCandidate(PreparedPitch? prepared, GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning,
-        PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, CancellationToken cancellation = default)
+        PlayerSheet? batter, PlayerSheet? pitcher, int lastIssuedEventSequence, CancellationToken cancellation = default, PlayerInputSet? playerInputs = null)
     {
         cancellation.ThrowIfCancellationRequested();
-        if (CheckPrepared(prepared, state, rng, tuning, batter, pitcher) is { } stale)
+        if (CheckPrepared(prepared, state, rng, tuning, batter, pitcher, playerInputs) is { } stale)
             return Result<NonInPlayPitchCandidate>.Failure(stale);
         var draft = prepared!.Draft;                   // CheckPrepared proved that prepared and state exist (the null guard below only informs the compiler)
         ArgumentNullException.ThrowIfNull(state);
@@ -189,10 +214,12 @@ public static class PitchPreparation
 
     /// <summary>
     /// The shared "is this preparation still the one the caller is looking at" contract of 3-C2B-1, in its original order: the inputs exist, the draft contract is supported, the same
-    /// game, a snapshot that belongs to it and sits where the draft started, the same current batter/pitcher and handedness, the same rules / tuning / probability model, and last
-    /// of all the very same state object. Returns the first problem or null. Used unchanged by the non-in-play builder and the in-play planner (3-C2B-2).
+    /// game, a snapshot that belongs to it and sits where the draft started, the same current batter/pitcher and handedness, the same rules / tuning / probability model, then (Phase 3-D v2,
+    /// step 6b) the game's pinned tuning and the player inputs - the set identity and every frozen fielder - and last of all the very same state object. Returns the first problem or null.
+    /// Used by the non-in-play builder, the in-play planner, the advancement resolver and the commit evidence. It runs BEFORE the compare-and-swap; nothing is checked after it.
     /// </summary>
-    internal static Error? CheckPrepared(PreparedPitch? prepared, GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning, PlayerSheet? batter, PlayerSheet? pitcher)
+    internal static Error? CheckPrepared(PreparedPitch? prepared, GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning, PlayerSheet? batter, PlayerSheet? pitcher,
+        PlayerInputSet? playerInputs = null)
     {
         if (prepared is null)
             return Fail("PitchCandidate.prepared_missing", "준비된 투구가 없습니다.");
@@ -241,6 +268,29 @@ public static class PitchPreparation
             return Fail("PitchCandidate.tuning_changed", "준비 이후 튜닝 버전 또는 해시가 바뀌었습니다.");
         if (tuning.Model.Version.Value != prepared.ProbabilityModelVersion)
             return Fail("PitchCandidate.probability_model_changed", "준비 이후 확률 모델 버전이 바뀌었습니다.");
+
+        // 6b (Phase 3-D v2, S1): the player inputs. The set the caller holds NOW must be the very set the pitch was prepared with, and the frozen fielders (position, player, base rating) must
+        // still be the current defenders and ratings. PlayerId alone is never enough: the same id with another rating is another input. A defensive substitution or a changed rating is
+        // reported here with its own reason, before the generic stale-state reason below.
+        if (state.Execution is { } execution && (tuning.Model.Version.Value != execution.ProbabilityModelVersion || tuning.Tuning.Value != execution.TuningVersion || tuning.ContentHash != execution.TuningHash))
+            return Fail("PitchCandidate.execution_mismatch", "경기가 고정한 확률 모델·튜닝 버전 또는 해시와 현재 튜닝이 다릅니다.");
+        if (prepared.PlayerInputsId != playerInputs?.Id)
+            return Fail("PitchCandidate.player_inputs_changed", "준비 이후 선수 입력 집합이 달라졌거나, 준비할 때와 다른 집합(또는 없음)이 전달되었습니다.");
+        if (prepared.Fielding is { } frozen)
+        {
+            var current = PitchFieldingInputs.Build(state, playerInputs!, "PitchCandidate");
+            if (!current.IsSuccess)
+                return current.Error!.Value;
+            for (var i = 0; i < frozen.Entries.Length; i++)
+            {
+                var then = frozen.Entries[i];
+                var now = current.Value.Entries[i];
+                if (then.Player != now.Player)
+                    return Fail("PitchCandidate.fielder_changed", $"준비 이후 {then.Position} 수비수가 {then.Player}에서 {now.Player}(으)로 바뀌었습니다.");
+                if (then.Fielding != now.Fielding)
+                    return Fail("PitchCandidate.fielding_changed", $"준비 이후 {then.Position} 수비수 {then.Player}의 기본 수비 능력치가 바뀌었습니다.");
+            }
+        }
 
         // 1 (last, so the specific reasons above win): count, outs, bases, approach, applied events... the very same state object
         if (!ReferenceEquals(state, prepared.State))

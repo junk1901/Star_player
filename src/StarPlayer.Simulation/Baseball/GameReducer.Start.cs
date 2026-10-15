@@ -26,6 +26,8 @@ public static partial class GameReducer
             return Fail<GameState>("Game.start_invalid", "경기 시작 정보 또는 경기 ID가 올바르지 않습니다.");
         if (start.Rules is null)
             return Fail<GameState>("Game.rules_missing", "경기 규칙 스냅샷이 없습니다.");
+        if (GameExecutionRules.Validate(start.Execution) is { } badExecution)
+            return Result<GameState>.Failure(badExecution);
 
         var away = BuildTeam(start.Rules, start.Away, "원정");
         if (!away.IsSuccess) return Result<GameState>.Failure(away.Error!.Value);
@@ -38,7 +40,7 @@ public static partial class GameReducer
             start.GameId, start.Rules, 1, InningHalf.Top, 0, PitchCountState.Zero, RunnerState.Empty, 0, 0,
             ImmutableList.Create(0), ImmutableList<int>.Empty, PaStage.Start, null, null, away.Value, home.Value,
             ImmutableList<ScoredPlay>.Empty, ImmutableList<StatEntry>.Empty, ImmutableList<SubstitutionRecord>.Empty, ImmutableList<EventReceipt>.Empty,
-            1, GameStatus.InProgress, null, null);
+            1, GameStatus.InProgress, null, null, start.Execution);
         return Result<GameState>.Success(state);
     }
 

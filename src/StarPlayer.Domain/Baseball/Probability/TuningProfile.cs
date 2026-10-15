@@ -41,7 +41,7 @@ public sealed record ScenarioSpec(string Id, string Description, string Stage, s
 public sealed record TargetSpec(string Id, string Description, long LowPpm, long HighPpm, string Status);
 
 /// <summary>
-/// One validated tuning profile of <c>prob-model-v1</c>. Identity: <see cref="ContentHash"/>, the SHA-256 of <see cref="CanonicalText"/>, a deterministic text built
+/// One validated tuning profile of <c>prob-model-v1</c> or <c>prob-model-v2</c> (each tuning version belongs to exactly one model version). Identity: <see cref="ContentHash"/>, the SHA-256 of <see cref="CanonicalText"/>, a deterministic text built
 /// from the validated values in a fixed order (JSON key order, whitespace and the free-text descriptions do not matter; every number, id and the provenance do).
 /// Any change of a number is therefore a new hash and, by policy, a new <see cref="TuningVersion"/>.
 /// </summary>
@@ -139,6 +139,9 @@ public sealed class TuningProfile
         var tuning = TuningVersion.Create(draft.TuningVersion);
         if (!tuning.IsSuccess)
             return Result<TuningProfile>.Failure(tuning.Error!.Value);
+        // a model and a tuning belong together (v1 with v1, v2 with v2): a version is never converted to its neighbour
+        if ((modelVersion.Value.Value == ProbabilityModelVersion.V2Text) != (tuning.Value.Value == TuningVersion.VirtualProtoV2Text))
+            return Fail("Tuning.model_tuning_mismatch", $"튜닝 버전 '{tuning.Value}'은(는) 확률 모델 '{modelVersion.Value}'의 튜닝이 아닙니다.");
         var zone = ZoneModelVersion.Create(draft.ZoneModel);
         if (!zone.IsSuccess)
             return Result<TuningProfile>.Failure(zone.Error!.Value);

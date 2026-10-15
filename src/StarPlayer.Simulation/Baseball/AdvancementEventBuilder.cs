@@ -116,6 +116,29 @@ internal static class AdvancementEventBuilder
     }
 
     /// <summary>
+    /// R3 under <see cref="AdvancementPolicy.VersionV2"/>: every runner thrown out on the play must have been credited with an assist by exactly the fielder whose Arm was an input - the
+    /// player standing at the Retriever position in the ORIGINAL state - and a decision that was not an out must have no such input credit. Compared with the reducer's own scored
+    /// play (position, player and kind of each fielder credit), not with the event the builder wrote. Returns the problem or null.
+    /// </summary>
+    public static Error? ThrowOutCreditProblem(IReadOnlyList<AdvancementDecisionAudit> decisions, ScoredPlay play, GameState original)
+    {
+        foreach (var d in decisions)
+        {
+            if (d.Abilities is not { } a)
+                return Mismatch($"'{d.ContextKey}' 결정에 Arm 입력 기록이 없습니다.");
+            if (original.DefenderAt(original.FieldingSide, a.Retriever) != a.RetrieverPlayer)
+                return Mismatch($"'{d.ContextKey}'의 Arm 입력 선수 {a.RetrieverPlayer}가 {a.Retriever} 위치의 현재 수비수가 아닙니다.");
+        }
+
+        foreach (var group in decisions.Where(d => d.Applied == AdvancementOutcome.Out).GroupBy(d => (d.Abilities!.Retriever, d.Abilities.RetrieverPlayer)))
+            if (play.Credits.Count(c => c.Kind == CreditKind.Assist && c.Position == group.Key.Retriever && c.Player == group.Key.RetrieverPlayer) < group.Count())
+                return Mismatch($"주루사의 보살이 Arm 입력 선수 {group.Key.RetrieverPlayer}({group.Key.Retriever})에게 기록되지 않았습니다.");
+        return null;
+    }
+
+    private static Error Mismatch(string detail) => new("Advancement.arm_credit_mismatch", $"송구 Arm 입력 선수와 보살 기록이 맞지 않습니다: {detail}");
+
+    /// <summary>
     /// The batter result the reducer must derive from the final event. A hit or reaching on an error keeps its name; a caught ball that is Out is a sacrifice fly only when it was a
     /// fly ball, the batter is the play's only out, the play started with fewer than two outs and at least one run scored on the play (the reducer's rule); otherwise it is Out.
     /// </summary>

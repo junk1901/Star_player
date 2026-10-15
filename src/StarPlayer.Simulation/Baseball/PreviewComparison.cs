@@ -6,7 +6,7 @@ namespace StarPlayer.Simulation.Baseball;
 /// <summary>
 /// The structural comparison of a candidate's unconfirmed preview with the step the reducer produced again on the authoritative state (C3-B, game-engine 27.18 B-03).
 /// It names the FIRST differing field path (<c>null</c> = identical). Every member of <see cref="GameState"/>, <see cref="TeamGameState"/>, <see cref="ScoredPlay"/>,
-/// <see cref="GameStep"/> and <see cref="GameStatDelta"/> is compared by an explicit line below, collections by content and order (never by <c>ImmutableList</c> reference), so
+/// <see cref="GameStep"/> and <see cref="GameStatDelta"/> is compared by an explicit line below, collections by content and order (never by <c>ImmutableList</c> reference; <see cref="GameState.Execution"/> by record value, so a different park snapshot, tuning pin or policy is a difference), so
 /// a member added to one of those types is not compared until someone adds it here; field-inventory tests fail first and force that review. The leaf records inside the
 /// collections (runners, lineup slots, receipts, moves, credits, stat entries, facts ...) hold only scalars, enums and value-type ids, so their value equality is structural;
 /// a test pins that too. <see cref="GameState.Rules"/> is compared by reference: the reducer preserves it and a rebuilt snapshot is a different profile instance.
@@ -30,6 +30,7 @@ internal static class PreviewComparison
             return a is null && b is null ? null : p;
         return Scalar(a.GameId, b.GameId, p + ".GameId")
             ?? Ref(a.Rules, b.Rules, p + ".Rules")
+            ?? Scalar(a.Execution, b.Execution, p + ".Execution")
             ?? Scalar(a.Inning, b.Inning, p + ".Inning")
             ?? Scalar(a.Half, b.Half, p + ".Half")
             ?? Scalar(a.Outs, b.Outs, p + ".Outs")

@@ -3,6 +3,7 @@ using System.Text.Json;
 using StarPlayer.Application.Ports;
 using StarPlayer.Domain.Baseball.Game;
 using StarPlayer.Domain.Baseball.Probability;
+using StarPlayer.Domain.Common;
 using StarPlayer.Domain.Players;
 using StarPlayer.Infrastructure.Fixtures;
 using StarPlayer.Simulation.Baseball;
@@ -49,6 +50,14 @@ internal static class PitchBranchFixture
     /// <remarks>The game id is always explicit: the resolver requires it to equal the RNG snapshot's context key, so a positive test passes the same text to both.</remarks>
     public static GameState StartState(GameRuleSnapshot rules, string gameId) =>
         GameReducer.Start(new GameStart(gameId, rules, BaseGame.Value.Away, BaseGame.Value.Home)).Value;
+
+    /// <summary>Every player of both teams of the base game: the nine of each lineup, the starting pitchers and the benches.</summary>
+    public static IReadOnlyList<PlayerId> BasePlayers { get; } = new[] { BaseGame.Value.Away, BaseGame.Value.Home }
+        .SelectMany(t => t.Lineup.Select(s => s.Player).Append(t.StartingPitcher).Concat(t.Bench)).Distinct().ToList();
+
+    /// <summary>The same new game under a Phase 3-D execution contract (park snapshot and pinned versions); <c>null</c> is the legacy start.</summary>
+    public static GameState StartState(GameRuleSnapshot rules, string gameId, GameExecution? execution) =>
+        GameReducer.Start(new GameStart(gameId, rules, BaseGame.Value.Away, BaseGame.Value.Home, execution)).Value;
 
     /// <summary>An approach is chosen: the pitch sequence is running (an approach-driven pitch is legal, an explicit Take is not).</summary>
     public static GameState InSequenceState(GameRuleSnapshot rules, string gameId) =>

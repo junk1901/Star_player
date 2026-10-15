@@ -69,6 +69,9 @@ internal static class SourceScan
         R("ZoneReferenceDistribution", @"\bZoneReferenceDistribution\b"),
         R("WorldFormat", @"\bWorldFormat\b"),
         R("PrepareFromProfiles", @"\bPrepareFromProfiles\b"),
+        // Phase 3-D v2 (S1): the exact-rating player input set of the resolver
+        R("PlayerInputSet", @"\bPlayerInputSet\b"),
+        R("PitchFieldingInputs", @"\bPitchFieldingInputs\b"),
     ];
 
     public static List<string> Find(string source, IEnumerable<Rule> rules)

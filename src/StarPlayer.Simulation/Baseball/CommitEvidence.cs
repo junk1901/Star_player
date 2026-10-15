@@ -26,10 +26,12 @@ internal sealed class CommitEvidence
     private readonly TuningProfile? _tuning;
     private readonly PlayerSheet? _batter;
     private readonly PlayerSheet? _pitcher;
+    private readonly PlayerInputSet? _inputs;
 
     private CommitEvidence(AuthoritativeGame? aggregate, PreparedPitch? prepared, NonInPlayPitchCandidate? nonInPlay, InPlayPitchCandidate? inPlay,
-        TuningProfile? tuning, PlayerSheet? batter, PlayerSheet? pitcher)
+        TuningProfile? tuning, PlayerSheet? batter, PlayerSheet? pitcher, PlayerInputSet? inputs)
     {
+        _inputs = inputs;
         _base = aggregate;
         _prepared = prepared;
         _nonInPlay = nonInPlay;
@@ -41,11 +43,12 @@ internal sealed class CommitEvidence
 
     /// <summary>Evidence for a non-in-play candidate (pitch or explicit take) and the <see cref="PreparedPitch"/> it was built from.</summary>
     internal static CommitEvidence ForNonInPlay(AuthoritativeGame? aggregate, PreparedPitch? prepared, NonInPlayPitchCandidate? candidate, TuningProfile? tuning,
-        PlayerSheet? batter, PlayerSheet? pitcher) => new(aggregate, prepared, candidate, null, tuning, batter, pitcher);
+        PlayerSheet? batter, PlayerSheet? pitcher, PlayerInputSet? inputs = null) => new(aggregate, prepared, candidate, null, tuning, batter, pitcher, inputs);
 
     /// <summary>Evidence for an in-play candidate (base or resolved); its source is <c>candidate.Plan.Prepared</c>.</summary>
-    internal static CommitEvidence ForInPlay(AuthoritativeGame? aggregate, InPlayPitchCandidate? candidate, TuningProfile? tuning, PlayerSheet? batter, PlayerSheet? pitcher) =>
-        new(aggregate, candidate?.Plan?.Prepared, null, candidate, tuning, batter, pitcher);
+    internal static CommitEvidence ForInPlay(AuthoritativeGame? aggregate, InPlayPitchCandidate? candidate, TuningProfile? tuning, PlayerSheet? batter, PlayerSheet? pitcher,
+        PlayerInputSet? inputs = null) =>
+        new(aggregate, candidate?.Plan?.Prepared, null, candidate, tuning, batter, pitcher, inputs);
 
     /// <summary>True when the entry received no candidate at all (O-2 step 1).</summary>
     internal bool CandidateMissing => _nonInPlay is null && _inPlay is null;
@@ -63,7 +66,7 @@ internal sealed class CommitEvidence
 
     /// <summary>O-2 step 7a: the unchanged <see cref="PitchPreparation.CheckPrepared"/> against the core's aggregate (its codes and order).</summary>
     internal Error? CheckPrepared(AuthoritativeGame expected) =>
-        PitchPreparation.CheckPrepared(_prepared, expected.State, expected.Rng, _tuning, _batter, _pitcher);
+        PitchPreparation.CheckPrepared(_prepared, expected.State, expected.Rng, _tuning, _batter, _pitcher, _inputs);
 
     /// <summary>
     /// O-2 step 7b (B-01): the binding of the evidence to the core's inputs, then the link of the candidate to its source. Returns <c>Commit.candidate_link_mismatch</c> or null.
@@ -161,6 +164,8 @@ internal sealed class CommitEvidence
                 return Link("추가 진루 결정의 맥락 키가 기본 계획의 맥락 키와 다릅니다.");
             if (detail.EventResult != candidate.Event.Result || detail.EventBatted != candidate.Event.Batted)
                 return Link("추가 진루 기록의 사건 입력이 후보 사건과 다릅니다.");
+            if (LinkAbilities(candidate, detail) is { } ability)
+                return ability;
 
             var composed = AdvancementPlanner.Compose(plan.Facts, prepared.State, detail.Decisions.Select(d => d.Drawn).ToArray());
             if (!composed.IsSuccess)
@@ -171,6 +176,67 @@ internal sealed class CommitEvidence
         return EventFingerprint.Receipt(rebuilt) == EventFingerprint.Receipt(candidate.Event)
             ? null
             : Link("후보 사건이 기록된 계획으로 결정적으로 다시 만든 사건과 다릅니다.");
+    }
+
+    /// <summary>
+    /// Phase 3-D v2 (R2-R4, S1/S3): the policy of a resolved advancement is the one the GAME pinned; under <see cref="AdvancementPolicy.VersionV2"/> every decision names the runner and the
+    /// Retriever whose Speed and Arm produced its row, those ratings are re-read from the set the caller holds NOW (the identity was already proved equal to the prepared pitch's by
+    /// <see cref="CheckPrepared"/>), the row and the drawn result are recomputed from the recorded roll with one joint computation, and the throw-out assists are credited to the Arm
+    /// player. Under v1 nothing of this exists. Returns a link problem or null.
+    /// </summary>
+    private Error? LinkAbilities(InPlayPitchCandidate candidate, AdvancementAudit detail)
+    {
+        var prepared = candidate.Plan.Prepared;
+        var state = prepared.State;
+        var policy = state.Execution?.AdvancementPolicyVersion ?? AdvancementPolicy.Version;
+        if (detail.PolicyVersion != policy)
+            return Link($"추가 진루 기록의 정책 '{detail.PolicyVersion}'이 경기가 고정한 정책 '{policy}'과 다릅니다.");
+        // F-01: the decisions are bound to the contexts the game's own verified facts declare (the same pure derivation the resolver used), never to what the audit says about itself
+        var made = AdvancementPlanner.Contexts(candidate.Plan.Facts);
+        if (!made.IsSuccess)
+            return Link($"기본 계획에서 추가 진루 맥락을 다시 도출할 수 없습니다: {made.Error!.Value.Code}");
+        var contexts = made.Value;
+        if (detail.Decisions.Length != contexts.Length)
+            return Link("추가 진루 결정의 수가 기본 계획에서 도출한 맥락의 수와 다릅니다.");
+        for (var i = 0; i < contexts.Length; i++)
+        {
+            var (c, d) = (contexts[i], detail.Decisions[i]);
+            if (d.Order != c.Order || d.ContextKey != c.Key || d.RunnerKey != c.RunnerKey || d.Runner != c.Runner || d.StartBase != c.StartBase || d.PlanTo != c.PlanTo || d.TargetTo != c.TargetTo)
+                return Link($"'{d.ContextKey}' 결정이 기본 계획에서 도출한 {i + 1}번째 맥락(순서·키·주자·시작 베이스·목표)과 다릅니다.");
+        }
+
+        if (policy != AdvancementPolicy.VersionV2)
+            return detail.PlayerInputsId is not null || detail.Decisions.Any(d => d.Abilities is not null)
+                ? Link("중립 추가 진루 정책의 기록에 선수 입력이 붙어 있습니다.")
+                : null;
+
+        if (_inputs is null || detail.PlayerInputsId != _inputs.Id || prepared.PlayerInputsId != _inputs.Id)
+            return Link("추가 진루 기록의 선수 입력 집합이 준비한 투구·현재 집합과 다릅니다.");
+        for (var i = 0; i < contexts.Length; i++)
+        {
+            var d = detail.Decisions[i];
+            if (d.Abilities is null)
+                return Link($"'{d.ContextKey}' 결정에 선수 입력 기록이 없습니다.");
+
+            // the expected runner, Retriever and ratings come from the REAL context, the state and the set held now; the record must equal them exactly
+            var read = AdvancementSlots.For(contexts[i], state, _inputs);
+            if (!read.IsSuccess)
+                return Link($"'{d.ContextKey}' 결정의 선수 입력을 실제 맥락에서 다시 읽을 수 없습니다: {read.Error!.Value.Code}");
+            if (d.Abilities != read.Value.Audit)
+                return Link($"'{d.ContextKey}' 결정의 주자·송구 수비수·능력치 기록이 실제 맥락과 현재 선수 입력 집합에서 읽은 값과 다릅니다.");
+
+            var row = StageProbability.Compute(_tuning!, "advancement", d.ContextKey, read.Value.Modifiers);
+            if (!row.IsSuccess || !row.Value.Distribution.Ppm.SequenceEqual(d.Ppm))
+                return Link($"'{d.ContextKey}' 결정의 확률표가 실제 입력으로 다시 계산한 값과 다릅니다.");
+            if (row.Value.Distribution.SelectIndex(d.Roll) is not { IsSuccess: true } picked || (AdvancementOutcome)picked.Value != d.Drawn)
+                return Link($"'{d.ContextKey}' 결정의 뽑은 결과가 기록된 주사위 값과 확률표에서 나오는 결과와 다릅니다.");
+        }
+
+        if (candidate.UnconfirmedStep.NewPlays.Count != 1)
+            return Link("추가 진루 후보의 미리보기에 단일 득점 플레이가 없어 보살 기록을 확인할 수 없습니다.");
+        return AdvancementEventBuilder.ThrowOutCreditProblem(detail.Decisions, candidate.UnconfirmedStep.NewPlays[0], state) is { } armProblem
+            ? Link(armProblem.Message)
+            : null;
     }
 
     /// <summary>

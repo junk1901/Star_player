@@ -51,6 +51,9 @@ public class HiddenTendencyBoundaryTests
          typeof(StarPlayer.Simulation.Baseball.CommitRecord), typeof(StarPlayer.Simulation.Baseball.CommitGate),
          // Phase 3-C3-B adds the pitch entry: its signatures name the prepared pitch and the candidates, so it is Simulation-internal as well
          typeof(StarPlayer.Simulation.Baseball.PitchCommitGate),
+         // Phase 3-D v2 (S1): the player input set holds EXACT base fielding / speed / arm ratings of NPCs; it and its frozen fielder inputs are resolver-internal, like the draft
+         typeof(StarPlayer.Simulation.Baseball.PlayerInputSet), typeof(StarPlayer.Simulation.Baseball.PlayerRunFieldInput), typeof(StarPlayer.Simulation.Baseball.PitchFieldingInputs),
+         typeof(StarPlayer.Simulation.Baseball.FieldingInput),
          // Phase 3-D (BatterTendency v2, D-T2) adds the per-player profile set and its entry: hidden exactly like the vector they hold
          typeof(BatterZoneProfiles), typeof(BatterZoneProfileEntry)];
 

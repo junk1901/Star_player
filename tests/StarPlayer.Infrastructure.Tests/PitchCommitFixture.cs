@@ -72,6 +72,10 @@ internal static class Pc
 
         public Driver Approach() => Do(id => new ApproachEvent(id, ApproachKind.Normal));
 
+        /// <summary>A real substitution between plate appearances (a pinch runner needs <paramref name="base"/>, a defensive substitution <paramref name="slot"/>).</summary>
+        public Driver Substitute(SubstitutionKind kind, TeamSide team, PlayerId player, int? @base = null, int? slot = null) =>
+            Do(id => new SubstitutionEvent(id, kind, team, player, @base, slot));
+
         public Driver Walk()
         {
             Approach();
@@ -255,7 +259,7 @@ internal static class Pc
 
     public static PreparedPitch With(this PreparedPitch p, PitchBranchDraft draft) =>
         new(p.State, p.GameId, p.StartRngStateHash, p.BatterId, p.PitcherId, p.BatterDeclaredSide, p.PitcherThrows, draft, p.RulesVersion, p.RulesHash, p.ProbabilityModelVersion,
-            p.TuningVersion, p.TuningHash);
+            p.TuningVersion, p.TuningHash, p.Fielding);
 
     public static NonInPlayPitchCandidate WithStep(this NonInPlayPitchCandidate c, GameStep step) => new(c.Event, step, c.NextRng, c.Kind, c.NextBoundedCalls);
 

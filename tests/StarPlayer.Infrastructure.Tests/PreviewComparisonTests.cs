@@ -64,6 +64,7 @@ public class PreviewComparisonTests
         ["GameState.NextRunnerKey"] = s => S(s, st => st with { NextRunnerKey = st.NextRunnerKey + 1 }),
         ["GameState.Status"] = s => S(s, st => st with { Status = Next(st.Status) }),
         ["GameState.Outcome"] = s => S(s, st => st with { Outcome = st.Outcome is null ? GameOutcome.Tie : null }),
+        ["GameState.Execution"] = s => S(s, st => st with { Execution = Gx.Exec() }),
         ["GameState.Final"] = s => S(s, st => st with { Final = new FinalizedGame(st.GameId, GameOutcome.Tie, 0, 0, "x", "y", null!) }),
 
         // TeamGameState (the away team stands for both: the comparer treats them with one routine)
