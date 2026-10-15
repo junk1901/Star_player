@@ -128,3 +128,29 @@ B-01~B-07 대응: B-01 후보 연결(`CheckLink`), B-02 RNG 증거(`CheckRng`), 
 4. Codex 독립 리뷰 `미실시`. GPT Chat 기술 검토: 이 문서 제출 후 소유자 전달.
 
 상태: Phase 3 Gate `INCOMPLETE` · C3-C 구현·변이 재실행·Codex 리뷰 `NOT STARTED / NOT AUTHORIZED` · GitHub Push는 Phase 3 최종 Gate 이후 별도 승인 · 이 문서와 증거 파일은 Git 스테이징·커밋하지 않았다.
+
+## 2026-10-15 C3-C Evidence Recovery Correction Addendum
+
+> 위 본문(§1~§9)은 C3-C-0 작성 시점(2026-10-14)의 기록이며 수정하지 않는다. 이 절은 이후 확인된 사실로 그 기록을 정정·보완한다. 출처: 소유자 `TASK.md` "Phase 3-C3-C Final Closeout Documentation & Evidence Integration"(2026-10-15, 문서만). 전체 Closeout: [PHASE_3C3C_REPORT](PHASE_3C3C_REPORT.md).
+
+**A1. C3-B 변이 정의 — `MISSING`에서 `TRANSCRIPT_RECOVERED`로.** §8·§9가 `MISSING / SUMMARY_ONLY`로 적은 C3-B 변이 13건의 정의(M7 포함)와 당시 실행 기록은 C3-C-3A에서 C3-B 구현 세션 트랜스크립트(EV-B1) 안에서 발견됐다. C3-A 원본 정의도 같은 방식으로 복구됐다(EV-A1, EV-A2).
+
+**A2. 보호 보관.** EV-A1·EV-A2·EV-B1과 사전 감사 보고서 EV-R1은 저장소 밖 접근 제한 보관소 `PRIVATE_D5_VAULT`에 바이트 복사로 보존됐고, 2026-10-15 재확인에서 4/4 SHA-256·크기가 일치했다. 트랜스크립트는 개인정보를 포함하므로 Git에 넣지 않는다.
+
+**A3. 당시 독립 stdout/stderr 원본은 여전히 없다.** 복구된 것은 트랜스크립트 안의 정의와 실행 기록이다. 당시 변이 실행의 독립 stdout/stderr 파일은 별도로 확보되지 않았다(`MISSING` 유지).
+
+**A4. 현재 트리 독립 재실행 완료 (C3-C-3B).** 기준 HEAD `52cab03`의 격리 스냅샷에서 C3-B 원본 13건을 원본 그대로 재실행했다(변이 직전 백업이 HEAD 소스와 SHA-256 동일 → 당시와 같은 Production 소스에 적용). 결과 12 KILLED, **B-M7 SURVIVED**(`LIKELY_REDUNDANT_GUARD / NOT_FORMALLY_PROVEN`, 해결로 처리하지 않음). 실패 수는 과거 기록과 B-M3(27→28)만 다르다(현재 테스트 집합 151건 기준). 원시 로그·TRX·Patch·매니페스트(275개 해시 일치)는 `PRIVATE_3B_EVIDENCE`.
+
+**A5. 기존 `MISSING` 기록과 새 증거의 관계.** §8 표의 "C3-B Mutation 12/13, M7 생존 — SUMMARY_ONLY (원본 MISSING)" 행은 이렇게 읽는다: 정의·당시 실행 기록 `TRANSCRIPT_RECOVERED`, 당시 독립 원시 출력 `MISSING`, 현재 트리 재실행 결과 `RAW_VERIFIED`(C3-C-3B). 과거 결과(12/13, M7 생존)와 현재 재실행 결과는 일치한다. "C3-B 구현 완료 보고서 원본 `MISSING`"과 "전체 xUnit 단독 실행 원본 `MISSING`"은 그대로다.
+
+**A6. `snap.ps1.txt` SHA-256 약식 표기 불일치.** §8 표의 "매니페스트 생성 스크립트" 행은 SHA-256을 `522050D2…8851F`로 적었다. 실제 값은 `522050d2d379219a63e1daf9c49b247ff235f25dd78e1518eafd5942ed33851f`(539 B)이며 끝 다섯 자리는 `3851F`다. 앞 8자리와 크기는 맞고, 파일 바이트는 `828a988`과 HEAD에서 같은 blob이다. 약식 표기 오기이며 파일 변경은 없다.
+
+**A7. `snap.ps1` 경로 문자열의 첫 글자 누락.** `snap.ps1`은 경로를 `$_.FullName.Substring(25)`로 잘랐는데 저장소 루트 접두사 `E:\Madegame\Star_player\`는 24자다. 그래서 두 트리 매니페스트(`snap0`, `snap3`)의 경로는 첫 글자가 빠져 있다: `game\`→`ame\` 12개, `src\`→`rc\` 104개, `tests\`→`ests\` 113개(합계 229, 잘린 경로 사이 중복 0). 모든 스냅샷이 같은 방식으로 잘려 파일별 해시와 스냅샷 간 비교, 매니페스트 해시 `E3319526…241A`는 영향을 받지 않는다. 사람이 읽을 때 경로 앞에 `g`/`s`/`t`를 보충해야 한다. 원본 매니페스트와 스크립트는 고치지 않는다.
+
+**A8. 보충.** 위 정정은 이 보고서의 §9 판정 `C3B_IMPLEMENTATION_COMPLETE_WITH_NOTES`를 바꾸지 않는다. Codex 독립 리뷰 `미실시`, Phase 3 Gate `INCOMPLETE`, GitHub Push 금지.
+
+**A9. Codex 독립 리뷰의 생존 Mutation 검토 (2026-10-15 추가; 위 A1~A8은 변경하지 않으며, A8의 Codex `미실시` 표기는 Codex 리뷰 전 시점의 역사적 기록이다).** 소유자가 전달한 `CODEX_C3C_REVIEW_PASS_WITH_NOTES`(BLOCKER 0 / MAJOR 0 / MINOR 1) 중 이 보고서와 관련된 기술 검토만 기록한다. 전체: [PHASE_3C3C_REPORT §I](PHASE_3C3C_REPORT.md).
+
+- **B-M7**(`CommitEvidence.CheckApplied`의 ef2 검증·투구 수 증가 검사): 선행 링크 검증과 공통 Commit 코어에서 관련 검증이 수행되고 현재 Reducer의 정상 투구 경로에서 `CountPitch`가 호출되므로 정상 경로에서 중복 방어라는 논거는 타당하다. 그러나 모든 비정상 상태에 대한 동등성은 증명되지 않았다. 상태 유지: `SURVIVED / LIKELY_REDUNDANT_GUARD / NOT_FORMALLY_PROVEN`. 이는 §8의 "12/13 검출, M7 생존" 결과를 바꾸지 않는다.
+- **독립 확인의 한계.** Codex는 접근 제한 때문에 B-M7 원본 Mutation Patch와 원본 로그·TRX를 직접 열람하지 못했다. 비공개 증거에 대한 Codex 검증 범위는 `REPORTED_AND_ATTESTED_NOT_INDEPENDENTLY_READ`이며, 원본 증거에 대한 Claude Code의 앞선 해시 검사(A1~A4)를 무효화하지도, Codex가 원본을 검증했다고 주장하지도 않는다.
+- 중복 방어의 근거를 확인했다는 것과 형식적 동등성을 증명했다는 것은 다른 주장이다. 이 보고서의 §9 판정 `C3B_IMPLEMENTATION_COMPLETE_WITH_NOTES`는 그대로이며 Phase 3 Gate는 `INCOMPLETE`, GitHub Push 금지.

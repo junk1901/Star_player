@@ -10,7 +10,7 @@ reviewed_by: ""
 branch: "main"
 commit: "3-C2A: 'feat: add phase 3c2a deterministic pitch branch resolver' (기준 HEAD d3570b76e93246076253681568b709d3ea1d5a3b 다음 커밋; SHA는 git log 참조 — 문서가 자기 커밋 SHA를 담을 수 없음; 3-C1은 d3570b7)"
 roadmap_anchor: "phase-3--seeded-game-simulation--prototype-1"
-last_updated: "2026-10-14"
+last_updated: "2026-10-15"
 tags:
   - star-player
   - phase-review
@@ -20,6 +20,18 @@ tags:
 
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
+
+> [!info] 3-C3-C 검증 결과 · Closeout 문서 통합 (2026-10-15, `TASK.md` "Phase 3-C3-C Final Closeout Documentation & Evidence Integration", 기준 HEAD `52cab03` — 문서만)
+> C3-C 기술 검증은 수행 완료, Closeout 문서는 작성·최종 정합화 완료(2026-10-15), **Codex 독립 리뷰는 `CODEX_C3C_REVIEW_PASS_WITH_NOTES`**(BLOCKER 0 / MAJOR 0 / MINOR 1; 이 리뷰 판정은 C3-C Closeout 문서·코드 검토에 한정). 이 문서의 최상위 status는 **`검토 대기` 유지** — Phase 3 전체의 최종 승인(`승인 완료`)이나 구현 종료가 아니다(3-D 이후 미착수, `PHASE_3_GATE_INCOMPLETE`).
+> - C3-C-1/2 테스트: 신규 63건(C3-C-1 `03c8675` 33, C3-C-2 `52cab03` 30), TC-01~11·TC-14~15. TC-12/13 `UNDEFINED — NOT SCORED`. E4 Race 11건 × 5회 PASS(종료 코드 0 ×5).
+> - Mutation 36건 실행(C3-C-3B): 34 KILLED / 2 SURVIVED — C3-A 원본 19, C3-A 재정의 3(A-M9R/A-M10R/A-M13R), C3-B 원본 12 KILLED + B-M7 생존, A-M25 특별 검증 생존. A-M9/A-M10 원본 적용 불가(36건에 미포함), A-M26·A-M10R2 미실행. 신규 63건의 추가 검출력 0.
+> - 전체 회귀(C3-C-3C, 격리 Clone): xUnit 1,804 PASS / FAIL 0 / SKIP 0 / EXIT 0, `verify.ps1` Run 1·2 `GATE: PASS`(22 PASS + 2 INFO, 회차 간 일치).
+> - 증거 보존: D5(트랜스크립트·사전 감사, 4/4 SHA 일치), E4(원본 16개, `E4_NO_HISTORICAL_SHA256_BASELINE`), 3B 매니페스트 275개·3C 매니페스트 96개 해시 일치 — 모두 저장소 밖 접근 제한 보관, Git에는 요약·해시만.
+> - Codex 독립 리뷰(소유자 전달 결과 기록): MINOR 1 = 보고서의 "이 보고서 외 공식 문서 9개" → "이 보고서 포함 총 9개"(기존 7개 수정 + 신규 2개), **정정 완료**. 필수 Production·테스트 수정 0. Codex는 Production 코드·테스트를 독립 검토했으나 비공개 Mutation Patch·TRX·원본 로그는 열람하지 못했다(`REPORTED_AND_ATTESTED_NOT_INDEPENDENTLY_READ`); Claude Code의 기존 해시 검사는 유효하며 Codex가 원본을 검증했다고 주장하지 않는다. 이 리뷰 기록은 Codex 결과의 전달 기록이며 GPT Chat 승인이나 `승인 완료`가 아니다.
+> - 기술 NOTE(유지): B-M7 `SURVIVED / LIKELY_REDUNDANT_GUARD / NOT_FORMALLY_PROVEN`(정상 경로 중복 방어 논거는 타당, 비정상 상태 동등성 미증명), A-M25 `SURVIVED / UNRESOLVED`(OD-3 잠정 비차단, TC-14/15 PASS는 해결 근거 아님), TC-14 Production `IsComplete` 병행 호출(별도 완료 조건·필드 검사도 있어 순환 검증은 아님), Reducer Oracle 재사용, TC-04/05 양쪽 게시 순서 결정적 검증(통계적 경쟁 증거 아님), Seed 상한 20,000/60,000/3,000 및 생성 실패 skip 경로, CAS 직후 취소 직접 주입 부재, Race 승자 분포 미기록, TC-12/13 `UNDEFINED — NOT SCORED`. 절차 NOTE: NuGet `NETWORK_ACCESS_UNVERIFIED`, Godot 공유 사용자 경로 쓰기.
+> - 모델 예외: 소유자 2026-10-15 "모델 다른거 사용은 상관없음" → `MODEL_DEVIATION_OWNER_ACCEPTED`(이전 `OWNER_ACCEPTANCE_PENDING`은 역사적 상태; 재실행 없음, 다른 NOTE 면제 아님).
+> - 다음: 로컬 Commit은 **소유자 결정 대기**(미실시). C3-C 최종 Commit 미실시. GitHub Push 금지. Phase 3 Gate `INCOMPLETE`.
+> - 문서: [PHASE_3C3C_REPORT](../../docs/reports/PHASE_3C3C_REPORT.md), [game-engine §27.21](../../docs/game-engine.md), [ADR-007](../../docs/decisions/ADR-007.md), [결정 기록](../02_Decisions/2026-10-15_C3C_Closeout.md), [3C3B 정정 Addendum](../../docs/reports/PHASE_3C3B_REPORT.md).
 
 > [!info] 3-C3-B 구현 완료 기록 · C3-C-0 문서 Closeout (2026-10-14, `TASK.md` "Phase 3-C3-C-0 문서 Closeout 및 검증 증거 보완", 기준 HEAD `8ed806f` — 문서만)
 > C3-B 프로덕션 구현은 **완료 / PASS WITH NOTES / 로컬 커밋 `8ed806f`**(푸시 안 함)로 기록한다. 기술 검토 `PASS WITH NOTES`는 소유자 전달 내용이며 검토 문서 원문은 저장소에 없다. 이 문서의 최상위 status는 **`검토 대기` 유지**(Phase 3 전체 검토 완료 아님), **Phase 3 Gate `INCOMPLETE`**, `승인 완료`로 바꾸지 않았다. 이번 단계에서 코드·테스트·verify·Mutation을 실행하지 않았고 스테이징·커밋·푸시·Codex 호출을 하지 않았다.
