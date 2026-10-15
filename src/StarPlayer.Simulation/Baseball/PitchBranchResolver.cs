@@ -20,7 +20,7 @@ namespace StarPlayer.Simulation.Baseball;
 /// </para>
 /// <para>
 /// <b>Tendency (Phase 3-D-1).</b> <c>swing_result</c> and <c>batted_ball</c> receive a <see cref="TendencyContext"/> (the actual zone and the batter's hidden vector, neutral when none is
-/// given) so the probability model applies its window guard and its bounded shift. It only changes the distribution a roll is read from: no stage is added, no extra draw is made and no roll changes.
+/// given) so the probability model applies its window guard and its bounded shift. It only changes the distribution a roll is read from: the tendency adds no stage and no draw of its own, and a stage that runs is rolled exactly as before. Because the distribution differs, the drawn outcome can differ (for example a swing that stays out of play becomes in play), and then later stages - and so the total number of calls - differ legitimately (D-T6, ADR-007).
 /// </para>
 /// <para>
 /// <b>Ability modifiers (Phase 3-D).</b> When the request carries <see cref="PitchAbilities"/>, each stage receives the modifier inputs <see cref="PitchModifierInputs"/> builds for

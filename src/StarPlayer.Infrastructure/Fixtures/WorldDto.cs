@@ -3,8 +3,10 @@ namespace StarPlayer.Infrastructure.Fixtures;
 // JSON schema v1 for the Phase 1 fictional pack (documented in docs/data-model.md). Plain data only: every value is
 // validated again by the Domain factories when mapped, so a hand-edited file cannot create an illegal object.
 // Property names are snake_case through the serializer options. Unknown properties are rejected (typos must not pass).
+// Format versions are separate strict DTOs: WorldDto is v1 and never gains a field; WorldV2Dto (Phase 3-D) adds the optional hidden batter-tendency collection. A v1 file that
+// carries the v2 field is therefore an unmapped member and is rejected by the unchanged shared options.
 
-internal sealed class WorldDto
+internal class WorldDto
 {
     public required int FormatVersion { get; set; }
     public required string Label { get; set; }
@@ -21,6 +23,37 @@ internal sealed class WorldDto
     public required List<DevelopmentDto> DevelopmentProfiles { get; set; }
     public required List<JerseyAssignmentDto> JerseyAssignments { get; set; }
     public required List<BatteryPairDto> BatteryPairs { get; set; }
+}
+
+/// <summary>
+/// JSON schema v2: everything of v1 plus the OPTIONAL <c>batter_zone_tendencies</c> list (hidden, sparse, source order). Omitted and an empty array are different file shapes and both
+/// are kept; an explicit JSON null is refused by the reader. The attribute (not the shared options) omits the member when the world had none.
+/// </summary>
+internal sealed class WorldV2Dto : WorldDto
+{
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public List<BatterZoneTendencyDto?>? BatterZoneTendencies { get; set; }
+
+    public WorldV2Dto()
+    {
+    }
+
+    [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
+    public WorldV2Dto(WorldDto v1)
+    {
+        FormatVersion = 2; Label = v1.Label; AsOfDate = v1.AsOfDate; ControlledPlayerId = v1.ControlledPlayerId; Rules = v1.Rules; ParkFactorBounds = v1.ParkFactorBounds;
+        Jersey = v1.Jersey; Clubs = v1.Clubs; Stadiums = v1.Stadiums; ParkFactorProfiles = v1.ParkFactorProfiles; StadiumUsage = v1.StadiumUsage; Players = v1.Players;
+        DevelopmentProfiles = v1.DevelopmentProfiles; JerseyAssignments = v1.JerseyAssignments; BatteryPairs = v1.BatteryPairs;
+    }
+}
+
+/// <summary>One hidden batter tendency row of a v2 pack. Every field is required; <c>values</c> are the nine inner-cell integers in row-major order.</summary>
+internal sealed class BatterZoneTendencyDto
+{
+    public required string PlayerId { get; set; }
+    public required string ZoneModel { get; set; }
+    public required string ReferenceId { get; set; }
+    public required List<int> Values { get; set; }
 }
 
 internal sealed class RulesDto

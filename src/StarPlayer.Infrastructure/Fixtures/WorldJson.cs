@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using StarPlayer.Application.Ports;
 using StarPlayer.Domain.Baseball;
+using StarPlayer.Domain.Baseball.PitchZone;
 using StarPlayer.Domain.Common;
 using StarPlayer.Domain.Players;
 using StarPlayer.Domain.Teams;
@@ -10,13 +11,24 @@ using StarPlayer.Domain.Teams;
 namespace StarPlayer.Infrastructure.Fixtures;
 
 /// <summary>
-/// Reads and writes the Phase 1 fictional pack (JSON schema v1). Reading maps every DTO through the Domain factories, so
+/// Reads and writes the Phase 1 fictional pack (JSON schema v1, and v2 since Phase 3-D). Reading maps every DTO through the Domain factories, so
 /// an illegal value is reported with its location (<c>players[3] p-0004: SkillValue.out_of_range ...</c>) and no partial
 /// world is returned. Writing is the exact inverse, which is what the round-trip tests rely on.
+/// <para>
+/// <b>Versions (D-T1).</b> The <c>format_version</c> is read first and chooses a strict DTO: 1 is <see cref="WorldDto"/> (no new field is accepted), 2 is <see cref="WorldV2Dto"/> (adds
+/// the optional hidden <c>batter_zone_tendencies</c>), anything else is <c>Fixture.version_unsupported</c> and is never converted. The shared <see cref="Options"/> are not changed. The world
+/// remembers its <see cref="WorldFormat"/>, so v1 stays v1 and v2 omitted / empty / filled each write back in their own shape.
+/// </para>
+/// <para>
+/// <b>Sparse and corrupt (D-T4).</b> An absent or empty collection means every player is neutral; a player without a row is neutral. Anything wrong in a row is an error, never repaired
+/// (no clamp, no normalisation, no skipped row). Error text names the row, never the values.
+/// </para>
 /// </summary>
 internal static class WorldJson
 {
     public const int FormatVersion = 1;
+    public const int FormatVersionV2 = 2;
+    private const string TendencyField = "batter_zone_tendencies";
 
     public static readonly JsonSerializerOptions Options = new()
     {
@@ -36,7 +48,7 @@ internal static class WorldJson
     {
         try
         {
-            var dto = JsonSerializer.Deserialize<WorldDto>(json, Options)
+            var dto = Deserialize(json)
                 ?? throw new FixtureException("Fixture.json_invalid", "JSON 내용이 비어 있습니다.");
             return Result<PlayerWorld>.Success(ToDomain(dto));
         }
@@ -50,7 +62,50 @@ internal static class WorldJson
         }
     }
 
-    public static string Write(PlayerWorld world) => JsonSerializer.Serialize(ToDto(world), Options);
+    /// <summary>Reads <c>format_version</c> first and deserializes with the matching strict DTO. A non-object root or a non-integer version falls to the v1 path, whose own errors apply.</summary>
+    private static WorldDto? Deserialize(string json)
+    {
+        using var document = JsonDocument.Parse(json);
+        var root = document.RootElement;
+        if (root.ValueKind != JsonValueKind.Object || !root.TryGetProperty("format_version", out var version) || version.ValueKind != JsonValueKind.Number || !version.TryGetInt32(out var number))
+            return JsonSerializer.Deserialize<WorldDto>(json, Options);
+        if (number == FormatVersionV2)
+        {
+            if (root.TryGetProperty(TendencyField, out var field) && field.ValueKind == JsonValueKind.Null)
+                throw new FixtureException("Fixture.json_invalid", $"{TendencyField}: null은 허용되지 않습니다(생략하거나 배열로 쓰세요).");
+            return JsonSerializer.Deserialize<WorldV2Dto>(json, Options);
+        }
+
+        if (number != FormatVersion)
+            throw new FixtureException("Fixture.version_unsupported", $"지원하지 않는 픽스처 형식 버전입니다: {number} (지원: {FormatVersion}, {FormatVersionV2})");
+        return JsonSerializer.Deserialize<WorldDto>(json, Options);
+    }
+
+    /// <summary>Writes the world in the format it was read from. A v1 world that holds tendencies is a programming error (nothing is dropped silently).</summary>
+    public static string Write(PlayerWorld world)
+    {
+        var v1 = ToDto(world);
+        if (world.Format.Version == FormatVersion)
+        {
+            if (world.Format.BatterTendenciesPresent || world.BatterTendencies.Count > 0)
+                throw new InvalidOperationException("v1 형식의 세계는 타자 코스 성향을 담을 수 없습니다.");
+            return JsonSerializer.Serialize(v1, Options);
+        }
+
+        if (world.Format.Version != FormatVersionV2)
+            throw new InvalidOperationException($"지원하지 않는 세계 형식 버전입니다: {world.Format.Version}");
+        var v2 = new WorldV2Dto(v1);
+        if (world.Format.BatterTendenciesPresent)
+        {
+            var rows = new List<BatterZoneTendencyDto?>(world.BatterTendencies.Count); // a loop, not a lambda: no compiler-generated member may name the hidden entry type
+            foreach (var e in world.BatterTendencies.Entries)
+                rows.Add(new BatterZoneTendencyDto { PlayerId = e.Player.Value, ZoneModel = e.Tendency.Model.Value, ReferenceId = e.Tendency.ReferenceId, Values = e.Tendency.Values.ToList() });
+            v2.BatterZoneTendencies = rows;
+        }
+        else if (world.BatterTendencies.Count > 0)
+            throw new InvalidOperationException("타자 코스 성향이 있는데 형식 정보에는 목록이 없다고 되어 있습니다.");
+        return JsonSerializer.Serialize(v2, Options);
+    }
 
     // ---------------------------------------------------------------- JSON -> Domain
 
@@ -80,8 +135,9 @@ internal static class WorldJson
 
     private static PlayerWorld ToDomain(WorldDto dto)
     {
-        if (dto.FormatVersion != FormatVersion)
-            throw new FixtureException("Fixture.version_unsupported", $"지원하지 않는 픽스처 형식 버전입니다: {dto.FormatVersion} (지원: {FormatVersion})");
+        var v2 = dto as WorldV2Dto;
+        if (dto.FormatVersion != (v2 is null ? FormatVersion : FormatVersionV2))
+            throw new FixtureException("Fixture.version_unsupported", $"지원하지 않는 픽스처 형식 버전입니다: {dto.FormatVersion} (지원: {FormatVersion}, {FormatVersionV2})");
 
         var catalog = Ok(RuleCatalog.Create(dto.Rules.Catalog.Select((d, i) => Ok(RuleAreaDefinition.Create(
             EnumOf<RuleArea>(d.Area, $"rules.catalog[{i}].area"), Id<RuleVersionId>(d.Version, $"rules.catalog[{i}].version"),
@@ -130,6 +186,8 @@ internal static class WorldJson
         foreach (var missing in players.Where(p => development.All(d => d.PlayerId != p.Id)))
             throw new FixtureException("Fixture.development_missing", $"development_profiles: {missing.Id} 선수의 성장 프로필이 없습니다.");
 
+        var tendencies = ToProfiles(v2?.BatterZoneTendencies, byId);
+
         var range = Ok(JerseyNumberRange.Create(Ok(JerseyNumber.Create(dto.Jersey.Min), "jersey.min"), Ok(JerseyNumber.Create(dto.Jersey.Max), "jersey.max")), "jersey");
         var retired = dto.Jersey.Retired.Select((r, i) => new RetiredNumberRestriction(
             Id<ClubId>(r.ClubId, $"jersey.retired[{i}].club_id"), Ok(JerseyNumber.Create(r.Number), $"jersey.retired[{i}].number"), r.EffectiveFrom)).ToList();
@@ -160,7 +218,43 @@ internal static class WorldJson
         if (!byId.ContainsKey(controlled))
             throw new FixtureException("Fixture.unknown_reference", $"controlled_player_id: 선수 {controlled}이(가) 없습니다.");
 
-        return new PlayerWorld(dto.Label, dto.AsOfDate, controlled, clubs, stadiums, bounds, factorProfiles, usages, catalog, profile, players, development, ledger, batteries);
+        return new PlayerWorld(dto.Label, dto.AsOfDate, controlled, clubs, stadiums, bounds, factorProfiles, usages, catalog, profile, players, development, ledger, batteries,
+            tendencies, v2 is null ? WorldFormat.V1 : new WorldFormat(FormatVersionV2, v2.BatterZoneTendencies is not null));
+    }
+
+    /// <summary>
+    /// Validates the v2 rows and builds the hidden profile set (the one trusted conversion that names the hidden type; HiddenTendencyBoundaryTests allows exactly this member). Every
+    /// row must be well formed, name a known hitter once and carry a registered model and reference whose weighted sum is zero; nothing is repaired or skipped.
+    /// </summary>
+    private static BatterZoneProfiles ToProfiles(List<BatterZoneTendencyDto?>? rows, Dictionary<PlayerId, PlayerSheet> byId)
+    {
+        if (rows is null)
+            return BatterZoneProfiles.Empty;
+        var entries = new List<BatterZoneProfileEntry>(rows.Count);
+        var ids = new List<string>(rows.Count);
+        for (var i = 0; i < rows.Count; i++)
+        {
+            var where = $"{TendencyField}[{i}]";
+            var row = rows[i] ?? throw new FixtureException("Fixture.json_invalid", $"{where}: 항목이 null입니다.");
+            if (row.PlayerId is null) throw new FixtureException("Fixture.field_missing", $"{where}.player_id: 값이 없습니다.");
+            if (row.ZoneModel is null) throw new FixtureException("Fixture.field_missing", $"{where}.zone_model: 값이 없습니다.");
+            if (row.ReferenceId is null) throw new FixtureException("Fixture.field_missing", $"{where}.reference_id: 값이 없습니다.");
+            if (row.Values is null) throw new FixtureException("Fixture.field_missing", $"{where}.values: 값이 없습니다.");
+
+            var player = Id<PlayerId>(row.PlayerId, where + ".player_id");
+            where += $" {player}";
+            if (!byId.TryGetValue(player, out var sheet))
+                throw new FixtureException("Fixture.unknown_reference", $"{where}: 해당 선수가 없습니다.");
+            if (sheet.Ratings.Hitter is null)
+                throw new FixtureException("Fixture.tendency_batter_invalid", $"{where}: 타격 능력치가 있는 선수가 아닙니다.");
+            Ok(ZoneModelVersion.Create(row.ZoneModel), where + ".zone_model");
+            var reference = Ok(ZoneReferenceDistribution.Resolve(row.ReferenceId), where + ".reference_id");
+            entries.Add(new BatterZoneProfileEntry(player, Ok(BatterZoneTendency.Create(row.Values, reference), where)));
+            ids.Add(player.Value);
+        }
+
+        Unique(ids, TendencyField);
+        return Ok(BatterZoneProfiles.Create(entries), TendencyField);
     }
 
     private static void Unique(IEnumerable<string> keys, string where)

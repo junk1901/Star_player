@@ -62,6 +62,13 @@ internal static class SourceScan
         R("GameRulesJson", @"\bGameRulesJson\b"),
         R("GameReducer", @"\bGameReducer\b"),
         R("GameState", @"\bGameState\b"),
+        // Phase 3-D (BatterTendency v2, D-T2): the hidden zone-tendency types and the only door the resolver preparation reads them through
+        R("BatterZoneProfiles", @"\bBatterZoneProfiles\b"),
+        R("BatterZoneProfileEntry", @"\bBatterZoneProfileEntry\b"),
+        R("BatterZoneTendency", @"\bBatterZoneTendency\b"),
+        R("ZoneReferenceDistribution", @"\bZoneReferenceDistribution\b"),
+        R("WorldFormat", @"\bWorldFormat\b"),
+        R("PrepareFromProfiles", @"\bPrepareFromProfiles\b"),
     ];
 
     public static List<string> Find(string source, IEnumerable<Rule> rules)

@@ -74,7 +74,7 @@ public static class PitchPreparation
     /// Checks that the two sheets are the CURRENT batter and pitcher of <paramref name="state"/> (ids only: no extra eligibility rule), takes the batter's declared side
     /// (<see cref="Player.Bats"/>) and the pitcher's throwing hand (<see cref="Player.Throws"/>) from them and calls the real <see cref="PitchBranchResolver.Resolve"/>.
     /// Supplying trusted sheets is the caller's responsibility (there is no player store yet). Changes nothing of the caller's.
-    /// <paramref name="batterTendency"/> (Phase 3-D-1) is the batter's hidden zone tendency for the resolver only; null is neutral. There is no stored source for it yet.
+    /// <paramref name="batterTendency"/> (Phase 3-D-1) is the batter's hidden zone tendency for the resolver only; null is neutral. The stored source is the world's per-player set, reached through <see cref="PrepareFromProfiles"/>.
     /// The two sheets' current base ratings become the ability modifier inputs (Phase 3-D, <see cref="PitchAbilities"/>); a sheet without the needed hitting or pitching ratings is refused.
     /// </summary>
     public static Result<PreparedPitch> Prepare(GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning, PitchIntent intent, bool explicitTake,
@@ -102,6 +102,29 @@ public static class PitchPreparation
         var draft = drafted.Value;
         return Result<PreparedPitch>.Success(new PreparedPitch(state, state.GameId, rng.StateHash, batter.Id, pitcher.Id, batter.Player.Bats, pitcher.Player.Throws, draft,
             state.Rules.Version, state.Rules.ContentHash, tuning.Model.Version.Value, tuning.Tuning.Value, tuning.ContentHash));
+    }
+
+    /// <summary>
+    /// Phase 3-D (BatterTendency v2, D-T3): <see cref="Prepare"/> with the CURRENT batter's hidden zone tendency looked up in a fixed, immutable <see cref="BatterZoneProfiles"/> set. It is a
+    /// separate entry point on purpose: it takes the set and no explicit vector (the two can never be passed together), and it adds no calculation. Order: the state must be in progress and
+    /// the two sheets must be the state's current batter and pitcher (the same <c>CheckSheets</c> contract as <see cref="Prepare"/>); the batter's PlayerId is then taken from the
+    /// <paramref name="state"/> (never from a name) and looked up; a batter with no entry runs the unchanged no-tendency path; a tendency balanced against another zone model or reference than
+    /// <paramref name="tuning"/> is refused up front (otherwise the resolver would fail only on pitches that reach a tendency stage). The result is <see cref="Prepare"/>'s, so a substitute
+    /// batter gets his own entry (or none), never the previous batter's. A null set is refused: an EMPTY set is the way to say "nobody has a tendency".
+    /// </summary>
+    public static Result<PreparedPitch> PrepareFromProfiles(GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning, PitchIntent intent, bool explicitTake,
+        PlayerSheet? batter, PlayerSheet? pitcher, BatterZoneProfiles? profiles, CancellationToken cancellation = default)
+    {
+        cancellation.ThrowIfCancellationRequested();
+        if (profiles is null)
+            return Prep.Fail("PitchPrepare.profiles_missing", "타자 코스 성향 집합이 없습니다(성향이 없으면 빈 집합을 전달하세요).");
+
+        BatterZoneTendency? tendency = null;
+        if (state is not null && state.Status == GameStatus.InProgress && CheckSheets(state, batter, pitcher, "PitchPrepare") is null)
+            tendency = profiles.Find(state.Batting.CurrentBatterSlot.Player);
+        if (tendency is not null && rng is not null && tuning is not null && (tendency.ReferenceId != tuning.Reference.Id || tendency.Model != tuning.ZoneModel))
+            return Prep.Fail("PitchPrepare.tendency_reference_mismatch", "타자 코스 성향의 구역 모델 또는 기준 분포가 이 튜닝과 다릅니다.");
+        return Prepare(state, rng, tuning, intent, explicitTake, batter, pitcher, cancellation, tendency); // every other error is Prepare's own
     }
 
     /// <summary>

@@ -315,7 +315,9 @@ public class FixtureWorldTests
         Assert.Equal("Fixture.json_invalid", FirstErrorCode("null"));
         Assert.Equal("Fixture.json_invalid", FirstErrorCode(Edit(root => root.AsObject().Remove("clubs"))));
         Assert.Equal("Fixture.json_invalid", FirstErrorCode(Edit(root => root.AsObject()["surprise_field"] = 1)));
-        Assert.Equal("Fixture.version_unsupported", FirstErrorCode(Edit(root => root["format_version"] = 2)));
+        // Phase 3-D: 2 became a supported version (DataPack v2, WorldTendencyV2Tests); the unsupported neighbours stay refused
+        Assert.Equal("Fixture.version_unsupported", FirstErrorCode(Edit(root => root["format_version"] = 3)));
+        Assert.Equal("Fixture.version_unsupported", FirstErrorCode(Edit(root => root["format_version"] = 0)));
     }
 
     // ---- Codex review: rule snapshot and cross-club jersey data through the pack ----

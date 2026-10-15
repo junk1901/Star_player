@@ -25,7 +25,8 @@ public class TrustedBoundaryTests
 
     private static readonly string[] DangerousNames =
         ["PlayerWorld", "IPlayerWorldSource", "ViewerContext", "DevelopmentProfile", "PlayerSheet", "FixturePlayerWorldSource", "WorldJson",
-         "IScriptedGameSource", "ScriptedGame", "ExpectedGame", "ScriptedGameSource", "ScriptedGameJson", "GameRulesJson", "GameReducer", "GameState"];
+         "IScriptedGameSource", "ScriptedGame", "ExpectedGame", "ScriptedGameSource", "ScriptedGameJson", "GameRulesJson", "GameReducer", "GameState",
+         "WorldFormat", "BatterZoneProfiles", "BatterZoneProfileEntry", "BatterZoneTendency", "WorldV2Dto"];
 
     // ---- public surface: reflection ----
 
@@ -285,6 +286,28 @@ public class TrustedBoundaryTests
         Assert.Contains("ViewerContext", SourceScan.Find("new ViewerContext(id, true)", SourceScan.RawWorldRules));
         Assert.Empty(SourceScan.Find("// PlayerWorld is internal\nvar text = \"DevelopmentProfile\";", SourceScan.RawWorldRules));
         Assert.Empty(SourceScan.Find("var service = PlayerInfoComposition.CreateFictionalPhase1();", SourceScan.RawWorldRules));
+    }
+
+    [Fact]
+    public void Raw_world_source_rules_also_flag_the_hidden_batter_tendency_types_and_their_one_preparation_door()
+    {
+        Assert.Equal(["BatterZoneProfiles"], SourceScan.Find("BatterZoneProfiles profiles = null;", SourceScan.RawWorldRules));
+        Assert.Equal(["BatterZoneProfileEntry"], SourceScan.Find("var e = new BatterZoneProfileEntry(id, t);", SourceScan.RawWorldRules));
+        Assert.Equal(["BatterZoneTendency"], SourceScan.Find("BatterZoneTendency t = BatterZoneTendency.Neutral;", SourceScan.RawWorldRules));
+        Assert.Equal(["ZoneReferenceDistribution"], SourceScan.Find("var r = ZoneReferenceDistribution.UniformV1;", SourceScan.RawWorldRules));
+        Assert.Equal(["WorldFormat"], SourceScan.Find("WorldFormat f = null;", SourceScan.RawWorldRules));
+        Assert.Equal(["PrepareFromProfiles"], SourceScan.Find("PitchPreparation.PrepareFromProfiles(a, b);", SourceScan.RawWorldRules));
+        // comments and string text are not code, and a longer identifier is not the type
+        Assert.Empty(SourceScan.Find("// BatterZoneProfiles stays in the world\nvar text = \"BatterZoneTendency\";", SourceScan.RawWorldRules));
+        Assert.Empty(SourceScan.Find("var x = MyBatterZoneProfilesView.Show();", SourceScan.RawWorldRules));
+    }
+
+    [Fact]
+    public void The_v2_world_dto_is_internal_like_every_other_raw_dto()
+    {
+        Assert.False(InfrastructureAssembly.GetTypes().Single(t => t.Name == "WorldV2Dto").IsVisible);
+        Assert.False(InfrastructureAssembly.GetTypes().Single(t => t.Name == "BatterZoneTendencyDto").IsVisible);
+        Assert.False(typeof(WorldFormat).IsVisible);
     }
 
     [Fact]
