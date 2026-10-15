@@ -788,16 +788,28 @@ public class AdvancementPolicyTests
     }
 
     [Fact]
-    public void Static_missing_input_the_model_declares_the_speed_and_arm_slots_but_the_pitch_resolver_supplies_no_modifier_at_all()
+    public void Static_missing_input_the_model_declares_the_speed_and_arm_slots_but_the_pitch_resolver_supplies_no_advancement_modifier()
     {
         var model = ProbabilityModel.V1;
 
         Assert.Equal("advancement", model.Slot("runner.speed")!.Stage);
         Assert.Equal("advancement", model.Slot("defense.arm")!.Stage);
         Assert.Equal(0, model.Slots.Count(s => s.Stage == "advancement" && s.Id.Contains("fatigue", StringComparison.OrdinalIgnoreCase)));   // no condition or fatigue slot exists
-        var source = File.ReadAllText(Path.Combine(FeasibilityData.Root, "src", "StarPlayer.Simulation", "Baseball", "PitchBranchResolver.cs"));
-        Assert.DoesNotContain("ModifierInput", source);                                // C2A draws every stage neutral: C2B-3 starting neutral is consistent
-        Assert.Contains("StageProbability.Compute(tuning, stage, condition, tendency: tendency)", source);   // 3-D-1: only the hidden tendency context is supplied, still no modifier input
+        var baseball = Path.Combine(FeasibilityData.Root, "src", "StarPlayer.Simulation", "Baseball");
+        var resolver = File.ReadAllText(Path.Combine(baseball, "PitchBranchResolver.cs"));
+        // Phase 3-D: the resolver no longer draws every stage neutral; it hands each stage the inputs PitchModifierInputs builds, and it never builds a ModifierInput itself
+        Assert.DoesNotContain("ModifierInput", resolver.Replace("PitchModifierInputs", ""));
+        Assert.Contains("PitchModifierInputs.For(stage, abilities,", resolver);
+        Assert.Contains("StageProbability.Compute(tuning, stage, condition, inputs, tendency)", resolver);
+        // the only place a ModifierInput is created connects exactly the nine approved slots; no advancement, defence-fielding, runner, arm, park, catcher or battery slot
+        var inputs = File.ReadAllText(Path.Combine(baseball, "PitchModifierInputs.cs"));
+        var slots = System.Text.RegularExpressions.Regex.Matches(inputs, @"ModifierInput\.(?:Linear|Choice)\(""([a-z_.]+)""").Select(m => m.Groups[1].Value).OrderBy(x => x, StringComparer.Ordinal).ToArray();
+        Assert.Equal(new[]
+        {
+            "batter.contact", "batter.eye", "batter.power", "matchup.handedness", "pitcher.control", "pitcher.stuff", "pitcher.velocity", "situation.count_pressure", "strategy.approach",
+        }, slots);
+        foreach (var banned in new[] { "runner.", "defense.", "park.", "catcher.", "battery." })
+            Assert.DoesNotContain(banned, inputs);
     }
 
     // =============================================================== H. isolation: the production state is untouched

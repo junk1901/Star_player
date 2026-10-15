@@ -26,10 +26,12 @@ public enum PitchBranchKind { HitByPitch, CalledBall, CalledStrike, SwingingStri
 /// draft. A missing batter side or pitcher hand is an error, never a default (<see cref="BattingSide"/>/<see cref="ThrowingHand"/> are nullable on purpose).
 /// <see cref="BatterTendency"/> (Phase 3-D-1) is the batter's HIDDEN zone tendency for the game resolver only; null means the neutral vector of the tuning's reference, which is
 /// still supplied to the two tendency stages. It is neither stored in the draft nor printed.
+/// <see cref="Abilities"/> (Phase 3-D) are the six base ratings of the two players; when given, the resolver also derives approach, count pressure and handedness from the state and
+/// the applied side and passes the nine live slots' <see cref="ModifierInput"/>s to their stages. Null means no modifier at all (the ability-free computation, as before 3-D).
 /// </summary>
 public sealed record PitchBranchRequest(
     GameState? State, TuningProfile? Tuning, PitchIntent Intent, bool ExplicitTake, BattingSide? BatterDeclaredSide, ThrowingHand? PitcherThrows, GameRandomSnapshot? Rng,
-    BatterZoneTendency? BatterTendency = null);
+    BatterZoneTendency? BatterTendency = null, PitchAbilities? Abilities = null);
 
 /// <summary>One probability decision of the branch, with the stream it drew from and the exact roll (audit data; the trace is resolver-internal).</summary>
 public sealed record PitchBranchStep(string Stage, string Condition, string Outcome, RngStreamId Stream, uint Roll, long RawDraws, ProbabilityTrace Trace);

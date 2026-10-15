@@ -385,7 +385,9 @@ public class PitchPreparationTests
     [MemberData(nameof(PitchBranchResolverTests.ScenarioIds), MemberType = typeof(PitchBranchResolverTests))]
     public void Every_golden_pitch_becomes_the_expected_legal_event_or_the_explicit_in_play_limit_and_uses_no_extra_randomness(string id)
     {
-        var scenario = Golden.GetProperty("scenarios").EnumerateArray().Single(s => s.GetProperty("id").GetString() == id);
+        // Prepare always supplies the sheets' ratings, so the expectation is the oracle of the same scenarios under the default modifier context (all ratings 50, approach normal,
+        // count 0-0; only handedness is non-neutral): tests/Fixtures/generator/generate_pitch_modifier_golden.py. The ability-free oracle still pins PitchBranchResolver.Resolve.
+        var scenario = PitchModifierWiringTests.ModifierGolden.GetProperty("prepare_default_scenarios").EnumerateArray().Single(s => s.GetProperty("id").GetString() == id);
         var context = Text(scenario, "context");
         var rng = Snapshot(Hex64(scenario.GetProperty("seed")), context,
             scenario.GetProperty("prior_calls").EnumerateObject().ToDictionary(p => p.Name, p => p.Value.GetInt32()));
@@ -594,7 +596,7 @@ public class PitchPreparationTests
             var plain = PitchPreparation.Prepare(state, rng, Tuning, PitchIntent.Balanced, false, b, p).Value.Draft;
             var neutral = PitchPreparation.Prepare(state, rng, Tuning, PitchIntent.Balanced, false, b, p, batterTendency: BatterZoneTendency.Neutral).Value.Draft;
             var shifted = PitchPreparation.Prepare(state, rng, Tuning, PitchIntent.Balanced, false, b, p, batterTendency: mixed).Value.Draft;
-            var direct = PitchBranchResolver.Resolve(new PitchBranchRequest(state, Tuning, PitchIntent.Balanced, false, BattingSide.Right, ThrowingHand.Right, rng, mixed)).Value;
+            var direct = PitchBranchResolver.Resolve(new PitchBranchRequest(state, Tuning, PitchIntent.Balanced, false, BattingSide.Right, ThrowingHand.Right, rng, mixed, PitchAbilities.From(b, p).Value)).Value;
             Assert.Equal(Summary(plain), Summary(neutral));
             Assert.Equal(Summary(direct), Summary(shifted));
             if (Summary(plain) != Summary(shifted))
@@ -602,5 +604,77 @@ public class PitchPreparationTests
         }
 
         Assert.True(changed > 0);
+    }
+
+    // ---------------------------------------------------------------- Phase 3-D: the sheets' base ratings become the modifier inputs
+
+    private static PlayerSheet RatedSheet(PlayerId id, int contact, int power, int eye, int control, int stuff, int velocity, FieldPosition preferred = FieldPosition.Pitcher,
+        bool hitting = true, bool pitching = true)
+    {
+        SkillValue S(int v) => SkillValue.Create(v).Value;
+        var hitter = hitting ? new HitterRatings(S(contact), S(power), S(eye), S(50), S(50), S(50)) : null;
+        var pitcher = pitching ? new PitcherRatings(S(stuff), S(control), S(velocity), S(50), PitchRepertoire.Create([new PitchRating(PitchType.Fastball, S(50))]).Value) : null;
+        var player = Player.Create(id, "시험선수", new DateOnly(2000, 1, 1), ThrowingHand.Right, BattingSide.Right, BodyMeasurements.Create(180, 80).Value, [], "").Value;
+        var status = PlayerStatus.Create([new OriginRecord(OriginType.HighSchool, null, null, null)], EntryPath.Draft, RegistrationStatus.Registered,
+            LeagueAssignment.FirstTeam, [new ClubAffiliation(ClubId.Create("club-a").Value, new DateOnly(2020, 1, 1), null)], CareerStatus.Active).Value;
+        return PlayerSheet.Create(player, Ratings.Create(hitter, pitcher, null).Value, new PlayerState(S(10), S(90), S(50), S(50), S(50), S(50)),
+            ProficiencyProfile.Create(preferred, Array.Empty<(FieldPosition, SkillValue)>(), []).Value, status).Value;
+    }
+
+    [Fact]
+    public void Prepare_turns_the_current_base_ratings_into_the_six_ability_inputs_and_ignores_the_transient_state()
+    {
+        var state = InSequenceState(Automated, Gid);
+        // condition 10 and fatigue 90 are deliberately extreme: decision D-ABILITY-1 applies the BASE rating only
+        var batter = RatedSheet(state.Batting.CurrentBatterSlot.Player, contact: 100, power: 0, eye: 100, control: 50, stuff: 50, velocity: 50);
+        var pitcher = RatedSheet(state.Fielding.Pitcher, contact: 50, power: 50, eye: 50, control: 100, stuff: 0, velocity: 100);
+        for (ulong seed = 1; seed < 4000; seed++)
+        {
+            var prepared = PitchPreparation.Prepare(state, Rng(seed), Tuning, PitchIntent.Balanced, false, batter, pitcher);
+            Assert.True(prepared.IsSuccess, prepared.Error?.Code);
+            var steps = prepared.Value.Draft.Steps;
+            if (steps.All(s => s.Stage != StageIds.BattedBall))
+                continue;
+            int Factor(string stage, string slot) => steps.Single(s => s.Stage == stage).Trace.Modifiers.Single(m => m.Slot == slot).FactorPpm;
+            Assert.Equal(1_000_000 + (100 - 50) * 1500, Factor(StageIds.ActualLocation, "pitcher.control"));      // 1,075,000
+            Assert.Equal(1_000_000 + (0 - 50) * 1200, Factor(StageIds.SwingResult, "pitcher.stuff"));             // 940,000
+            Assert.Equal(1_000_000 + (100 - 50) * -1500, Factor(StageIds.SwingResult, "batter.contact"));         // 925,000
+            Assert.Equal(1_000_000 + (100 - 50) * -800, Factor(StageIds.BattedBall, "pitcher.velocity"));         // 960,000
+            Assert.Equal(1_000_000 + (0 - 50) * 1500, Factor(StageIds.BattedBall, "batter.power"));               // 925,000
+            // eye acts on outer zones only; inside the zone it is listed as not applied
+            var decision = steps.Single(s => s.Stage == StageIds.BatterDecision).Trace.Modifiers.Single(m => m.Slot == "batter.eye");
+            var outer = prepared.Value.Draft.Location.Zone.Value.StartsWith("out.", StringComparison.Ordinal);
+            Assert.Equal((outer, outer ? 1_000_000 + (100 - 50) * -1500 : 1_000_000), (decision.Applied, decision.FactorPpm));
+            return;
+        }
+
+        Assert.Fail("no in-play pitch found");
+    }
+
+    [Fact]
+    public void Prepare_changes_no_rating_or_state_of_either_sheet()
+    {
+        var state = InSequenceState(Automated, Gid);
+        var batter = RatedSheet(state.Batting.CurrentBatterSlot.Player, 80, 20, 70, 50, 50, 50);
+        var pitcher = RatedSheet(state.Fielding.Pitcher, 50, 50, 50, 30, 90, 60);
+        string Snap(PlayerSheet x) => string.Join(",", x.Ratings.Skills().Select(k => $"{k.Key}={k.Value.Value}").Concat(x.State.Values().Select(k => $"{k.Key}={k.Value.Value}")));
+        var before = (Snap(batter), Snap(pitcher));
+        for (ulong seed = 1; seed <= 50; seed++)
+            Assert.True(PitchPreparation.Prepare(state, Rng(seed), Tuning, PitchIntent.Attack, false, batter, pitcher).IsSuccess);
+        Assert.Equal(before, (Snap(batter), Snap(pitcher)));
+    }
+
+    [Fact]
+    public void A_sheet_without_the_needed_hitting_or_pitching_ratings_is_refused_and_never_defaulted_to_50()
+    {
+        var state = InSequenceState(Automated, Gid);
+        var pitcherOnly = RatedSheet(state.Batting.CurrentBatterSlot.Player, 50, 50, 50, 50, 50, 50, FieldPosition.Pitcher, hitting: false);
+        var hitterOnly = RatedSheet(state.Fielding.Pitcher, 50, 50, 50, 50, 50, 50, FieldPosition.Shortstop, pitching: false);
+        var ok = RatedSheet(state.Fielding.Pitcher, 50, 50, 50, 50, 50, 50);
+        var okBatter = RatedSheet(state.Batting.CurrentBatterSlot.Player, 50, 50, 50, 50, 50, 50);
+
+        Assert.Equal("PitchAbilities.batter_hitting_missing", Code(PitchPreparation.Prepare(state, Rng(), Tuning, PitchIntent.Balanced, false, pitcherOnly, ok)));
+        Assert.Equal("PitchAbilities.pitcher_pitching_missing", Code(PitchPreparation.Prepare(state, Rng(), Tuning, PitchIntent.Balanced, false, okBatter, hitterOnly)));
+        Assert.True(PitchPreparation.Prepare(state, Rng(), Tuning, PitchIntent.Balanced, false, okBatter, ok).IsSuccess);
     }
 }

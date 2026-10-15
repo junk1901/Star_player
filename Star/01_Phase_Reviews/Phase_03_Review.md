@@ -21,6 +21,9 @@ tags:
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
 
+> [!info] 3-D 능력치 보정 연결 (2026-10-15, `TASK.md` "Star Player Phase 3-D Ability Modifier Wiring", 기준 HEAD `a73ef54`) — `IMPLEMENTED` · `TESTED` · `REVIEW_PENDING`
+> 투구 판정 9개 슬롯(control·eye·approach·count_pressure·stuff·contact·handedness·velocity·power)을 연결했다. 임시 정책 D-ABILITY-1(유효 능력치 = 현재 기본 능력치, 상태 미적용)과 D-ABILITY-2(3볼·<2스트라이크 three_balls, 2스트라이크·<3볼 two_strikes, 3-2 neutral)는 소유자 승인의 임시 단순화이며 최종 밸런스가 아니다. 새 stage·난수·튜닝 버전·저장 형식 없음. 새 독립 오라클(Python) 포함 신규 테스트 31건, 전체 xUnit 1,843 PASS(Release). 미해결: 타자 성향 데이터 공급, 구장 `Hits` 계수, 수비/주자/송구 슬롯, 3-E·3-F. 이 문서의 최상위 status는 `검토 대기` 유지, Phase 3 Gate `INCOMPLETE`. 상세: [game-engine §29](../../docs/game-engine.md), [ADR-007](../../docs/decisions/ADR-007.md).
+
 > [!info] 3-D-1 코스 성향 연결 (2026-10-15, `TASK.md` "Star Player Phase 3 Next Development", 기준 HEAD `53805aa`) — `IMPLEMENTED` · `TESTED` · `REVIEW_PENDING`
 > `swing_result`·`batted_ball`에 `TendencyContext`를 연결했다(선택 입력 `BatterTendency`, null이면 중립). 난수·이벤트·영속화 변경 없음. 신규 테스트 8건, 전체 xUnit 1,812 PASS(Release). 미해결: 타자 성향의 저장 위치(소유자·아키텍처 결정), 구장 `Hits` 계수 소유자 결정, 능력 보정 입력, 3-E·3-F. 이 문서의 최상위 status는 `검토 대기` 유지, Phase 3 Gate `INCOMPLETE`. 상세: [game-engine §28](../../docs/game-engine.md), [ADR-007](../../docs/decisions/ADR-007.md).
 

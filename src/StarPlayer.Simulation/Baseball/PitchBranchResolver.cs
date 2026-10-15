@@ -23,6 +23,10 @@ namespace StarPlayer.Simulation.Baseball;
 /// given) so the probability model applies its window guard and its bounded shift. It only changes the distribution a roll is read from: no stage is added, no extra draw is made and no roll changes.
 /// </para>
 /// <para>
+/// <b>Ability modifiers (Phase 3-D).</b> When the request carries <see cref="PitchAbilities"/>, each stage receives the modifier inputs <see cref="PitchModifierInputs"/> builds for
+/// it (nine live slots; see there). Like the tendency this only changes the distribution a roll is read from.
+/// </para>
+/// <para>
 /// <b>Explicit Take</b> keeps the reducer's contract (ball, called strike, hit by pitch): the batter decision is drawn once exactly as in a normal pitch; a hit by pitch ends the
 /// branch, any other decision (take or swing) is treated as watching and draws the called pitch, and swing/contact/field are never drawn.
 /// </para>
@@ -64,7 +68,10 @@ public static class PitchBranchResolver
         Result<string> Decide(string stage, string condition, RngStreamId streamId, TendencyContext? tendency = null)
         {
             cancellation.ThrowIfCancellationRequested();
-            var computed = StageProbability.Compute(tuning, stage, condition, tendency: tendency);
+            var inputs = request.Abilities is { } abilities
+                ? PitchModifierInputs.For(stage, abilities, state.Count, state.Approach, side, request.PitcherThrows!.Value)
+                : null;
+            var computed = StageProbability.Compute(tuning, stage, condition, inputs, tendency);
             if (!computed.IsSuccess)
                 return Result<string>.Failure(computed.Error!.Value);
             var stream = random.Stream(streamId);
@@ -193,6 +200,8 @@ public static class PitchBranchResolver
             return Fail("PitchBranch.intent_invalid", "투수 의도 값이 올바르지 않습니다.");
         var intent = request.Intent switch { PitchIntent.Balanced => "balanced", PitchIntent.Attack => "attack", _ => "careful" };
 
+        if (request.Abilities is { } abilities && !abilities.InRange())
+            return Fail("PitchBranch.ability_out_of_range", "투구 보정에 쓰는 기본 능력치는 0~100 범위여야 합니다.");
         if (request.BatterDeclaredSide is not { } declared)
             return Fail("PitchBranch.batter_side_missing", "타자의 선언 타석 방향이 없습니다.");
         if (!Enum.IsDefined(declared))

@@ -75,6 +75,7 @@ public static class PitchPreparation
     /// (<see cref="Player.Bats"/>) and the pitcher's throwing hand (<see cref="Player.Throws"/>) from them and calls the real <see cref="PitchBranchResolver.Resolve"/>.
     /// Supplying trusted sheets is the caller's responsibility (there is no player store yet). Changes nothing of the caller's.
     /// <paramref name="batterTendency"/> (Phase 3-D-1) is the batter's hidden zone tendency for the resolver only; null is neutral. There is no stored source for it yet.
+    /// The two sheets' current base ratings become the ability modifier inputs (Phase 3-D, <see cref="PitchAbilities"/>); a sheet without the needed hitting or pitching ratings is refused.
     /// </summary>
     public static Result<PreparedPitch> Prepare(GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning, PitchIntent intent, bool explicitTake,
         PlayerSheet? batter, PlayerSheet? pitcher, CancellationToken cancellation = default, BatterZoneTendency? batterTendency = null)
@@ -91,7 +92,10 @@ public static class PitchPreparation
         if (CheckSheets(state, batter, pitcher, "PitchPrepare") is { } wrong)
             return Result<PreparedPitch>.Failure(wrong);
 
-        var drafted = PitchBranchResolver.Resolve(new PitchBranchRequest(state, tuning, intent, explicitTake, batter!.Player.Bats, pitcher!.Player.Throws, rng, batterTendency), cancellation);
+        var abilities = PitchAbilities.From(batter, pitcher);
+        if (!abilities.IsSuccess)
+            return Result<PreparedPitch>.Failure(abilities.Error!.Value);
+        var drafted = PitchBranchResolver.Resolve(new PitchBranchRequest(state, tuning, intent, explicitTake, batter!.Player.Bats, pitcher!.Player.Throws, rng, batterTendency, abilities.Value), cancellation);
         if (!drafted.IsSuccess)
             return Result<PreparedPitch>.Failure(drafted.Error!.Value);
 
