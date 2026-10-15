@@ -24,9 +24,12 @@ public enum PitchBranchKind { HitByPitch, CalledBall, CalledStrike, SwingingStri
 /// Everything the branch needs from its caller. <see cref="State"/> is only READ (it supplies the rules, the game status and the plate-appearance stage); the resolver
 /// never changes it. <see cref="Rng"/> is the caller's current RNG position: the resolver continues from it on a private copy and hands the next position back in the
 /// draft. A missing batter side or pitcher hand is an error, never a default (<see cref="BattingSide"/>/<see cref="ThrowingHand"/> are nullable on purpose).
+/// <see cref="BatterTendency"/> (Phase 3-D-1) is the batter's HIDDEN zone tendency for the game resolver only; null means the neutral vector of the tuning's reference, which is
+/// still supplied to the two tendency stages. It is neither stored in the draft nor printed.
 /// </summary>
 public sealed record PitchBranchRequest(
-    GameState? State, TuningProfile? Tuning, PitchIntent Intent, bool ExplicitTake, BattingSide? BatterDeclaredSide, ThrowingHand? PitcherThrows, GameRandomSnapshot? Rng);
+    GameState? State, TuningProfile? Tuning, PitchIntent Intent, bool ExplicitTake, BattingSide? BatterDeclaredSide, ThrowingHand? PitcherThrows, GameRandomSnapshot? Rng,
+    BatterZoneTendency? BatterTendency = null);
 
 /// <summary>One probability decision of the branch, with the stream it drew from and the exact roll (audit data; the trace is resolver-internal).</summary>
 public sealed record PitchBranchStep(string Stage, string Condition, string Outcome, RngStreamId Stream, uint Roll, long RawDraws, ProbabilityTrace Trace);

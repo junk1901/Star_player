@@ -19,6 +19,10 @@ namespace StarPlayer.Simulation.Baseball;
 /// here (3-C2B).
 /// </para>
 /// <para>
+/// <b>Tendency (Phase 3-D-1).</b> <c>swing_result</c> and <c>batted_ball</c> receive a <see cref="TendencyContext"/> (the actual zone and the batter's hidden vector, neutral when none is
+/// given) so the probability model applies its window guard and its bounded shift. It only changes the distribution a roll is read from: no stage is added, no extra draw is made and no roll changes.
+/// </para>
+/// <para>
 /// <b>Explicit Take</b> keeps the reducer's contract (ball, called strike, hit by pitch): the batter decision is drawn once exactly as in a normal pitch; a hit by pitch ends the
 /// branch, any other decision (take or swing) is treated as watching and draws the called pitch, and swing/contact/field are never drawn.
 /// </para>
@@ -43,6 +47,7 @@ public static class PitchBranchResolver
             return Result<PitchBranchDraft>.Failure(checkedInput.Error!.Value);
         var (state, tuning, intentKey, side) = checkedInput.Value;
         var rules = state.Rules;
+        var tendencyVector = request!.BatterTendency ?? BatterZoneTendency.Create(new int[BatterZoneTendency.ZoneCount], tuning.Reference).Value; // all zeros is always average-neutral
 
         var restored = GameRandom.Restore(request!.Rng);
         if (!restored.IsSuccess)
@@ -56,10 +61,10 @@ public static class PitchBranchResolver
         var steps = new List<PitchBranchStep>();
         var calls = new Dictionary<RngStreamId, (int Calls, long Draws)>();
 
-        Result<string> Decide(string stage, string condition, RngStreamId streamId)
+        Result<string> Decide(string stage, string condition, RngStreamId streamId, TendencyContext? tendency = null)
         {
             cancellation.ThrowIfCancellationRequested();
-            var computed = StageProbability.Compute(tuning, stage, condition);
+            var computed = StageProbability.Compute(tuning, stage, condition, tendency: tendency);
             if (!computed.IsSuccess)
                 return Result<string>.Failure(computed.Error!.Value);
             var stream = random.Stream(streamId);
@@ -117,7 +122,8 @@ public static class PitchBranchResolver
         }
         else
         {
-            var result = Decide(StageIds.SwingResult, ConditionKeys.Zone(actualZone.Value), GameRngStreams.Contact);
+            var tendency = new TendencyContext(actualZone.Value, tendencyVector);
+            var result = Decide(StageIds.SwingResult, ConditionKeys.Zone(actualZone.Value), GameRngStreams.Contact, tendency);
             if (!result.IsSuccess)
                 return Result<PitchBranchDraft>.Failure(result.Error!.Value);
             swing = result.Value;
@@ -127,7 +133,7 @@ public static class PitchBranchResolver
                 var group = ConditionKeys.BattedBallGroup(actualZone.Value);
                 if (!group.IsSuccess)
                     return Result<PitchBranchDraft>.Failure(group.Error!.Value);
-                var ball = Decide(StageIds.BattedBall, group.Value, GameRngStreams.Contact);
+                var ball = Decide(StageIds.BattedBall, group.Value, GameRngStreams.Contact, tendency);
                 if (!ball.IsSuccess)
                     return Result<PitchBranchDraft>.Failure(ball.Error!.Value);
                 batted = ball.Value;

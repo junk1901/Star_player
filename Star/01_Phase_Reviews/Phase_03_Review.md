@@ -21,6 +21,9 @@ tags:
 > [!warning] 상태 규칙
 > 허용 상태는 `초안`, `검토 대기`, `승인 완료`, `보완 필요`입니다. 구현 AI는 외부 검토 없이 `승인 완료`로 변경하지 않습니다. 실행하지 않은 검증은 `미검증`, 수행하지 않은 독립 리뷰는 `미실시`로 기록합니다.
 
+> [!info] 3-D-1 코스 성향 연결 (2026-10-15, `TASK.md` "Star Player Phase 3 Next Development", 기준 HEAD `53805aa`) — `IMPLEMENTED` · `TESTED` · `REVIEW_PENDING`
+> `swing_result`·`batted_ball`에 `TendencyContext`를 연결했다(선택 입력 `BatterTendency`, null이면 중립). 난수·이벤트·영속화 변경 없음. 신규 테스트 8건, 전체 xUnit 1,812 PASS(Release). 미해결: 타자 성향의 저장 위치(소유자·아키텍처 결정), 구장 `Hits` 계수 소유자 결정, 능력 보정 입력, 3-E·3-F. 이 문서의 최상위 status는 `검토 대기` 유지, Phase 3 Gate `INCOMPLETE`. 상세: [game-engine §28](../../docs/game-engine.md), [ADR-007](../../docs/decisions/ADR-007.md).
+
 > [!info] 3-C3-C 검증 결과 · Closeout 문서 통합 (2026-10-15, `TASK.md` "Phase 3-C3-C Final Closeout Documentation & Evidence Integration", 기준 HEAD `52cab03` — 문서만)
 > C3-C 기술 검증은 수행 완료, Closeout 문서는 작성·최종 정합화 완료(2026-10-15), **Codex 독립 리뷰는 `CODEX_C3C_REVIEW_PASS_WITH_NOTES`**(BLOCKER 0 / MAJOR 0 / MINOR 1; 이 리뷰 판정은 C3-C Closeout 문서·코드 검토에 한정). 이 문서의 최상위 status는 **`검토 대기` 유지** — Phase 3 전체의 최종 승인(`승인 완료`)이나 구현 종료가 아니다(3-D 이후 미착수, `PHASE_3_GATE_INCOMPLETE`).
 > - C3-C-1/2 테스트: 신규 63건(C3-C-1 `03c8675` 33, C3-C-2 `52cab03` 30), TC-01~11·TC-14~15. TC-12/13 `UNDEFINED — NOT SCORED`. E4 Race 11건 × 5회 PASS(종료 코드 0 ×5).

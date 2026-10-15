@@ -1,4 +1,5 @@
 using StarPlayer.Domain.Baseball.Game;
+using StarPlayer.Domain.Baseball.PitchZone;
 using StarPlayer.Domain.Baseball.Probability;
 using StarPlayer.Domain.Common;
 using StarPlayer.Domain.Players;
@@ -73,9 +74,10 @@ public static class PitchPreparation
     /// Checks that the two sheets are the CURRENT batter and pitcher of <paramref name="state"/> (ids only: no extra eligibility rule), takes the batter's declared side
     /// (<see cref="Player.Bats"/>) and the pitcher's throwing hand (<see cref="Player.Throws"/>) from them and calls the real <see cref="PitchBranchResolver.Resolve"/>.
     /// Supplying trusted sheets is the caller's responsibility (there is no player store yet). Changes nothing of the caller's.
+    /// <paramref name="batterTendency"/> (Phase 3-D-1) is the batter's hidden zone tendency for the resolver only; null is neutral. There is no stored source for it yet.
     /// </summary>
     public static Result<PreparedPitch> Prepare(GameState? state, GameRandomSnapshot? rng, TuningProfile? tuning, PitchIntent intent, bool explicitTake,
-        PlayerSheet? batter, PlayerSheet? pitcher, CancellationToken cancellation = default)
+        PlayerSheet? batter, PlayerSheet? pitcher, CancellationToken cancellation = default, BatterZoneTendency? batterTendency = null)
     {
         cancellation.ThrowIfCancellationRequested();
         if (state is null)
@@ -89,7 +91,7 @@ public static class PitchPreparation
         if (CheckSheets(state, batter, pitcher, "PitchPrepare") is { } wrong)
             return Result<PreparedPitch>.Failure(wrong);
 
-        var drafted = PitchBranchResolver.Resolve(new PitchBranchRequest(state, tuning, intent, explicitTake, batter!.Player.Bats, pitcher!.Player.Throws, rng), cancellation);
+        var drafted = PitchBranchResolver.Resolve(new PitchBranchRequest(state, tuning, intent, explicitTake, batter!.Player.Bats, pitcher!.Player.Throws, rng, batterTendency), cancellation);
         if (!drafted.IsSuccess)
             return Result<PreparedPitch>.Failure(drafted.Error!.Value);
 

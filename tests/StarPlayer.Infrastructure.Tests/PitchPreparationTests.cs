@@ -580,4 +580,27 @@ public class PitchPreparationTests
         Assert.Equal("pitch-branch-v1", PitchBranchResolver.ContractVersion);
         Assert.Equal("ef2", EventFingerprint.VersionV2);
     }
+
+    [Fact]
+    public void Prepare_hands_the_batters_hidden_tendency_to_the_resolver_and_defaults_to_neutral()
+    {
+        var state = InSequenceState(Automated, Gid);
+        var (b, p) = Sheets(state);
+        var mixed = BatterZoneTendency.Create([-60, 10, 20, 30, 40, -50, -40, 50, 0], ZoneReferenceDistribution.UniformV1).Value;
+        var changed = 0;
+        for (ulong seed = 1; seed <= 300; seed++)
+        {
+            var rng = Rng(seed);
+            var plain = PitchPreparation.Prepare(state, rng, Tuning, PitchIntent.Balanced, false, b, p).Value.Draft;
+            var neutral = PitchPreparation.Prepare(state, rng, Tuning, PitchIntent.Balanced, false, b, p, batterTendency: BatterZoneTendency.Neutral).Value.Draft;
+            var shifted = PitchPreparation.Prepare(state, rng, Tuning, PitchIntent.Balanced, false, b, p, batterTendency: mixed).Value.Draft;
+            var direct = PitchBranchResolver.Resolve(new PitchBranchRequest(state, Tuning, PitchIntent.Balanced, false, BattingSide.Right, ThrowingHand.Right, rng, mixed)).Value;
+            Assert.Equal(Summary(plain), Summary(neutral));
+            Assert.Equal(Summary(direct), Summary(shifted));
+            if (Summary(plain) != Summary(shifted))
+                changed++;
+        }
+
+        Assert.True(changed > 0);
+    }
 }

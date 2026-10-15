@@ -797,7 +797,7 @@ public class AdvancementPolicyTests
         Assert.Equal(0, model.Slots.Count(s => s.Stage == "advancement" && s.Id.Contains("fatigue", StringComparison.OrdinalIgnoreCase)));   // no condition or fatigue slot exists
         var source = File.ReadAllText(Path.Combine(FeasibilityData.Root, "src", "StarPlayer.Simulation", "Baseball", "PitchBranchResolver.cs"));
         Assert.DoesNotContain("ModifierInput", source);                                // C2A draws every stage neutral: C2B-3 starting neutral is consistent
-        Assert.Contains("StageProbability.Compute(tuning, stage, condition)", source);
+        Assert.Contains("StageProbability.Compute(tuning, stage, condition, tendency: tendency)", source);   // 3-D-1: only the hidden tendency context is supplied, still no modifier input
     }
 
     // =============================================================== H. isolation: the production state is untouched
