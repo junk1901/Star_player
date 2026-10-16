@@ -22,15 +22,15 @@ public class ProbabilityModelV3Tests
     // ---------------------------------------------------------------- versions and the explicit pairing table
 
     [Fact]
-    public void V3_is_a_known_model_and_tuning_version_and_a_fourth_is_not()
+    public void V3_is_a_known_model_and_tuning_version_and_a_fifth_is_not()
     {
         Assert.Equal("prob-model-v3", ProbabilityModelVersion.Create("prob-model-v3").Value.Value);
         Assert.Equal("tuning-virtual-proto-v3", TuningVersion.Create("tuning-virtual-proto-v3").Value.Value);
         Assert.Same(ProbabilityModel.V3, ProbabilityModel.Resolve(ProbabilityModelVersion.V3).Value);
         Assert.Equal("prob-model-v3", ProbabilityModel.V3.Version.Value);
-        foreach (var unknown in new[] { null, "", "prob-model-v4", "PROB-MODEL-V3", " prob-model-v3", "prob-model-v3 ", "prob-model-v30" })
+        foreach (var unknown in new[] { null, "", "prob-model-v5", "PROB-MODEL-V3", " prob-model-v3", "prob-model-v3 ", "prob-model-v30" })
             Assert.Equal("ProbabilityModelVersion.unsupported", ProbabilityModelVersion.Create(unknown).Error!.Value.Code);
-        foreach (var unknown in new[] { null, "", "tuning-virtual-proto-v4", "TUNING-VIRTUAL-PROTO-V3", "tuning-virtual-proto-v3 " })
+        foreach (var unknown in new[] { null, "", "tuning-virtual-proto-v5", "TUNING-VIRTUAL-PROTO-V3", "tuning-virtual-proto-v3 " })
             Assert.Equal("TuningVersion.unsupported", TuningVersion.Create(unknown).Error!.Value.Code);
     }
 

@@ -259,12 +259,17 @@ internal static class Pc
 
     public static PreparedPitch With(this PreparedPitch p, PitchBranchDraft draft) =>
         new(p.State, p.GameId, p.StartRngStateHash, p.BatterId, p.PitcherId, p.BatterDeclaredSide, p.PitcherThrows, draft, p.RulesVersion, p.RulesHash, p.ProbabilityModelVersion,
-            p.TuningVersion, p.TuningHash, p.Fielding, p.Catcher);
+            p.TuningVersion, p.TuningHash, p.Fielding, p.Catcher, p.PitcherInput);
 
     /// <summary>Phase 3-E: the same preparation with its frozen catcher input replaced (null removes it). Forging goes through the internal constructor only.</summary>
     public static PreparedPitch WithCatcher(this PreparedPitch p, FrozenCatcherInput? catcher) =>
         new(p.State, p.GameId, p.StartRngStateHash, p.BatterId, p.PitcherId, p.BatterDeclaredSide, p.PitcherThrows, p.Draft, p.RulesVersion, p.RulesHash, p.ProbabilityModelVersion,
-            p.TuningVersion, p.TuningHash, p.Fielding, catcher);
+            p.TuningVersion, p.TuningHash, p.Fielding, catcher, p.PitcherInput);
+
+    /// <summary>Game Calling v4: the same preparation with its frozen pitcher input replaced (null removes it). Forging goes through the internal constructor only.</summary>
+    public static PreparedPitch WithPitcher(this PreparedPitch p, FrozenPitcherInput? pitcher) =>
+        new(p.State, p.GameId, p.StartRngStateHash, p.BatterId, p.PitcherId, p.BatterDeclaredSide, p.PitcherThrows, p.Draft, p.RulesVersion, p.RulesHash, p.ProbabilityModelVersion,
+            p.TuningVersion, p.TuningHash, p.Fielding, p.Catcher, pitcher);
 
     public static NonInPlayPitchCandidate WithStep(this NonInPlayPitchCandidate c, GameStep step) => new(c.Event, step, c.NextRng, c.Kind, c.NextBoundedCalls);
 

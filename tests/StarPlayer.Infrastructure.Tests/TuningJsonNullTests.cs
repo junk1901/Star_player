@@ -157,7 +157,7 @@ public class TuningJsonNullTests
         node["status"] = "official_kbo";
         Assert.Equal("Tuning.status_invalid", Rejected(node).Code);
         var other = Root();
-        other["model_version"] = "prob-model-v4";
+        other["model_version"] = "prob-model-v5";
         Assert.Equal("ProbabilityModelVersion.unsupported", Rejected(other).Code);
     }
 }

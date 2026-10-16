@@ -231,7 +231,7 @@ public class FramingResolverTests
         var g = Aggregate(d, 21);
         var (b, p) = Sheets(g.State);
         var fielding = PitchFieldingInputs.Build(g.State, set, "t").Value;
-        var catcher = automated ? null : FrozenCatcherInput.Build(g.State, set, "t").Value;
+        var catcher = automated ? null : FrozenCatcherInput.Build(g.State, set, Fr.T3.Model, "t").Value;
         return (g, set, new PitchBranchRequest(g.State, tuning ?? Fr.T3, PitchIntent.Balanced, false, BattingSide.Right, ThrowingHand.Right, g.Rng, null, PitchAbilities.From(b, p).Value, fielding, catcher));
     }
 

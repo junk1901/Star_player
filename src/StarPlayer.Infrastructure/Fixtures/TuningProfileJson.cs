@@ -87,6 +87,7 @@ internal static class TuningProfileJson
     public const string ResourceName = "virtual_tuning_v1.json";
     public const string ResourceNameV2 = "virtual_tuning_v2.json";
     public const string ResourceNameV3 = "virtual_tuning_v3.json";
+    public const string ResourceNameV4 = "virtual_tuning_v4.json";
 
     public static Result<TuningProfile> Read(string json)
     {
@@ -161,6 +162,9 @@ internal static class TuningProfileJson
 
     /// <summary>The embedded virtual tuning set of <c>prob-model-v3</c> (<c>tuning-virtual-proto-v3</c>, Phase 3-E): v2 plus the active <c>catcher.framing</c> slot. v1 and v2 are separate, unchanged files.</summary>
     public static Result<TuningProfile> LoadVirtualV3() => Read(ScriptedGameSource.ReadResource(ResourceNameV3));
+
+    /// <summary>The embedded virtual tuning set of <c>prob-model-v4</c> (<c>tuning-virtual-proto-v4</c>, Phase 3-E Game Calling): v3 plus the active <c>catcher.game_calling</c> slot. v1, v2 and v3 are separate, unchanged files.</summary>
+    public static Result<TuningProfile> LoadVirtualV4() => Read(ScriptedGameSource.ReadResource(ResourceNameV4));
 
     internal static TuningProfileDraft ToDraft(TuningFileDto d) => new(
         d.ModelVersion, d.TuningVersion, d.Status, d.Provenance, d.ZoneModel, d.ReferenceDistributionId, d.NormalizationPolicy, d.RoundingPolicy,

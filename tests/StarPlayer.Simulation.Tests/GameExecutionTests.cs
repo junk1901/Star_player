@@ -114,7 +114,7 @@ public class GameExecutionTests
     public void The_pinned_versions_hash_policy_and_inputs_identifier_are_validated()
     {
         Assert.Equal("Game.execution_model_unsupported", Ex.Start(Ex.Exec(model: "prob-model-v1")).Error!.Value.Code);
-        Assert.Equal("Game.execution_model_unsupported", Ex.Start(Ex.Exec(model: "prob-model-v4")).Error!.Value.Code);
+        Assert.Equal("Game.execution_model_unsupported", Ex.Start(Ex.Exec(model: "prob-model-v5")).Error!.Value.Code);
         Assert.Equal("Game.execution_tuning_unsupported", Ex.Start(Ex.Exec(tuning: "tuning-virtual-proto-v1")).Error!.Value.Code);
         Assert.Equal("Game.execution_tuning_hash_invalid", Ex.Start(Ex.Exec(hash: "ABC")).Error!.Value.Code);
         Assert.Equal("Game.execution_tuning_hash_invalid", Ex.Start(Ex.Exec(hash: new string('A', 64))).Error!.Value.Code);        // lower-case hex only

@@ -22,6 +22,9 @@ internal static class Gx
     /// <summary>Phase 3-E: the embedded <c>tuning-virtual-proto-v3</c> of <c>prob-model-v3</c> (catcher.framing active).</summary>
     public static readonly TuningProfile Tuning3 = Pc.Ok(TuningProfileJson.LoadVirtualV3());
 
+    /// <summary>Phase 3-E (Game Calling v4): the embedded <c>tuning-virtual-proto-v4</c> of <c>prob-model-v4</c> (catcher.game_calling active).</summary>
+    public static readonly TuningProfile Tuning4 = Pc.Ok(TuningProfileJson.LoadVirtualV4());
+
     /// <summary>A snapshot built by the real <see cref="ParkFactorProfile"/> factory under the widest domain bounds.</summary>
     public static ParkFactorSnapshot Park(int homeRuns = 1000, int hits = 1000, int extraBaseHits = 1000, string stadium = "stadium-gx", string profile = "pf-gx", int version = 1) =>
         Pc.Ok(ParkFactorProfile.Create(ParkFactorProfileId.Create(profile).Value, StadiumId.Create(stadium).Value, version, new DateOnly(2030, 1, 1),
@@ -172,7 +175,7 @@ internal static class Gx
     private static readonly Dictionary<string, string[]> Allowed = new()
     {
         [StageIds.TargetZone] = [],
-        [StageIds.ActualLocation] = ["pitcher.control"],
+        [StageIds.ActualLocation] = ["pitcher.control", "catcher.game_calling"],   // Game Calling v4: only a model-v4 game ever lists the second (the v2 / v3 tests assert it is never seen)
         [StageIds.BatterDecision] = ["batter.eye", "strategy.approach", "situation.count_pressure"],
         [StageIds.CalledPitch] = ["catcher.framing"],       // Phase 3-E: only a model-v3 non_automated game ever lists it (the v2 tests below assert it is never seen)
         [StageIds.SwingResult] = ["pitcher.stuff", "batter.contact", "matchup.handedness"],
@@ -185,7 +188,8 @@ internal static class Gx
     /// <paramref name="maxEvents"/> events were confirmed. No production runner exists; this loop only chooses an approach for every new plate appearance and confirms what the pipeline
     /// built. Invariants are checked on every pitch: sums, caps, which slots reach which stage, the streams used, the retained execution contract.
     /// </summary>
-    public static GameRun Play(GameExecution? execution, TuningProfile tuning, PlayerInputSet? inputs, ulong seed, int maxEvents = 6000, GameRuleSnapshot? rules = null)
+    public static GameRun Play(GameExecution? execution, TuningProfile tuning, PlayerInputSet? inputs, ulong seed, int maxEvents = 6000, GameRuleSnapshot? rules = null,
+        Func<GameState, (PlayerSheet Batter, PlayerSheet Pitcher)>? sheets = null)
     {
         var state0 = PitchBranchFixture.StartState(rules ?? PitchBranchFixture.NonAutomated, Pc.Gid, execution);
         var cursor = new GameCursor(Pc.Ok(AuthoritativeGame.Restore(state0, PitchBranchFixture.Snapshot(seed, Pc.Gid), 0, 0)));
@@ -223,7 +227,7 @@ internal static class Gx
                 continue;
             }
 
-            var (b, p) = Pc.Sheets(s);
+            var (b, p) = sheets is null ? Pc.Sheets(s) : sheets(s);                        // Game Calling v4: a pitcher sheet must show the Control the game pinned
             var made = PitchPreparation.Prepare(s, g.Rng, tuning, PitchIntent.Balanced, false, b, p, default, null, inputs);
             if (!made.IsSuccess)
             {

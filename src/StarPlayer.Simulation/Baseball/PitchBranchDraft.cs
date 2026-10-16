@@ -32,10 +32,14 @@ public enum PitchBranchKind { HitByPitch, CalledBall, CalledStrike, SwingingStri
 /// <see cref="PlayerInputSet"/>; when given, <c>defense_result</c> receives the <c>defense.fielding</c> input of the batted ball's representative fielder. Null means that slot stays neutral.
 /// <see cref="Catcher"/> (Phase 3-E) is the current catcher and his base <c>ReceivingFraming</c>, frozen the same way; it is REQUIRED exactly when <see cref="FrozenCatcherInput.Required"/> holds
 /// (model v3 and non_automated rules) and refused otherwise. When given, every <c>called_pitch</c> decision receives <c>catcher.framing</c>; the model's scope decides where it acts.
+/// Since Game Calling v4 the same object also carries <c>GameCalling</c>: it is REQUIRED under <c>prob-model-v4</c> in every mode (Framing only when non_automated) and every <c>actual_location</c> decision receives
+/// <c>catcher.game_calling</c>; the model's <see cref="ModifierConditionScope.BorderlineTarget"/> decides where it acts.
+/// <see cref="PitcherInput"/> (Game Calling v4, GC-S1) is the pitcher on the mound and his base <c>Control</c> as pinned in the game's content-version-3 input set; it is REQUIRED exactly under <c>prob-model-v4</c>
+/// (<see cref="FrozenPitcherInput.Required"/>) together with <see cref="Abilities"/>, refused otherwise; the Control the abilities feed to every <c>actual_location</c> decision must equal it.
 /// </summary>
 public sealed record PitchBranchRequest(
     GameState? State, TuningProfile? Tuning, PitchIntent Intent, bool ExplicitTake, BattingSide? BatterDeclaredSide, ThrowingHand? PitcherThrows, GameRandomSnapshot? Rng,
-    BatterZoneTendency? BatterTendency = null, PitchAbilities? Abilities = null, PitchFieldingInputs? Fielding = null, FrozenCatcherInput? Catcher = null);
+    BatterZoneTendency? BatterTendency = null, PitchAbilities? Abilities = null, PitchFieldingInputs? Fielding = null, FrozenCatcherInput? Catcher = null, FrozenPitcherInput? PitcherInput = null);
 
 /// <summary>One probability decision of the branch, with the stream it drew from and the exact roll (audit data; the trace is resolver-internal).</summary>
 public sealed record PitchBranchStep(string Stage, string Condition, string Outcome, RngStreamId Stream, uint Roll, long RawDraws, ProbabilityTrace Trace);

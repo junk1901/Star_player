@@ -124,9 +124,9 @@ public class TuningProfileTests
     public void Unknown_model_tuning_zone_and_reference_versions_are_rejected()
     {
         var d = Draft();
-        Assert.Equal("ProbabilityModelVersion.unsupported", Reject(d with { ModelVersion = "prob-model-v4" }).Code);
+        Assert.Equal("ProbabilityModelVersion.unsupported", Reject(d with { ModelVersion = "prob-model-v5" }).Code);
         Assert.Equal("ProbabilityModelVersion.unsupported", Reject(d with { ModelVersion = null }).Code);
-        Assert.Equal("TuningVersion.unsupported", Reject(d with { TuningVersion = "tuning-virtual-proto-v4" }).Code);
+        Assert.Equal("TuningVersion.unsupported", Reject(d with { TuningVersion = "tuning-virtual-proto-v5" }).Code);
         Assert.Equal("TuningVersion.unsupported", Reject(d with { TuningVersion = null }).Code);
         Assert.Equal("ZoneModelVersion.unsupported", Reject(d with { ZoneModel = "pzl-zones-v2" }).Code);
         Assert.Equal("ZoneReferenceDistribution.id_unknown", Reject(d with { ReferenceDistributionId = "pzl-ref-uniform-v2" }).Code);

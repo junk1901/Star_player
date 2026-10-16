@@ -50,22 +50,29 @@ public class ModifierWiringPinTests
             .Where(f => Regex.IsMatch(File.ReadAllText(f), @"ModifierInput\.(?:Linear|Choice)\("))
             .Select(f => Path.GetFileName(f)!).Order(StringComparer.Ordinal).ToArray();
 
-        Assert.Equal(["AdvancementSlots.cs", "DefenseSlots.cs", "FrozenCatcherInput.cs", "PitchModifierInputs.cs"], creators);   // Phase 3-E added exactly one: the catcher's Framing
+        Assert.Equal(["AdvancementSlots.cs", "DefenseSlots.cs", "FrozenCatcherInput.cs", "PitchModifierInputs.cs"], creators);   // Phase 3-E added exactly one file: the catcher's Framing (and, in v4, Game Calling); the pitcher's Control stays in PitchModifierInputs
     }
 
     [Fact]
-    public void The_framing_slot_is_connected_in_one_file_to_the_called_pitch_stage_only_and_names_no_other_slot()
+    public void The_catcher_slots_are_connected_in_one_file_each_to_its_own_stage_only_and_name_no_other_slot()
     {
         var file = File.ReadAllText(Path.Combine(Baseball, "FrozenCatcherInput.cs"));
 
-        Assert.Equal(["catcher.framing"], Slots("FrozenCatcherInput.cs"));
-        Assert.Contains("stage != StageIds.CalledPitch", file);
+        // Framing -> called_pitch (Phase 3-E); Game Calling -> actual_location (Game Calling v4); nothing else is created in this file
+        Assert.Equal(["catcher.framing", "catcher.game_calling"], Slots("FrozenCatcherInput.cs"));
+        Assert.Contains("stage == StageIds.CalledPitch && catcher.ReceivingFraming is { } framing", file);
+        Assert.Contains("stage == StageIds.ActualLocation && catcher.GameCalling is { } gameCalling", file);
+        Assert.Single(Regex.Matches(file, @"ModifierInput\.Linear\(""catcher\.framing"""));
+        Assert.Single(Regex.Matches(file, @"ModifierInput\.Linear\(""catcher\.game_calling"""));
         Assert.DoesNotContain("park.", file);
         Assert.DoesNotContain("defense.", file);
-        Assert.DoesNotContain("catcher.game_calling", file);
+        Assert.DoesNotContain("pitcher.control", file);
         Assert.DoesNotContain("battery.chemistry", file);
-        // the resolver only calls Extend; it never names the slot itself
-        Assert.DoesNotContain("catcher.framing", File.ReadAllText(Path.Combine(Baseball, "PitchBranchResolver.cs")).Replace("<c>catcher.framing</c>", ""));
+        // the resolver only calls Extend; it never names either slot itself, and the frozen pitcher input creates no ModifierInput at all (pitcher.control keeps its single connection)
+        var resolver = File.ReadAllText(Path.Combine(Baseball, "PitchBranchResolver.cs")).Replace("<c>catcher.framing</c>", "").Replace("<c>catcher.game_calling</c>", "");
+        Assert.DoesNotContain("catcher.framing", resolver);
+        Assert.DoesNotContain("catcher.game_calling", resolver);
+        Assert.Empty(Slots("FrozenPitcherInput.cs"));
     }
 
     [Fact]

@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using StarPlayer.Domain.Baseball.Game;
 using StarPlayer.Domain.Common;
 using StarPlayer.Simulation.Baseball;
+using StarPlayer.Simulation.Randomness;
 using StarPlayer.Simulation.Tests.Randomness;
 
 namespace StarPlayer.Simulation.Tests.Authority;
@@ -89,6 +90,41 @@ public class PitchCommitBoundaryTests
             "GameRandom.Create", "System.Random", "DateTime", "GameCursor"];
         foreach (var word in neverDraws)
             Assert.DoesNotContain(word, Code("CommitEvidence.cs"));
+    }
+
+    // ---------------------------------------------------------------- Game Calling v4 (GC-S2): the verification replay is a private copy, not a game draw
+
+    [Fact]
+    public void The_verification_replay_is_a_private_restored_copy_it_can_reach_no_authority_and_only_the_evidence_uses_it()
+    {
+        // the one place a roll is replayed: the file may draw (it replays), so the vocabulary that would make a draw a GAME draw is what is forbidden
+        var replay = Code("PitchRollReplay.cs");
+        Assert.Single(Regex.Matches(replay, @"GameRandom\.Restore\("));                                          // the only way in: a private copy restored from an immutable snapshot
+        foreach (var word in new[] { "GameReducer", "Interlocked", "new AuthoritativeGame", "new StagedCommit", "new CommitRecord", "Atomically", "GameRandom.Create", "System.Random", "DateTime", "GameCursor", "Publish", "AuthoritativeGame" })
+            Assert.DoesNotContain(word, replay);
+
+        var type = typeof(PitchCommitGate).Assembly.GetType("StarPlayer.Simulation.Baseball.PitchRollReplay")!;
+        Assert.NotNull(type);
+        Assert.True(type.IsNotPublic && type.IsSealed);
+        Assert.Empty(type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly));
+        Assert.Empty(type.GetConstructors(BindingFlags.Public | BindingFlags.Instance));
+        // no reachable member accepts or returns a live generator, a stream, the cursor or an aggregate: the only RNG input is the immutable snapshot, and the one constructor (which takes the private copy) is private
+        Assert.All(type.GetConstructors(All), c => Assert.True(c.IsPrivate));
+        var reachable = type.GetMethods(All).Where(m => !m.IsPrivate).ToArray();
+        var signature = reachable.SelectMany(m => m.GetParameters().Select(p => p.ParameterType).Append(m.ReturnType));
+        Assert.DoesNotContain(signature, t => t.Name is "GameRandom" or "RngStream" or "GameCursor" or "AuthoritativeGame" or "StagedCommit");
+        Assert.Contains(typeof(GameRandomSnapshot), reachable.SelectMany(m => m.GetParameters().Select(p => p.ParameterType)));
+        Assert.All(type.GetFields(All).Where(f => !f.IsStatic), f => Assert.True(f.IsInitOnly, f.Name));
+
+        // nobody else replays, and the evidence builds it from the aggregate's own immutable snapshot
+        var users = Directory.EnumerateFiles(Path.Combine(RngFixture.Root, "src", "StarPlayer.Simulation"), "*.cs", SearchOption.AllDirectories)
+            .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}") && File.ReadAllText(f).Contains("PitchRollReplay", StringComparison.Ordinal))
+            .Select(f => Path.GetFileName(f)!).Order(StringComparer.Ordinal).ToArray();
+        Assert.Equal(["CommitEvidence.cs", "PitchRollReplay.cs"], users);
+        Assert.Single(Regex.Matches(Code("CommitEvidence.cs"), @"PitchRollReplay\.From\(expected\.Rng\)"));
+        Assert.DoesNotContain("PitchRollReplay", Code("CommitGate.cs"));                                         // the core, the cursor and the gate never see it
+        Assert.DoesNotContain("PitchRollReplay", Code("GameCursor.cs"));
+        Assert.DoesNotContain("PitchRollReplay", Code("PitchCommitGate.cs"));
     }
 
     [Fact]

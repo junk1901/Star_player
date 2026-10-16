@@ -259,7 +259,7 @@ public class FramingInputTests
             ("prob-model-v3", "tuning-virtual-proto-v1", "Game.execution_tuning_unsupported"),
             ("prob-model-v2", "tuning-virtual-proto-v1", "Game.execution_tuning_unsupported"),
             ("prob-model-v1", "tuning-virtual-proto-v1", "Game.execution_model_unsupported"),
-            ("prob-model-v4", "tuning-virtual-proto-v3", "Game.execution_model_unsupported"),
+            ("prob-model-v5", "tuning-virtual-proto-v3", "Game.execution_model_unsupported"),
         ];
         foreach (var (model, tuning, code) in bad)
             Assert.Equal(code, Code(GameReducer.Start(new GameStart(Gid, Automated, AwaySetup, HomeSetup, baseExec with { ProbabilityModelVersion = model, TuningVersion = tuning }))));

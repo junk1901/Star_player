@@ -1,0 +1,13356 @@
+{
+ "bound": 1000000,
+ "context": "game:3c3b:probe",
+ "pitch_stream_swaps": [
+  {
+   "pitch": [
+    {
+     "raw": 1,
+     "roll": 453779
+    },
+    {
+     "raw": 2,
+     "roll": 574554
+    }
+   ],
+   "seed": "00000000000001cd"
+  },
+  {
+   "pitch": [
+    {
+     "raw": 1,
+     "roll": 721654
+    },
+    {
+     "raw": 2,
+     "roll": 799604
+    }
+   ],
+   "seed": "0000000000001de6"
+  },
+  {
+   "pitch": [
+    {
+     "raw": 2,
+     "roll": 874079
+    },
+    {
+     "raw": 1,
+     "roll": 788427
+    }
+   ],
+   "seed": "0000000000002172"
+  },
+  {
+   "pitch": [
+    {
+     "raw": 2,
+     "roll": 115462
+    },
+    {
+     "raw": 1,
+     "roll": 580741
+    }
+   ],
+   "seed": "0000000000004522"
+  },
+  {
+   "pitch": [
+    {
+     "raw": 1,
+     "roll": 379536
+    },
+    {
+     "raw": 2,
+     "roll": 748568
+    }
+   ],
+   "seed": "0000000000005a1e"
+  },
+  {
+   "pitch": [
+    {
+     "raw": 1,
+     "roll": 485885
+    },
+    {
+     "raw": 2,
+     "roll": 407496
+    }
+   ],
+   "seed": "0000000000007109"
+  }
+ ],
+ "records": [
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 939167
+    },
+    {
+     "raw": 1,
+     "roll": 489176
+    },
+    {
+     "raw": 1,
+     "roll": 142958
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000001",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 349065
+    },
+    {
+     "raw": 1,
+     "roll": 465517
+    },
+    {
+     "raw": 1,
+     "roll": 38834
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 142958
+    },
+    {
+     "raw": 1,
+     "roll": 551948
+    },
+    {
+     "raw": 1,
+     "roll": 152471
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000001",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 349065
+    },
+    {
+     "raw": 1,
+     "roll": 465517
+    },
+    {
+     "raw": 1,
+     "roll": 38834
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 632489
+    },
+    {
+     "raw": 1,
+     "roll": 811693
+    },
+    {
+     "raw": 1,
+     "roll": 833469
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000001",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 349065
+    },
+    {
+     "raw": 1,
+     "roll": 465517
+    },
+    {
+     "raw": 1,
+     "roll": 38834
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 939167
+    },
+    {
+     "raw": 1,
+     "roll": 489176
+    },
+    {
+     "raw": 1,
+     "roll": 142958
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000001",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 465517
+    },
+    {
+     "raw": 1,
+     "roll": 38834
+    },
+    {
+     "raw": 1,
+     "roll": 401889
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 142958
+    },
+    {
+     "raw": 1,
+     "roll": 551948
+    },
+    {
+     "raw": 1,
+     "roll": 152471
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000001",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 465517
+    },
+    {
+     "raw": 1,
+     "roll": 38834
+    },
+    {
+     "raw": 1,
+     "roll": 401889
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 632489
+    },
+    {
+     "raw": 1,
+     "roll": 811693
+    },
+    {
+     "raw": 1,
+     "roll": 833469
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000001",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 465517
+    },
+    {
+     "raw": 1,
+     "roll": 38834
+    },
+    {
+     "raw": 1,
+     "roll": 401889
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 939167
+    },
+    {
+     "raw": 1,
+     "roll": 489176
+    },
+    {
+     "raw": 1,
+     "roll": 142958
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000001",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 401889
+    },
+    {
+     "raw": 1,
+     "roll": 238442
+    },
+    {
+     "raw": 1,
+     "roll": 939531
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 142958
+    },
+    {
+     "raw": 1,
+     "roll": 551948
+    },
+    {
+     "raw": 1,
+     "roll": 152471
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000001",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 401889
+    },
+    {
+     "raw": 1,
+     "roll": 238442
+    },
+    {
+     "raw": 1,
+     "roll": 939531
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 632489
+    },
+    {
+     "raw": 1,
+     "roll": 811693
+    },
+    {
+     "raw": 1,
+     "roll": 833469
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000001",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 401889
+    },
+    {
+     "raw": 1,
+     "roll": 238442
+    },
+    {
+     "raw": 1,
+     "roll": 939531
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 830144
+    },
+    {
+     "raw": 1,
+     "roll": 790606
+    },
+    {
+     "raw": 1,
+     "roll": 104545
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000002",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 64501
+    },
+    {
+     "raw": 1,
+     "roll": 983229
+    },
+    {
+     "raw": 1,
+     "roll": 471297
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 104545
+    },
+    {
+     "raw": 1,
+     "roll": 148154
+    },
+    {
+     "raw": 1,
+     "roll": 194309
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000002",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 64501
+    },
+    {
+     "raw": 1,
+     "roll": 983229
+    },
+    {
+     "raw": 1,
+     "roll": 471297
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 144406
+    },
+    {
+     "raw": 1,
+     "roll": 971638
+    },
+    {
+     "raw": 1,
+     "roll": 490047
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000002",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 64501
+    },
+    {
+     "raw": 1,
+     "roll": 983229
+    },
+    {
+     "raw": 1,
+     "roll": 471297
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 830144
+    },
+    {
+     "raw": 1,
+     "roll": 790606
+    },
+    {
+     "raw": 1,
+     "roll": 104545
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000002",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 983229
+    },
+    {
+     "raw": 1,
+     "roll": 471297
+    },
+    {
+     "raw": 1,
+     "roll": 610509
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 104545
+    },
+    {
+     "raw": 1,
+     "roll": 148154
+    },
+    {
+     "raw": 1,
+     "roll": 194309
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000002",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 983229
+    },
+    {
+     "raw": 1,
+     "roll": 471297
+    },
+    {
+     "raw": 1,
+     "roll": 610509
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 144406
+    },
+    {
+     "raw": 1,
+     "roll": 971638
+    },
+    {
+     "raw": 1,
+     "roll": 490047
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000002",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 983229
+    },
+    {
+     "raw": 1,
+     "roll": 471297
+    },
+    {
+     "raw": 1,
+     "roll": 610509
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 830144
+    },
+    {
+     "raw": 1,
+     "roll": 790606
+    },
+    {
+     "raw": 1,
+     "roll": 104545
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000002",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 610509
+    },
+    {
+     "raw": 1,
+     "roll": 298904
+    },
+    {
+     "raw": 1,
+     "roll": 473286
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 104545
+    },
+    {
+     "raw": 1,
+     "roll": 148154
+    },
+    {
+     "raw": 1,
+     "roll": 194309
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000002",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 610509
+    },
+    {
+     "raw": 1,
+     "roll": 298904
+    },
+    {
+     "raw": 1,
+     "roll": 473286
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 144406
+    },
+    {
+     "raw": 1,
+     "roll": 971638
+    },
+    {
+     "raw": 1,
+     "roll": 490047
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000002",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 610509
+    },
+    {
+     "raw": 1,
+     "roll": 298904
+    },
+    {
+     "raw": 1,
+     "roll": 473286
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 427567
+    },
+    {
+     "raw": 1,
+     "roll": 965841
+    },
+    {
+     "raw": 1,
+     "roll": 34272
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000003",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 229479
+    },
+    {
+     "raw": 1,
+     "roll": 515977
+    },
+    {
+     "raw": 1,
+     "roll": 749039
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 34272
+    },
+    {
+     "raw": 1,
+     "roll": 922977
+    },
+    {
+     "raw": 1,
+     "roll": 440884
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000003",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 229479
+    },
+    {
+     "raw": 1,
+     "roll": 515977
+    },
+    {
+     "raw": 1,
+     "roll": 749039
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 666435
+    },
+    {
+     "raw": 1,
+     "roll": 161892
+    },
+    {
+     "raw": 1,
+     "roll": 663875
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000003",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 229479
+    },
+    {
+     "raw": 1,
+     "roll": 515977
+    },
+    {
+     "raw": 1,
+     "roll": 749039
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 427567
+    },
+    {
+     "raw": 1,
+     "roll": 965841
+    },
+    {
+     "raw": 1,
+     "roll": 34272
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000003",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 515977
+    },
+    {
+     "raw": 1,
+     "roll": 749039
+    },
+    {
+     "raw": 1,
+     "roll": 70645
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 34272
+    },
+    {
+     "raw": 1,
+     "roll": 922977
+    },
+    {
+     "raw": 1,
+     "roll": 440884
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000003",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 515977
+    },
+    {
+     "raw": 1,
+     "roll": 749039
+    },
+    {
+     "raw": 1,
+     "roll": 70645
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 666435
+    },
+    {
+     "raw": 1,
+     "roll": 161892
+    },
+    {
+     "raw": 1,
+     "roll": 663875
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000003",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 515977
+    },
+    {
+     "raw": 1,
+     "roll": 749039
+    },
+    {
+     "raw": 1,
+     "roll": 70645
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 427567
+    },
+    {
+     "raw": 1,
+     "roll": 965841
+    },
+    {
+     "raw": 1,
+     "roll": 34272
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000003",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 70645
+    },
+    {
+     "raw": 1,
+     "roll": 281517
+    },
+    {
+     "raw": 1,
+     "roll": 271023
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 34272
+    },
+    {
+     "raw": 1,
+     "roll": 922977
+    },
+    {
+     "raw": 1,
+     "roll": 440884
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000003",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 70645
+    },
+    {
+     "raw": 1,
+     "roll": 281517
+    },
+    {
+     "raw": 1,
+     "roll": 271023
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 666435
+    },
+    {
+     "raw": 1,
+     "roll": 161892
+    },
+    {
+     "raw": 1,
+     "roll": 663875
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000003",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 70645
+    },
+    {
+     "raw": 1,
+     "roll": 281517
+    },
+    {
+     "raw": 1,
+     "roll": 271023
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 236917
+    },
+    {
+     "raw": 1,
+     "roll": 889465
+    },
+    {
+     "raw": 1,
+     "roll": 906300
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000004",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 218350
+    },
+    {
+     "raw": 1,
+     "roll": 385172
+    },
+    {
+     "raw": 1,
+     "roll": 364857
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 906300
+    },
+    {
+     "raw": 1,
+     "roll": 465870
+    },
+    {
+     "raw": 1,
+     "roll": 351469
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000004",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 218350
+    },
+    {
+     "raw": 1,
+     "roll": 385172
+    },
+    {
+     "raw": 1,
+     "roll": 364857
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 242623
+    },
+    {
+     "raw": 1,
+     "roll": 946401
+    },
+    {
+     "raw": 1,
+     "roll": 838383
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000004",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 218350
+    },
+    {
+     "raw": 1,
+     "roll": 385172
+    },
+    {
+     "raw": 1,
+     "roll": 364857
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 236917
+    },
+    {
+     "raw": 1,
+     "roll": 889465
+    },
+    {
+     "raw": 1,
+     "roll": 906300
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000004",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 385172
+    },
+    {
+     "raw": 1,
+     "roll": 364857
+    },
+    {
+     "raw": 1,
+     "roll": 766449
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 906300
+    },
+    {
+     "raw": 1,
+     "roll": 465870
+    },
+    {
+     "raw": 1,
+     "roll": 351469
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000004",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 385172
+    },
+    {
+     "raw": 1,
+     "roll": 364857
+    },
+    {
+     "raw": 1,
+     "roll": 766449
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 242623
+    },
+    {
+     "raw": 1,
+     "roll": 946401
+    },
+    {
+     "raw": 1,
+     "roll": 838383
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000004",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 385172
+    },
+    {
+     "raw": 1,
+     "roll": 364857
+    },
+    {
+     "raw": 1,
+     "roll": 766449
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 236917
+    },
+    {
+     "raw": 1,
+     "roll": 889465
+    },
+    {
+     "raw": 1,
+     "roll": 906300
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000004",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 766449
+    },
+    {
+     "raw": 1,
+     "roll": 629338
+    },
+    {
+     "raw": 1,
+     "roll": 844042
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 906300
+    },
+    {
+     "raw": 1,
+     "roll": 465870
+    },
+    {
+     "raw": 1,
+     "roll": 351469
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000004",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 766449
+    },
+    {
+     "raw": 1,
+     "roll": 629338
+    },
+    {
+     "raw": 1,
+     "roll": 844042
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 242623
+    },
+    {
+     "raw": 1,
+     "roll": 946401
+    },
+    {
+     "raw": 1,
+     "roll": 838383
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000004",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 766449
+    },
+    {
+     "raw": 1,
+     "roll": 629338
+    },
+    {
+     "raw": 1,
+     "roll": 844042
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 330167
+    },
+    {
+     "raw": 1,
+     "roll": 596593
+    },
+    {
+     "raw": 1,
+     "roll": 165707
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000005",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 445495
+    },
+    {
+     "raw": 1,
+     "roll": 598979
+    },
+    {
+     "raw": 1,
+     "roll": 12878
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 165707
+    },
+    {
+     "raw": 1,
+     "roll": 867965
+    },
+    {
+     "raw": 1,
+     "roll": 258514
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000005",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 445495
+    },
+    {
+     "raw": 1,
+     "roll": 598979
+    },
+    {
+     "raw": 1,
+     "roll": 12878
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 581429
+    },
+    {
+     "raw": 1,
+     "roll": 476100
+    },
+    {
+     "raw": 1,
+     "roll": 281787
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000005",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 445495
+    },
+    {
+     "raw": 1,
+     "roll": 598979
+    },
+    {
+     "raw": 1,
+     "roll": 12878
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 330167
+    },
+    {
+     "raw": 1,
+     "roll": 596593
+    },
+    {
+     "raw": 1,
+     "roll": 165707
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000005",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 598979
+    },
+    {
+     "raw": 1,
+     "roll": 12878
+    },
+    {
+     "raw": 1,
+     "roll": 46043
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 165707
+    },
+    {
+     "raw": 1,
+     "roll": 867965
+    },
+    {
+     "raw": 1,
+     "roll": 258514
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000005",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 598979
+    },
+    {
+     "raw": 1,
+     "roll": 12878
+    },
+    {
+     "raw": 1,
+     "roll": 46043
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 581429
+    },
+    {
+     "raw": 1,
+     "roll": 476100
+    },
+    {
+     "raw": 1,
+     "roll": 281787
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000005",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 598979
+    },
+    {
+     "raw": 1,
+     "roll": 12878
+    },
+    {
+     "raw": 1,
+     "roll": 46043
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 330167
+    },
+    {
+     "raw": 1,
+     "roll": 596593
+    },
+    {
+     "raw": 1,
+     "roll": 165707
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000005",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 46043
+    },
+    {
+     "raw": 1,
+     "roll": 335996
+    },
+    {
+     "raw": 1,
+     "roll": 80321
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 165707
+    },
+    {
+     "raw": 1,
+     "roll": 867965
+    },
+    {
+     "raw": 1,
+     "roll": 258514
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000005",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 46043
+    },
+    {
+     "raw": 1,
+     "roll": 335996
+    },
+    {
+     "raw": 1,
+     "roll": 80321
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 581429
+    },
+    {
+     "raw": 1,
+     "roll": 476100
+    },
+    {
+     "raw": 1,
+     "roll": 281787
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000005",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 46043
+    },
+    {
+     "raw": 1,
+     "roll": 335996
+    },
+    {
+     "raw": 1,
+     "roll": 80321
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 546514
+    },
+    {
+     "raw": 1,
+     "roll": 314439
+    },
+    {
+     "raw": 1,
+     "roll": 172714
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000006",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 870743
+    },
+    {
+     "raw": 1,
+     "roll": 11480
+    },
+    {
+     "raw": 1,
+     "roll": 289957
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 172714
+    },
+    {
+     "raw": 1,
+     "roll": 427401
+    },
+    {
+     "raw": 1,
+     "roll": 535144
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000006",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 870743
+    },
+    {
+     "raw": 1,
+     "roll": 11480
+    },
+    {
+     "raw": 1,
+     "roll": 289957
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 20349
+    },
+    {
+     "raw": 1,
+     "roll": 249803
+    },
+    {
+     "raw": 1,
+     "roll": 518749
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000006",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 870743
+    },
+    {
+     "raw": 1,
+     "roll": 11480
+    },
+    {
+     "raw": 1,
+     "roll": 289957
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 546514
+    },
+    {
+     "raw": 1,
+     "roll": 314439
+    },
+    {
+     "raw": 1,
+     "roll": 172714
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000006",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 11480
+    },
+    {
+     "raw": 1,
+     "roll": 289957
+    },
+    {
+     "raw": 1,
+     "roll": 147149
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 172714
+    },
+    {
+     "raw": 1,
+     "roll": 427401
+    },
+    {
+     "raw": 1,
+     "roll": 535144
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000006",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 11480
+    },
+    {
+     "raw": 1,
+     "roll": 289957
+    },
+    {
+     "raw": 1,
+     "roll": 147149
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 20349
+    },
+    {
+     "raw": 1,
+     "roll": 249803
+    },
+    {
+     "raw": 1,
+     "roll": 518749
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000006",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 11480
+    },
+    {
+     "raw": 1,
+     "roll": 289957
+    },
+    {
+     "raw": 1,
+     "roll": 147149
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 546514
+    },
+    {
+     "raw": 1,
+     "roll": 314439
+    },
+    {
+     "raw": 1,
+     "roll": 172714
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000006",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 147149
+    },
+    {
+     "raw": 1,
+     "roll": 361041
+    },
+    {
+     "raw": 1,
+     "roll": 206255
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 172714
+    },
+    {
+     "raw": 1,
+     "roll": 427401
+    },
+    {
+     "raw": 1,
+     "roll": 535144
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000006",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 147149
+    },
+    {
+     "raw": 1,
+     "roll": 361041
+    },
+    {
+     "raw": 1,
+     "roll": 206255
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 20349
+    },
+    {
+     "raw": 1,
+     "roll": 249803
+    },
+    {
+     "raw": 1,
+     "roll": 518749
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000006",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 147149
+    },
+    {
+     "raw": 1,
+     "roll": 361041
+    },
+    {
+     "raw": 1,
+     "roll": 206255
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 73325
+    },
+    {
+     "raw": 1,
+     "roll": 759227
+    },
+    {
+     "raw": 1,
+     "roll": 979579
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000007",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 106224
+    },
+    {
+     "raw": 1,
+     "roll": 220896
+    },
+    {
+     "raw": 1,
+     "roll": 398195
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 979579
+    },
+    {
+     "raw": 1,
+     "roll": 945530
+    },
+    {
+     "raw": 1,
+     "roll": 307457
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000007",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 106224
+    },
+    {
+     "raw": 1,
+     "roll": 220896
+    },
+    {
+     "raw": 1,
+     "roll": 398195
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 951578
+    },
+    {
+     "raw": 1,
+     "roll": 353319
+    },
+    {
+     "raw": 1,
+     "roll": 276304
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000007",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 106224
+    },
+    {
+     "raw": 1,
+     "roll": 220896
+    },
+    {
+     "raw": 1,
+     "roll": 398195
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 73325
+    },
+    {
+     "raw": 1,
+     "roll": 759227
+    },
+    {
+     "raw": 1,
+     "roll": 979579
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000007",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 220896
+    },
+    {
+     "raw": 1,
+     "roll": 398195
+    },
+    {
+     "raw": 1,
+     "roll": 168907
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 979579
+    },
+    {
+     "raw": 1,
+     "roll": 945530
+    },
+    {
+     "raw": 1,
+     "roll": 307457
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000007",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 220896
+    },
+    {
+     "raw": 1,
+     "roll": 398195
+    },
+    {
+     "raw": 1,
+     "roll": 168907
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 951578
+    },
+    {
+     "raw": 1,
+     "roll": 353319
+    },
+    {
+     "raw": 1,
+     "roll": 276304
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000007",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 220896
+    },
+    {
+     "raw": 1,
+     "roll": 398195
+    },
+    {
+     "raw": 1,
+     "roll": 168907
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 73325
+    },
+    {
+     "raw": 1,
+     "roll": 759227
+    },
+    {
+     "raw": 1,
+     "roll": 979579
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000007",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 168907
+    },
+    {
+     "raw": 1,
+     "roll": 699231
+    },
+    {
+     "raw": 1,
+     "roll": 965486
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 979579
+    },
+    {
+     "raw": 1,
+     "roll": 945530
+    },
+    {
+     "raw": 1,
+     "roll": 307457
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000007",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 168907
+    },
+    {
+     "raw": 1,
+     "roll": 699231
+    },
+    {
+     "raw": 1,
+     "roll": 965486
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 951578
+    },
+    {
+     "raw": 1,
+     "roll": 353319
+    },
+    {
+     "raw": 1,
+     "roll": 276304
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000007",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 168907
+    },
+    {
+     "raw": 1,
+     "roll": 699231
+    },
+    {
+     "raw": 1,
+     "roll": 965486
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 841633
+    },
+    {
+     "raw": 1,
+     "roll": 577348
+    },
+    {
+     "raw": 1,
+     "roll": 107788
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000008",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 286486
+    },
+    {
+     "raw": 1,
+     "roll": 518222
+    },
+    {
+     "raw": 1,
+     "roll": 106864
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 107788
+    },
+    {
+     "raw": 1,
+     "roll": 414183
+    },
+    {
+     "raw": 1,
+     "roll": 342097
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000008",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 286486
+    },
+    {
+     "raw": 1,
+     "roll": 518222
+    },
+    {
+     "raw": 1,
+     "roll": 106864
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 510773
+    },
+    {
+     "raw": 1,
+     "roll": 100090
+    },
+    {
+     "raw": 1,
+     "roll": 625485
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000008",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 286486
+    },
+    {
+     "raw": 1,
+     "roll": 518222
+    },
+    {
+     "raw": 1,
+     "roll": 106864
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 841633
+    },
+    {
+     "raw": 1,
+     "roll": 577348
+    },
+    {
+     "raw": 1,
+     "roll": 107788
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000008",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 518222
+    },
+    {
+     "raw": 1,
+     "roll": 106864
+    },
+    {
+     "raw": 1,
+     "roll": 576620
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 107788
+    },
+    {
+     "raw": 1,
+     "roll": 414183
+    },
+    {
+     "raw": 1,
+     "roll": 342097
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000008",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 518222
+    },
+    {
+     "raw": 1,
+     "roll": 106864
+    },
+    {
+     "raw": 1,
+     "roll": 576620
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 510773
+    },
+    {
+     "raw": 1,
+     "roll": 100090
+    },
+    {
+     "raw": 1,
+     "roll": 625485
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000008",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 518222
+    },
+    {
+     "raw": 1,
+     "roll": 106864
+    },
+    {
+     "raw": 1,
+     "roll": 576620
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 841633
+    },
+    {
+     "raw": 1,
+     "roll": 577348
+    },
+    {
+     "raw": 1,
+     "roll": 107788
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000008",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 576620
+    },
+    {
+     "raw": 1,
+     "roll": 550333
+    },
+    {
+     "raw": 1,
+     "roll": 385843
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 107788
+    },
+    {
+     "raw": 1,
+     "roll": 414183
+    },
+    {
+     "raw": 1,
+     "roll": 342097
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000008",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 576620
+    },
+    {
+     "raw": 1,
+     "roll": 550333
+    },
+    {
+     "raw": 1,
+     "roll": 385843
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 510773
+    },
+    {
+     "raw": 1,
+     "roll": 100090
+    },
+    {
+     "raw": 1,
+     "roll": 625485
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000008",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 576620
+    },
+    {
+     "raw": 1,
+     "roll": 550333
+    },
+    {
+     "raw": 1,
+     "roll": 385843
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 970630
+    },
+    {
+     "raw": 1,
+     "roll": 417731
+    },
+    {
+     "raw": 1,
+     "roll": 47748
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000009",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 583008
+    },
+    {
+     "raw": 1,
+     "roll": 287744
+    },
+    {
+     "raw": 1,
+     "roll": 20660
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 47748
+    },
+    {
+     "raw": 1,
+     "roll": 382695
+    },
+    {
+     "raw": 1,
+     "roll": 216184
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000009",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 583008
+    },
+    {
+     "raw": 1,
+     "roll": 287744
+    },
+    {
+     "raw": 1,
+     "roll": 20660
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 329055
+    },
+    {
+     "raw": 1,
+     "roll": 861268
+    },
+    {
+     "raw": 1,
+     "roll": 540639
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000009",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 583008
+    },
+    {
+     "raw": 1,
+     "roll": 287744
+    },
+    {
+     "raw": 1,
+     "roll": 20660
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 970630
+    },
+    {
+     "raw": 1,
+     "roll": 417731
+    },
+    {
+     "raw": 1,
+     "roll": 47748
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000009",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 287744
+    },
+    {
+     "raw": 1,
+     "roll": 20660
+    },
+    {
+     "raw": 1,
+     "roll": 899331
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 47748
+    },
+    {
+     "raw": 1,
+     "roll": 382695
+    },
+    {
+     "raw": 1,
+     "roll": 216184
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000009",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 287744
+    },
+    {
+     "raw": 1,
+     "roll": 20660
+    },
+    {
+     "raw": 1,
+     "roll": 899331
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 329055
+    },
+    {
+     "raw": 1,
+     "roll": 861268
+    },
+    {
+     "raw": 1,
+     "roll": 540639
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000009",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 287744
+    },
+    {
+     "raw": 1,
+     "roll": 20660
+    },
+    {
+     "raw": 1,
+     "roll": 899331
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 970630
+    },
+    {
+     "raw": 1,
+     "roll": 417731
+    },
+    {
+     "raw": 1,
+     "roll": 47748
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000009",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 899331
+    },
+    {
+     "raw": 1,
+     "roll": 116852
+    },
+    {
+     "raw": 1,
+     "roll": 183500
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 47748
+    },
+    {
+     "raw": 1,
+     "roll": 382695
+    },
+    {
+     "raw": 1,
+     "roll": 216184
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000009",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 899331
+    },
+    {
+     "raw": 1,
+     "roll": 116852
+    },
+    {
+     "raw": 1,
+     "roll": 183500
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 329055
+    },
+    {
+     "raw": 1,
+     "roll": 861268
+    },
+    {
+     "raw": 1,
+     "roll": 540639
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000009",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 899331
+    },
+    {
+     "raw": 1,
+     "roll": 116852
+    },
+    {
+     "raw": 1,
+     "roll": 183500
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 987420
+    },
+    {
+     "raw": 1,
+     "roll": 852879
+    },
+    {
+     "raw": 1,
+     "roll": 231742
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000000a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 297090
+    },
+    {
+     "raw": 1,
+     "roll": 701385
+    },
+    {
+     "raw": 1,
+     "roll": 783446
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 231742
+    },
+    {
+     "raw": 1,
+     "roll": 163409
+    },
+    {
+     "raw": 1,
+     "roll": 597858
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000000a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 297090
+    },
+    {
+     "raw": 1,
+     "roll": 701385
+    },
+    {
+     "raw": 1,
+     "roll": 783446
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 583242
+    },
+    {
+     "raw": 1,
+     "roll": 825766
+    },
+    {
+     "raw": 1,
+     "roll": 409158
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000000a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 297090
+    },
+    {
+     "raw": 1,
+     "roll": 701385
+    },
+    {
+     "raw": 1,
+     "roll": 783446
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 987420
+    },
+    {
+     "raw": 1,
+     "roll": 852879
+    },
+    {
+     "raw": 1,
+     "roll": 231742
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000000a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 701385
+    },
+    {
+     "raw": 1,
+     "roll": 783446
+    },
+    {
+     "raw": 1,
+     "roll": 593115
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 231742
+    },
+    {
+     "raw": 1,
+     "roll": 163409
+    },
+    {
+     "raw": 1,
+     "roll": 597858
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000000a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 701385
+    },
+    {
+     "raw": 1,
+     "roll": 783446
+    },
+    {
+     "raw": 1,
+     "roll": 593115
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 583242
+    },
+    {
+     "raw": 1,
+     "roll": 825766
+    },
+    {
+     "raw": 1,
+     "roll": 409158
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000000a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 701385
+    },
+    {
+     "raw": 1,
+     "roll": 783446
+    },
+    {
+     "raw": 1,
+     "roll": 593115
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 987420
+    },
+    {
+     "raw": 1,
+     "roll": 852879
+    },
+    {
+     "raw": 1,
+     "roll": 231742
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000000a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 593115
+    },
+    {
+     "raw": 1,
+     "roll": 48672
+    },
+    {
+     "raw": 1,
+     "roll": 166508
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 231742
+    },
+    {
+     "raw": 1,
+     "roll": 163409
+    },
+    {
+     "raw": 1,
+     "roll": 597858
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000000a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 593115
+    },
+    {
+     "raw": 1,
+     "roll": 48672
+    },
+    {
+     "raw": 1,
+     "roll": 166508
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 583242
+    },
+    {
+     "raw": 1,
+     "roll": 825766
+    },
+    {
+     "raw": 1,
+     "roll": 409158
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000000a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 593115
+    },
+    {
+     "raw": 1,
+     "roll": 48672
+    },
+    {
+     "raw": 1,
+     "roll": 166508
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 148948
+    },
+    {
+     "raw": 1,
+     "roll": 528775
+    },
+    {
+     "raw": 1,
+     "roll": 882729
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000000b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 440785
+    },
+    {
+     "raw": 1,
+     "roll": 10718
+    },
+    {
+     "raw": 1,
+     "roll": 754770
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 882729
+    },
+    {
+     "raw": 1,
+     "roll": 961436
+    },
+    {
+     "raw": 1,
+     "roll": 191706
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000000b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 440785
+    },
+    {
+     "raw": 1,
+     "roll": 10718
+    },
+    {
+     "raw": 1,
+     "roll": 754770
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 257395
+    },
+    {
+     "raw": 1,
+     "roll": 653426
+    },
+    {
+     "raw": 1,
+     "roll": 618410
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000000b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 440785
+    },
+    {
+     "raw": 1,
+     "roll": 10718
+    },
+    {
+     "raw": 1,
+     "roll": 754770
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 148948
+    },
+    {
+     "raw": 1,
+     "roll": 528775
+    },
+    {
+     "raw": 1,
+     "roll": 882729
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000000b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 10718
+    },
+    {
+     "raw": 1,
+     "roll": 754770
+    },
+    {
+     "raw": 1,
+     "roll": 294983
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 882729
+    },
+    {
+     "raw": 1,
+     "roll": 961436
+    },
+    {
+     "raw": 1,
+     "roll": 191706
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000000b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 10718
+    },
+    {
+     "raw": 1,
+     "roll": 754770
+    },
+    {
+     "raw": 1,
+     "roll": 294983
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 257395
+    },
+    {
+     "raw": 1,
+     "roll": 653426
+    },
+    {
+     "raw": 1,
+     "roll": 618410
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000000b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 10718
+    },
+    {
+     "raw": 1,
+     "roll": 754770
+    },
+    {
+     "raw": 1,
+     "roll": 294983
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 148948
+    },
+    {
+     "raw": 1,
+     "roll": 528775
+    },
+    {
+     "raw": 1,
+     "roll": 882729
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000000b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 294983
+    },
+    {
+     "raw": 1,
+     "roll": 206871
+    },
+    {
+     "raw": 1,
+     "roll": 470789
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 882729
+    },
+    {
+     "raw": 1,
+     "roll": 961436
+    },
+    {
+     "raw": 1,
+     "roll": 191706
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000000b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 294983
+    },
+    {
+     "raw": 1,
+     "roll": 206871
+    },
+    {
+     "raw": 1,
+     "roll": 470789
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 257395
+    },
+    {
+     "raw": 1,
+     "roll": 653426
+    },
+    {
+     "raw": 1,
+     "roll": 618410
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000000b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 294983
+    },
+    {
+     "raw": 1,
+     "roll": 206871
+    },
+    {
+     "raw": 1,
+     "roll": 470789
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 449193
+    },
+    {
+     "raw": 1,
+     "roll": 866994
+    },
+    {
+     "raw": 1,
+     "roll": 415980
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000000c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 825750
+    },
+    {
+     "raw": 1,
+     "roll": 341971
+    },
+    {
+     "raw": 1,
+     "roll": 233904
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 415980
+    },
+    {
+     "raw": 1,
+     "roll": 544395
+    },
+    {
+     "raw": 1,
+     "roll": 716932
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000000c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 825750
+    },
+    {
+     "raw": 1,
+     "roll": 341971
+    },
+    {
+     "raw": 1,
+     "roll": 233904
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 499175
+    },
+    {
+     "raw": 1,
+     "roll": 984537
+    },
+    {
+     "raw": 1,
+     "roll": 503976
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000000c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 825750
+    },
+    {
+     "raw": 1,
+     "roll": 341971
+    },
+    {
+     "raw": 1,
+     "roll": 233904
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 449193
+    },
+    {
+     "raw": 1,
+     "roll": 866994
+    },
+    {
+     "raw": 1,
+     "roll": 415980
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000000c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 341971
+    },
+    {
+     "raw": 1,
+     "roll": 233904
+    },
+    {
+     "raw": 1,
+     "roll": 191430
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 415980
+    },
+    {
+     "raw": 1,
+     "roll": 544395
+    },
+    {
+     "raw": 1,
+     "roll": 716932
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000000c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 341971
+    },
+    {
+     "raw": 1,
+     "roll": 233904
+    },
+    {
+     "raw": 1,
+     "roll": 191430
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 499175
+    },
+    {
+     "raw": 1,
+     "roll": 984537
+    },
+    {
+     "raw": 1,
+     "roll": 503976
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000000c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 341971
+    },
+    {
+     "raw": 1,
+     "roll": 233904
+    },
+    {
+     "raw": 1,
+     "roll": 191430
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 449193
+    },
+    {
+     "raw": 1,
+     "roll": 866994
+    },
+    {
+     "raw": 1,
+     "roll": 415980
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000000c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 191430
+    },
+    {
+     "raw": 1,
+     "roll": 252090
+    },
+    {
+     "raw": 1,
+     "roll": 782239
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 415980
+    },
+    {
+     "raw": 1,
+     "roll": 544395
+    },
+    {
+     "raw": 1,
+     "roll": 716932
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000000c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 191430
+    },
+    {
+     "raw": 1,
+     "roll": 252090
+    },
+    {
+     "raw": 1,
+     "roll": 782239
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 499175
+    },
+    {
+     "raw": 1,
+     "roll": 984537
+    },
+    {
+     "raw": 1,
+     "roll": 503976
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000000c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 191430
+    },
+    {
+     "raw": 1,
+     "roll": 252090
+    },
+    {
+     "raw": 1,
+     "roll": 782239
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 652821
+    },
+    {
+     "raw": 1,
+     "roll": 141516
+    },
+    {
+     "raw": 1,
+     "roll": 649385
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000000d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 158998
+    },
+    {
+     "raw": 1,
+     "roll": 150351
+    },
+    {
+     "raw": 1,
+     "roll": 265814
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 649385
+    },
+    {
+     "raw": 1,
+     "roll": 217182
+    },
+    {
+     "raw": 1,
+     "roll": 293169
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000000d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 158998
+    },
+    {
+     "raw": 1,
+     "roll": 150351
+    },
+    {
+     "raw": 1,
+     "roll": 265814
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 654999
+    },
+    {
+     "raw": 1,
+     "roll": 832241
+    },
+    {
+     "raw": 1,
+     "roll": 981334
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000000d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 158998
+    },
+    {
+     "raw": 1,
+     "roll": 150351
+    },
+    {
+     "raw": 1,
+     "roll": 265814
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 652821
+    },
+    {
+     "raw": 1,
+     "roll": 141516
+    },
+    {
+     "raw": 1,
+     "roll": 649385
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000000d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 150351
+    },
+    {
+     "raw": 1,
+     "roll": 265814
+    },
+    {
+     "raw": 1,
+     "roll": 830035
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 649385
+    },
+    {
+     "raw": 1,
+     "roll": 217182
+    },
+    {
+     "raw": 1,
+     "roll": 293169
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000000d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 150351
+    },
+    {
+     "raw": 1,
+     "roll": 265814
+    },
+    {
+     "raw": 1,
+     "roll": 830035
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 654999
+    },
+    {
+     "raw": 1,
+     "roll": 832241
+    },
+    {
+     "raw": 1,
+     "roll": 981334
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000000d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 150351
+    },
+    {
+     "raw": 1,
+     "roll": 265814
+    },
+    {
+     "raw": 1,
+     "roll": 830035
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 652821
+    },
+    {
+     "raw": 1,
+     "roll": 141516
+    },
+    {
+     "raw": 1,
+     "roll": 649385
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000000d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 830035
+    },
+    {
+     "raw": 1,
+     "roll": 618564
+    },
+    {
+     "raw": 1,
+     "roll": 314640
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 649385
+    },
+    {
+     "raw": 1,
+     "roll": 217182
+    },
+    {
+     "raw": 1,
+     "roll": 293169
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000000d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 830035
+    },
+    {
+     "raw": 1,
+     "roll": 618564
+    },
+    {
+     "raw": 1,
+     "roll": 314640
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 654999
+    },
+    {
+     "raw": 1,
+     "roll": 832241
+    },
+    {
+     "raw": 1,
+     "roll": 981334
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000000d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 830035
+    },
+    {
+     "raw": 1,
+     "roll": 618564
+    },
+    {
+     "raw": 1,
+     "roll": 314640
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 758979
+    },
+    {
+     "raw": 1,
+     "roll": 130262
+    },
+    {
+     "raw": 1,
+     "roll": 681291
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000000e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 10447
+    },
+    {
+     "raw": 1,
+     "roll": 842987
+    },
+    {
+     "raw": 1,
+     "roll": 893737
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 681291
+    },
+    {
+     "raw": 1,
+     "roll": 437348
+    },
+    {
+     "raw": 1,
+     "roll": 37204
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000000e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 10447
+    },
+    {
+     "raw": 1,
+     "roll": 842987
+    },
+    {
+     "raw": 1,
+     "roll": 893737
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 449571
+    },
+    {
+     "raw": 1,
+     "roll": 934076
+    },
+    {
+     "raw": 1,
+     "roll": 159281
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000000e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 10447
+    },
+    {
+     "raw": 1,
+     "roll": 842987
+    },
+    {
+     "raw": 1,
+     "roll": 893737
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 758979
+    },
+    {
+     "raw": 1,
+     "roll": 130262
+    },
+    {
+     "raw": 1,
+     "roll": 681291
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000000e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 842987
+    },
+    {
+     "raw": 1,
+     "roll": 893737
+    },
+    {
+     "raw": 1,
+     "roll": 431290
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 681291
+    },
+    {
+     "raw": 1,
+     "roll": 437348
+    },
+    {
+     "raw": 1,
+     "roll": 37204
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000000e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 842987
+    },
+    {
+     "raw": 1,
+     "roll": 893737
+    },
+    {
+     "raw": 1,
+     "roll": 431290
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 449571
+    },
+    {
+     "raw": 1,
+     "roll": 934076
+    },
+    {
+     "raw": 1,
+     "roll": 159281
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000000e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 842987
+    },
+    {
+     "raw": 1,
+     "roll": 893737
+    },
+    {
+     "raw": 1,
+     "roll": 431290
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 758979
+    },
+    {
+     "raw": 1,
+     "roll": 130262
+    },
+    {
+     "raw": 1,
+     "roll": 681291
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000000e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 431290
+    },
+    {
+     "raw": 1,
+     "roll": 477726
+    },
+    {
+     "raw": 1,
+     "roll": 98337
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 681291
+    },
+    {
+     "raw": 1,
+     "roll": 437348
+    },
+    {
+     "raw": 1,
+     "roll": 37204
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000000e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 431290
+    },
+    {
+     "raw": 1,
+     "roll": 477726
+    },
+    {
+     "raw": 1,
+     "roll": 98337
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 449571
+    },
+    {
+     "raw": 1,
+     "roll": 934076
+    },
+    {
+     "raw": 1,
+     "roll": 159281
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000000e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 431290
+    },
+    {
+     "raw": 1,
+     "roll": 477726
+    },
+    {
+     "raw": 1,
+     "roll": 98337
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 726753
+    },
+    {
+     "raw": 1,
+     "roll": 398222
+    },
+    {
+     "raw": 1,
+     "roll": 874275
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000000f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 234932
+    },
+    {
+     "raw": 1,
+     "roll": 920257
+    },
+    {
+     "raw": 1,
+     "roll": 500535
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 874275
+    },
+    {
+     "raw": 1,
+     "roll": 318623
+    },
+    {
+     "raw": 1,
+     "roll": 761606
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000000f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 234932
+    },
+    {
+     "raw": 1,
+     "roll": 920257
+    },
+    {
+     "raw": 1,
+     "roll": 500535
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 858909
+    },
+    {
+     "raw": 1,
+     "roll": 227361
+    },
+    {
+     "raw": 1,
+     "roll": 504555
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000000f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 234932
+    },
+    {
+     "raw": 1,
+     "roll": 920257
+    },
+    {
+     "raw": 1,
+     "roll": 500535
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 726753
+    },
+    {
+     "raw": 1,
+     "roll": 398222
+    },
+    {
+     "raw": 1,
+     "roll": 874275
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000000f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 920257
+    },
+    {
+     "raw": 1,
+     "roll": 500535
+    },
+    {
+     "raw": 1,
+     "roll": 123558
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 874275
+    },
+    {
+     "raw": 1,
+     "roll": 318623
+    },
+    {
+     "raw": 1,
+     "roll": 761606
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000000f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 920257
+    },
+    {
+     "raw": 1,
+     "roll": 500535
+    },
+    {
+     "raw": 1,
+     "roll": 123558
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 858909
+    },
+    {
+     "raw": 1,
+     "roll": 227361
+    },
+    {
+     "raw": 1,
+     "roll": 504555
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000000f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 920257
+    },
+    {
+     "raw": 1,
+     "roll": 500535
+    },
+    {
+     "raw": 1,
+     "roll": 123558
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 726753
+    },
+    {
+     "raw": 1,
+     "roll": 398222
+    },
+    {
+     "raw": 1,
+     "roll": 874275
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000000f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 123558
+    },
+    {
+     "raw": 1,
+     "roll": 718572
+    },
+    {
+     "raw": 1,
+     "roll": 7480
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 874275
+    },
+    {
+     "raw": 1,
+     "roll": 318623
+    },
+    {
+     "raw": 1,
+     "roll": 761606
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000000f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 123558
+    },
+    {
+     "raw": 1,
+     "roll": 718572
+    },
+    {
+     "raw": 1,
+     "roll": 7480
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 858909
+    },
+    {
+     "raw": 1,
+     "roll": 227361
+    },
+    {
+     "raw": 1,
+     "roll": 504555
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000000f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 123558
+    },
+    {
+     "raw": 1,
+     "roll": 718572
+    },
+    {
+     "raw": 1,
+     "roll": 7480
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 704995
+    },
+    {
+     "raw": 1,
+     "roll": 699828
+    },
+    {
+     "raw": 1,
+     "roll": 876983
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000010",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 968305
+    },
+    {
+     "raw": 1,
+     "roll": 513890
+    },
+    {
+     "raw": 1,
+     "roll": 760461
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 876983
+    },
+    {
+     "raw": 1,
+     "roll": 465388
+    },
+    {
+     "raw": 1,
+     "roll": 987816
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000010",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 968305
+    },
+    {
+     "raw": 1,
+     "roll": 513890
+    },
+    {
+     "raw": 1,
+     "roll": 760461
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 646646
+    },
+    {
+     "raw": 1,
+     "roll": 965426
+    },
+    {
+     "raw": 1,
+     "roll": 263460
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000010",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 968305
+    },
+    {
+     "raw": 1,
+     "roll": 513890
+    },
+    {
+     "raw": 1,
+     "roll": 760461
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 704995
+    },
+    {
+     "raw": 1,
+     "roll": 699828
+    },
+    {
+     "raw": 1,
+     "roll": 876983
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000010",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 513890
+    },
+    {
+     "raw": 1,
+     "roll": 760461
+    },
+    {
+     "raw": 1,
+     "roll": 778804
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 876983
+    },
+    {
+     "raw": 1,
+     "roll": 465388
+    },
+    {
+     "raw": 1,
+     "roll": 987816
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000010",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 513890
+    },
+    {
+     "raw": 1,
+     "roll": 760461
+    },
+    {
+     "raw": 1,
+     "roll": 778804
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 646646
+    },
+    {
+     "raw": 1,
+     "roll": 965426
+    },
+    {
+     "raw": 1,
+     "roll": 263460
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000010",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 513890
+    },
+    {
+     "raw": 1,
+     "roll": 760461
+    },
+    {
+     "raw": 1,
+     "roll": 778804
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 704995
+    },
+    {
+     "raw": 1,
+     "roll": 699828
+    },
+    {
+     "raw": 1,
+     "roll": 876983
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000010",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 778804
+    },
+    {
+     "raw": 1,
+     "roll": 331896
+    },
+    {
+     "raw": 1,
+     "roll": 230130
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 876983
+    },
+    {
+     "raw": 1,
+     "roll": 465388
+    },
+    {
+     "raw": 1,
+     "roll": 987816
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000010",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 778804
+    },
+    {
+     "raw": 1,
+     "roll": 331896
+    },
+    {
+     "raw": 1,
+     "roll": 230130
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 646646
+    },
+    {
+     "raw": 1,
+     "roll": 965426
+    },
+    {
+     "raw": 1,
+     "roll": 263460
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000010",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 778804
+    },
+    {
+     "raw": 1,
+     "roll": 331896
+    },
+    {
+     "raw": 1,
+     "roll": 230130
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 736253
+    },
+    {
+     "raw": 1,
+     "roll": 455128
+    },
+    {
+     "raw": 1,
+     "roll": 883892
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000011",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 60555
+    },
+    {
+     "raw": 1,
+     "roll": 170201
+    },
+    {
+     "raw": 1,
+     "roll": 712339
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 883892
+    },
+    {
+     "raw": 1,
+     "roll": 731203
+    },
+    {
+     "raw": 1,
+     "roll": 43389
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000011",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 60555
+    },
+    {
+     "raw": 1,
+     "roll": 170201
+    },
+    {
+     "raw": 1,
+     "roll": 712339
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 682466
+    },
+    {
+     "raw": 1,
+     "roll": 61859
+    },
+    {
+     "raw": 1,
+     "roll": 404919
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000011",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 60555
+    },
+    {
+     "raw": 1,
+     "roll": 170201
+    },
+    {
+     "raw": 1,
+     "roll": 712339
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 736253
+    },
+    {
+     "raw": 1,
+     "roll": 455128
+    },
+    {
+     "raw": 1,
+     "roll": 883892
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000011",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 170201
+    },
+    {
+     "raw": 1,
+     "roll": 712339
+    },
+    {
+     "raw": 1,
+     "roll": 113336
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 883892
+    },
+    {
+     "raw": 1,
+     "roll": 731203
+    },
+    {
+     "raw": 1,
+     "roll": 43389
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000011",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 170201
+    },
+    {
+     "raw": 1,
+     "roll": 712339
+    },
+    {
+     "raw": 1,
+     "roll": 113336
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 682466
+    },
+    {
+     "raw": 1,
+     "roll": 61859
+    },
+    {
+     "raw": 1,
+     "roll": 404919
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000011",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 170201
+    },
+    {
+     "raw": 1,
+     "roll": 712339
+    },
+    {
+     "raw": 1,
+     "roll": 113336
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 736253
+    },
+    {
+     "raw": 1,
+     "roll": 455128
+    },
+    {
+     "raw": 1,
+     "roll": 883892
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000011",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 113336
+    },
+    {
+     "raw": 1,
+     "roll": 28170
+    },
+    {
+     "raw": 1,
+     "roll": 341418
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 883892
+    },
+    {
+     "raw": 1,
+     "roll": 731203
+    },
+    {
+     "raw": 1,
+     "roll": 43389
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000011",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 113336
+    },
+    {
+     "raw": 1,
+     "roll": 28170
+    },
+    {
+     "raw": 1,
+     "roll": 341418
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 682466
+    },
+    {
+     "raw": 1,
+     "roll": 61859
+    },
+    {
+     "raw": 1,
+     "roll": 404919
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000011",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 113336
+    },
+    {
+     "raw": 1,
+     "roll": 28170
+    },
+    {
+     "raw": 1,
+     "roll": 341418
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 84092
+    },
+    {
+     "raw": 1,
+     "roll": 836791
+    },
+    {
+     "raw": 1,
+     "roll": 967905
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000012",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 343088
+    },
+    {
+     "raw": 1,
+     "roll": 971927
+    },
+    {
+     "raw": 1,
+     "roll": 308229
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 967905
+    },
+    {
+     "raw": 1,
+     "roll": 681654
+    },
+    {
+     "raw": 1,
+     "roll": 322924
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000012",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 343088
+    },
+    {
+     "raw": 1,
+     "roll": 971927
+    },
+    {
+     "raw": 1,
+     "roll": 308229
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 738027
+    },
+    {
+     "raw": 1,
+     "roll": 226367
+    },
+    {
+     "raw": 1,
+     "roll": 369086
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000012",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 343088
+    },
+    {
+     "raw": 1,
+     "roll": 971927
+    },
+    {
+     "raw": 1,
+     "roll": 308229
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 84092
+    },
+    {
+     "raw": 1,
+     "roll": 836791
+    },
+    {
+     "raw": 1,
+     "roll": 967905
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000012",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 971927
+    },
+    {
+     "raw": 1,
+     "roll": 308229
+    },
+    {
+     "raw": 1,
+     "roll": 524456
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 967905
+    },
+    {
+     "raw": 1,
+     "roll": 681654
+    },
+    {
+     "raw": 1,
+     "roll": 322924
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000012",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 971927
+    },
+    {
+     "raw": 1,
+     "roll": 308229
+    },
+    {
+     "raw": 1,
+     "roll": 524456
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 738027
+    },
+    {
+     "raw": 1,
+     "roll": 226367
+    },
+    {
+     "raw": 1,
+     "roll": 369086
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000012",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 971927
+    },
+    {
+     "raw": 1,
+     "roll": 308229
+    },
+    {
+     "raw": 1,
+     "roll": 524456
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 84092
+    },
+    {
+     "raw": 1,
+     "roll": 836791
+    },
+    {
+     "raw": 1,
+     "roll": 967905
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000012",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 524456
+    },
+    {
+     "raw": 1,
+     "roll": 913960
+    },
+    {
+     "raw": 1,
+     "roll": 731193
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 967905
+    },
+    {
+     "raw": 1,
+     "roll": 681654
+    },
+    {
+     "raw": 1,
+     "roll": 322924
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000012",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 524456
+    },
+    {
+     "raw": 1,
+     "roll": 913960
+    },
+    {
+     "raw": 1,
+     "roll": 731193
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 738027
+    },
+    {
+     "raw": 1,
+     "roll": 226367
+    },
+    {
+     "raw": 1,
+     "roll": 369086
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000012",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 524456
+    },
+    {
+     "raw": 1,
+     "roll": 913960
+    },
+    {
+     "raw": 1,
+     "roll": 731193
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 158155
+    },
+    {
+     "raw": 1,
+     "roll": 231928
+    },
+    {
+     "raw": 1,
+     "roll": 125202
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000013",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 393203
+    },
+    {
+     "raw": 1,
+     "roll": 484748
+    },
+    {
+     "raw": 1,
+     "roll": 405872
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 125202
+    },
+    {
+     "raw": 1,
+     "roll": 351178
+    },
+    {
+     "raw": 1,
+     "roll": 524404
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000013",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 393203
+    },
+    {
+     "raw": 1,
+     "roll": 484748
+    },
+    {
+     "raw": 1,
+     "roll": 405872
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 194364
+    },
+    {
+     "raw": 1,
+     "roll": 527208
+    },
+    {
+     "raw": 1,
+     "roll": 842489
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000013",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 393203
+    },
+    {
+     "raw": 1,
+     "roll": 484748
+    },
+    {
+     "raw": 1,
+     "roll": 405872
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 158155
+    },
+    {
+     "raw": 1,
+     "roll": 231928
+    },
+    {
+     "raw": 1,
+     "roll": 125202
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000013",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 484748
+    },
+    {
+     "raw": 1,
+     "roll": 405872
+    },
+    {
+     "raw": 1,
+     "roll": 162681
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 125202
+    },
+    {
+     "raw": 1,
+     "roll": 351178
+    },
+    {
+     "raw": 1,
+     "roll": 524404
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000013",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 484748
+    },
+    {
+     "raw": 1,
+     "roll": 405872
+    },
+    {
+     "raw": 1,
+     "roll": 162681
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 194364
+    },
+    {
+     "raw": 1,
+     "roll": 527208
+    },
+    {
+     "raw": 1,
+     "roll": 842489
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000013",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 484748
+    },
+    {
+     "raw": 1,
+     "roll": 405872
+    },
+    {
+     "raw": 1,
+     "roll": 162681
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 158155
+    },
+    {
+     "raw": 1,
+     "roll": 231928
+    },
+    {
+     "raw": 1,
+     "roll": 125202
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000013",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 162681
+    },
+    {
+     "raw": 1,
+     "roll": 803416
+    },
+    {
+     "raw": 1,
+     "roll": 778360
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 125202
+    },
+    {
+     "raw": 1,
+     "roll": 351178
+    },
+    {
+     "raw": 1,
+     "roll": 524404
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000013",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 162681
+    },
+    {
+     "raw": 1,
+     "roll": 803416
+    },
+    {
+     "raw": 1,
+     "roll": 778360
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 194364
+    },
+    {
+     "raw": 1,
+     "roll": 527208
+    },
+    {
+     "raw": 1,
+     "roll": 842489
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000013",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 162681
+    },
+    {
+     "raw": 1,
+     "roll": 803416
+    },
+    {
+     "raw": 1,
+     "roll": 778360
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 49090
+    },
+    {
+     "raw": 1,
+     "roll": 88253
+    },
+    {
+     "raw": 1,
+     "roll": 828875
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000014",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 382711
+    },
+    {
+     "raw": 1,
+     "roll": 409824
+    },
+    {
+     "raw": 1,
+     "roll": 411982
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 828875
+    },
+    {
+     "raw": 1,
+     "roll": 768637
+    },
+    {
+     "raw": 1,
+     "roll": 741475
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000014",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 382711
+    },
+    {
+     "raw": 1,
+     "roll": 409824
+    },
+    {
+     "raw": 1,
+     "roll": 411982
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 423394
+    },
+    {
+     "raw": 1,
+     "roll": 881047
+    },
+    {
+     "raw": 1,
+     "roll": 596655
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000014",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 382711
+    },
+    {
+     "raw": 1,
+     "roll": 409824
+    },
+    {
+     "raw": 1,
+     "roll": 411982
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 49090
+    },
+    {
+     "raw": 1,
+     "roll": 88253
+    },
+    {
+     "raw": 1,
+     "roll": 828875
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000014",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 409824
+    },
+    {
+     "raw": 1,
+     "roll": 411982
+    },
+    {
+     "raw": 1,
+     "roll": 978407
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 828875
+    },
+    {
+     "raw": 1,
+     "roll": 768637
+    },
+    {
+     "raw": 1,
+     "roll": 741475
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000014",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 409824
+    },
+    {
+     "raw": 1,
+     "roll": 411982
+    },
+    {
+     "raw": 1,
+     "roll": 978407
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 423394
+    },
+    {
+     "raw": 1,
+     "roll": 881047
+    },
+    {
+     "raw": 1,
+     "roll": 596655
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000014",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 409824
+    },
+    {
+     "raw": 1,
+     "roll": 411982
+    },
+    {
+     "raw": 1,
+     "roll": 978407
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 49090
+    },
+    {
+     "raw": 1,
+     "roll": 88253
+    },
+    {
+     "raw": 1,
+     "roll": 828875
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000014",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 978407
+    },
+    {
+     "raw": 1,
+     "roll": 217918
+    },
+    {
+     "raw": 1,
+     "roll": 443470
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 828875
+    },
+    {
+     "raw": 1,
+     "roll": 768637
+    },
+    {
+     "raw": 1,
+     "roll": 741475
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000014",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 978407
+    },
+    {
+     "raw": 1,
+     "roll": 217918
+    },
+    {
+     "raw": 1,
+     "roll": 443470
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 423394
+    },
+    {
+     "raw": 1,
+     "roll": 881047
+    },
+    {
+     "raw": 1,
+     "roll": 596655
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000014",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 978407
+    },
+    {
+     "raw": 1,
+     "roll": 217918
+    },
+    {
+     "raw": 1,
+     "roll": 443470
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 15398
+    },
+    {
+     "raw": 1,
+     "roll": 946551
+    },
+    {
+     "raw": 1,
+     "roll": 816568
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000015",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 91656
+    },
+    {
+     "raw": 1,
+     "roll": 351559
+    },
+    {
+     "raw": 1,
+     "roll": 549672
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 816568
+    },
+    {
+     "raw": 1,
+     "roll": 595760
+    },
+    {
+     "raw": 1,
+     "roll": 947808
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000015",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 91656
+    },
+    {
+     "raw": 1,
+     "roll": 351559
+    },
+    {
+     "raw": 1,
+     "roll": 549672
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 412765
+    },
+    {
+     "raw": 1,
+     "roll": 242853
+    },
+    {
+     "raw": 1,
+     "roll": 428232
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000015",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 91656
+    },
+    {
+     "raw": 1,
+     "roll": 351559
+    },
+    {
+     "raw": 1,
+     "roll": 549672
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 15398
+    },
+    {
+     "raw": 1,
+     "roll": 946551
+    },
+    {
+     "raw": 1,
+     "roll": 816568
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000015",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 351559
+    },
+    {
+     "raw": 1,
+     "roll": 549672
+    },
+    {
+     "raw": 1,
+     "roll": 717285
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 816568
+    },
+    {
+     "raw": 1,
+     "roll": 595760
+    },
+    {
+     "raw": 1,
+     "roll": 947808
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000015",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 351559
+    },
+    {
+     "raw": 1,
+     "roll": 549672
+    },
+    {
+     "raw": 1,
+     "roll": 717285
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 412765
+    },
+    {
+     "raw": 1,
+     "roll": 242853
+    },
+    {
+     "raw": 1,
+     "roll": 428232
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000015",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 351559
+    },
+    {
+     "raw": 1,
+     "roll": 549672
+    },
+    {
+     "raw": 1,
+     "roll": 717285
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 15398
+    },
+    {
+     "raw": 1,
+     "roll": 946551
+    },
+    {
+     "raw": 1,
+     "roll": 816568
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000015",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 717285
+    },
+    {
+     "raw": 1,
+     "roll": 890345
+    },
+    {
+     "raw": 1,
+     "roll": 285764
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 816568
+    },
+    {
+     "raw": 1,
+     "roll": 595760
+    },
+    {
+     "raw": 1,
+     "roll": 947808
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000015",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 717285
+    },
+    {
+     "raw": 1,
+     "roll": 890345
+    },
+    {
+     "raw": 1,
+     "roll": 285764
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 412765
+    },
+    {
+     "raw": 1,
+     "roll": 242853
+    },
+    {
+     "raw": 1,
+     "roll": 428232
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000015",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 717285
+    },
+    {
+     "raw": 1,
+     "roll": 890345
+    },
+    {
+     "raw": 1,
+     "roll": 285764
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 122087
+    },
+    {
+     "raw": 1,
+     "roll": 769665
+    },
+    {
+     "raw": 1,
+     "roll": 971498
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000016",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 710130
+    },
+    {
+     "raw": 1,
+     "roll": 273711
+    },
+    {
+     "raw": 1,
+     "roll": 149243
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 971498
+    },
+    {
+     "raw": 1,
+     "roll": 850139
+    },
+    {
+     "raw": 1,
+     "roll": 208467
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000016",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 710130
+    },
+    {
+     "raw": 1,
+     "roll": 273711
+    },
+    {
+     "raw": 1,
+     "roll": 149243
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 505276
+    },
+    {
+     "raw": 1,
+     "roll": 835322
+    },
+    {
+     "raw": 1,
+     "roll": 993600
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000016",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 710130
+    },
+    {
+     "raw": 1,
+     "roll": 273711
+    },
+    {
+     "raw": 1,
+     "roll": 149243
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 122087
+    },
+    {
+     "raw": 1,
+     "roll": 769665
+    },
+    {
+     "raw": 1,
+     "roll": 971498
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000016",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 273711
+    },
+    {
+     "raw": 1,
+     "roll": 149243
+    },
+    {
+     "raw": 1,
+     "roll": 109507
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 971498
+    },
+    {
+     "raw": 1,
+     "roll": 850139
+    },
+    {
+     "raw": 1,
+     "roll": 208467
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000016",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 273711
+    },
+    {
+     "raw": 1,
+     "roll": 149243
+    },
+    {
+     "raw": 1,
+     "roll": 109507
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 505276
+    },
+    {
+     "raw": 1,
+     "roll": 835322
+    },
+    {
+     "raw": 1,
+     "roll": 993600
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000016",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 273711
+    },
+    {
+     "raw": 1,
+     "roll": 149243
+    },
+    {
+     "raw": 1,
+     "roll": 109507
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 122087
+    },
+    {
+     "raw": 1,
+     "roll": 769665
+    },
+    {
+     "raw": 1,
+     "roll": 971498
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000016",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 109507
+    },
+    {
+     "raw": 1,
+     "roll": 291566
+    },
+    {
+     "raw": 1,
+     "roll": 312521
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 971498
+    },
+    {
+     "raw": 1,
+     "roll": 850139
+    },
+    {
+     "raw": 1,
+     "roll": 208467
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000016",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 109507
+    },
+    {
+     "raw": 1,
+     "roll": 291566
+    },
+    {
+     "raw": 1,
+     "roll": 312521
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 505276
+    },
+    {
+     "raw": 1,
+     "roll": 835322
+    },
+    {
+     "raw": 1,
+     "roll": 993600
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000016",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 109507
+    },
+    {
+     "raw": 1,
+     "roll": 291566
+    },
+    {
+     "raw": 1,
+     "roll": 312521
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 834114
+    },
+    {
+     "raw": 1,
+     "roll": 768017
+    },
+    {
+     "raw": 1,
+     "roll": 391302
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000017",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 300190
+    },
+    {
+     "raw": 1,
+     "roll": 860388
+    },
+    {
+     "raw": 1,
+     "roll": 327864
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 391302
+    },
+    {
+     "raw": 1,
+     "roll": 991465
+    },
+    {
+     "raw": 1,
+     "roll": 769627
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000017",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 300190
+    },
+    {
+     "raw": 1,
+     "roll": 860388
+    },
+    {
+     "raw": 1,
+     "roll": 327864
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 395248
+    },
+    {
+     "raw": 1,
+     "roll": 71102
+    },
+    {
+     "raw": 1,
+     "roll": 645887
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000017",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 300190
+    },
+    {
+     "raw": 1,
+     "roll": 860388
+    },
+    {
+     "raw": 1,
+     "roll": 327864
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 834114
+    },
+    {
+     "raw": 1,
+     "roll": 768017
+    },
+    {
+     "raw": 1,
+     "roll": 391302
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000017",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 860388
+    },
+    {
+     "raw": 1,
+     "roll": 327864
+    },
+    {
+     "raw": 1,
+     "roll": 255683
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 391302
+    },
+    {
+     "raw": 1,
+     "roll": 991465
+    },
+    {
+     "raw": 1,
+     "roll": 769627
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000017",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 860388
+    },
+    {
+     "raw": 1,
+     "roll": 327864
+    },
+    {
+     "raw": 1,
+     "roll": 255683
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 395248
+    },
+    {
+     "raw": 1,
+     "roll": 71102
+    },
+    {
+     "raw": 1,
+     "roll": 645887
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000017",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 860388
+    },
+    {
+     "raw": 1,
+     "roll": 327864
+    },
+    {
+     "raw": 1,
+     "roll": 255683
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 834114
+    },
+    {
+     "raw": 1,
+     "roll": 768017
+    },
+    {
+     "raw": 1,
+     "roll": 391302
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000017",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 255683
+    },
+    {
+     "raw": 1,
+     "roll": 254690
+    },
+    {
+     "raw": 1,
+     "roll": 982944
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 391302
+    },
+    {
+     "raw": 1,
+     "roll": 991465
+    },
+    {
+     "raw": 1,
+     "roll": 769627
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000017",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 255683
+    },
+    {
+     "raw": 1,
+     "roll": 254690
+    },
+    {
+     "raw": 1,
+     "roll": 982944
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 395248
+    },
+    {
+     "raw": 1,
+     "roll": 71102
+    },
+    {
+     "raw": 1,
+     "roll": 645887
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000017",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 255683
+    },
+    {
+     "raw": 1,
+     "roll": 254690
+    },
+    {
+     "raw": 1,
+     "roll": 982944
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 517789
+    },
+    {
+     "raw": 1,
+     "roll": 184391
+    },
+    {
+     "raw": 1,
+     "roll": 69387
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000018",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 271147
+    },
+    {
+     "raw": 1,
+     "roll": 989960
+    },
+    {
+     "raw": 1,
+     "roll": 403524
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 69387
+    },
+    {
+     "raw": 1,
+     "roll": 344825
+    },
+    {
+     "raw": 1,
+     "roll": 958580
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000018",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 271147
+    },
+    {
+     "raw": 1,
+     "roll": 989960
+    },
+    {
+     "raw": 1,
+     "roll": 403524
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 914252
+    },
+    {
+     "raw": 1,
+     "roll": 327512
+    },
+    {
+     "raw": 1,
+     "roll": 793683
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000018",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 271147
+    },
+    {
+     "raw": 1,
+     "roll": 989960
+    },
+    {
+     "raw": 1,
+     "roll": 403524
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 517789
+    },
+    {
+     "raw": 1,
+     "roll": 184391
+    },
+    {
+     "raw": 1,
+     "roll": 69387
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000018",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 989960
+    },
+    {
+     "raw": 1,
+     "roll": 403524
+    },
+    {
+     "raw": 1,
+     "roll": 694924
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 69387
+    },
+    {
+     "raw": 1,
+     "roll": 344825
+    },
+    {
+     "raw": 1,
+     "roll": 958580
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000018",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 989960
+    },
+    {
+     "raw": 1,
+     "roll": 403524
+    },
+    {
+     "raw": 1,
+     "roll": 694924
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 914252
+    },
+    {
+     "raw": 1,
+     "roll": 327512
+    },
+    {
+     "raw": 1,
+     "roll": 793683
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000018",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 989960
+    },
+    {
+     "raw": 1,
+     "roll": 403524
+    },
+    {
+     "raw": 1,
+     "roll": 694924
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 517789
+    },
+    {
+     "raw": 1,
+     "roll": 184391
+    },
+    {
+     "raw": 1,
+     "roll": 69387
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000018",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 694924
+    },
+    {
+     "raw": 1,
+     "roll": 257482
+    },
+    {
+     "raw": 1,
+     "roll": 255490
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 69387
+    },
+    {
+     "raw": 1,
+     "roll": 344825
+    },
+    {
+     "raw": 1,
+     "roll": 958580
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000018",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 694924
+    },
+    {
+     "raw": 1,
+     "roll": 257482
+    },
+    {
+     "raw": 1,
+     "roll": 255490
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 914252
+    },
+    {
+     "raw": 1,
+     "roll": 327512
+    },
+    {
+     "raw": 1,
+     "roll": 793683
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000018",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 694924
+    },
+    {
+     "raw": 1,
+     "roll": 257482
+    },
+    {
+     "raw": 1,
+     "roll": 255490
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 15397
+    },
+    {
+     "raw": 1,
+     "roll": 61405
+    },
+    {
+     "raw": 1,
+     "roll": 486110
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000019",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 727708
+    },
+    {
+     "raw": 1,
+     "roll": 841
+    },
+    {
+     "raw": 1,
+     "roll": 182641
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 486110
+    },
+    {
+     "raw": 1,
+     "roll": 21743
+    },
+    {
+     "raw": 1,
+     "roll": 200658
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000019",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 727708
+    },
+    {
+     "raw": 1,
+     "roll": 841
+    },
+    {
+     "raw": 1,
+     "roll": 182641
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 975809
+    },
+    {
+     "raw": 1,
+     "roll": 476049
+    },
+    {
+     "raw": 1,
+     "roll": 96045
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000019",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 727708
+    },
+    {
+     "raw": 1,
+     "roll": 841
+    },
+    {
+     "raw": 1,
+     "roll": 182641
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 15397
+    },
+    {
+     "raw": 1,
+     "roll": 61405
+    },
+    {
+     "raw": 1,
+     "roll": 486110
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000019",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 841
+    },
+    {
+     "raw": 1,
+     "roll": 182641
+    },
+    {
+     "raw": 1,
+     "roll": 569143
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 486110
+    },
+    {
+     "raw": 1,
+     "roll": 21743
+    },
+    {
+     "raw": 1,
+     "roll": 200658
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000019",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 841
+    },
+    {
+     "raw": 1,
+     "roll": 182641
+    },
+    {
+     "raw": 1,
+     "roll": 569143
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 975809
+    },
+    {
+     "raw": 1,
+     "roll": 476049
+    },
+    {
+     "raw": 1,
+     "roll": 96045
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000019",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 841
+    },
+    {
+     "raw": 1,
+     "roll": 182641
+    },
+    {
+     "raw": 1,
+     "roll": 569143
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 15397
+    },
+    {
+     "raw": 1,
+     "roll": 61405
+    },
+    {
+     "raw": 1,
+     "roll": 486110
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000019",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 569143
+    },
+    {
+     "raw": 1,
+     "roll": 108785
+    },
+    {
+     "raw": 1,
+     "roll": 165069
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 486110
+    },
+    {
+     "raw": 1,
+     "roll": 21743
+    },
+    {
+     "raw": 1,
+     "roll": 200658
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000019",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 569143
+    },
+    {
+     "raw": 1,
+     "roll": 108785
+    },
+    {
+     "raw": 1,
+     "roll": 165069
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 975809
+    },
+    {
+     "raw": 1,
+     "roll": 476049
+    },
+    {
+     "raw": 1,
+     "roll": 96045
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000019",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 569143
+    },
+    {
+     "raw": 1,
+     "roll": 108785
+    },
+    {
+     "raw": 1,
+     "roll": 165069
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 203919
+    },
+    {
+     "raw": 1,
+     "roll": 830436
+    },
+    {
+     "raw": 1,
+     "roll": 83886
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000001a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 38051
+    },
+    {
+     "raw": 1,
+     "roll": 28157
+    },
+    {
+     "raw": 1,
+     "roll": 453751
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 83886
+    },
+    {
+     "raw": 1,
+     "roll": 990499
+    },
+    {
+     "raw": 1,
+     "roll": 98554
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000001a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 38051
+    },
+    {
+     "raw": 1,
+     "roll": 28157
+    },
+    {
+     "raw": 1,
+     "roll": 453751
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 350186
+    },
+    {
+     "raw": 1,
+     "roll": 206741
+    },
+    {
+     "raw": 1,
+     "roll": 428157
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000001a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 38051
+    },
+    {
+     "raw": 1,
+     "roll": 28157
+    },
+    {
+     "raw": 1,
+     "roll": 453751
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 203919
+    },
+    {
+     "raw": 1,
+     "roll": 830436
+    },
+    {
+     "raw": 1,
+     "roll": 83886
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000001a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 28157
+    },
+    {
+     "raw": 1,
+     "roll": 453751
+    },
+    {
+     "raw": 1,
+     "roll": 711633
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 83886
+    },
+    {
+     "raw": 1,
+     "roll": 990499
+    },
+    {
+     "raw": 1,
+     "roll": 98554
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000001a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 28157
+    },
+    {
+     "raw": 1,
+     "roll": 453751
+    },
+    {
+     "raw": 1,
+     "roll": 711633
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 350186
+    },
+    {
+     "raw": 1,
+     "roll": 206741
+    },
+    {
+     "raw": 1,
+     "roll": 428157
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000001a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 28157
+    },
+    {
+     "raw": 1,
+     "roll": 453751
+    },
+    {
+     "raw": 1,
+     "roll": 711633
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 203919
+    },
+    {
+     "raw": 1,
+     "roll": 830436
+    },
+    {
+     "raw": 1,
+     "roll": 83886
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000001a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 711633
+    },
+    {
+     "raw": 1,
+     "roll": 936064
+    },
+    {
+     "raw": 1,
+     "roll": 727022
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 83886
+    },
+    {
+     "raw": 1,
+     "roll": 990499
+    },
+    {
+     "raw": 1,
+     "roll": 98554
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000001a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 711633
+    },
+    {
+     "raw": 1,
+     "roll": 936064
+    },
+    {
+     "raw": 1,
+     "roll": 727022
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 350186
+    },
+    {
+     "raw": 1,
+     "roll": 206741
+    },
+    {
+     "raw": 1,
+     "roll": 428157
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000001a",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 711633
+    },
+    {
+     "raw": 1,
+     "roll": 936064
+    },
+    {
+     "raw": 1,
+     "roll": 727022
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 564781
+    },
+    {
+     "raw": 1,
+     "roll": 999283
+    },
+    {
+     "raw": 1,
+     "roll": 381439
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000001b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 362092
+    },
+    {
+     "raw": 1,
+     "roll": 618810
+    },
+    {
+     "raw": 1,
+     "roll": 690019
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 381439
+    },
+    {
+     "raw": 1,
+     "roll": 158335
+    },
+    {
+     "raw": 1,
+     "roll": 158750
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000001b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 362092
+    },
+    {
+     "raw": 1,
+     "roll": 618810
+    },
+    {
+     "raw": 1,
+     "roll": 690019
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 127298
+    },
+    {
+     "raw": 1,
+     "roll": 887299
+    },
+    {
+     "raw": 1,
+     "roll": 570265
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000001b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 362092
+    },
+    {
+     "raw": 1,
+     "roll": 618810
+    },
+    {
+     "raw": 1,
+     "roll": 690019
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 564781
+    },
+    {
+     "raw": 1,
+     "roll": 999283
+    },
+    {
+     "raw": 1,
+     "roll": 381439
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000001b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 618810
+    },
+    {
+     "raw": 1,
+     "roll": 690019
+    },
+    {
+     "raw": 1,
+     "roll": 194737
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 381439
+    },
+    {
+     "raw": 1,
+     "roll": 158335
+    },
+    {
+     "raw": 1,
+     "roll": 158750
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000001b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 618810
+    },
+    {
+     "raw": 1,
+     "roll": 690019
+    },
+    {
+     "raw": 1,
+     "roll": 194737
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 127298
+    },
+    {
+     "raw": 1,
+     "roll": 887299
+    },
+    {
+     "raw": 1,
+     "roll": 570265
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000001b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 618810
+    },
+    {
+     "raw": 1,
+     "roll": 690019
+    },
+    {
+     "raw": 1,
+     "roll": 194737
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 564781
+    },
+    {
+     "raw": 1,
+     "roll": 999283
+    },
+    {
+     "raw": 1,
+     "roll": 381439
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000001b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 194737
+    },
+    {
+     "raw": 1,
+     "roll": 255727
+    },
+    {
+     "raw": 1,
+     "roll": 77889
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 381439
+    },
+    {
+     "raw": 1,
+     "roll": 158335
+    },
+    {
+     "raw": 1,
+     "roll": 158750
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000001b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 194737
+    },
+    {
+     "raw": 1,
+     "roll": 255727
+    },
+    {
+     "raw": 1,
+     "roll": 77889
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 127298
+    },
+    {
+     "raw": 1,
+     "roll": 887299
+    },
+    {
+     "raw": 1,
+     "roll": 570265
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000001b",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 194737
+    },
+    {
+     "raw": 1,
+     "roll": 255727
+    },
+    {
+     "raw": 1,
+     "roll": 77889
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 241240
+    },
+    {
+     "raw": 1,
+     "roll": 439365
+    },
+    {
+     "raw": 1,
+     "roll": 84534
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000001c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 803742
+    },
+    {
+     "raw": 1,
+     "roll": 12406
+    },
+    {
+     "raw": 1,
+     "roll": 890398
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 84534
+    },
+    {
+     "raw": 1,
+     "roll": 569324
+    },
+    {
+     "raw": 1,
+     "roll": 376074
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000001c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 803742
+    },
+    {
+     "raw": 1,
+     "roll": 12406
+    },
+    {
+     "raw": 1,
+     "roll": 890398
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 938198
+    },
+    {
+     "raw": 1,
+     "roll": 856184
+    },
+    {
+     "raw": 1,
+     "roll": 802529
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000001c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 803742
+    },
+    {
+     "raw": 1,
+     "roll": 12406
+    },
+    {
+     "raw": 1,
+     "roll": 890398
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 241240
+    },
+    {
+     "raw": 1,
+     "roll": 439365
+    },
+    {
+     "raw": 1,
+     "roll": 84534
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000001c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 12406
+    },
+    {
+     "raw": 1,
+     "roll": 890398
+    },
+    {
+     "raw": 1,
+     "roll": 241847
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 84534
+    },
+    {
+     "raw": 1,
+     "roll": 569324
+    },
+    {
+     "raw": 1,
+     "roll": 376074
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000001c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 12406
+    },
+    {
+     "raw": 1,
+     "roll": 890398
+    },
+    {
+     "raw": 1,
+     "roll": 241847
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 938198
+    },
+    {
+     "raw": 1,
+     "roll": 856184
+    },
+    {
+     "raw": 1,
+     "roll": 802529
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000001c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 12406
+    },
+    {
+     "raw": 1,
+     "roll": 890398
+    },
+    {
+     "raw": 1,
+     "roll": 241847
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 241240
+    },
+    {
+     "raw": 1,
+     "roll": 439365
+    },
+    {
+     "raw": 1,
+     "roll": 84534
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000001c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 241847
+    },
+    {
+     "raw": 1,
+     "roll": 151697
+    },
+    {
+     "raw": 1,
+     "roll": 101583
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 84534
+    },
+    {
+     "raw": 1,
+     "roll": 569324
+    },
+    {
+     "raw": 1,
+     "roll": 376074
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000001c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 241847
+    },
+    {
+     "raw": 1,
+     "roll": 151697
+    },
+    {
+     "raw": 1,
+     "roll": 101583
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 938198
+    },
+    {
+     "raw": 1,
+     "roll": 856184
+    },
+    {
+     "raw": 1,
+     "roll": 802529
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000001c",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 241847
+    },
+    {
+     "raw": 1,
+     "roll": 151697
+    },
+    {
+     "raw": 1,
+     "roll": 101583
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 707664
+    },
+    {
+     "raw": 1,
+     "roll": 857938
+    },
+    {
+     "raw": 1,
+     "roll": 717204
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000001d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 636267
+    },
+    {
+     "raw": 1,
+     "roll": 994428
+    },
+    {
+     "raw": 1,
+     "roll": 853223
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 717204
+    },
+    {
+     "raw": 1,
+     "roll": 530124
+    },
+    {
+     "raw": 1,
+     "roll": 511842
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000001d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 636267
+    },
+    {
+     "raw": 1,
+     "roll": 994428
+    },
+    {
+     "raw": 1,
+     "roll": 853223
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 865250
+    },
+    {
+     "raw": 1,
+     "roll": 476322
+    },
+    {
+     "raw": 1,
+     "roll": 872208
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000001d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 636267
+    },
+    {
+     "raw": 1,
+     "roll": 994428
+    },
+    {
+     "raw": 1,
+     "roll": 853223
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 707664
+    },
+    {
+     "raw": 1,
+     "roll": 857938
+    },
+    {
+     "raw": 1,
+     "roll": 717204
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000001d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 994428
+    },
+    {
+     "raw": 1,
+     "roll": 853223
+    },
+    {
+     "raw": 1,
+     "roll": 571625
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 717204
+    },
+    {
+     "raw": 1,
+     "roll": 530124
+    },
+    {
+     "raw": 1,
+     "roll": 511842
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000001d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 994428
+    },
+    {
+     "raw": 1,
+     "roll": 853223
+    },
+    {
+     "raw": 1,
+     "roll": 571625
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 865250
+    },
+    {
+     "raw": 1,
+     "roll": 476322
+    },
+    {
+     "raw": 1,
+     "roll": 872208
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000001d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 994428
+    },
+    {
+     "raw": 1,
+     "roll": 853223
+    },
+    {
+     "raw": 1,
+     "roll": 571625
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 707664
+    },
+    {
+     "raw": 1,
+     "roll": 857938
+    },
+    {
+     "raw": 1,
+     "roll": 717204
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000001d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 571625
+    },
+    {
+     "raw": 1,
+     "roll": 304691
+    },
+    {
+     "raw": 1,
+     "roll": 936201
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 717204
+    },
+    {
+     "raw": 1,
+     "roll": 530124
+    },
+    {
+     "raw": 1,
+     "roll": 511842
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000001d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 571625
+    },
+    {
+     "raw": 1,
+     "roll": 304691
+    },
+    {
+     "raw": 1,
+     "roll": 936201
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 865250
+    },
+    {
+     "raw": 1,
+     "roll": 476322
+    },
+    {
+     "raw": 1,
+     "roll": 872208
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000001d",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 571625
+    },
+    {
+     "raw": 1,
+     "roll": 304691
+    },
+    {
+     "raw": 1,
+     "roll": 936201
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 389631
+    },
+    {
+     "raw": 1,
+     "roll": 498879
+    },
+    {
+     "raw": 1,
+     "roll": 127855
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000001e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 147041
+    },
+    {
+     "raw": 1,
+     "roll": 586700
+    },
+    {
+     "raw": 1,
+     "roll": 856974
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 127855
+    },
+    {
+     "raw": 1,
+     "roll": 473462
+    },
+    {
+     "raw": 1,
+     "roll": 161419
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000001e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 147041
+    },
+    {
+     "raw": 1,
+     "roll": 586700
+    },
+    {
+     "raw": 1,
+     "roll": 856974
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 30230
+    },
+    {
+     "raw": 1,
+     "roll": 109285
+    },
+    {
+     "raw": 1,
+     "roll": 353372
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000001e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 147041
+    },
+    {
+     "raw": 1,
+     "roll": 586700
+    },
+    {
+     "raw": 1,
+     "roll": 856974
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 389631
+    },
+    {
+     "raw": 1,
+     "roll": 498879
+    },
+    {
+     "raw": 1,
+     "roll": 127855
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000001e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 586700
+    },
+    {
+     "raw": 1,
+     "roll": 856974
+    },
+    {
+     "raw": 1,
+     "roll": 72436
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 127855
+    },
+    {
+     "raw": 1,
+     "roll": 473462
+    },
+    {
+     "raw": 1,
+     "roll": 161419
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000001e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 586700
+    },
+    {
+     "raw": 1,
+     "roll": 856974
+    },
+    {
+     "raw": 1,
+     "roll": 72436
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 30230
+    },
+    {
+     "raw": 1,
+     "roll": 109285
+    },
+    {
+     "raw": 1,
+     "roll": 353372
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000001e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 586700
+    },
+    {
+     "raw": 1,
+     "roll": 856974
+    },
+    {
+     "raw": 1,
+     "roll": 72436
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 389631
+    },
+    {
+     "raw": 1,
+     "roll": 498879
+    },
+    {
+     "raw": 1,
+     "roll": 127855
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000001e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 72436
+    },
+    {
+     "raw": 1,
+     "roll": 978336
+    },
+    {
+     "raw": 1,
+     "roll": 128361
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 127855
+    },
+    {
+     "raw": 1,
+     "roll": 473462
+    },
+    {
+     "raw": 1,
+     "roll": 161419
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000001e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 72436
+    },
+    {
+     "raw": 1,
+     "roll": 978336
+    },
+    {
+     "raw": 1,
+     "roll": 128361
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 30230
+    },
+    {
+     "raw": 1,
+     "roll": 109285
+    },
+    {
+     "raw": 1,
+     "roll": 353372
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000001e",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 72436
+    },
+    {
+     "raw": 1,
+     "roll": 978336
+    },
+    {
+     "raw": 1,
+     "roll": 128361
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 353495
+    },
+    {
+     "raw": 1,
+     "roll": 601856
+    },
+    {
+     "raw": 1,
+     "roll": 771951
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000001f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 627179
+    },
+    {
+     "raw": 1,
+     "roll": 999803
+    },
+    {
+     "raw": 1,
+     "roll": 466236
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 771951
+    },
+    {
+     "raw": 1,
+     "roll": 58335
+    },
+    {
+     "raw": 1,
+     "roll": 440618
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000001f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 627179
+    },
+    {
+     "raw": 1,
+     "roll": 999803
+    },
+    {
+     "raw": 1,
+     "roll": 466236
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 834247
+    },
+    {
+     "raw": 1,
+     "roll": 618581
+    },
+    {
+     "raw": 1,
+     "roll": 186185
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000001f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 627179
+    },
+    {
+     "raw": 1,
+     "roll": 999803
+    },
+    {
+     "raw": 1,
+     "roll": 466236
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 353495
+    },
+    {
+     "raw": 1,
+     "roll": 601856
+    },
+    {
+     "raw": 1,
+     "roll": 771951
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000001f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 999803
+    },
+    {
+     "raw": 1,
+     "roll": 466236
+    },
+    {
+     "raw": 1,
+     "roll": 291488
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 771951
+    },
+    {
+     "raw": 1,
+     "roll": 58335
+    },
+    {
+     "raw": 1,
+     "roll": 440618
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000001f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 999803
+    },
+    {
+     "raw": 1,
+     "roll": 466236
+    },
+    {
+     "raw": 1,
+     "roll": 291488
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 834247
+    },
+    {
+     "raw": 1,
+     "roll": 618581
+    },
+    {
+     "raw": 1,
+     "roll": 186185
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000001f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 999803
+    },
+    {
+     "raw": 1,
+     "roll": 466236
+    },
+    {
+     "raw": 1,
+     "roll": 291488
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 353495
+    },
+    {
+     "raw": 1,
+     "roll": 601856
+    },
+    {
+     "raw": 1,
+     "roll": 771951
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000001f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 291488
+    },
+    {
+     "raw": 1,
+     "roll": 601564
+    },
+    {
+     "raw": 1,
+     "roll": 503692
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 771951
+    },
+    {
+     "raw": 1,
+     "roll": 58335
+    },
+    {
+     "raw": 1,
+     "roll": 440618
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000001f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 291488
+    },
+    {
+     "raw": 1,
+     "roll": 601564
+    },
+    {
+     "raw": 1,
+     "roll": 503692
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 834247
+    },
+    {
+     "raw": 1,
+     "roll": 618581
+    },
+    {
+     "raw": 1,
+     "roll": 186185
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000001f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 291488
+    },
+    {
+     "raw": 1,
+     "roll": 601564
+    },
+    {
+     "raw": 1,
+     "roll": 503692
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 40040
+    },
+    {
+     "raw": 1,
+     "roll": 398609
+    },
+    {
+     "raw": 1,
+     "roll": 360708
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000020",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 551126
+    },
+    {
+     "raw": 1,
+     "roll": 685235
+    },
+    {
+     "raw": 1,
+     "roll": 536936
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 360708
+    },
+    {
+     "raw": 1,
+     "roll": 104048
+    },
+    {
+     "raw": 1,
+     "roll": 794222
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000020",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 551126
+    },
+    {
+     "raw": 1,
+     "roll": 685235
+    },
+    {
+     "raw": 1,
+     "roll": 536936
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 561170
+    },
+    {
+     "raw": 1,
+     "roll": 491462
+    },
+    {
+     "raw": 1,
+     "roll": 469876
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000020",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 551126
+    },
+    {
+     "raw": 1,
+     "roll": 685235
+    },
+    {
+     "raw": 1,
+     "roll": 536936
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 40040
+    },
+    {
+     "raw": 1,
+     "roll": 398609
+    },
+    {
+     "raw": 1,
+     "roll": 360708
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000020",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 685235
+    },
+    {
+     "raw": 1,
+     "roll": 536936
+    },
+    {
+     "raw": 1,
+     "roll": 296994
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 360708
+    },
+    {
+     "raw": 1,
+     "roll": 104048
+    },
+    {
+     "raw": 1,
+     "roll": 794222
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000020",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 685235
+    },
+    {
+     "raw": 1,
+     "roll": 536936
+    },
+    {
+     "raw": 1,
+     "roll": 296994
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 561170
+    },
+    {
+     "raw": 1,
+     "roll": 491462
+    },
+    {
+     "raw": 1,
+     "roll": 469876
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000020",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 685235
+    },
+    {
+     "raw": 1,
+     "roll": 536936
+    },
+    {
+     "raw": 1,
+     "roll": 296994
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 40040
+    },
+    {
+     "raw": 1,
+     "roll": 398609
+    },
+    {
+     "raw": 1,
+     "roll": 360708
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000020",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 296994
+    },
+    {
+     "raw": 1,
+     "roll": 362956
+    },
+    {
+     "raw": 1,
+     "roll": 162310
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 360708
+    },
+    {
+     "raw": 1,
+     "roll": 104048
+    },
+    {
+     "raw": 1,
+     "roll": 794222
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000020",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 296994
+    },
+    {
+     "raw": 1,
+     "roll": 362956
+    },
+    {
+     "raw": 1,
+     "roll": 162310
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 561170
+    },
+    {
+     "raw": 1,
+     "roll": 491462
+    },
+    {
+     "raw": 1,
+     "roll": 469876
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000020",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 296994
+    },
+    {
+     "raw": 1,
+     "roll": 362956
+    },
+    {
+     "raw": 1,
+     "roll": 162310
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 873751
+    },
+    {
+     "raw": 1,
+     "roll": 562347
+    },
+    {
+     "raw": 1,
+     "roll": 109989
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000021",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 806022
+    },
+    {
+     "raw": 1,
+     "roll": 852821
+    },
+    {
+     "raw": 1,
+     "roll": 143036
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 109989
+    },
+    {
+     "raw": 1,
+     "roll": 307763
+    },
+    {
+     "raw": 1,
+     "roll": 204903
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000021",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 806022
+    },
+    {
+     "raw": 1,
+     "roll": 852821
+    },
+    {
+     "raw": 1,
+     "roll": 143036
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 813510
+    },
+    {
+     "raw": 1,
+     "roll": 702139
+    },
+    {
+     "raw": 1,
+     "roll": 180738
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000021",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 806022
+    },
+    {
+     "raw": 1,
+     "roll": 852821
+    },
+    {
+     "raw": 1,
+     "roll": 143036
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 873751
+    },
+    {
+     "raw": 1,
+     "roll": 562347
+    },
+    {
+     "raw": 1,
+     "roll": 109989
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000021",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 852821
+    },
+    {
+     "raw": 1,
+     "roll": 143036
+    },
+    {
+     "raw": 1,
+     "roll": 56345
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 109989
+    },
+    {
+     "raw": 1,
+     "roll": 307763
+    },
+    {
+     "raw": 1,
+     "roll": 204903
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000021",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 852821
+    },
+    {
+     "raw": 1,
+     "roll": 143036
+    },
+    {
+     "raw": 1,
+     "roll": 56345
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 813510
+    },
+    {
+     "raw": 1,
+     "roll": 702139
+    },
+    {
+     "raw": 1,
+     "roll": 180738
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000021",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 852821
+    },
+    {
+     "raw": 1,
+     "roll": 143036
+    },
+    {
+     "raw": 1,
+     "roll": 56345
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 873751
+    },
+    {
+     "raw": 1,
+     "roll": 562347
+    },
+    {
+     "raw": 1,
+     "roll": 109989
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000021",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 56345
+    },
+    {
+     "raw": 1,
+     "roll": 731044
+    },
+    {
+     "raw": 1,
+     "roll": 224059
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 109989
+    },
+    {
+     "raw": 1,
+     "roll": 307763
+    },
+    {
+     "raw": 1,
+     "roll": 204903
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000021",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 56345
+    },
+    {
+     "raw": 1,
+     "roll": 731044
+    },
+    {
+     "raw": 1,
+     "roll": 224059
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 813510
+    },
+    {
+     "raw": 1,
+     "roll": 702139
+    },
+    {
+     "raw": 1,
+     "roll": 180738
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000021",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 56345
+    },
+    {
+     "raw": 1,
+     "roll": 731044
+    },
+    {
+     "raw": 1,
+     "roll": 224059
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 988185
+    },
+    {
+     "raw": 1,
+     "roll": 286493
+    },
+    {
+     "raw": 1,
+     "roll": 729282
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000022",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 162800
+    },
+    {
+     "raw": 1,
+     "roll": 414126
+    },
+    {
+     "raw": 1,
+     "roll": 655769
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 729282
+    },
+    {
+     "raw": 1,
+     "roll": 788954
+    },
+    {
+     "raw": 1,
+     "roll": 278661
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000022",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 162800
+    },
+    {
+     "raw": 1,
+     "roll": 414126
+    },
+    {
+     "raw": 1,
+     "roll": 655769
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 639139
+    },
+    {
+     "raw": 1,
+     "roll": 704227
+    },
+    {
+     "raw": 1,
+     "roll": 142144
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000022",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 162800
+    },
+    {
+     "raw": 1,
+     "roll": 414126
+    },
+    {
+     "raw": 1,
+     "roll": 655769
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 988185
+    },
+    {
+     "raw": 1,
+     "roll": 286493
+    },
+    {
+     "raw": 1,
+     "roll": 729282
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000022",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 414126
+    },
+    {
+     "raw": 1,
+     "roll": 655769
+    },
+    {
+     "raw": 1,
+     "roll": 926447
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 729282
+    },
+    {
+     "raw": 1,
+     "roll": 788954
+    },
+    {
+     "raw": 1,
+     "roll": 278661
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000022",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 414126
+    },
+    {
+     "raw": 1,
+     "roll": 655769
+    },
+    {
+     "raw": 1,
+     "roll": 926447
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 639139
+    },
+    {
+     "raw": 1,
+     "roll": 704227
+    },
+    {
+     "raw": 1,
+     "roll": 142144
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000022",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 414126
+    },
+    {
+     "raw": 1,
+     "roll": 655769
+    },
+    {
+     "raw": 1,
+     "roll": 926447
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 988185
+    },
+    {
+     "raw": 1,
+     "roll": 286493
+    },
+    {
+     "raw": 1,
+     "roll": 729282
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000022",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 926447
+    },
+    {
+     "raw": 1,
+     "roll": 54518
+    },
+    {
+     "raw": 1,
+     "roll": 851995
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 729282
+    },
+    {
+     "raw": 1,
+     "roll": 788954
+    },
+    {
+     "raw": 1,
+     "roll": 278661
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000022",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 926447
+    },
+    {
+     "raw": 1,
+     "roll": 54518
+    },
+    {
+     "raw": 1,
+     "roll": 851995
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 639139
+    },
+    {
+     "raw": 1,
+     "roll": 704227
+    },
+    {
+     "raw": 1,
+     "roll": 142144
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000022",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 926447
+    },
+    {
+     "raw": 1,
+     "roll": 54518
+    },
+    {
+     "raw": 1,
+     "roll": 851995
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 414956
+    },
+    {
+     "raw": 1,
+     "roll": 639744
+    },
+    {
+     "raw": 1,
+     "roll": 221194
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000023",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 633114
+    },
+    {
+     "raw": 1,
+     "roll": 910584
+    },
+    {
+     "raw": 1,
+     "roll": 709682
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 221194
+    },
+    {
+     "raw": 1,
+     "roll": 929234
+    },
+    {
+     "raw": 1,
+     "roll": 751013
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000023",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 633114
+    },
+    {
+     "raw": 1,
+     "roll": 910584
+    },
+    {
+     "raw": 1,
+     "roll": 709682
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 137819
+    },
+    {
+     "raw": 1,
+     "roll": 70371
+    },
+    {
+     "raw": 1,
+     "roll": 631182
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000023",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 633114
+    },
+    {
+     "raw": 1,
+     "roll": 910584
+    },
+    {
+     "raw": 1,
+     "roll": 709682
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 414956
+    },
+    {
+     "raw": 1,
+     "roll": 639744
+    },
+    {
+     "raw": 1,
+     "roll": 221194
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000023",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 910584
+    },
+    {
+     "raw": 1,
+     "roll": 709682
+    },
+    {
+     "raw": 1,
+     "roll": 990230
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 221194
+    },
+    {
+     "raw": 1,
+     "roll": 929234
+    },
+    {
+     "raw": 1,
+     "roll": 751013
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000023",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 910584
+    },
+    {
+     "raw": 1,
+     "roll": 709682
+    },
+    {
+     "raw": 1,
+     "roll": 990230
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 137819
+    },
+    {
+     "raw": 1,
+     "roll": 70371
+    },
+    {
+     "raw": 1,
+     "roll": 631182
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000023",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 910584
+    },
+    {
+     "raw": 1,
+     "roll": 709682
+    },
+    {
+     "raw": 1,
+     "roll": 990230
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 414956
+    },
+    {
+     "raw": 1,
+     "roll": 639744
+    },
+    {
+     "raw": 1,
+     "roll": 221194
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000023",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 990230
+    },
+    {
+     "raw": 1,
+     "roll": 398420
+    },
+    {
+     "raw": 1,
+     "roll": 309947
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 221194
+    },
+    {
+     "raw": 1,
+     "roll": 929234
+    },
+    {
+     "raw": 1,
+     "roll": 751013
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000023",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 990230
+    },
+    {
+     "raw": 1,
+     "roll": 398420
+    },
+    {
+     "raw": 1,
+     "roll": 309947
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 137819
+    },
+    {
+     "raw": 1,
+     "roll": 70371
+    },
+    {
+     "raw": 1,
+     "roll": 631182
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000023",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 990230
+    },
+    {
+     "raw": 1,
+     "roll": 398420
+    },
+    {
+     "raw": 1,
+     "roll": 309947
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 75975
+    },
+    {
+     "raw": 1,
+     "roll": 162198
+    },
+    {
+     "raw": 1,
+     "roll": 292574
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000024",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 496033
+    },
+    {
+     "raw": 1,
+     "roll": 296019
+    },
+    {
+     "raw": 1,
+     "roll": 985871
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 292574
+    },
+    {
+     "raw": 1,
+     "roll": 869634
+    },
+    {
+     "raw": 1,
+     "roll": 402795
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000024",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 496033
+    },
+    {
+     "raw": 1,
+     "roll": 296019
+    },
+    {
+     "raw": 1,
+     "roll": 985871
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 563929
+    },
+    {
+     "raw": 1,
+     "roll": 450158
+    },
+    {
+     "raw": 1,
+     "roll": 862762
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000024",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 496033
+    },
+    {
+     "raw": 1,
+     "roll": 296019
+    },
+    {
+     "raw": 1,
+     "roll": 985871
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 75975
+    },
+    {
+     "raw": 1,
+     "roll": 162198
+    },
+    {
+     "raw": 1,
+     "roll": 292574
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000024",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 296019
+    },
+    {
+     "raw": 1,
+     "roll": 985871
+    },
+    {
+     "raw": 1,
+     "roll": 783582
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 292574
+    },
+    {
+     "raw": 1,
+     "roll": 869634
+    },
+    {
+     "raw": 1,
+     "roll": 402795
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000024",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 296019
+    },
+    {
+     "raw": 1,
+     "roll": 985871
+    },
+    {
+     "raw": 1,
+     "roll": 783582
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 563929
+    },
+    {
+     "raw": 1,
+     "roll": 450158
+    },
+    {
+     "raw": 1,
+     "roll": 862762
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000024",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 296019
+    },
+    {
+     "raw": 1,
+     "roll": 985871
+    },
+    {
+     "raw": 1,
+     "roll": 783582
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 75975
+    },
+    {
+     "raw": 1,
+     "roll": 162198
+    },
+    {
+     "raw": 1,
+     "roll": 292574
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000024",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 783582
+    },
+    {
+     "raw": 1,
+     "roll": 934825
+    },
+    {
+     "raw": 1,
+     "roll": 612297
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 292574
+    },
+    {
+     "raw": 1,
+     "roll": 869634
+    },
+    {
+     "raw": 1,
+     "roll": 402795
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000024",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 783582
+    },
+    {
+     "raw": 1,
+     "roll": 934825
+    },
+    {
+     "raw": 1,
+     "roll": 612297
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 563929
+    },
+    {
+     "raw": 1,
+     "roll": 450158
+    },
+    {
+     "raw": 1,
+     "roll": 862762
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000024",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 783582
+    },
+    {
+     "raw": 1,
+     "roll": 934825
+    },
+    {
+     "raw": 1,
+     "roll": 612297
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 576274
+    },
+    {
+     "raw": 1,
+     "roll": 108490
+    },
+    {
+     "raw": 1,
+     "roll": 430834
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000025",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 624424
+    },
+    {
+     "raw": 1,
+     "roll": 104958
+    },
+    {
+     "raw": 1,
+     "roll": 321133
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 430834
+    },
+    {
+     "raw": 1,
+     "roll": 722423
+    },
+    {
+     "raw": 1,
+     "roll": 905564
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000025",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 624424
+    },
+    {
+     "raw": 1,
+     "roll": 104958
+    },
+    {
+     "raw": 1,
+     "roll": 321133
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 114702
+    },
+    {
+     "raw": 1,
+     "roll": 388435
+    },
+    {
+     "raw": 1,
+     "roll": 330933
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000025",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 624424
+    },
+    {
+     "raw": 1,
+     "roll": 104958
+    },
+    {
+     "raw": 1,
+     "roll": 321133
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 576274
+    },
+    {
+     "raw": 1,
+     "roll": 108490
+    },
+    {
+     "raw": 1,
+     "roll": 430834
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000025",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 104958
+    },
+    {
+     "raw": 1,
+     "roll": 321133
+    },
+    {
+     "raw": 1,
+     "roll": 294076
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 430834
+    },
+    {
+     "raw": 1,
+     "roll": 722423
+    },
+    {
+     "raw": 1,
+     "roll": 905564
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000025",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 104958
+    },
+    {
+     "raw": 1,
+     "roll": 321133
+    },
+    {
+     "raw": 1,
+     "roll": 294076
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 114702
+    },
+    {
+     "raw": 1,
+     "roll": 388435
+    },
+    {
+     "raw": 1,
+     "roll": 330933
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000025",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 104958
+    },
+    {
+     "raw": 1,
+     "roll": 321133
+    },
+    {
+     "raw": 1,
+     "roll": 294076
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 576274
+    },
+    {
+     "raw": 1,
+     "roll": 108490
+    },
+    {
+     "raw": 1,
+     "roll": 430834
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000025",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 294076
+    },
+    {
+     "raw": 1,
+     "roll": 501821
+    },
+    {
+     "raw": 1,
+     "roll": 898252
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 430834
+    },
+    {
+     "raw": 1,
+     "roll": 722423
+    },
+    {
+     "raw": 1,
+     "roll": 905564
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000025",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 294076
+    },
+    {
+     "raw": 1,
+     "roll": 501821
+    },
+    {
+     "raw": 1,
+     "roll": 898252
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 114702
+    },
+    {
+     "raw": 1,
+     "roll": 388435
+    },
+    {
+     "raw": 1,
+     "roll": 330933
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000025",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 294076
+    },
+    {
+     "raw": 1,
+     "roll": 501821
+    },
+    {
+     "raw": 1,
+     "roll": 898252
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 79052
+    },
+    {
+     "raw": 1,
+     "roll": 53510
+    },
+    {
+     "raw": 1,
+     "roll": 378125
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000026",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 178072
+    },
+    {
+     "raw": 1,
+     "roll": 667811
+    },
+    {
+     "raw": 1,
+     "roll": 435900
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 378125
+    },
+    {
+     "raw": 1,
+     "roll": 427065
+    },
+    {
+     "raw": 1,
+     "roll": 604656
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000026",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 178072
+    },
+    {
+     "raw": 1,
+     "roll": 667811
+    },
+    {
+     "raw": 1,
+     "roll": 435900
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 734147
+    },
+    {
+     "raw": 1,
+     "roll": 550656
+    },
+    {
+     "raw": 1,
+     "roll": 677428
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000026",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 178072
+    },
+    {
+     "raw": 1,
+     "roll": 667811
+    },
+    {
+     "raw": 1,
+     "roll": 435900
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 79052
+    },
+    {
+     "raw": 1,
+     "roll": 53510
+    },
+    {
+     "raw": 1,
+     "roll": 378125
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000026",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 667811
+    },
+    {
+     "raw": 1,
+     "roll": 435900
+    },
+    {
+     "raw": 1,
+     "roll": 653917
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 378125
+    },
+    {
+     "raw": 1,
+     "roll": 427065
+    },
+    {
+     "raw": 1,
+     "roll": 604656
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000026",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 667811
+    },
+    {
+     "raw": 1,
+     "roll": 435900
+    },
+    {
+     "raw": 1,
+     "roll": 653917
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 734147
+    },
+    {
+     "raw": 1,
+     "roll": 550656
+    },
+    {
+     "raw": 1,
+     "roll": 677428
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000026",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 667811
+    },
+    {
+     "raw": 1,
+     "roll": 435900
+    },
+    {
+     "raw": 1,
+     "roll": 653917
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 79052
+    },
+    {
+     "raw": 1,
+     "roll": 53510
+    },
+    {
+     "raw": 1,
+     "roll": 378125
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000026",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 653917
+    },
+    {
+     "raw": 1,
+     "roll": 772642
+    },
+    {
+     "raw": 1,
+     "roll": 411542
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 378125
+    },
+    {
+     "raw": 1,
+     "roll": 427065
+    },
+    {
+     "raw": 1,
+     "roll": 604656
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000026",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 653917
+    },
+    {
+     "raw": 1,
+     "roll": 772642
+    },
+    {
+     "raw": 1,
+     "roll": 411542
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 734147
+    },
+    {
+     "raw": 1,
+     "roll": 550656
+    },
+    {
+     "raw": 1,
+     "roll": 677428
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000026",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 653917
+    },
+    {
+     "raw": 1,
+     "roll": 772642
+    },
+    {
+     "raw": 1,
+     "roll": 411542
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 904045
+    },
+    {
+     "raw": 1,
+     "roll": 780266
+    },
+    {
+     "raw": 1,
+     "roll": 409107
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000027",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 619579
+    },
+    {
+     "raw": 1,
+     "roll": 560182
+    },
+    {
+     "raw": 1,
+     "roll": 709219
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 409107
+    },
+    {
+     "raw": 1,
+     "roll": 747808
+    },
+    {
+     "raw": 1,
+     "roll": 381978
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000027",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 619579
+    },
+    {
+     "raw": 1,
+     "roll": 560182
+    },
+    {
+     "raw": 1,
+     "roll": 709219
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 888790
+    },
+    {
+     "raw": 1,
+     "roll": 840760
+    },
+    {
+     "raw": 1,
+     "roll": 21806
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000027",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 619579
+    },
+    {
+     "raw": 1,
+     "roll": 560182
+    },
+    {
+     "raw": 1,
+     "roll": 709219
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 904045
+    },
+    {
+     "raw": 1,
+     "roll": 780266
+    },
+    {
+     "raw": 1,
+     "roll": 409107
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000027",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 560182
+    },
+    {
+     "raw": 1,
+     "roll": 709219
+    },
+    {
+     "raw": 1,
+     "roll": 375408
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 409107
+    },
+    {
+     "raw": 1,
+     "roll": 747808
+    },
+    {
+     "raw": 1,
+     "roll": 381978
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000027",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 560182
+    },
+    {
+     "raw": 1,
+     "roll": 709219
+    },
+    {
+     "raw": 1,
+     "roll": 375408
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 888790
+    },
+    {
+     "raw": 1,
+     "roll": 840760
+    },
+    {
+     "raw": 1,
+     "roll": 21806
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000027",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 560182
+    },
+    {
+     "raw": 1,
+     "roll": 709219
+    },
+    {
+     "raw": 1,
+     "roll": 375408
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 904045
+    },
+    {
+     "raw": 1,
+     "roll": 780266
+    },
+    {
+     "raw": 1,
+     "roll": 409107
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000027",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 375408
+    },
+    {
+     "raw": 1,
+     "roll": 588435
+    },
+    {
+     "raw": 1,
+     "roll": 689972
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 409107
+    },
+    {
+     "raw": 1,
+     "roll": 747808
+    },
+    {
+     "raw": 1,
+     "roll": 381978
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000027",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 375408
+    },
+    {
+     "raw": 1,
+     "roll": 588435
+    },
+    {
+     "raw": 1,
+     "roll": 689972
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 888790
+    },
+    {
+     "raw": 1,
+     "roll": 840760
+    },
+    {
+     "raw": 1,
+     "roll": 21806
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000027",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 375408
+    },
+    {
+     "raw": 1,
+     "roll": 588435
+    },
+    {
+     "raw": 1,
+     "roll": 689972
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 804720
+    },
+    {
+     "raw": 1,
+     "roll": 298080
+    },
+    {
+     "raw": 1,
+     "roll": 630756
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000028",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 503589
+    },
+    {
+     "raw": 1,
+     "roll": 537988
+    },
+    {
+     "raw": 1,
+     "roll": 844526
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 630756
+    },
+    {
+     "raw": 1,
+     "roll": 565186
+    },
+    {
+     "raw": 1,
+     "roll": 981481
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0000000000000028",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 503589
+    },
+    {
+     "raw": 1,
+     "roll": 537988
+    },
+    {
+     "raw": 1,
+     "roll": 844526
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 405174
+    },
+    {
+     "raw": 1,
+     "roll": 331597
+    },
+    {
+     "raw": 1,
+     "roll": 711460
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0000000000000028",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 503589
+    },
+    {
+     "raw": 1,
+     "roll": 537988
+    },
+    {
+     "raw": 1,
+     "roll": 844526
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 804720
+    },
+    {
+     "raw": 1,
+     "roll": 298080
+    },
+    {
+     "raw": 1,
+     "roll": 630756
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0000000000000028",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 537988
+    },
+    {
+     "raw": 1,
+     "roll": 844526
+    },
+    {
+     "raw": 1,
+     "roll": 870001
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 630756
+    },
+    {
+     "raw": 1,
+     "roll": 565186
+    },
+    {
+     "raw": 1,
+     "roll": 981481
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0000000000000028",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 537988
+    },
+    {
+     "raw": 1,
+     "roll": 844526
+    },
+    {
+     "raw": 1,
+     "roll": 870001
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 405174
+    },
+    {
+     "raw": 1,
+     "roll": 331597
+    },
+    {
+     "raw": 1,
+     "roll": 711460
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0000000000000028",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 537988
+    },
+    {
+     "raw": 1,
+     "roll": 844526
+    },
+    {
+     "raw": 1,
+     "roll": 870001
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 804720
+    },
+    {
+     "raw": 1,
+     "roll": 298080
+    },
+    {
+     "raw": 1,
+     "roll": 630756
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0000000000000028",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 870001
+    },
+    {
+     "raw": 1,
+     "roll": 493438
+    },
+    {
+     "raw": 1,
+     "roll": 423657
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 630756
+    },
+    {
+     "raw": 1,
+     "roll": 565186
+    },
+    {
+     "raw": 1,
+     "roll": 981481
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0000000000000028",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 870001
+    },
+    {
+     "raw": 1,
+     "roll": 493438
+    },
+    {
+     "raw": 1,
+     "roll": 423657
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 405174
+    },
+    {
+     "raw": 1,
+     "roll": 331597
+    },
+    {
+     "raw": 1,
+     "roll": 711460
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0000000000000028",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 870001
+    },
+    {
+     "raw": 1,
+     "roll": 493438
+    },
+    {
+     "raw": 1,
+     "roll": 423657
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 624399
+    },
+    {
+     "raw": 1,
+     "roll": 971939
+    },
+    {
+     "raw": 1,
+     "roll": 697977
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "000000000000270f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 786660
+    },
+    {
+     "raw": 1,
+     "roll": 889859
+    },
+    {
+     "raw": 1,
+     "roll": 651065
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 697977
+    },
+    {
+     "raw": 1,
+     "roll": 627026
+    },
+    {
+     "raw": 1,
+     "roll": 878833
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "000000000000270f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 786660
+    },
+    {
+     "raw": 1,
+     "roll": 889859
+    },
+    {
+     "raw": 1,
+     "roll": 651065
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 384475
+    },
+    {
+     "raw": 1,
+     "roll": 622252
+    },
+    {
+     "raw": 1,
+     "roll": 517628
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "000000000000270f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 786660
+    },
+    {
+     "raw": 1,
+     "roll": 889859
+    },
+    {
+     "raw": 1,
+     "roll": 651065
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 624399
+    },
+    {
+     "raw": 1,
+     "roll": 971939
+    },
+    {
+     "raw": 1,
+     "roll": 697977
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "000000000000270f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 889859
+    },
+    {
+     "raw": 1,
+     "roll": 651065
+    },
+    {
+     "raw": 1,
+     "roll": 14420
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 697977
+    },
+    {
+     "raw": 1,
+     "roll": 627026
+    },
+    {
+     "raw": 1,
+     "roll": 878833
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "000000000000270f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 889859
+    },
+    {
+     "raw": 1,
+     "roll": 651065
+    },
+    {
+     "raw": 1,
+     "roll": 14420
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 384475
+    },
+    {
+     "raw": 1,
+     "roll": 622252
+    },
+    {
+     "raw": 1,
+     "roll": 517628
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "000000000000270f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 889859
+    },
+    {
+     "raw": 1,
+     "roll": 651065
+    },
+    {
+     "raw": 1,
+     "roll": 14420
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 624399
+    },
+    {
+     "raw": 1,
+     "roll": 971939
+    },
+    {
+     "raw": 1,
+     "roll": 697977
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "000000000000270f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 14420
+    },
+    {
+     "raw": 1,
+     "roll": 136535
+    },
+    {
+     "raw": 1,
+     "roll": 850710
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 697977
+    },
+    {
+     "raw": 1,
+     "roll": 627026
+    },
+    {
+     "raw": 1,
+     "roll": 878833
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "000000000000270f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 14420
+    },
+    {
+     "raw": 1,
+     "roll": 136535
+    },
+    {
+     "raw": 1,
+     "roll": 850710
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 384475
+    },
+    {
+     "raw": 1,
+     "roll": 622252
+    },
+    {
+     "raw": 1,
+     "roll": 517628
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "000000000000270f",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 14420
+    },
+    {
+     "raw": 1,
+     "roll": 136535
+    },
+    {
+     "raw": 1,
+     "roll": 850710
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 329583
+    },
+    {
+     "raw": 1,
+     "roll": 600615
+    },
+    {
+     "raw": 1,
+     "roll": 784022
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "00000000075bcd15",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 514540
+    },
+    {
+     "raw": 1,
+     "roll": 730396
+    },
+    {
+     "raw": 1,
+     "roll": 151661
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 784022
+    },
+    {
+     "raw": 1,
+     "roll": 661474
+    },
+    {
+     "raw": 1,
+     "roll": 306033
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "00000000075bcd15",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 514540
+    },
+    {
+     "raw": 1,
+     "roll": 730396
+    },
+    {
+     "raw": 1,
+     "roll": 151661
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 791876
+    },
+    {
+     "raw": 1,
+     "roll": 561731
+    },
+    {
+     "raw": 1,
+     "roll": 58825
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "00000000075bcd15",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 514540
+    },
+    {
+     "raw": 1,
+     "roll": 730396
+    },
+    {
+     "raw": 1,
+     "roll": 151661
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 329583
+    },
+    {
+     "raw": 1,
+     "roll": 600615
+    },
+    {
+     "raw": 1,
+     "roll": 784022
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "00000000075bcd15",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 730396
+    },
+    {
+     "raw": 1,
+     "roll": 151661
+    },
+    {
+     "raw": 1,
+     "roll": 417250
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 784022
+    },
+    {
+     "raw": 1,
+     "roll": 661474
+    },
+    {
+     "raw": 1,
+     "roll": 306033
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "00000000075bcd15",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 730396
+    },
+    {
+     "raw": 1,
+     "roll": 151661
+    },
+    {
+     "raw": 1,
+     "roll": 417250
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 791876
+    },
+    {
+     "raw": 1,
+     "roll": 561731
+    },
+    {
+     "raw": 1,
+     "roll": 58825
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "00000000075bcd15",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 730396
+    },
+    {
+     "raw": 1,
+     "roll": 151661
+    },
+    {
+     "raw": 1,
+     "roll": 417250
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 329583
+    },
+    {
+     "raw": 1,
+     "roll": 600615
+    },
+    {
+     "raw": 1,
+     "roll": 784022
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "00000000075bcd15",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 417250
+    },
+    {
+     "raw": 1,
+     "roll": 584732
+    },
+    {
+     "raw": 1,
+     "roll": 167624
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 784022
+    },
+    {
+     "raw": 1,
+     "roll": 661474
+    },
+    {
+     "raw": 1,
+     "roll": 306033
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "00000000075bcd15",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 417250
+    },
+    {
+     "raw": 1,
+     "roll": 584732
+    },
+    {
+     "raw": 1,
+     "roll": 167624
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 791876
+    },
+    {
+     "raw": 1,
+     "roll": 561731
+    },
+    {
+     "raw": 1,
+     "roll": 58825
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "00000000075bcd15",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 417250
+    },
+    {
+     "raw": 1,
+     "roll": 584732
+    },
+    {
+     "raw": 1,
+     "roll": 167624
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 722265
+    },
+    {
+     "raw": 1,
+     "roll": 634897
+    },
+    {
+     "raw": 1,
+     "roll": 830046
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "00000000ffffffff",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 114659
+    },
+    {
+     "raw": 1,
+     "roll": 631914
+    },
+    {
+     "raw": 1,
+     "roll": 169073
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 830046
+    },
+    {
+     "raw": 1,
+     "roll": 545511
+    },
+    {
+     "raw": 1,
+     "roll": 244784
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "00000000ffffffff",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 114659
+    },
+    {
+     "raw": 1,
+     "roll": 631914
+    },
+    {
+     "raw": 1,
+     "roll": 169073
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 715485
+    },
+    {
+     "raw": 1,
+     "roll": 426394
+    },
+    {
+     "raw": 1,
+     "roll": 389818
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "00000000ffffffff",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 114659
+    },
+    {
+     "raw": 1,
+     "roll": 631914
+    },
+    {
+     "raw": 1,
+     "roll": 169073
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 722265
+    },
+    {
+     "raw": 1,
+     "roll": 634897
+    },
+    {
+     "raw": 1,
+     "roll": 830046
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "00000000ffffffff",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 631914
+    },
+    {
+     "raw": 1,
+     "roll": 169073
+    },
+    {
+     "raw": 1,
+     "roll": 745793
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 830046
+    },
+    {
+     "raw": 1,
+     "roll": 545511
+    },
+    {
+     "raw": 1,
+     "roll": 244784
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "00000000ffffffff",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 631914
+    },
+    {
+     "raw": 1,
+     "roll": 169073
+    },
+    {
+     "raw": 1,
+     "roll": 745793
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 715485
+    },
+    {
+     "raw": 1,
+     "roll": 426394
+    },
+    {
+     "raw": 1,
+     "roll": 389818
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "00000000ffffffff",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 631914
+    },
+    {
+     "raw": 1,
+     "roll": 169073
+    },
+    {
+     "raw": 1,
+     "roll": 745793
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 722265
+    },
+    {
+     "raw": 1,
+     "roll": 634897
+    },
+    {
+     "raw": 1,
+     "roll": 830046
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "00000000ffffffff",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 745793
+    },
+    {
+     "raw": 1,
+     "roll": 422766
+    },
+    {
+     "raw": 1,
+     "roll": 738879
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 830046
+    },
+    {
+     "raw": 1,
+     "roll": 545511
+    },
+    {
+     "raw": 1,
+     "roll": 244784
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "00000000ffffffff",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 745793
+    },
+    {
+     "raw": 1,
+     "roll": 422766
+    },
+    {
+     "raw": 1,
+     "roll": 738879
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 715485
+    },
+    {
+     "raw": 1,
+     "roll": 426394
+    },
+    {
+     "raw": 1,
+     "roll": 389818
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "00000000ffffffff",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 745793
+    },
+    {
+     "raw": 1,
+     "roll": 422766
+    },
+    {
+     "raw": 1,
+     "roll": 738879
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 606295
+    },
+    {
+     "raw": 1,
+     "roll": 934950
+    },
+    {
+     "raw": 1,
+     "roll": 8263
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0123456789abcdef",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 868674
+    },
+    {
+     "raw": 1,
+     "roll": 348035
+    },
+    {
+     "raw": 1,
+     "roll": 198873
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 8263
+    },
+    {
+     "raw": 1,
+     "roll": 348110
+    },
+    {
+     "raw": 1,
+     "roll": 520740
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 0,
+   "seed": "0123456789abcdef",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 868674
+    },
+    {
+     "raw": 1,
+     "roll": 348035
+    },
+    {
+     "raw": 1,
+     "roll": 198873
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 936644
+    },
+    {
+     "raw": 1,
+     "roll": 895963
+    },
+    {
+     "raw": 1,
+     "roll": 281377
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 0,
+   "seed": "0123456789abcdef",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 868674
+    },
+    {
+     "raw": 1,
+     "roll": 348035
+    },
+    {
+     "raw": 1,
+     "roll": 198873
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 606295
+    },
+    {
+     "raw": 1,
+     "roll": 934950
+    },
+    {
+     "raw": 1,
+     "roll": 8263
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 1,
+   "seed": "0123456789abcdef",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 348035
+    },
+    {
+     "raw": 1,
+     "roll": 198873
+    },
+    {
+     "raw": 1,
+     "roll": 107962
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 8263
+    },
+    {
+     "raw": 1,
+     "roll": 348110
+    },
+    {
+     "raw": 1,
+     "roll": 520740
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 1,
+   "seed": "0123456789abcdef",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 348035
+    },
+    {
+     "raw": 1,
+     "roll": 198873
+    },
+    {
+     "raw": 1,
+     "roll": 107962
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 936644
+    },
+    {
+     "raw": 1,
+     "roll": 895963
+    },
+    {
+     "raw": 1,
+     "roll": 281377
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 1,
+   "seed": "0123456789abcdef",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 348035
+    },
+    {
+     "raw": 1,
+     "roll": 198873
+    },
+    {
+     "raw": 1,
+     "roll": 107962
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 606295
+    },
+    {
+     "raw": 1,
+     "roll": 934950
+    },
+    {
+     "raw": 1,
+     "roll": 8263
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 3,
+   "seed": "0123456789abcdef",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 107962
+    },
+    {
+     "raw": 1,
+     "roll": 703660
+    },
+    {
+     "raw": 1,
+     "roll": 604623
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 8263
+    },
+    {
+     "raw": 1,
+     "roll": 348110
+    },
+    {
+     "raw": 1,
+     "roll": 520740
+    }
+   ],
+   "prior_location_calls": 2,
+   "prior_target_calls": 3,
+   "seed": "0123456789abcdef",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 107962
+    },
+    {
+     "raw": 1,
+     "roll": 703660
+    },
+    {
+     "raw": 1,
+     "roll": 604623
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 936644
+    },
+    {
+     "raw": 1,
+     "roll": 895963
+    },
+    {
+     "raw": 1,
+     "roll": 281377
+    }
+   ],
+   "prior_location_calls": 5,
+   "prior_target_calls": 3,
+   "seed": "0123456789abcdef",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 107962
+    },
+    {
+     "raw": 1,
+     "roll": 703660
+    },
+    {
+     "raw": 1,
+     "roll": 604623
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 2,
+     "roll": 869536
+    },
+    {
+     "raw": 1,
+     "roll": 126740
+    },
+    {
+     "raw": 1,
+     "roll": 535623
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "00000000000006bd",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 5531
+    },
+    {
+     "raw": 1,
+     "roll": 828243
+    },
+    {
+     "raw": 1,
+     "roll": 813531
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 602166
+    },
+    {
+     "raw": 1,
+     "roll": 2108
+    },
+    {
+     "raw": 1,
+     "roll": 230552
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000979",
+   "target": [
+    {
+     "raw": 2,
+     "roll": 912123
+    },
+    {
+     "raw": 1,
+     "roll": 390895
+    },
+    {
+     "raw": 1,
+     "roll": 636504
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 11051
+    },
+    {
+     "raw": 1,
+     "roll": 425596
+    },
+    {
+     "raw": 1,
+     "roll": 991991
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000b12",
+   "target": [
+    {
+     "raw": 2,
+     "roll": 73853
+    },
+    {
+     "raw": 1,
+     "roll": 207881
+    },
+    {
+     "raw": 1,
+     "roll": 786699
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 2,
+     "roll": 371285
+    },
+    {
+     "raw": 1,
+     "roll": 8746
+    },
+    {
+     "raw": 1,
+     "roll": 879752
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000000ed9",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 428377
+    },
+    {
+     "raw": 1,
+     "roll": 885723
+    },
+    {
+     "raw": 1,
+     "roll": 383755
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 2,
+     "roll": 534001
+    },
+    {
+     "raw": 1,
+     "roll": 678255
+    },
+    {
+     "raw": 1,
+     "roll": 425350
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "00000000000039c6",
+   "target": [
+    {
+     "raw": 1,
+     "roll": 345032
+    },
+    {
+     "raw": 1,
+     "roll": 469057
+    },
+    {
+     "raw": 1,
+     "roll": 274233
+    }
+   ]
+  },
+  {
+   "location": [
+    {
+     "raw": 1,
+     "roll": 806176
+    },
+    {
+     "raw": 1,
+     "roll": 381456
+    },
+    {
+     "raw": 1,
+     "roll": 521238
+    }
+   ],
+   "prior_location_calls": 0,
+   "prior_target_calls": 0,
+   "seed": "0000000000003ed7",
+   "target": [
+    {
+     "raw": 2,
+     "roll": 176676
+    },
+    {
+     "raw": 1,
+     "roll": 78011
+    },
+    {
+     "raw": 1,
+     "roll": 283570
+    }
+   ]
+  }
+ ],
+ "streams": {
+  "location": "game/location@1",
+  "target": "game/target@1"
+ }
+}

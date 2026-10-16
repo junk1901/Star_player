@@ -19,8 +19,8 @@ internal static class GameExecutionRules
     {
         if (execution is null)
             return null;
-        if (execution.ProbabilityModelVersion != ProbabilityModelVersion.V2Text && execution.ProbabilityModelVersion != ProbabilityModelVersion.V3Text)
-            return Err("Game.execution_model_unsupported", $"경기 실행 계약의 확률 모델은 '{ProbabilityModelVersion.V2Text}' 또는 '{ProbabilityModelVersion.V3Text}'이어야 합니다(받은 값: '{execution.ProbabilityModelVersion}').");
+        if (execution.ProbabilityModelVersion is not (ProbabilityModelVersion.V2Text or ProbabilityModelVersion.V3Text or ProbabilityModelVersion.V4Text))
+            return Err("Game.execution_model_unsupported", $"경기 실행 계약의 확률 모델은 '{ProbabilityModelVersion.V2Text}', '{ProbabilityModelVersion.V3Text}' 또는 '{ProbabilityModelVersion.V4Text}'이어야 합니다(받은 값: '{execution.ProbabilityModelVersion}').");
         var model = ProbabilityModel.Resolve(ProbabilityModelVersion.Create(execution.ProbabilityModelVersion).Value).Value;
         var tuning = TuningVersion.Create(execution.TuningVersion);
         if (!tuning.IsSuccess || !ProbabilityModel.Pairs(model.Version, tuning.Value))
@@ -43,6 +43,11 @@ internal static class GameExecutionRules
         // must be pinned. Automated play never needs a Framing rating, so it keeps the v2 requirements exactly.
         if (rules is { CalledPitchMode: CalledPitchMode.NonAutomated } && model.FramingActive && execution.PlayerInputsId is null)
             return Err("Game.execution_inputs_required_framing", $"확률 모델 '{model.Version}'에서 수동 판정(non_automated) 경기는 포수의 Framing을 읽을 선수 입력 집합 식별자가 있어야 합니다.");
+
+        // Phase 3-E (Game Calling v4, GC-S1): the model pins the current catcher's GameCalling AND the current pitcher's Control in the game's player input set (content version 3), in EVERY called-pitch mode.
+        // Without a pinned set there is no authoritative source for either value, so the game is refused here and nothing is defaulted. (The identity is a hash: its content VERSION is checked wherever the set itself is read.)
+        if (model.GameCallingActive && execution.PlayerInputsId is null)
+            return Err("Game.execution_inputs_required_game_calling", $"확률 모델 '{model.Version}'은 포수의 Game Calling과 투수의 Control을 읽을 선수 입력 집합(콘텐츠 형식 {PlayerInputSet.ContentV3}) 식별자가 있어야 합니다.");
 
         foreach (var (slotId, factor, name) in new[] { ("park.home_runs", park.HomeRuns, "홈런"), ("park.hits", park.Hits, "안타(단타)"), ("park.extra_base_hits", park.ExtraBaseHits, "장타") })
         {

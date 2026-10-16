@@ -169,20 +169,42 @@ public static class StageProbability
     /// Whether the slot acts in this condition. Two independent scopes, both of which must allow it: the zone scope (<see cref="ZoneScope"/>, zone-keyed stages) and, since Phase 3-E, the
     /// <see cref="ModifierConditionScope"/> (called-pitch conditions). A scope that cannot be evaluated is an ERROR - it is never read as "applies".
     /// </summary>
-    private static Result<bool> AppliesTo(ModifierSlot slot, StageDef stage, string condition)
+    internal static Result<bool> AppliesTo(ModifierSlot slot, StageDef stage, string condition)
     {
         if (slot.ConditionScope != ModifierConditionScope.All)
         {
-            if (slot.ConditionScope != ModifierConditionScope.NonAutomatedBorderline || stage.Id != StageIds.CalledPitch)
+            // each scope is defined for exactly one stage; any other pairing (or a value this build does not know) is an error, never "applies" and never "does not apply"
+            var scopeStage = slot.ConditionScope switch
+            {
+                ModifierConditionScope.NonAutomatedBorderline => StageIds.CalledPitch,
+                ModifierConditionScope.BorderlineTarget => StageIds.ActualLocation,
+                _ => null,
+            };
+            if (scopeStage is null || stage.Id != scopeStage)
                 return Result<bool>.Failure(new Error("Modifier.condition_scope_unsupported", $"보정 슬롯 '{slot.Id}'의 조건 범위를 '{stage.Id}' 단계에서 해석할 수 없습니다."));
-            var parsed = ConditionKeys.ParseCalledPitch(condition);
-            if (!parsed.IsSuccess)
-                return Result<bool>.Failure(parsed.Error!.Value);
-            var info = PitchZoneModel.V1.Info(parsed.Value.Zone);
-            if (!info.IsSuccess)
-                return Result<bool>.Failure(info.Error!.Value);
-            if (parsed.Value.Mode != CalledPitchMode.NonAutomated || info.Value.Boundary != BoundaryClass.Borderline)
-                return Result<bool>.Success(false);
+            if (slot.ConditionScope == ModifierConditionScope.BorderlineTarget)
+            {
+                // the condition key of actual_location IS the aimed zone: the class of the TARGET decides, never the zone the pitch then lands on
+                var target = PitchZoneId.Create(condition);
+                if (!target.IsSuccess)
+                    return Result<bool>.Failure(target.Error!.Value);
+                var targetInfo = PitchZoneModel.V1.Info(target.Value);
+                if (!targetInfo.IsSuccess)
+                    return Result<bool>.Failure(targetInfo.Error!.Value);
+                if (targetInfo.Value.Boundary != BoundaryClass.Borderline)
+                    return Result<bool>.Success(false);
+            }
+            else
+            {
+                var parsed = ConditionKeys.ParseCalledPitch(condition);
+                if (!parsed.IsSuccess)
+                    return Result<bool>.Failure(parsed.Error!.Value);
+                var info = PitchZoneModel.V1.Info(parsed.Value.Zone);
+                if (!info.IsSuccess)
+                    return Result<bool>.Failure(info.Error!.Value);
+                if (parsed.Value.Mode != CalledPitchMode.NonAutomated || info.Value.Boundary != BoundaryClass.Borderline)
+                    return Result<bool>.Success(false);
+            }
         }
 
         if (slot.Scope == ZoneScope.All)

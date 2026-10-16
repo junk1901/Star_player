@@ -18,8 +18,12 @@ namespace StarPlayer.Simulation.Baseball;
 /// <see cref="ReceivingFraming"/> (Phase 3-E, content version 2 only) is the player's base <c>ReceivingFraming</c> (0-100), or <c>null</c> for a player without catcher ratings. A set of content
 /// version 1 never captures it - it is always <c>null</c> there AND absent from that version's identity text - so a v1 set can never carry a meaningful value its identity ignores.
 /// </para>
+/// <para>
+/// <see cref="GameCalling"/> (the catcher's base <c>GameCalling</c>) and <see cref="PitcherControl"/> (the pitcher's base <c>Control</c>) exist in content version 3 only (Phase 3-E, Game Calling v4), under the same
+/// rule: always <c>null</c> in versions 1 and 2 and absent from their identity text. Each is <c>null</c> for a player without the matching ratings (a role-specific value); asking for a missing one is an error.
+/// </para>
 /// </summary>
-public sealed record PlayerRunFieldInput(PlayerId Player, int? Fielding, int? Speed, int? Arm, int? ReceivingFraming = null);
+public sealed record PlayerRunFieldInput(PlayerId Player, int? Fielding, int? Speed, int? Arm, int? ReceivingFraming = null, int? GameCalling = null, int? PitcherControl = null);
 
 /// <summary>
 /// An immutable snapshot of the players a game may read (S1). It is built once from trusted <see cref="PlayerSheet"/>s, copies what it needs and keeps no sheet, delegate or mutable
@@ -29,6 +33,8 @@ public sealed record PlayerRunFieldInput(PlayerId Player, int? Fielding, int? Sp
 /// <b>Content versions (Phase 3-E).</b> <see cref="ContentVersion"/> is part of the type, never guessed from the identity text. Version 1 (<see cref="ContentV1"/>, made by <see cref="Create"/>) is the
 /// original format and its identities are unchanged; version 2 (<see cref="ContentV2"/>, made by <see cref="CreateForFraming"/>) adds <c>ReceivingFraming</c> to every entry and to the identity
 /// text. The two are different identities even for the same sheets. A later phase that stores a set must record the content version, the content AND the identity (ROADMAP Phase 4 note).
+/// Version 3 (<see cref="ContentV3"/>, made by <see cref="CreateForGameCalling"/>, Game Calling v4) adds <c>GameCalling</c> and <c>PitcherControl</c> after <c>ReceivingFraming</c>; its identity text starts with its
+/// own version line, so it can never equal a version 1 or 2 identity.
 /// </para>
 /// </summary>
 public sealed class PlayerInputSet
@@ -38,6 +44,9 @@ public sealed class PlayerInputSet
 
     /// <summary>Phase 3-E: v1 plus <c>ReceivingFraming</c> per player (null token <c>-</c> for a player without catcher ratings).</summary>
     public const string ContentV2 = "player-input-set-v2";
+
+    /// <summary>Phase 3-E (Game Calling v4): v2 plus <c>GameCalling</c> (catcher ratings) and <c>PitcherControl</c> (pitcher ratings) per player; the null token <c>-</c> marks a missing role rating.</summary>
+    public const string ContentV3 = "player-input-set-v3";
 
     private readonly ImmutableDictionary<PlayerId, PlayerRunFieldInput> _byPlayer;
 
@@ -62,13 +71,21 @@ public sealed class PlayerInputSet
     public PlayerRunFieldInput? Find(PlayerId player) => _byPlayer.TryGetValue(player, out var found) ? found : null;
 
     /// <summary>A null set, a null or repeated sheet is an error (nothing is skipped or merged). Content version 1: Fielding, Speed, Arm; its identity is exactly the one it always had.</summary>
-    public static Result<PlayerInputSet> Create(IEnumerable<PlayerSheet?>? sheets) => Build(sheets, withFraming: false);
+    public static Result<PlayerInputSet> Create(IEnumerable<PlayerSheet?>? sheets) => Build(sheets, ContentV1);
 
     /// <summary>The same, in content version 2: every entry also holds the player's base <c>ReceivingFraming</c> (null for a player without catcher ratings) and the identity covers it.</summary>
-    public static Result<PlayerInputSet> CreateForFraming(IEnumerable<PlayerSheet?>? sheets) => Build(sheets, withFraming: true);
+    public static Result<PlayerInputSet> CreateForFraming(IEnumerable<PlayerSheet?>? sheets) => Build(sheets, ContentV2);
 
-    private static Result<PlayerInputSet> Build(IEnumerable<PlayerSheet?>? sheets, bool withFraming)
+    /// <summary>
+    /// The same, in content version 3 (Game Calling v4): every entry also holds the player's base <c>GameCalling</c> (null without catcher ratings) and base <c>Control</c> (null without pitcher ratings), and the identity covers both.
+    /// Nothing is defaulted: a missing role rating stays <c>null</c> and is refused only when the game needs it for the player standing at that position.
+    /// </summary>
+    public static Result<PlayerInputSet> CreateForGameCalling(IEnumerable<PlayerSheet?>? sheets) => Build(sheets, ContentV3);
+
+    private static Result<PlayerInputSet> Build(IEnumerable<PlayerSheet?>? sheets, string version)
     {
+        var withFraming = version != ContentV1;
+        var withBattery = version == ContentV3;
         static Result<PlayerInputSet> Fail(string code, string message) => Result<PlayerInputSet>.Failure(new Error(code, message));
 
         if (sheets is null)
@@ -79,23 +96,26 @@ public sealed class PlayerInputSet
             if (sheet is null)
                 return Fail("PlayerInputSet.sheet_missing", "선수 입력 집합에 빈 선수 정보가 있습니다.");
             var hitter = sheet.Ratings.Hitter;
-            var entry = new PlayerRunFieldInput(sheet.Id, hitter?.Fielding.Value, hitter?.Speed.Value, hitter?.Arm.Value, withFraming ? sheet.Ratings.Catcher?.ReceivingFraming.Value : null);
+            var entry = new PlayerRunFieldInput(sheet.Id, hitter?.Fielding.Value, hitter?.Speed.Value, hitter?.Arm.Value, withFraming ? sheet.Ratings.Catcher?.ReceivingFraming.Value : null,
+                withBattery ? sheet.Ratings.Catcher?.GameCalling.Value : null, withBattery ? sheet.Ratings.Pitcher?.Control.Value : null);
             if (!entries.TryAdd(sheet.Id, entry))
                 return Fail("PlayerInputSet.duplicate_player", $"선수 {sheet.Id}의 정보가 선수 입력 집합에 두 번 있습니다.");
         }
 
         var ordered = entries.Values.OrderBy(e => e.Player.Value, StringComparer.Ordinal).ToImmutableArray();
-        var version = withFraming ? ContentV2 : ContentV1;
         return Result<PlayerInputSet>.Success(new PlayerInputSet(version, ordered, Digest(version, ordered)));
     }
 
     private static string Digest(string version, ImmutableArray<PlayerRunFieldInput> ordered)
     {
         static string N(int? v) => v is { } n ? n.ToString(CultureInfo.InvariantCulture) : "-";
-        // v1 lines are byte-for-byte what they were before Phase 3-E; v2 appends the framing token to the same line
-        var lines = version == ContentV2
-            ? ordered.Select(e => $"{e.Player.Value}|fielding={N(e.Fielding)}|speed={N(e.Speed)}|arm={N(e.Arm)}|framing={N(e.ReceivingFraming)}")
-            : ordered.Select(e => $"{e.Player.Value}|fielding={N(e.Fielding)}|speed={N(e.Speed)}|arm={N(e.Arm)}");
+        // v1 lines are byte-for-byte what they were before Phase 3-E; v2 appends the framing token to the same line; v3 appends the game-calling and control tokens after it (fixed field order)
+        var lines = version switch
+        {
+            ContentV3 => ordered.Select(e => $"{e.Player.Value}|fielding={N(e.Fielding)}|speed={N(e.Speed)}|arm={N(e.Arm)}|framing={N(e.ReceivingFraming)}|game_calling={N(e.GameCalling)}|control={N(e.PitcherControl)}"),
+            ContentV2 => ordered.Select(e => $"{e.Player.Value}|fielding={N(e.Fielding)}|speed={N(e.Speed)}|arm={N(e.Arm)}|framing={N(e.ReceivingFraming)}"),
+            _ => ordered.Select(e => $"{e.Player.Value}|fielding={N(e.Fielding)}|speed={N(e.Speed)}|arm={N(e.Arm)}"),
+        };
         var text = string.Join("\n", lines.Prepend(version));
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text))).ToLowerInvariant();
     }

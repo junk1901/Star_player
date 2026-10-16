@@ -1,4 +1,5 @@
 using StarPlayer.Domain.Baseball.Game;
+using StarPlayer.Domain.Baseball.PitchZone;
 using StarPlayer.Domain.Baseball.Probability;
 using StarPlayer.Domain.Common;
 using StarPlayer.Domain.Players;
@@ -96,6 +97,8 @@ internal sealed class CommitEvidence
             return Link("후보의 난수 위치가 준비한 투구의 난수 위치(H1)와 같은 인스턴스가 아닙니다.");
         if (GameEventLocation.Of(candidate.Event) is null)
             return Link("후보 사건에 투구 위치가 없습니다.");
+        if (LinkActualLocation(expected, draft) is { } actualLocation)
+            return actualLocation;
         if (LinkCalledPitch(expected, draft) is { } calledPitch)
             return calledPitch;
 
@@ -113,6 +116,179 @@ internal sealed class CommitEvidence
         return EventFingerprint.Receipt(rebuilt) == EventFingerprint.Receipt(candidate.Event)
             ? null
             : Link("후보 사건이 준비한 투구의 종류·결과·위치로 만든 사건과 다릅니다(Take와 Pitch의 뒤바뀜 포함).");
+    }
+
+    /// <summary>
+    /// Game Calling v4 (GC-B, GC-S1 and GC-S2): the <c>target_zone</c> and <c>actual_location</c> part of the recorded draft against a pure recomputation from the REAL inputs, and the authenticity of every recorded roll.
+    /// <para>
+    /// <b>Inputs (GC-S1).</b> The pitcher on the mound is read from the aggregate's actual state and his Control from the player input set the GAME pinned (<see cref="GameExecution.PlayerInputsId"/>, content version 3); the
+    /// catcher and his GameCalling are read the same way. The pitcher, catcher, Control and GameCalling written in the prepared pitch, in the recorded steps or in the trace are never used as the expectation.
+    /// The aimed zone is not read from the record either: it is the outcome of the replayed <c>target_zone</c> draw.
+    /// </para>
+    /// <para>
+    /// <b>Replay (GC-S2).</b> A <see cref="PitchRollReplay"/> is restored from H0 (the aggregate's snapshot, which <see cref="CheckPrepared"/> proved is the position the pitch started from) and the draft's draws are
+    /// replayed on its private copy with the existing stream, bound and rejection sampling (<c>NextBounded(1,000,000)</c> on the stream each step names, in step order). The copy shares nothing mutable with the aggregate, the
+    /// cursor or the candidate; running it is a verification, not a game draw, and it is never published. For the two location stages the expected condition, distribution, modifier entries, roll, raw draws and
+    /// outcome are recomputed from the trusted inputs; for every later step the roll and raw draws are replayed; and the copy must end exactly at the draft's H1. Re-evaluating a recorded roll against a
+    /// table is NOT enough: a roll changed inside the same outcome interval keeps the outcome and the H1 hash but is not what the generator produced, and only this replay sees it.
+    /// </para>
+    /// Applies only when the model pins Control in the input set (<c>prob-model-v4</c>); earlier models keep their previous verification unchanged. Returns a link problem or null.
+    /// </summary>
+    private Error? LinkActualLocation(AuthoritativeGame expected, PitchBranchDraft draft)
+    {
+        var tuning = _tuning!;                                          // CheckPrepared proved the tuning is the prepared one
+        if (!FrozenPitcherInput.Required(tuning.Model))
+            return null;
+        var state = expected.State;
+        if (_inputs is null)
+            return Link("Game Calling 모델의 투구를 검증할 선수 입력 집합이 없습니다.");
+        if (state.Execution is not { PlayerInputsId: { } pinned } || pinned != _inputs.Id)
+            return Link("검증에 전달된 선수 입력 집합이 경기가 고정한 집합이 아닙니다.");
+        var pitcher = FrozenPitcherInput.Build(state, _inputs, "Commit");
+        if (!pitcher.IsSuccess)
+            return Link($"실제 상태와 선수 입력 집합에서 투수 Control을 다시 읽을 수 없습니다: {pitcher.Error!.Value.Code}");
+        var catcher = FrozenCatcherInput.Build(state, _inputs, tuning.Model, "Commit");
+        if (!catcher.IsSuccess)
+            return Link($"실제 상태와 선수 입력 집합에서 포수 Game Calling을 다시 읽을 수 없습니다: {catcher.Error!.Value.Code}");
+
+        // F-01 (Codex final review): the structure is fixed by the branch BEFORE any recorded step is replayed; the recorded list is never the source of what is allowed
+        if (StructureProblem(draft) is { } structure)
+            return Link(structure);
+        var steps = draft.Steps;
+        var contract = StageContract(draft.Kind);
+
+        // H0 -> a private replay (a copy restored from the immutable snapshot; see PitchRollReplay)
+        var started = PitchRollReplay.From(expected.Rng);
+        if (!started.IsSuccess)
+            return started.Error!.Value;
+        var replay = started.Value;
+
+        // the stage-by-stage expectation; each tuple is (expected stream, expected condition, the recomputed result)
+        var intent = draft.Intent switch { PitchIntent.Balanced => "balanced", PitchIntent.Attack => "attack", PitchIntent.Careful => "careful", _ => null };
+        if (intent is null)
+            return Link("투구 분기 기록의 투수 의도 값이 올바르지 않습니다.");
+        var targetRow = StageProbability.Compute(tuning, StageIds.TargetZone, intent);
+        if (!targetRow.IsSuccess)
+            return Link($"target_zone 확률을 다시 계산할 수 없습니다: {targetRow.Error!.Value.Code}");
+        if (TraceProblem(StageIds.TargetZone, GameRngStreams.Target, intent, targetRow.Value, steps[0]) is { } targetProblem)
+            return Link(targetProblem);
+        var (targetRoll, targetRaw) = replay.Next(GameRngStreams.Target);
+        if (targetRoll != steps[0].Roll || targetRaw != steps[0].RawDraws)
+            return Rng($"target_zone의 기록된 주사위 값·원시 소비({steps[0].Roll}/{steps[0].RawDraws})가 H0에서 다시 재생한 값({targetRoll}/{targetRaw})과 다릅니다.");
+        var targetOutcome = targetRow.Value.Distribution.Select(targetRoll);
+        if (!targetOutcome.IsSuccess || targetOutcome.Value != steps[0].Outcome)
+            return Link("target_zone의 기록된 결과가 재생한 주사위 값에서 나오는 결과와 다릅니다.");
+        var aimed = PitchZoneId.Create(targetOutcome.Value);
+        if (!aimed.IsSuccess)
+            return Link("재생한 목표 구역이 올바른 구역이 아닙니다.");
+
+        // the location row from the REAL pitcher Control and catcher GameCalling, for the REPLAYED aimed zone
+        var inputs = FrozenCatcherInput.Extend(PitchModifierInputs.ForActualLocation(pitcher.Value.Control), StageIds.ActualLocation, catcher.Value);
+        var locationRow = StageProbability.Compute(tuning, StageIds.ActualLocation, ConditionKeys.Zone(aimed.Value), inputs);
+        if (!locationRow.IsSuccess)
+            return Link($"actual_location 확률을 실제 투수·포수 입력으로 다시 계산할 수 없습니다: {locationRow.Error!.Value.Code}");
+        if (TraceProblem(StageIds.ActualLocation, GameRngStreams.Location, ConditionKeys.Zone(aimed.Value), locationRow.Value, steps[1]) is { } locationProblem)
+            return Link(locationProblem);
+        var (locationRoll, locationRaw) = replay.Next(GameRngStreams.Location);
+        if (locationRoll != steps[1].Roll || locationRaw != steps[1].RawDraws)
+            return Rng($"actual_location의 기록된 주사위 값·원시 소비({steps[1].Roll}/{steps[1].RawDraws})가 H0에서 다시 재생한 값({locationRoll}/{locationRaw})과 다릅니다.");
+        var landed = locationRow.Value.Distribution.Select(locationRoll);
+        if (!landed.IsSuccess || landed.Value != steps[1].Outcome)
+            return Link("actual_location의 기록된 결과가 재생한 주사위 값에서 나오는 결과와 다릅니다.");
+
+        // the recorded target, location and boundary are exactly what the replay produced
+        var target = TargetZone.Create(tuning.ZoneModel, aimed.Value);
+        var landedZone = PitchZoneId.Create(landed.Value);
+        if (!target.IsSuccess || !landedZone.IsSuccess)
+            return Link("재생한 구역으로 투구 위치를 만들 수 없습니다.");
+        var location = PitchLocation.FromZone(tuning.ZoneModel, landedZone.Value, draft.Location.Side);
+        if (!location.IsSuccess || location.Value != draft.Location)
+            return Link("기록된 투구 위치(구역·타석 방향·경계 분류)가 재생한 실제 위치와 다릅니다.");
+        if (target.Value != draft.Target)
+            return Link("기록된 목표 구역이 재생한 목표 구역과 다릅니다.");
+
+        // every later step: the roll and the raw draws are what the same stream produces next; then the copy must stand exactly where the draft says H1 is
+        for (var i = 2; i < steps.Length; i++)
+        {
+            var (roll, raw) = replay.Next(contract[i].Stream);           // the stream the contract names, equal to the recorded one (StructureProblem)
+            if (roll != steps[i].Roll || raw != steps[i].RawDraws)
+                return Rng($"{i + 1}번째 단계({steps[i].Stage})의 기록된 주사위 값·원시 소비({steps[i].Roll}/{steps[i].RawDraws})가 H0에서 다시 재생한 값({roll}/{raw})과 다릅니다.");
+        }
+
+        return replay.StateHash == draft.NextRng.StateHash
+            ? null
+            : Rng("H0에서 기록된 단계들을 재생한 난수 위치가 투구 뒤 난수(H1)와 다릅니다.");
+    }
+
+    // the two batter_decision outcomes the resolver branches on (PitchBranchResolver keeps them private); an honest hit-by-pitch or called pitch fails the contract below if either is wrong
+    private const string HitByPitchOutcome = "hit_by_pitch";
+    private const string TakeOutcome = "take";
+
+    /// <summary>
+    /// The stages a pitch branch may contain, in order, each with its fixed stream: exactly what <see cref="PitchBranchResolver"/> draws. Hit by pitch = target, location, batter_decision; a called ball or
+    /// strike adds called_pitch; a swinging strike or foul adds swing_result; in play adds swing_result, batted_ball and defense_result. No other stage or stream belongs to a pitch.
+    /// </summary>
+    private static (string Stage, RngStreamId Stream)[] StageContract(PitchBranchKind kind)
+    {
+        (string, RngStreamId)[] head = [(StageIds.TargetZone, GameRngStreams.Target), (StageIds.ActualLocation, GameRngStreams.Location), (StageIds.BatterDecision, GameRngStreams.Pitch)];
+        return kind switch
+        {
+            PitchBranchKind.HitByPitch => head,
+            PitchBranchKind.CalledBall or PitchBranchKind.CalledStrike => [.. head, (StageIds.CalledPitch, GameRngStreams.Pitch)],
+            PitchBranchKind.SwingingStrike or PitchBranchKind.Foul => [.. head, (StageIds.SwingResult, GameRngStreams.Contact)],
+            _ => [.. head, (StageIds.SwingResult, GameRngStreams.Contact), (StageIds.BattedBall, GameRngStreams.Contact), (StageIds.DefenseResult, GameRngStreams.Field)],
+        };
+    }
+
+    /// <summary>
+    /// The recorded steps against the structure the branch allows: the same count, the same stages in the same order, the same stream per stage. Whether the branch label itself matches what the steps decided is
+    /// checked from their outcomes (the batter's decision and the swing result choose the branch). Returns the problem text or null.
+    /// </summary>
+    private static string? StructureProblem(PitchBranchDraft draft)
+    {
+        var steps = draft.Steps;
+        if (steps.IsDefault)
+            return "투구 분기 기록에 단계 목록이 없습니다.";
+        var contract = StageContract(draft.Kind);
+        if (steps.Length != contract.Length)
+            return $"{draft.Kind} 투구의 단계 수는 {contract.Length}개여야 하는데 {steps.Length}개가 기록되어 있습니다(허용되지 않은 추가·누락 단계).";
+        for (var i = 0; i < contract.Length; i++)
+            if (steps[i].Stage != contract[i].Stage || steps[i].Stream != contract[i].Stream)
+                return $"{draft.Kind} 투구의 {i + 1}번째 단계는 {contract[i].Stage} / {contract[i].Stream.Canonical}이어야 하는데 {steps[i].Stage} / {steps[i].Stream.Canonical}이 기록되어 있습니다.";
+
+        var decision = steps[2].Outcome;
+        var consistent = draft.Kind switch
+        {
+            PitchBranchKind.HitByPitch => decision == HitByPitchOutcome,
+            PitchBranchKind.CalledBall or PitchBranchKind.CalledStrike => decision != HitByPitchOutcome && (decision == TakeOutcome || draft.ExplicitTake),
+            _ => decision != HitByPitchOutcome && decision != TakeOutcome && !draft.ExplicitTake
+                && draft.Kind == (steps[3].Outcome switch { "miss" => PitchBranchKind.SwingingStrike, "foul" => PitchBranchKind.Foul, _ => PitchBranchKind.InPlay }),
+        };
+        return consistent ? null : $"투구 분기 종류 {draft.Kind}가 기록된 타자 결정 '{decision}'·스윙 결과의 의미와 맞지 않습니다.";
+    }
+
+    /// <summary>
+    /// A recorded step against the recomputed row of its stage: the stage, stream and condition, the final distribution, the trace (baseline, combined factors and cap flags, versions, hash) and the modifier entries (slot,
+    /// input, factor, applied, targets). Returns the problem text or null. The roll and the outcome are compared by the caller, against the replay.
+    /// </summary>
+    private static string? TraceProblem(string stage, RngStreamId stream, string condition, StageResult row, PitchBranchStep recorded)
+    {
+        if (recorded.Stage != stage || recorded.Stream != stream)
+            return $"기록된 {recorded.Stage} 단계의 스트림 {recorded.Stream.Canonical}이 기대한 {stage} / {stream.Canonical}과 다릅니다.";
+        if (recorded.Condition != condition || recorded.Trace.Condition != condition)
+            return $"기록된 {stage} 조건 '{recorded.Condition}'이 실제 입력에서 나오는 '{condition}'과 다릅니다.";
+        var (expected, trace) = (row.Distribution, row.Trace);
+        if (!expected.Ppm.SequenceEqual(recorded.Trace.Final))
+            return $"기록된 {stage} 확률 분포가 실제 투수·포수·규칙 입력으로 다시 계산한 값과 다릅니다.";
+        if (!trace.Baseline.SequenceEqual(recorded.Trace.Baseline) || !trace.CombinedFactorPpm.SequenceEqual(recorded.Trace.CombinedFactorPpm) || !trace.CombinedCapped.SequenceEqual(recorded.Trace.CombinedCapped)
+            || !trace.AfterModifiers.SequenceEqual(recorded.Trace.AfterModifiers) || trace.TuningHash != recorded.Trace.TuningHash || trace.ModelVersion != recorded.Trace.ModelVersion
+            || trace.TuningVersion != recorded.Trace.TuningVersion || !trace.Outcomes.SequenceEqual(recorded.Trace.Outcomes))
+            return $"기록된 {stage} 계산 흔적(기준 확률·결합 계수·버전)이 실제 입력으로 다시 계산한 값과 다릅니다.";
+        if (trace.Modifiers.Count != recorded.Trace.Modifiers.Count
+            || trace.Modifiers.Zip(recorded.Trace.Modifiers).Any(p => p.First.Slot != p.Second.Slot || p.First.Input != p.Second.Input || p.First.FactorPpm != p.Second.FactorPpm
+                                                                    || p.First.Applied != p.Second.Applied || !p.First.Targets.SequenceEqual(p.Second.Targets)))
+            return $"기록된 {stage} 보정 항목(투수 Control·포수 Game Calling 입력, 적용 여부, 계수)이 실제 입력으로 다시 계산한 값과 다릅니다.";
+        return null;
     }
 
     /// <summary>
@@ -150,7 +326,7 @@ internal sealed class CommitEvidence
         {
             if (_inputs is null)
                 return Link("수동 판정 경기의 called_pitch를 검증할 선수 입력 집합이 없습니다.");
-            var catcher = FrozenCatcherInput.Build(state, _inputs, "Commit");
+            var catcher = FrozenCatcherInput.Build(state, _inputs, tuning.Model, "Commit");
             if (!catcher.IsSuccess)
                 return Link($"실제 상태와 선수 입력 집합에서 포수 Framing을 다시 읽을 수 없습니다: {catcher.Error!.Value.Code}");
             inputs = FrozenCatcherInput.Extend(null, StageIds.CalledPitch, catcher.Value);
@@ -188,6 +364,8 @@ internal sealed class CommitEvidence
             return Link("후보 사건에 투구 위치가 없습니다.");
         if (audit.StartRngStateHash != prepared.StartRngStateHash)
             return Link("후보 감사 기록의 시작 난수 해시(H0)가 준비한 투구의 것과 다릅니다.");
+        if (LinkActualLocation(expected, draft) is { } actualLocation)
+            return actualLocation;
         if (LinkCalledPitch(expected, draft) is { } calledPitch)
             return calledPitch;                                        // an in-play pitch has no called_pitch step: a recorded one is a forgery
 

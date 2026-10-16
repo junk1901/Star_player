@@ -211,7 +211,7 @@ public static class PitchBranchResolver
         // even for a neutral stadium; a legacy game (no execution) can only run a v1 tuning. Nothing is converted, defaulted or clamped.
         if (GameExecutionRules.Validate(state.Execution, state.Rules) is { } badExecution)
             return Result<(GameState, TuningProfile, string, AppliedBatterSide)>.Failure(badExecution);
-        var modelV2 = tuning.Model.Version.Value is ProbabilityModelVersion.V2Text or ProbabilityModelVersion.V3Text; // the models with ACTIVE park slots (v2, and v3 which extends it)
+        var modelV2 = tuning.Model.Version.Value is ProbabilityModelVersion.V2Text or ProbabilityModelVersion.V3Text or ProbabilityModelVersion.V4Text; // the models with ACTIVE park slots (v2, and v3/v4 which extend it)
         if (state.Execution is { } execution)
         {
             if (tuning.Model.Version.Value != execution.ProbabilityModelVersion || tuning.Tuning.Value != execution.TuningVersion || tuning.ContentHash != execution.TuningHash)
@@ -243,24 +243,55 @@ public static class PitchBranchResolver
 
         // Phase 3-E: the catcher input. Required exactly when the model's Framing is active and the rules call pitches by hand - and then for every pitch, Clear or Borderline, whatever the batter does.
         // It must be a catcher input of THIS game, read from the pinned content-version-2 set, naming the CURRENT catcher; it is refused where it is not needed (nothing is silently ignored).
+        // Game Calling v4: the same object also carries GameCalling. Each rating must be present exactly when the model/rules need it (Framing: non_automated; GameCalling: every mode of model v4), never invented, never ignored.
         var catcherRequired = FrozenCatcherInput.Required(tuning.Model, rules);
         if (request.Catcher is { } catcher)
         {
             if (!catcherRequired)
                 return Fail("PitchBranch.catcher_unexpected", "이 확률 모델·판정 방식에서는 포수 입력을 쓰지 않는데 포수 입력이 전달되었습니다.");
             if (state.Execution is not { PlayerInputsId: { } pinnedSet })
-                return Fail("PitchBranch.catcher_inputs_not_pinned", "포수 Framing을 읽으려면 경기 실행 계약이 선수 입력 집합을 고정해야 합니다.");
+                return Fail("PitchBranch.catcher_inputs_not_pinned", "포수 능력치를 읽으려면 경기 실행 계약이 선수 입력 집합을 고정해야 합니다.");
             if (!string.Equals(catcher.GameId, state.GameId, StringComparison.Ordinal))
                 return Fail("PitchBranch.catcher_game_mismatch", "전달된 포수 입력이 이 경기의 것이 아닙니다.");
             if (catcher.InputSetId != pinnedSet)
                 return Fail("PitchBranch.catcher_inputs_mismatch", "경기가 고정한 선수 입력 집합과 전달된 포수 입력의 집합이 다릅니다.");
-            if (catcher.ReceivingFraming is < SkillValue.Min or > SkillValue.Max)
-                return Fail("PitchBranch.ability_out_of_range", "Framing 보정에 쓰는 기본 능력치는 0~100 범위여야 합니다.");
+            if (FrozenCatcherInput.FramingRequired(tuning.Model, rules) != catcher.ReceivingFraming.HasValue)
+                return Fail("PitchBranch.catcher_framing_mismatch", "포수 입력의 Framing 능력치가 이 확률 모델·판정 방식이 요구하는 것과 맞지 않습니다(필요한데 없거나, 필요 없는데 있음).");
+            if (FrozenCatcherInput.GameCallingRequired(tuning.Model) != catcher.GameCalling.HasValue)
+                return Fail("PitchBranch.catcher_game_calling_mismatch", "포수 입력의 GameCalling 능력치가 이 확률 모델이 요구하는 것과 맞지 않습니다(필요한데 없거나, 필요 없는데 있음).");
+            if (catcher.ReceivingFraming is < SkillValue.Min or > SkillValue.Max || catcher.GameCalling is < SkillValue.Min or > SkillValue.Max)
+                return Fail("PitchBranch.ability_out_of_range", "포수 보정(Framing·Game Calling)에 쓰는 기본 능력치는 0~100 범위여야 합니다.");
             if (state.DefenderAt(state.FieldingSide, FieldPosition.Catcher) != catcher.Catcher)
                 return Fail("PitchBranch.catcher_mismatch", "고정된 포수가 현재 경기 상태의 포수와 다릅니다.");
         }
         else if (catcherRequired)
-            return Fail("PitchBranch.catcher_missing", "수동 판정 경기에서 확률 모델 v3는 포수 입력(Framing)이 있어야 합니다.");
+            return Fail("PitchBranch.catcher_missing", "이 확률 모델·판정 방식에서는 포수 입력(Framing 또는 Game Calling)이 있어야 합니다.");
+
+        // Game Calling v4 (GC-S1): under model v4 the pitcher's Control is the one pinned in the game's content-version-3 input set for the CURRENT pitcher. It is required, must belong to this game and this set,
+        // must name the pitcher on the mound, and any ability-derived Control must equal it - so the resolver can never draw with a different Control than the pinned one.
+        var pitcherRequired = FrozenPitcherInput.Required(tuning.Model);
+        if (request.PitcherInput is { } pitcherInput)
+        {
+            if (!pitcherRequired)
+                return Fail("PitchBranch.pitcher_input_unexpected", "이 확률 모델에서는 고정 투수 입력을 쓰지 않는데 투수 입력이 전달되었습니다.");
+            if (state.Execution is not { PlayerInputsId: { } pinnedPitcherSet })
+                return Fail("PitchBranch.pitcher_inputs_not_pinned", "투수 Control을 읽으려면 경기 실행 계약이 선수 입력 집합을 고정해야 합니다.");
+            if (!string.Equals(pitcherInput.GameId, state.GameId, StringComparison.Ordinal))
+                return Fail("PitchBranch.pitcher_game_mismatch", "전달된 투수 입력이 이 경기의 것이 아닙니다.");
+            if (pitcherInput.InputSetId != pinnedPitcherSet)
+                return Fail("PitchBranch.pitcher_inputs_mismatch", "경기가 고정한 선수 입력 집합과 전달된 투수 입력의 집합이 다릅니다.");
+            if (pitcherInput.Control is < SkillValue.Min or > SkillValue.Max)
+                return Fail("PitchBranch.ability_out_of_range", "투수 Control에 쓰는 기본 능력치는 0~100 범위여야 합니다.");
+            if (state.Fielding.Pitcher != pitcherInput.Pitcher)
+                return Fail("PitchBranch.pitcher_input_mismatch", "고정된 투수가 현재 경기 상태의 마운드 투수와 다릅니다.");
+            // pitcher.control is connected in ONE place (PitchModifierInputs, from the abilities); under model v4 the abilities are therefore required and their Control must be the pinned one
+            if (request.Abilities is not { } supplied)
+                return Fail("PitchBranch.abilities_missing", "이 확률 모델에서는 고정된 투수 Control을 투구 보정에 쓰기 위해 투구 능력치 입력이 있어야 합니다.");
+            if (supplied.PitcherControl != pitcherInput.Control)
+                return Fail("PitchBranch.pitcher_control_mismatch", "투구 보정에 전달된 투수 Control이 경기가 고정한 투수 Control과 다릅니다.");
+        }
+        else if (pitcherRequired)
+            return Fail("PitchBranch.pitcher_input_missing", "이 확률 모델에서는 경기가 고정한 투수 Control 입력이 있어야 합니다.");
 
         if (!Enum.IsDefined(request.Intent))
             return Fail("PitchBranch.intent_invalid", "투수 의도 값이 올바르지 않습니다.");

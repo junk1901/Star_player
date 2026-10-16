@@ -42,7 +42,7 @@ internal static class PitchModifierInputs
     public static IReadOnlyList<ModifierInput> For(
         string stage, PitchAbilities abilities, PitchCountState count, ApproachKind? approach, AppliedBatterSide batterSide, ThrowingHand pitcherHand) => stage switch
     {
-        StageIds.ActualLocation => [ModifierInput.Linear("pitcher.control", abilities.PitcherControl)],
+        StageIds.ActualLocation => ForActualLocation(abilities.PitcherControl),
         StageIds.BatterDecision =>
         [
             ModifierInput.Linear("batter.eye", abilities.BatterEye),
@@ -62,6 +62,12 @@ internal static class PitchModifierInputs
         ],
         _ => [],
     };
+
+    /// <summary>
+    /// The one place <c>pitcher.control</c> is connected: the <c>actual_location</c> inputs for a given base Control. The resolver reaches it through <see cref="For"/>; the commit evidence (Game Calling v4) calls it with the
+    /// Control it re-derived from the pinned player input set, so the expected distribution is built by the very same code and the slot still has a single connection.
+    /// </summary>
+    internal static IReadOnlyList<ModifierInput> ForActualLocation(int pitcherControl) => [ModifierInput.Linear("pitcher.control", pitcherControl)];
 
     /// <summary>The chosen plate-appearance approach; before one is chosen (start of a plate appearance, or after an explicit Take) the pitch is neutral.</summary>
     public static string Approach(ApproachKind? approach) => approach switch
