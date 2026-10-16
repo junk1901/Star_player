@@ -16,15 +16,21 @@ public readonly record struct ProbabilityModelVersion : IStringId<ProbabilityMod
     /// <summary>Phase 3-D (owner decision P4): the same structure as v1 with the three park slots active. v1 is never edited.</summary>
     public const string V2Text = "prob-model-v2";
 
+    /// <summary>Phase 3-E (Framing v3): the same structure as v2 with <c>catcher.framing</c> active under <see cref="ModifierConditionScope.NonAutomatedBorderline"/>. v1 and v2 are never edited.</summary>
+    public const string V3Text = "prob-model-v3";
+
     public static ProbabilityModelVersion V1 { get; } = new() { Value = V1Text };
 
     public static ProbabilityModelVersion V2 { get; } = new() { Value = V2Text };
+
+    public static ProbabilityModelVersion V3 { get; } = new() { Value = V3Text };
 
     public string Value { get; private init; }
 
     public static Result<ProbabilityModelVersion> Create(string? value) =>
         string.Equals(value, V1Text, StringComparison.Ordinal) ? Result<ProbabilityModelVersion>.Success(V1)
         : string.Equals(value, V2Text, StringComparison.Ordinal) ? Result<ProbabilityModelVersion>.Success(V2)
+        : string.Equals(value, V3Text, StringComparison.Ordinal) ? Result<ProbabilityModelVersion>.Success(V3)
         : Result<ProbabilityModelVersion>.Failure(new Error("ProbabilityModelVersion.unsupported", $"지원하지 않는 확률 모델 버전입니다: '{value}'"));
 
     public override string ToString() => Value ?? "";
@@ -40,13 +46,19 @@ public readonly record struct TuningVersion : IStringId<TuningVersion>
 
     public static TuningVersion VirtualProtoV1 { get; } = new() { Value = VirtualProtoV1Text };
 
+    /// <summary>Phase 3-E (Framing v3): the tuning of <c>prob-model-v3</c>. v1 and v2 are never edited.</summary>
+    public const string VirtualProtoV3Text = "tuning-virtual-proto-v3";
+
     public static TuningVersion VirtualProtoV2 { get; } = new() { Value = VirtualProtoV2Text };
+
+    public static TuningVersion VirtualProtoV3 { get; } = new() { Value = VirtualProtoV3Text };
 
     public string Value { get; private init; }
 
     public static Result<TuningVersion> Create(string? value) =>
         string.Equals(value, VirtualProtoV1Text, StringComparison.Ordinal) ? Result<TuningVersion>.Success(VirtualProtoV1)
         : string.Equals(value, VirtualProtoV2Text, StringComparison.Ordinal) ? Result<TuningVersion>.Success(VirtualProtoV2)
+        : string.Equals(value, VirtualProtoV3Text, StringComparison.Ordinal) ? Result<TuningVersion>.Success(VirtualProtoV3)
         : Result<TuningVersion>.Failure(new Error("TuningVersion.unsupported", $"지원하지 않는 튜닝 버전입니다: '{value}'"));
 
     public override string ToString() => Value ?? "";
@@ -83,6 +95,13 @@ public enum ModifierKind { Linear, Table }
 public enum ZoneScope { All, Inner, Outer }
 
 /// <summary>
+/// Phase 3-E: an extra, closed condition on WHICH called-pitch condition a slot may act in. <see cref="All"/> (the default of every pre-v3 slot) adds nothing. <see cref="NonAutomatedBorderline"/> lets a slot
+/// act only in a <c>called_pitch</c> condition whose mode token is exactly <c>non_automated</c> and whose zone the zone model classifies as <see cref="BoundaryClass.Borderline"/>; everywhere else the slot is
+/// listed but NOT applied (factor exactly 1,000,000). It is a closed enum read by <see cref="StageProbability"/>: no delegate and no expression language.
+/// </summary>
+public enum ModifierConditionScope { All, NonAutomatedBorderline }
+
+/// <summary>
 /// One modifier slot of the model: which stage it acts in, which outcomes' weights it multiplies, its input kind and range, and its documented monotone direction.
 /// <para>
 /// <b>Linear</b> slots take a whole-number input (a 0-100 skill, or a 1-3000 permille park factor); the factor is <c>1,000,000 + (input - neutral) * slope</c>.
@@ -94,7 +113,8 @@ public enum ZoneScope { All, Inner, Outer }
 /// </summary>
 public sealed record ModifierSlot(
     string Id, string Stage, IReadOnlyList<string> Targets, ModifierKind Kind, ZoneScope Scope, int InputMin, int InputMax,
-    bool HigherInputRaisesFactor, IReadOnlyList<string> TableOrder, bool Reserved, string OwnerNote);
+    bool HigherInputRaisesFactor, IReadOnlyList<string> TableOrder, bool Reserved, string OwnerNote,
+    ModifierConditionScope ConditionScope = ModifierConditionScope.All);
 
 /// <summary>A stage whose distribution the batter's hidden zone tendency may shift: the batter-favourable outcomes and the cap that +100 stands for.</summary>
 public sealed record TendencyStage(string Stage, IReadOnlyList<string> Favoured, bool CapIsContact);
@@ -120,6 +140,32 @@ public static class ConditionKeys
         return Result<string>.Success($"{(mode == CalledPitchMode.Automated ? Automated : NonAutomated)}:{zone.Value}");
     }
 
+    /// <summary>
+    /// Reads a <c>called_pitch</c> condition key back: the mode token must equal <c>automated</c> or <c>non_automated</c> EXACTLY (ordinal, no prefix or substring reading) and the rest must be one
+    /// zone id of the zone model. Anything else - an empty key, a third mode, a second ':', an unknown zone - is an error, never a guess.
+    /// </summary>
+    public static Result<(CalledPitchMode Mode, PitchZoneId Zone)> ParseCalledPitch(string? key)
+    {
+        static Result<(CalledPitchMode, PitchZoneId)> Fail(string text) =>
+            Result<(CalledPitchMode, PitchZoneId)>.Failure(new Error("CalledPitchCondition.invalid", $"called_pitch 조건 키를 해석할 수 없습니다: {text}"));
+
+        if (key is null)
+            return Fail("키가 없습니다.");
+        var colon = key.IndexOf(':', StringComparison.Ordinal);
+        if (colon <= 0 || key.IndexOf(':', colon + 1) >= 0)
+            return Fail($"'{key}'");
+        var token = key.AsSpan(0, colon);
+        CalledPitchMode mode;
+        if (token.SequenceEqual(Automated))
+            mode = CalledPitchMode.Automated;
+        else if (token.SequenceEqual(NonAutomated))
+            mode = CalledPitchMode.NonAutomated;
+        else
+            return Fail($"알 수 없는 판정 방식 토큰 '{token.ToString()}'");
+        var zone = PitchZoneId.Create(key[(colon + 1)..]);
+        return zone.IsSuccess ? Result<(CalledPitchMode, PitchZoneId)>.Success((mode, zone.Value)) : Fail($"알 수 없는 구역 '{key[(colon + 1)..]}'");
+    }
+
     /// <summary>Key of the <c>batted_ball</c> stage: the centre cell is <c>heart</c>, the other eight inner cells <c>edge</c>, the eight outer zones <c>outside</c>.</summary>
     public static Result<string> BattedBallGroup(PitchZoneId zone)
     {
@@ -140,10 +186,16 @@ public sealed class ProbabilityModel
 {
     public const string CondTarget = "@condition";
 
-    public static ProbabilityModel V1 { get; } = Build(ProbabilityModelVersion.V1, parkActive: false);
+    public static ProbabilityModel V1 { get; } = Build(ProbabilityModelVersion.V1, parkActive: false, framingActive: false);
 
     /// <summary>Phase 3-D (P4): <c>prob-model-v2</c> = v1 with <c>park.home_runs</c>, <c>park.hits</c> and <c>park.extra_base_hits</c> active over <see cref="ParkInputMin"/>-<see cref="ParkInputMax"/> permille.</summary>
-    public static ProbabilityModel V2 { get; } = Build(ProbabilityModelVersion.V2, parkActive: true);
+    public static ProbabilityModel V2 { get; } = Build(ProbabilityModelVersion.V2, parkActive: true, framingActive: false);
+
+    /// <summary>
+    /// Phase 3-E: <c>prob-model-v3</c> = v2 with <c>catcher.framing</c> active over 0-100 and scoped to <see cref="ModifierConditionScope.NonAutomatedBorderline"/> (it targets <c>strike</c> of <c>called_pitch</c> only).
+    /// Every other stage, outcome, slot and range is identical to v2.
+    /// </summary>
+    public static ProbabilityModel V3 { get; } = Build(ProbabilityModelVersion.V3, parkActive: true, framingActive: true);
 
     /// <summary>Inclusive park input range of the ACTIVE model (<see cref="V2"/>) in permille; the C46 domain keeps its own absolute bound (3000).</summary>
     public const int ParkInputMin = 800;
@@ -169,7 +221,30 @@ public sealed class ProbabilityModel
     public static Result<ProbabilityModel> Resolve(ProbabilityModelVersion version) =>
         version.Value == ProbabilityModelVersion.V1Text ? Result<ProbabilityModel>.Success(V1)
         : version.Value == ProbabilityModelVersion.V2Text ? Result<ProbabilityModel>.Success(V2)
+        : version.Value == ProbabilityModelVersion.V3Text ? Result<ProbabilityModel>.Success(V3)
         : Result<ProbabilityModel>.Failure(new Error("ProbabilityModelVersion.unsupported", $"지원하지 않는 확률 모델 버전입니다: '{version}'"));
+
+    /// <summary>
+    /// The ONE tuning version that belongs to a model version (v1/v1, v2/v2, v3/v3): an explicit table, never an "is it v2" flag, so a further version cannot silently pair with a neighbour.
+    /// A model this build does not know is an error.
+    /// </summary>
+    public static Result<TuningVersion> TuningFor(ProbabilityModelVersion model) => model.Value switch
+    {
+        ProbabilityModelVersion.V1Text => Result<TuningVersion>.Success(TuningVersion.VirtualProtoV1),
+        ProbabilityModelVersion.V2Text => Result<TuningVersion>.Success(TuningVersion.VirtualProtoV2),
+        ProbabilityModelVersion.V3Text => Result<TuningVersion>.Success(TuningVersion.VirtualProtoV3),
+        _ => Result<TuningVersion>.Failure(new Error("ProbabilityModelVersion.unsupported", $"지원하지 않는 확률 모델 버전입니다: '{model}'")),
+    };
+
+    /// <summary>True exactly for the three approved pairs of <see cref="TuningFor"/>.</summary>
+    public static bool Pairs(ProbabilityModelVersion model, TuningVersion tuning)
+    {
+        var expected = TuningFor(model);
+        return expected.IsSuccess && string.Equals(expected.Value.Value, tuning.Value, StringComparison.Ordinal);
+    }
+
+    /// <summary>True when <c>catcher.framing</c> is an ACTIVE slot of this model (v3), false when it is still reserved (v1, v2).</summary>
+    public bool FramingActive => Slot("catcher.framing") is { Reserved: false };
 
     public StageDef? Stage(string id) => Stages.FirstOrDefault(s => string.Equals(s.Id, id, StringComparison.Ordinal));
 
@@ -177,7 +252,7 @@ public sealed class ProbabilityModel
 
     public TendencyStage? TendencyFor(string stage) => TendencyStages.FirstOrDefault(t => string.Equals(t.Stage, stage, StringComparison.Ordinal));
 
-    private static ProbabilityModel Build(ProbabilityModelVersion version, bool parkActive)
+    private static ProbabilityModel Build(ProbabilityModelVersion version, bool parkActive, bool framingActive)
     {
         var zoneIds = PitchZoneModel.V1.Zones.Select(z => z.Id.Value).ToList();
 
@@ -217,6 +292,13 @@ public sealed class ProbabilityModel
             ? new(id, StageIds.DefenseResult, targets, ModifierKind.Linear, ZoneScope.All, ParkInputMin, ParkInputMax, true, noTable, false, activeNote)
             : Reserved(id, StageIds.DefenseResult, targets, 1, 3000, reservedNote);
 
+        // v1/v2: reserved (neutral input only). v3 (Phase 3-E): active over 0-100 and limited by ConditionScope to non_automated Borderline called pitches; same slot id, stage and owned outcome.
+        ModifierSlot Framing() => framingActive
+            ? new("catcher.framing", StageIds.CalledPitch, ["strike"], ModifierKind.Linear, ZoneScope.All, SkillValue0, SkillValue100, true, noTable, false,
+                "Active in prob-model-v3: Framing acts only in non_automated mode and only on Borderline zones; Clear zones and automated mode are exactly neutral (the scope belongs to the model, not to the caller).",
+                ModifierConditionScope.NonAutomatedBorderline)
+            : Reserved("catcher.framing", StageIds.CalledPitch, ["strike"], SkillValue0, SkillValue100, "Reserved: Framing acts only in non_automated mode, only on Borderline zones, within a cap fixed by Phase 3-E; exactly zero in automated mode.");
+
         var slots = new List<ModifierSlot>
         {
             Skill("pitcher.control", StageIds.ActualLocation, [CondTarget], true, ZoneScope.All, "Control raises the chance the pitch lands on the aimed zone. One slot only: Control feeds nothing else."),
@@ -225,7 +307,7 @@ public sealed class ProbabilityModel
             Skill("batter.eye", StageIds.BatterDecision, ["swing"], false, ZoneScope.Outer, "Eye lowers the chance of swinging at a pitch outside the strike zone (chase). Outer zones only."),
             Table("strategy.approach", StageIds.BatterDecision, ["swing"], ["patient", "neutral", "aggressive"], "The selected plate-appearance approach changes the swing/take split only."),
             Table("situation.count_pressure", StageIds.BatterDecision, ["swing"], ["three_balls", "neutral", "two_strikes"], "Count pressure (a real, authoritative count) changes the swing/take split only."),
-            Reserved("catcher.framing", StageIds.CalledPitch, ["strike"], SkillValue0, SkillValue100, "Reserved: Framing acts only in non_automated mode, only on Borderline zones, within a cap fixed by Phase 3-E; exactly zero in automated mode."),
+            Framing(),
             Skill("pitcher.stuff", StageIds.SwingResult, ["miss"], true, ZoneScope.All, "Stuff raises the whiff chance."),
             Skill("batter.contact", StageIds.SwingResult, ["miss"], false, ZoneScope.All, "Contact lowers the whiff chance."),
             Table("matchup.handedness", StageIds.SwingResult, ["miss"], ["opposite_hand", "neutral", "same_hand"], "Platoon: a same-handed matchup favours the pitcher, an opposite-handed one the batter. Uses the applied batter side."),

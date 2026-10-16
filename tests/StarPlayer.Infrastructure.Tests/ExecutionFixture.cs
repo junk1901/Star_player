@@ -19,6 +19,9 @@ internal static class Gx
 
     public static readonly TuningProfile Tuning1 = TuningProfileTests.Profile();
 
+    /// <summary>Phase 3-E: the embedded <c>tuning-virtual-proto-v3</c> of <c>prob-model-v3</c> (catcher.framing active).</summary>
+    public static readonly TuningProfile Tuning3 = Pc.Ok(TuningProfileJson.LoadVirtualV3());
+
     /// <summary>A snapshot built by the real <see cref="ParkFactorProfile"/> factory under the widest domain bounds.</summary>
     public static ParkFactorSnapshot Park(int homeRuns = 1000, int hits = 1000, int extraBaseHits = 1000, string stadium = "stadium-gx", string profile = "pf-gx", int version = 1) =>
         Pc.Ok(ParkFactorProfile.Create(ParkFactorProfileId.Create(profile).Value, StadiumId.Create(stadium).Value, version, new DateOnly(2030, 1, 1),
@@ -171,7 +174,7 @@ internal static class Gx
         [StageIds.TargetZone] = [],
         [StageIds.ActualLocation] = ["pitcher.control"],
         [StageIds.BatterDecision] = ["batter.eye", "strategy.approach", "situation.count_pressure"],
-        [StageIds.CalledPitch] = [],
+        [StageIds.CalledPitch] = ["catcher.framing"],       // Phase 3-E: only a model-v3 non_automated game ever lists it (the v2 tests below assert it is never seen)
         [StageIds.SwingResult] = ["pitcher.stuff", "batter.contact", "matchup.handedness"],
         [StageIds.BattedBall] = ["pitcher.velocity", "batter.power"],
         [StageIds.DefenseResult] = ["defense.fielding", "park.home_runs", "park.hits", "park.extra_base_hits"],
@@ -182,9 +185,9 @@ internal static class Gx
     /// <paramref name="maxEvents"/> events were confirmed. No production runner exists; this loop only chooses an approach for every new plate appearance and confirms what the pipeline
     /// built. Invariants are checked on every pitch: sums, caps, which slots reach which stage, the streams used, the retained execution contract.
     /// </summary>
-    public static GameRun Play(GameExecution? execution, TuningProfile tuning, PlayerInputSet? inputs, ulong seed, int maxEvents = 6000)
+    public static GameRun Play(GameExecution? execution, TuningProfile tuning, PlayerInputSet? inputs, ulong seed, int maxEvents = 6000, GameRuleSnapshot? rules = null)
     {
-        var state0 = PitchBranchFixture.StartState(PitchBranchFixture.NonAutomated, Pc.Gid, execution);
+        var state0 = PitchBranchFixture.StartState(rules ?? PitchBranchFixture.NonAutomated, Pc.Gid, execution);
         var cursor = new GameCursor(Pc.Ok(AuthoritativeGame.Restore(state0, PitchBranchFixture.Snapshot(seed, Pc.Gid), 0, 0)));
         var violations = new List<string>();
         var receipts = new List<string>();

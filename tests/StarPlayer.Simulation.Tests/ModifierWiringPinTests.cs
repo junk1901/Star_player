@@ -50,7 +50,22 @@ public class ModifierWiringPinTests
             .Where(f => Regex.IsMatch(File.ReadAllText(f), @"ModifierInput\.(?:Linear|Choice)\("))
             .Select(f => Path.GetFileName(f)!).Order(StringComparer.Ordinal).ToArray();
 
-        Assert.Equal(["AdvancementSlots.cs", "DefenseSlots.cs", "PitchModifierInputs.cs"], creators);
+        Assert.Equal(["AdvancementSlots.cs", "DefenseSlots.cs", "FrozenCatcherInput.cs", "PitchModifierInputs.cs"], creators);   // Phase 3-E added exactly one: the catcher's Framing
+    }
+
+    [Fact]
+    public void The_framing_slot_is_connected_in_one_file_to_the_called_pitch_stage_only_and_names_no_other_slot()
+    {
+        var file = File.ReadAllText(Path.Combine(Baseball, "FrozenCatcherInput.cs"));
+
+        Assert.Equal(["catcher.framing"], Slots("FrozenCatcherInput.cs"));
+        Assert.Contains("stage != StageIds.CalledPitch", file);
+        Assert.DoesNotContain("park.", file);
+        Assert.DoesNotContain("defense.", file);
+        Assert.DoesNotContain("catcher.game_calling", file);
+        Assert.DoesNotContain("battery.chemistry", file);
+        // the resolver only calls Extend; it never names the slot itself
+        Assert.DoesNotContain("catcher.framing", File.ReadAllText(Path.Combine(Baseball, "PitchBranchResolver.cs")).Replace("<c>catcher.framing</c>", ""));
     }
 
     [Fact]

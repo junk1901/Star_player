@@ -30,10 +30,12 @@ public enum PitchBranchKind { HitByPitch, CalledBall, CalledStrike, SwingingStri
 /// the applied side and passes the nine live slots' <see cref="ModifierInput"/>s to their stages. Null means no modifier at all (the ability-free computation, as before 3-D).
 /// <see cref="Fielding"/> (Phase 3-D v2, Part B) are the base fielding ratings of the three representative fielders, frozen before the pitch from the game state and an immutable
 /// <see cref="PlayerInputSet"/>; when given, <c>defense_result</c> receives the <c>defense.fielding</c> input of the batted ball's representative fielder. Null means that slot stays neutral.
+/// <see cref="Catcher"/> (Phase 3-E) is the current catcher and his base <c>ReceivingFraming</c>, frozen the same way; it is REQUIRED exactly when <see cref="FrozenCatcherInput.Required"/> holds
+/// (model v3 and non_automated rules) and refused otherwise. When given, every <c>called_pitch</c> decision receives <c>catcher.framing</c>; the model's scope decides where it acts.
 /// </summary>
 public sealed record PitchBranchRequest(
     GameState? State, TuningProfile? Tuning, PitchIntent Intent, bool ExplicitTake, BattingSide? BatterDeclaredSide, ThrowingHand? PitcherThrows, GameRandomSnapshot? Rng,
-    BatterZoneTendency? BatterTendency = null, PitchAbilities? Abilities = null, PitchFieldingInputs? Fielding = null);
+    BatterZoneTendency? BatterTendency = null, PitchAbilities? Abilities = null, PitchFieldingInputs? Fielding = null, FrozenCatcherInput? Catcher = null);
 
 /// <summary>One probability decision of the branch, with the stream it drew from and the exact roll (audit data; the trace is resolver-internal).</summary>
 public sealed record PitchBranchStep(string Stage, string Condition, string Outcome, RngStreamId Stream, uint Roll, long RawDraws, ProbabilityTrace Trace);

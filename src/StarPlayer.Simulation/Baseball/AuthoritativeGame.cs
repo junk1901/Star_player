@@ -65,7 +65,7 @@ public sealed class AuthoritativeGame
         var ids = GameEventIds.Create(state.GameId);
         if (!ids.IsSuccess)
             return Result<AuthoritativeGame>.Failure(ids.Error!.Value);
-        if (GameExecutionRules.Validate(state.Execution) is { } badExecution)
+        if (GameExecutionRules.Validate(state.Execution, state.Rules) is { } badExecution)
             return Result<AuthoritativeGame>.Failure(badExecution); // a restored game's execution contract (park snapshot, pins) is validated again, never trusted
         var restored = GameRandom.Restore(rng);
         if (!restored.IsSuccess)

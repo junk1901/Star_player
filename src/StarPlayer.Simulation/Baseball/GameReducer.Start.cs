@@ -26,7 +26,7 @@ public static partial class GameReducer
             return Fail<GameState>("Game.start_invalid", "경기 시작 정보 또는 경기 ID가 올바르지 않습니다.");
         if (start.Rules is null)
             return Fail<GameState>("Game.rules_missing", "경기 규칙 스냅샷이 없습니다.");
-        if (GameExecutionRules.Validate(start.Execution) is { } badExecution)
+        if (GameExecutionRules.Validate(start.Execution, start.Rules) is { } badExecution)
             return Result<GameState>.Failure(badExecution);
 
         var away = BuildTeam(start.Rules, start.Away, "원정");

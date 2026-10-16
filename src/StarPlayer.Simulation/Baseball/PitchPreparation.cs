@@ -20,11 +20,11 @@ public sealed class PreparedPitch
 {
     internal PreparedPitch(GameState state, string gameId, string startRngStateHash, PlayerId batterId, PlayerId pitcherId, BattingSide batterDeclaredSide,
         ThrowingHand pitcherThrows, PitchBranchDraft draft, string rulesVersion, string rulesHash, string probabilityModelVersion, string tuningVersion, string tuningHash,
-        PitchFieldingInputs? fielding = null)
+        PitchFieldingInputs? fielding = null, FrozenCatcherInput? catcher = null)
     {
         State = state; GameId = gameId; StartRngStateHash = startRngStateHash; BatterId = batterId; PitcherId = pitcherId; BatterDeclaredSide = batterDeclaredSide;
         PitcherThrows = pitcherThrows; Draft = draft; RulesVersion = rulesVersion; RulesHash = rulesHash; ProbabilityModelVersion = probabilityModelVersion;
-        TuningVersion = tuningVersion; TuningHash = tuningHash; Fielding = fielding;
+        TuningVersion = tuningVersion; TuningHash = tuningHash; Fielding = fielding; Catcher = catcher;
     }
 
     public GameState State { get; }
@@ -46,6 +46,12 @@ public sealed class PreparedPitch
     /// <c>null</c> when the pitch was prepared with no player input set (the fielding slot was neutral).
     /// </summary>
     public PitchFieldingInputs? Fielding { get; }
+
+    /// <summary>
+    /// The catcher and his base ReceivingFraming frozen for this pitch (Phase 3-E), or <c>null</c> when the model/rules need none (<c>prob-model-v1/v2</c>, or automated calling). It is a record of what was
+    /// used, NOT a source of truth: whoever verifies the pitch re-derives the catcher from the real state and the real player input set.
+    /// </summary>
+    public FrozenCatcherInput? Catcher { get; }
 
     /// <summary>The identity of the player input set the pitch was prepared with (null = none). Later stages must be given the very same set.</summary>
     public string? PlayerInputsId => Fielding?.InputSetId;
@@ -120,13 +126,25 @@ public static class PitchPreparation
         else if (state.Execution is { PlayerInputsId: not null })
             return Prep.Fail("PitchPrepare.player_inputs_missing", "경기 실행 계약이 선수 입력 집합을 고정했으므로 투구를 준비하려면 그 집합이 필요합니다.");
 
-        var drafted = PitchBranchResolver.Resolve(new PitchBranchRequest(state, tuning, intent, explicitTake, batter!.Player.Bats, pitcher!.Player.Throws, rng, batterTendency, abilities.Value, fielding), cancellation);
+        // Phase 3-E: the current catcher, when the model's Framing is active and the rules call pitches by hand. Read from the state and the content-version-2 set BEFORE the first random number.
+        FrozenCatcherInput? catcher = null;
+        if (FrozenCatcherInput.Required(tuning.Model, state.Rules))
+        {
+            if (playerInputs is null)
+                return Prep.Fail("PitchPrepare.catcher_inputs_missing", "수동 판정 경기에서 확률 모델 v3는 포수 Framing을 읽을 선수 입력 집합이 필요합니다.");
+            var builtCatcher = FrozenCatcherInput.Build(state, playerInputs, "PitchPrepare");
+            if (!builtCatcher.IsSuccess)
+                return Result<PreparedPitch>.Failure(builtCatcher.Error!.Value);
+            catcher = builtCatcher.Value;
+        }
+
+        var drafted = PitchBranchResolver.Resolve(new PitchBranchRequest(state, tuning, intent, explicitTake, batter!.Player.Bats, pitcher!.Player.Throws, rng, batterTendency, abilities.Value, fielding, catcher), cancellation);
         if (!drafted.IsSuccess)
             return Result<PreparedPitch>.Failure(drafted.Error!.Value);
 
         var draft = drafted.Value;
         return Result<PreparedPitch>.Success(new PreparedPitch(state, state.GameId, rng.StateHash, batter.Id, pitcher.Id, batter.Player.Bats, pitcher.Player.Throws, draft,
-            state.Rules.Version, state.Rules.ContentHash, tuning.Model.Version.Value, tuning.Tuning.Value, tuning.ContentHash, fielding));
+            state.Rules.Version, state.Rules.ContentHash, tuning.Model.Version.Value, tuning.Tuning.Value, tuning.ContentHash, fielding, catcher));
     }
 
     /// <summary>
@@ -290,6 +308,26 @@ public static class PitchPreparation
                 if (then.Fielding != now.Fielding)
                     return Fail("PitchCandidate.fielding_changed", $"준비 이후 {then.Position} 수비수 {then.Player}의 기본 수비 능력치가 바뀌었습니다.");
             }
+        }
+
+        // 6c (Phase 3-E): the catcher input. Whether one is needed is decided by the CURRENT model and rules, never by what the preparation says; when needed, the catcher and his rating are re-derived from
+        // the real state and the real (content-version-2) set held now and compared as values. A catcher change, the same catcher with another rating, another game's input or another set are each reported here.
+        var catcherRequired = FrozenCatcherInput.Required(tuning.Model, state.Rules);
+        if (catcherRequired != (prepared.Catcher is not null))
+            return Fail("PitchCandidate.catcher_input_mismatch", catcherRequired ? "수동 판정 경기의 준비된 투구에 포수 입력이 없습니다." : "포수 입력이 필요 없는 준비된 투구에 포수 입력이 붙어 있습니다.");
+        if (prepared.Catcher is { } frozenCatcher)
+        {
+            if (!string.Equals(frozenCatcher.GameId, state.GameId, StringComparison.Ordinal) || !string.Equals(frozenCatcher.GameId, prepared.GameId, StringComparison.Ordinal))
+                return Fail("PitchCandidate.catcher_game_mismatch", "준비된 포수 입력이 이 경기의 것이 아닙니다.");
+            if (playerInputs is null || frozenCatcher.InputSetId != playerInputs.Id)
+                return Fail("PitchCandidate.player_inputs_changed", "준비한 포수 입력의 선수 입력 집합이 지금 전달된 집합과 다릅니다.");
+            var currentCatcher = FrozenCatcherInput.Build(state, playerInputs, "PitchCandidate");
+            if (!currentCatcher.IsSuccess)
+                return currentCatcher.Error!.Value;
+            if (frozenCatcher.Catcher != currentCatcher.Value.Catcher)
+                return Fail("PitchCandidate.catcher_changed", $"준비 이후 포수가 {frozenCatcher.Catcher}에서 {currentCatcher.Value.Catcher}(으)로 바뀌었습니다.");
+            if (frozenCatcher.ReceivingFraming != currentCatcher.Value.ReceivingFraming)
+                return Fail("PitchCandidate.framing_changed", $"준비 이후 포수 {frozenCatcher.Catcher}의 기본 Framing 능력치가 바뀌었습니다.");
         }
 
         // 1 (last, so the specific reasons above win): count, outs, bases, approach, applied events... the very same state object

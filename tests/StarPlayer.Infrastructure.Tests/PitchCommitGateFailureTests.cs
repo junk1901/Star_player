@@ -675,7 +675,9 @@ public class PitchCommitGateFailureTests
     {
         var f = Strike.Value;
         // a coherently forged draft that says "explicit take" in a plate appearance already in sequence: link and preparation pass, the reducer refuses a Take there
-        var draft = f.Prepared.Draft with { ExplicitTake = true, Kind = PitchBranchKind.CalledBall };
+        // (Phase 3-E: the forgery is made coherent in the called_pitch step too - an outcome that disagrees with its own step and roll is now refused earlier, at the link; roll 0 selects "ball" in every row)
+        var calledSteps = f.Prepared.Draft.Steps.Select(s => s.Stage == StageIds.CalledPitch ? s with { Outcome = "ball", Roll = 0 } : s).ToImmutableArray();
+        var draft = f.Prepared.Draft with { ExplicitTake = true, Kind = PitchBranchKind.CalledBall, CalledPitch = "ball", Steps = calledSteps };
         var forgedPrepared = f.Prepared.With(draft);
         var take = new TakeEvent(f.Candidate.Event.Id, new PitchSpec(PitchOutcome.Ball, Location: draft.Location));
         var forged = new NonInPlayPitchCandidate(take, S(f.Candidate.UnconfirmedStep, st => st with { Outs = 2 }), draft.NextRng, PitchBranchKind.CalledBall, draft.NextBoundedCalls);

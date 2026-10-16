@@ -16,6 +16,8 @@
     <EmbeddedResource Include="..\..\content\tuning\virtual_tuning_v1.json" LogicalName="virtual_tuning_v1.json" />
     <!-- Phase 3-D: tuning-virtual-proto-v2 for prob-model-v2 (the three park slots active); v1 above is never edited. -->
     <EmbeddedResource Include="..\..\content\tuning\virtual_tuning_v2.json" LogicalName="virtual_tuning_v2.json" />
+    <!-- Phase 3-E: tuning-virtual-proto-v3 for prob-model-v3 (catcher.framing active); v1 and v2 above are never edited. -->
+    <EmbeddedResource Include="..\..\content\tuning\virtual_tuning_v3.json" LogicalName="virtual_tuning_v3.json" />
   </ItemGroup>
   <ItemGroup>
     <!-- Raw fixture/world types are internal; only these test assemblies may see them (the Godot client may not). -->

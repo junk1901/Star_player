@@ -48,6 +48,11 @@ internal static class PitchBranchFixture
 
     /// <summary>New plate appearance, 0-0: an explicit Take is legal, an approach-driven pitch is not.</summary>
     /// <remarks>The game id is always explicit: the resolver requires it to equal the RNG snapshot's context key, so a positive test passes the same text to both.</remarks>
+    /// <summary>The two team setups of the base game (Phase 3-E tests start games with their own execution contracts).</summary>
+    public static TeamSetup AwaySetup => BaseGame.Value.Away;
+
+    public static TeamSetup HomeSetup => BaseGame.Value.Home;
+
     public static GameState StartState(GameRuleSnapshot rules, string gameId) =>
         GameReducer.Start(new GameStart(gameId, rules, BaseGame.Value.Away, BaseGame.Value.Home)).Value;
 

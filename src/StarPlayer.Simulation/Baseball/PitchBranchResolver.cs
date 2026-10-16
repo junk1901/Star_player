@@ -80,6 +80,8 @@ public static class PitchBranchResolver
             // Phase 3-D v2: in defense_result the game's own park snapshot (read from the GameState, never from a current stadium profile) and the representative fielder's base fielding
             // rating (frozen before the pitch) join the stage's inputs
             inputs = DefenseSlots.Extend(inputs, stage, condition, state, request.Fielding);
+            // Phase 3-E: in called_pitch the frozen catcher's Framing joins the stage's inputs for EVERY condition; where it may act is the model's ModifierConditionScope, not this loop
+            inputs = FrozenCatcherInput.Extend(inputs, stage, request.Catcher);
             var computed = StageProbability.Compute(tuning, stage, condition, inputs, tendency);
             if (!computed.IsSuccess)
                 return Result<string>.Failure(computed.Error!.Value);
@@ -205,11 +207,11 @@ public static class PitchBranchResolver
         if (tuning.ContentHash is not { Length: 64 } hash || !hash.All(c => c is (>= '0' and <= '9') or (>= 'a' and <= 'f')))
             return Fail("PitchBranch.tuning_hash_invalid", "튜닝 내용 해시가 올바르지 않습니다.");
 
-        // Phase 3-D (P3/S2/S3): the game's execution contract is re-validated and the supplied tuning must be exactly the pinned one. A model-v2 tuning needs an explicit park snapshot
+        // Phase 3-D (P3/S2/S3): the game's execution contract is re-validated and the supplied tuning must be exactly the pinned one. A model-v2/v3 tuning needs an explicit park snapshot
         // even for a neutral stadium; a legacy game (no execution) can only run a v1 tuning. Nothing is converted, defaulted or clamped.
-        if (GameExecutionRules.Validate(state.Execution) is { } badExecution)
+        if (GameExecutionRules.Validate(state.Execution, state.Rules) is { } badExecution)
             return Result<(GameState, TuningProfile, string, AppliedBatterSide)>.Failure(badExecution);
-        var modelV2 = tuning.Model.Version.Value == ProbabilityModelVersion.V2Text;
+        var modelV2 = tuning.Model.Version.Value is ProbabilityModelVersion.V2Text or ProbabilityModelVersion.V3Text; // the models with ACTIVE park slots (v2, and v3 which extends it)
         if (state.Execution is { } execution)
         {
             if (tuning.Model.Version.Value != execution.ProbabilityModelVersion || tuning.Tuning.Value != execution.TuningVersion || tuning.ContentHash != execution.TuningHash)
@@ -238,6 +240,27 @@ public static class PitchBranchResolver
         }
         else if (state.Execution is { PlayerInputsId: not null })
             return Fail("PitchBranch.player_inputs_missing", "경기 실행 계약이 선수 입력 집합을 고정했으므로 수비 입력이 있어야 합니다.");
+
+        // Phase 3-E: the catcher input. Required exactly when the model's Framing is active and the rules call pitches by hand - and then for every pitch, Clear or Borderline, whatever the batter does.
+        // It must be a catcher input of THIS game, read from the pinned content-version-2 set, naming the CURRENT catcher; it is refused where it is not needed (nothing is silently ignored).
+        var catcherRequired = FrozenCatcherInput.Required(tuning.Model, rules);
+        if (request.Catcher is { } catcher)
+        {
+            if (!catcherRequired)
+                return Fail("PitchBranch.catcher_unexpected", "이 확률 모델·판정 방식에서는 포수 입력을 쓰지 않는데 포수 입력이 전달되었습니다.");
+            if (state.Execution is not { PlayerInputsId: { } pinnedSet })
+                return Fail("PitchBranch.catcher_inputs_not_pinned", "포수 Framing을 읽으려면 경기 실행 계약이 선수 입력 집합을 고정해야 합니다.");
+            if (!string.Equals(catcher.GameId, state.GameId, StringComparison.Ordinal))
+                return Fail("PitchBranch.catcher_game_mismatch", "전달된 포수 입력이 이 경기의 것이 아닙니다.");
+            if (catcher.InputSetId != pinnedSet)
+                return Fail("PitchBranch.catcher_inputs_mismatch", "경기가 고정한 선수 입력 집합과 전달된 포수 입력의 집합이 다릅니다.");
+            if (catcher.ReceivingFraming is < SkillValue.Min or > SkillValue.Max)
+                return Fail("PitchBranch.ability_out_of_range", "Framing 보정에 쓰는 기본 능력치는 0~100 범위여야 합니다.");
+            if (state.DefenderAt(state.FieldingSide, FieldPosition.Catcher) != catcher.Catcher)
+                return Fail("PitchBranch.catcher_mismatch", "고정된 포수가 현재 경기 상태의 포수와 다릅니다.");
+        }
+        else if (catcherRequired)
+            return Fail("PitchBranch.catcher_missing", "수동 판정 경기에서 확률 모델 v3는 포수 입력(Framing)이 있어야 합니다.");
 
         if (!Enum.IsDefined(request.Intent))
             return Fail("PitchBranch.intent_invalid", "투수 의도 값이 올바르지 않습니다.");

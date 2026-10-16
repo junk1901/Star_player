@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using StarPlayer.Domain.Baseball.Game;
 using StarPlayer.Domain.Baseball.PitchZone;
 using StarPlayer.Domain.Common;
 
@@ -94,7 +95,9 @@ public static class StageProbability
             if (!evaluated.IsSuccess)
                 return Fail(evaluated.Error!.Value);
             var applies = AppliesTo(slot, stageDef, condition);
-            factors[slot.Id] = (slot, input, applies ? evaluated.Value : Neutral, applies);
+            if (!applies.IsSuccess)
+                return Fail(applies.Error!.Value);
+            factors[slot.Id] = (slot, input, applies.Value ? evaluated.Value : Neutral, applies.Value);
         }
 
         // (3) per-outcome combined factor, fixed slot order
@@ -162,15 +165,33 @@ public static class StageProbability
     private static bool Targets(ModifierSlot slot, string outcome, string condition) =>
         slot.Targets.Any(t => t == ProbabilityModel.CondTarget ? outcome == condition : t == outcome);
 
-    private static bool AppliesTo(ModifierSlot slot, StageDef stage, string condition)
+    /// <summary>
+    /// Whether the slot acts in this condition. Two independent scopes, both of which must allow it: the zone scope (<see cref="ZoneScope"/>, zone-keyed stages) and, since Phase 3-E, the
+    /// <see cref="ModifierConditionScope"/> (called-pitch conditions). A scope that cannot be evaluated is an ERROR - it is never read as "applies".
+    /// </summary>
+    private static Result<bool> AppliesTo(ModifierSlot slot, StageDef stage, string condition)
     {
+        if (slot.ConditionScope != ModifierConditionScope.All)
+        {
+            if (slot.ConditionScope != ModifierConditionScope.NonAutomatedBorderline || stage.Id != StageIds.CalledPitch)
+                return Result<bool>.Failure(new Error("Modifier.condition_scope_unsupported", $"보정 슬롯 '{slot.Id}'의 조건 범위를 '{stage.Id}' 단계에서 해석할 수 없습니다."));
+            var parsed = ConditionKeys.ParseCalledPitch(condition);
+            if (!parsed.IsSuccess)
+                return Result<bool>.Failure(parsed.Error!.Value);
+            var info = PitchZoneModel.V1.Info(parsed.Value.Zone);
+            if (!info.IsSuccess)
+                return Result<bool>.Failure(info.Error!.Value);
+            if (parsed.Value.Mode != CalledPitchMode.NonAutomated || info.Value.Boundary != BoundaryClass.Borderline)
+                return Result<bool>.Success(false);
+        }
+
         if (slot.Scope == ZoneScope.All)
-            return true;
+            return Result<bool>.Success(true);
         var zone = PitchZoneId.Create(condition);
         if (!zone.IsSuccess)
-            return true; // a scope is defined only for zone-keyed stages (the model never gives a scope to another stage)
+            return Result<bool>.Success(true); // a zone scope is defined only for zone-keyed stages (the model never gives a zone scope to another stage)
         var inner = PitchZoneModel.V1.Info(zone.Value).Value.Region == PitchZoneRegion.Inner;
-        return slot.Scope == ZoneScope.Inner ? inner : !inner;
+        return Result<bool>.Success(slot.Scope == ZoneScope.Inner ? inner : !inner);
     }
 
     private static Result<int> Evaluate(ModifierSlot slot, ModifierTuning tuning, ModifierInput input)

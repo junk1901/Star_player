@@ -78,10 +78,10 @@ internal sealed class CommitEvidence
             return Link("증거가 이 확정의 경기 상태가 아닌 다른 상태에 결속되어 있습니다.");
         if (!ReferenceEquals(Event, gameEvent))
             return Link("증거가 이 확정의 사건이 아닌 다른 사건에 결속되어 있습니다.");
-        return _nonInPlay is { } nonInPlay ? LinkNonInPlay(nonInPlay) : LinkInPlay(_inPlay!);
+        return _nonInPlay is { } nonInPlay ? LinkNonInPlay(expected, nonInPlay) : LinkInPlay(expected, _inPlay!);
     }
 
-    private Error? LinkNonInPlay(NonInPlayPitchCandidate candidate)
+    private Error? LinkNonInPlay(AuthoritativeGame expected, NonInPlayPitchCandidate candidate)
     {
         var draft = _prepared!.Draft;                                  // CheckPrepared proved the preparation exists
         if (draft.Kind == PitchBranchKind.InPlay)
@@ -96,6 +96,8 @@ internal sealed class CommitEvidence
             return Link("후보의 난수 위치가 준비한 투구의 난수 위치(H1)와 같은 인스턴스가 아닙니다.");
         if (GameEventLocation.Of(candidate.Event) is null)
             return Link("후보 사건에 투구 위치가 없습니다.");
+        if (LinkCalledPitch(expected, draft) is { } calledPitch)
+            return calledPitch;
 
         // the event as the builder makes it from the recorded draft (no draw): the same type, outcome, location and every other field, compared as a receipt
         var outcome = draft.Kind switch
@@ -113,7 +115,68 @@ internal sealed class CommitEvidence
             : Link("후보 사건이 준비한 투구의 종류·결과·위치로 만든 사건과 다릅니다(Take와 Pitch의 뒤바뀜 포함).");
     }
 
-    private Error? LinkInPlay(InPlayPitchCandidate candidate)
+    /// <summary>
+    /// Phase 3-E (Package B, F-01 principle): the <c>called_pitch</c> part of the recorded draft against a pure recomputation from the REAL inputs. The expected condition key is built from the aggregate's
+    /// actual rules mode and the pitch location; the expected Framing input is re-derived from the aggregate's actual state (the current catcher) and the player input set held now - the catcher id, the rating
+    /// and the applied flag written in the prepared pitch or in the recorded steps are never used as the source of the expectation. The row is recomputed with <see cref="StageProbability.Compute"/> (a pure
+    /// function: no draw) and the recorded distribution, modifier entries, roll and outcome must equal it. A pitch that has no called pitch (hit by pitch, swing, in play) must have no such step. Returns a
+    /// link problem or null.
+    /// </summary>
+    private Error? LinkCalledPitch(AuthoritativeGame expected, PitchBranchDraft draft)
+    {
+        var steps = draft.Steps.Where(s => s.Stage == StageIds.CalledPitch).ToArray();
+        var isCall = draft.Kind is PitchBranchKind.CalledBall or PitchBranchKind.CalledStrike;
+        if (steps.Length != (isCall ? 1 : 0))
+            return Link(isCall ? "볼·스트라이크 콜 투구에 called_pitch 단계가 정확히 하나 있지 않습니다." : "콜이 없는 투구에 called_pitch 단계가 기록되어 있습니다.");
+        if (!isCall)
+            return draft.CalledPitch is null ? null : Link("콜이 없는 투구에 called_pitch 결과가 기록되어 있습니다.");
+
+        var step = steps[0];
+        var state = expected.State;
+        var tuning = _tuning!;                                         // CheckPrepared proved the tuning is the prepared one
+        var zoneStep = draft.Steps.FirstOrDefault(s => s.Stage == StageIds.ActualLocation);
+        if (zoneStep is null || zoneStep.Outcome != draft.Location.Zone.Value)
+            return Link("기록된 실제 위치 단계의 결과가 투구 위치의 구역과 다릅니다.");
+        var key = ConditionKeys.CalledPitch(state.Rules.CalledPitchMode, draft.Location.Zone);
+        if (!key.IsSuccess)
+            return Link($"실제 규칙의 판정 방식과 투구 위치로 called_pitch 조건을 만들 수 없습니다: {key.Error!.Value.Code}");
+        if (step.Condition != key.Value || step.Trace.Condition != key.Value)
+            return Link($"기록된 called_pitch 조건 '{step.Condition}'이 실제 규칙 모드와 투구 위치에서 나오는 '{key.Value}'와 다릅니다.");
+        if (step.Stream != GameRngStreams.Pitch)
+            return Link("called_pitch 추첨 스트림이 game/pitch가 아닙니다.");
+
+        IReadOnlyList<ModifierInput>? inputs = null;
+        if (FrozenCatcherInput.Required(tuning.Model, state.Rules))
+        {
+            if (_inputs is null)
+                return Link("수동 판정 경기의 called_pitch를 검증할 선수 입력 집합이 없습니다.");
+            var catcher = FrozenCatcherInput.Build(state, _inputs, "Commit");
+            if (!catcher.IsSuccess)
+                return Link($"실제 상태와 선수 입력 집합에서 포수 Framing을 다시 읽을 수 없습니다: {catcher.Error!.Value.Code}");
+            inputs = FrozenCatcherInput.Extend(null, StageIds.CalledPitch, catcher.Value);
+        }
+
+        var computed = StageProbability.Compute(tuning, StageIds.CalledPitch, key.Value, inputs);
+        if (!computed.IsSuccess)
+            return Link($"called_pitch 확률을 실제 입력으로 다시 계산할 수 없습니다: {computed.Error!.Value.Code}");
+        var (distribution, trace) = (computed.Value.Distribution, computed.Value.Trace);
+        if (!distribution.Ppm.SequenceEqual(step.Trace.Final))
+            return Link("기록된 called_pitch 확률 분포가 실제 포수·규칙 입력으로 다시 계산한 값과 다릅니다.");
+        if (!trace.Baseline.SequenceEqual(step.Trace.Baseline) || !trace.CombinedFactorPpm.SequenceEqual(step.Trace.CombinedFactorPpm) || !trace.AfterModifiers.SequenceEqual(step.Trace.AfterModifiers)
+            || trace.TuningHash != step.Trace.TuningHash || trace.ModelVersion != step.Trace.ModelVersion || trace.TuningVersion != step.Trace.TuningVersion)
+            return Link("기록된 called_pitch 계산 흔적(기준 확률·결합 계수·버전)이 실제 입력으로 다시 계산한 값과 다릅니다.");
+        if (trace.Modifiers.Count != step.Trace.Modifiers.Count
+            || trace.Modifiers.Zip(step.Trace.Modifiers).Any(p => p.First.Slot != p.Second.Slot || p.First.Input != p.Second.Input || p.First.FactorPpm != p.Second.FactorPpm
+                                                                 || p.First.Applied != p.Second.Applied || !p.First.Targets.SequenceEqual(p.Second.Targets)))
+            return Link("기록된 called_pitch 보정 항목(포수 Framing 입력·적용 여부·계수)이 실제 입력으로 다시 계산한 값과 다릅니다.");
+        if (distribution.SelectIndex(step.Roll) is not { IsSuccess: true } picked || distribution.Outcomes[picked.Value] != step.Outcome)
+            return Link("기록된 called_pitch 결과가 기록된 주사위 값과 다시 계산한 확률표에서 나오는 결과와 다릅니다.");
+        if (draft.CalledPitch != step.Outcome || draft.Kind != (step.Outcome == "ball" ? PitchBranchKind.CalledBall : PitchBranchKind.CalledStrike))
+            return Link("기록된 투구 분기 종류·결과가 called_pitch 단계의 결과와 다릅니다.");
+        return null;
+    }
+
+    private Error? LinkInPlay(AuthoritativeGame expected, InPlayPitchCandidate candidate)
     {
         var plan = candidate.Plan;
         var prepared = plan.Prepared;                                  // the very object CheckPrepared accepted
@@ -125,6 +188,8 @@ internal sealed class CommitEvidence
             return Link("후보 사건에 투구 위치가 없습니다.");
         if (audit.StartRngStateHash != prepared.StartRngStateHash)
             return Link("후보 감사 기록의 시작 난수 해시(H0)가 준비한 투구의 것과 다릅니다.");
+        if (LinkCalledPitch(expected, draft) is { } calledPitch)
+            return calledPitch;                                        // an in-play pitch has no called_pitch step: a recorded one is a forgery
 
         // an advancement decision is open exactly when a resolved detail exists: a plan that needs one but has none is a forged unresolved candidate
         var detail = audit.AdvancementDetail;

@@ -1,0 +1,3833 @@
+{
+ "cases": [
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    0,
+    1000000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    0,
+    1000000
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    1000000,
+    0
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "automated",
+   "ppm": [
+    1000000,
+    0
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    249480,
+    750520
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    240000,
+    760000
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    231214,
+    768786
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    125523,
+    874477
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    120000,
+    880000
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    114943,
+    885057
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    249480,
+    750520
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    240000,
+    760000
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    231214,
+    768786
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    125523,
+    874477
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    120000,
+    880000
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    114943,
+    885057
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    125523,
+    874477
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    120000,
+    880000
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    114943,
+    885057
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    249480,
+    750520
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    240000,
+    760000
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    231214,
+    768786
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    125523,
+    874477
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    120000,
+    880000
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    114943,
+    885057
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    249480,
+    750520
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    240000,
+    760000
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    231214,
+    768786
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    788675,
+    211325
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    780000,
+    220000
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    771513,
+    228487
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    788675,
+    211325
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    780000,
+    220000
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    771513,
+    228487
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    788675,
+    211325
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    780000,
+    220000
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    771513,
+    228487
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 950000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    788675,
+    211325
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    780000,
+    220000
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1050000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    771513,
+    228487
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 0,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 50,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 100,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    249283,
+    750717
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    247525,
+    752475
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    244648,
+    755352
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    240183,
+    759817
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    239818,
+    760182
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    235525,
+    764475
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    232919,
+    767081
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    231383,
+    768617
+   ],
+   "zone": "in.r1c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    125408,
+    874592
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    124378,
+    875622
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    122699,
+    877301
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    120106,
+    879894
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    119894,
+    880106
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    117417,
+    882583
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    115920,
+    884080
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    115039,
+    884961
+   ],
+   "zone": "in.r1c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    249283,
+    750717
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    247525,
+    752475
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    244648,
+    755352
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    240183,
+    759817
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    239818,
+    760182
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    235525,
+    764475
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    232919,
+    767081
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    231383,
+    768617
+   ],
+   "zone": "in.r1c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    125408,
+    874592
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    124378,
+    875622
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    122699,
+    877301
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    120106,
+    879894
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    119894,
+    880106
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    117417,
+    882583
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    115920,
+    884080
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    115039,
+    884961
+   ],
+   "zone": "in.r2c1"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    10000,
+    990000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    10000,
+    990000
+   ],
+   "zone": "in.r2c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    125408,
+    874592
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    124378,
+    875622
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    122699,
+    877301
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    120106,
+    879894
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    119894,
+    880106
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    117417,
+    882583
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    115920,
+    884080
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    115039,
+    884961
+   ],
+   "zone": "in.r2c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    249283,
+    750717
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    247525,
+    752475
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    244648,
+    755352
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    240183,
+    759817
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    239818,
+    760182
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    235525,
+    764475
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    232919,
+    767081
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    231383,
+    768617
+   ],
+   "zone": "in.r3c1"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    125408,
+    874592
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    124378,
+    875622
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    122699,
+    877301
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    120106,
+    879894
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    119894,
+    880106
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    117417,
+    882583
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    115920,
+    884080
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    120000,
+    880000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    115039,
+    884961
+   ],
+   "zone": "in.r3c2"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    249283,
+    750717
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    247525,
+    752475
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    244648,
+    755352
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    240183,
+    759817
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    239818,
+    760182
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    235525,
+    764475
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    232919,
+    767081
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    240000,
+    760000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    231383,
+    768617
+   ],
+   "zone": "in.r3c3"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    788500,
+    211500
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    786925,
+    213075
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    784314,
+    215686
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    780172,
+    219828
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    779828,
+    220172
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    775733,
+    224267
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    773196,
+    226804
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    771681,
+    228319
+   ],
+   "zone": "out.high"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    788500,
+    211500
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    786925,
+    213075
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    784314,
+    215686
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    780172,
+    219828
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    779828,
+    220172
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    775733,
+    224267
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    773196,
+    226804
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    771681,
+    228319
+   ],
+   "zone": "out.in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_in"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    788500,
+    211500
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    786925,
+    213075
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    784314,
+    215686
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    780172,
+    219828
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    779828,
+    220172
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    775733,
+    224267
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    773196,
+    226804
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    771681,
+    228319
+   ],
+   "zone": "out.low"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.low_out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 951000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    788500,
+    211500
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 960000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    786925,
+    213075
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 975000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    784314,
+    215686
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 999000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    780172,
+    219828
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1001000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    779828,
+    220172
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1025000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    775733,
+    224267
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1040000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    773196,
+    226804
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": true,
+   "baseline": [
+    780000,
+    220000
+   ],
+   "boundary": "Borderline",
+   "factor": 1049000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    771681,
+    228319
+   ],
+   "zone": "out.out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 1,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 10,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 25,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 49,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 51,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 75,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 90,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  },
+  {
+   "applied": false,
+   "baseline": [
+    980000,
+    20000
+   ],
+   "boundary": "Clear",
+   "factor": 1000000,
+   "framing": 99,
+   "mode": "non_automated",
+   "ppm": [
+    980000,
+    20000
+   ],
+   "zone": "out.high_out"
+  }
+ ],
+ "classification": {
+  "in.r1c1": "Borderline",
+  "in.r1c2": "Borderline",
+  "in.r1c3": "Borderline",
+  "in.r2c1": "Borderline",
+  "in.r2c2": "Clear",
+  "in.r2c3": "Borderline",
+  "in.r3c1": "Borderline",
+  "in.r3c2": "Borderline",
+  "in.r3c3": "Borderline",
+  "out.high": "Borderline",
+  "out.high_in": "Clear",
+  "out.high_out": "Clear",
+  "out.in": "Borderline",
+  "out.low": "Borderline",
+  "out.low_in": "Clear",
+  "out.low_out": "Clear",
+  "out.out": "Borderline"
+ },
+ "model_version": "prob-model-v3",
+ "tuning_version": "tuning-virtual-proto-v3"
+}
