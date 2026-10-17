@@ -44,7 +44,14 @@ public static class SimRunner
     {
         ArgumentNullException.ThrowIfNull(config);
         ArgumentNullException.ThrowIfNull(seeds);
-        var specs = seeds.Select((seed, i) => config.Spec(i + 1, seed)).ToList();
+        return RunSpecs(config, seeds.Select((seed, i) => config.Spec(i + 1, seed)).ToList(), policy, cancellation);
+    }
+
+    /// <summary>Plays exactly the given games (a replay's RECORDED index / game id / seed, already checked by <see cref="ReplayPlan.CheckAgainst"/>); nothing is regenerated.</summary>
+    public static RunResult RunSpecs(RunConfig config, IReadOnlyList<GameSpec> specs, EvaluationPolicy? policy = null, CancellationToken cancellation = default)
+    {
+        ArgumentNullException.ThrowIfNull(config);
+        ArgumentNullException.ThrowIfNull(specs);
         var results = new List<GameRunResult>();
         foreach (var spec in specs)
         {

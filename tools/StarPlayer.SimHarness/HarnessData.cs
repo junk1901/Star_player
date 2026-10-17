@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using StarPlayer.Domain.Baseball;
 using StarPlayer.Domain.Baseball.Game;
 using StarPlayer.Domain.Baseball.PitchZone;
 using StarPlayer.Domain.Baseball.Probability;
@@ -45,6 +46,14 @@ public static class HarnessData
     public static string ResourceHash(string name) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(ReadResource(name)))).ToLowerInvariant();
 
     public static Result<TuningProfile> LoadTuningV4() => ParseTuning(ReadResource(TuningResource));
+
+    /// <summary>The neutral park every harness run uses (<c>pf-sim-neutral</c> v1, all factors 1000).</summary>
+    public static Result<ParkFactorSnapshot> NeutralPark()
+    {
+        var park = ParkFactorProfile.Create(ParkFactorProfileId.Create("pf-sim-neutral").Value, StadiumId.Create("stadium-sim-neutral").Value, 1, new DateOnly(2030, 1, 1),
+            ParkFactor.Neutral, ParkFactor.Neutral, ParkFactor.Neutral, ParkFactorBounds.Create(1, ParkFactorBounds.AbsoluteMaxPermille).Value);
+        return park.IsSuccess ? Result<ParkFactorSnapshot>.Success(park.Value.ToSnapshot()) : Result<ParkFactorSnapshot>.Failure(park.Error!.Value);
+    }
 
     public static Result<GameRuleSnapshot> LoadRules(string profileId)
     {

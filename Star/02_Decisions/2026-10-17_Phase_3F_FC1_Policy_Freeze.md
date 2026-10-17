@@ -1,7 +1,7 @@
 ---
 type: decision
 date: "2026-10-17"
-status: Phase 3-F F-C1 정책 계약 소유자 승인·문서 동결(FC1_POLICY_CONTRACT_FROZEN_UNCOMMITTED) — 실행 데이터 미동결, F-C2·F-C3 미착수, Phase 3 전체 Gate INCOMPLETE
+status: Phase 3-F F-C1 정책 계약 소유자 승인·문서 동결(FC1_POLICY_CONTRACT_FROZEN_COMMITTED, 로컬 Commit 97045829; 동결 시점에는 UNCOMMITTED) — 실행 데이터 미동결, F-C2-A 구현·검토 대기, F-C2-B/C·F-C3 미착수, Phase 3 전체 Gate INCOMPLETE
 related_phase: "03"
 tags:
   - star-player

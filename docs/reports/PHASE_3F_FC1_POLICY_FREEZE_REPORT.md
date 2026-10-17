@@ -2,7 +2,8 @@
 
 - 작성: Claude Code, 2026-10-17, 소유자 `TASK.md` "Star Player Phase 3-F F-C1 Policy Contract Freeze"
 - 기준 HEAD: `5492e80eba7d347f7deabe5dbdb98931f92db0f3` (불변)
-- 최종 판정: **`PHASE3_F_FC1_POLICY_CONTRACT_FROZEN_UNCOMMITTED`**
+- 최종 판정: **`PHASE3_F_FC1_POLICY_CONTRACT_FROZEN_UNCOMMITTED`** (작성 시점)
+- 이후 상태: `97045829d5836ff6dec8b40109c84d016d92c340`(`docs: freeze phase 3-F F-C1 validation policies`)로 로컬 Commit → **`FC1_POLICY_CONTRACT_FROZEN_COMMITTED`**(미푸시). 아래 본문은 작성 시점 기록이다.
 - 실제 Seed Manifest와 전략 표본 수는 동결하지 않았다(`FINAL_EXECUTION_FREEZE_PENDING`).
 
 ## A. 소유자 승인 범위
@@ -98,7 +99,7 @@ Strict CLI, Official Mode(Dirty 분류·입력 Hash·공식 Manifest·Gate 결�
 
 ## M. Phase 3-F / Phase 3 전체 Gate
 
-- F-C1 정책 계약: `FC1_POLICY_CONTRACT_FROZEN_UNCOMMITTED`
+- F-C1 정책 계약: `FC1_POLICY_CONTRACT_FROZEN_UNCOMMITTED` (작성 시점; 이후 `97045829` Commit으로 `FC1_POLICY_CONTRACT_FROZEN_COMMITTED`)
 - 실행 데이터: `FINAL_EXECUTION_FREEZE_PENDING`
 - F-C2: `NOT_STARTED`, F-C3: `NOT_STARTED`
 - **Phase 3-F Gate: `INCOMPLETE`. Phase 3 Gate: `INCOMPLETE`.**

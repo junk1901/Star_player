@@ -1,0 +1,114 @@
+{
+  "manifest_version": "simharness-manifest-v1",
+  "run": {
+    "run_id": "base",
+    "mode": "smoke",
+    "cohort_id": "neutral-v1",
+    "cohort_kind": "Neutral",
+    "input_schema_version": "simharness-input-v1",
+    "config_hash": "b9bbac722cddfefad9b0e039565ec5f409efef10ee71d640705f876535d1195a"
+  },
+  "engine": {
+    "probability_model_version": "prob-model-v4",
+    "tuning_version": "tuning-virtual-proto-v4",
+    "tuning_hash": "5011f8acaae4848481db6bc60f636d7594b2a30fcdf594aeab375f0aa98b8fd8",
+    "embedded_tuning_file_sha256": "992d7e2487cc53ca0ab2d8f64ce4ec66f76b2430b834d276f47378c2e3d88c1c",
+    "tuning_source": "embedded",
+    "tuning_file_sha256": null,
+    "rules_profile_id": "test-pzl-non-automated",
+    "rules_version": "test-v2",
+    "rules_status": "FictionalTest",
+    "rules_hash": "2d3f7557750c65d920ee79ec0ff57121ae8b8990f13368ae4daa7520492dce2d",
+    "embedded_rules_file_sha256": "b016b37bd94e1fcf7594525cfe3d6b590853619b4a9e13de5683a7bfc6bcab45",
+    "called_pitch_mode": "NonAutomated",
+    "advancement_policy_version": "advancement-policy-v2",
+    "park": {
+      "stadium": "stadium-sim-neutral",
+      "profile": "pf-sim-neutral",
+      "version": 1,
+      "home_runs_permille": 1000,
+      "hits_permille": 1000,
+      "extra_base_hits_permille": 1000
+    },
+    "player_input_set_content_version": "player-input-set-v3",
+    "player_input_set_id": "d79cc0473fcfe2c2e1488a5fee745d155527301e1ffa5ba39434378b1a40a898",
+    "cohort_inputs_hash": "9343ad41d1e808c0afc2f47a01e8c9f54c1028656dcb6f75f44e48a21305cb70",
+    "policy_id": "normal-balanced-v1",
+    "event_budget": 3000,
+    "competition_key": "sim"
+  },
+  "games": [
+    {
+      "index": 1,
+      "game_id": "game:sim:neutral-v1-000001",
+      "seed": 3
+    },
+    {
+      "index": 2,
+      "game_id": "game:sim:neutral-v1-000002",
+      "seed": 11
+    },
+    {
+      "index": 3,
+      "game_id": "game:sim:neutral-v1-000003",
+      "seed": 29
+    }
+  ],
+  "results": {
+    "games_requested": 3,
+    "games_completed": 3,
+    "games_failed": 0,
+    "games_cancelled": 0,
+    "games_not_started": 0,
+    "plate_appearances": 226,
+    "pitches": 673,
+    "committed_events": 899,
+    "end_kinds": {
+      "Regulation": 3
+    },
+    "error_codes": [],
+    "run_result_hash": "28e0536c644d6a38b4eefb4f673423229b35725ef87f7fa51a39e476cd552ec6",
+    "games": [
+      {
+        "game_id": "game:sim:neutral-v1-000001",
+        "seed": 3,
+        "status": "Completed",
+        "end_kind": "Regulation",
+        "event_hash": "957e7074b07433352d166daa0c5282d5dd4fe99edb67751a0e62a5228e40fda1",
+        "rng_hash": "9bc32537a2c04d0ab84ae715053ad928b0100dbe4cdc495385e3706652f2cf2f",
+        "result_hash": "e73270ff008963c8979b36858eb85d84cb45f7d43d0bfbd0a3227d0bcd3d1413",
+        "error_code": null
+      },
+      {
+        "game_id": "game:sim:neutral-v1-000002",
+        "seed": 11,
+        "status": "Completed",
+        "end_kind": "Regulation",
+        "event_hash": "905e2f901a7628502e6daa2e62bb2ff184e14cf333f880c19c5f73ab1d34a2af",
+        "rng_hash": "bdcce406f527e803b0cec9480962f9b5311b29b01347be057e45b908ced507d0",
+        "result_hash": "d898d1121b7eaa76f58faa44f6d7e29348b5e3b21a9db443ca123f7609be928d",
+        "error_code": null
+      },
+      {
+        "game_id": "game:sim:neutral-v1-000003",
+        "seed": 29,
+        "status": "Completed",
+        "end_kind": "Regulation",
+        "event_hash": "38f2a8ce79a2e583df2fd5b7a07e44c7cadd23ec870d723023fc596fac0057d0",
+        "rng_hash": "e2ef248ae058789a5b5a16d14a38722d4155f36cba60662d1ea187b8c5f4d427",
+        "result_hash": "01c5061ac244bc633e7f95412599b19942a51096570fe34f480bf92875623549",
+        "error_code": null
+      }
+    ]
+  },
+  "environment_not_hashed": {
+    "started_utc": "2026-10-17T08:25:03.2220063+00:00",
+    "finished_utc": "2026-10-17T08:25:03.8329170+00:00",
+    "elapsed_milliseconds": 610.9107,
+    "os_description": "Microsoft Windows 10.0.26200",
+    "runtime_version": ".NET 8.0.31",
+    "git_commit": "97045829d5836ff6dec8b40109c84d016d92c340",
+    "git_dirty": true,
+    "peak_working_set_bytes": 57081856
+  }
+}

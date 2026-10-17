@@ -1,0 +1,100 @@
+{
+  "manifest_version": "simharness-manifest-v1",
+  "run": {
+    "run_id": "legacy-auto-v1",
+    "mode": "smoke",
+    "cohort_id": "neutral-v1",
+    "cohort_kind": "Neutral",
+    "input_schema_version": "simharness-input-v1",
+    "config_hash": "b872d04e3e594f2c8b8f72689c01390f28005d7fd58bdff31dc9502b3b4b1c03"
+  },
+  "engine": {
+    "probability_model_version": "prob-model-v4",
+    "tuning_version": "tuning-virtual-proto-v4",
+    "tuning_hash": "5011f8acaae4848481db6bc60f636d7594b2a30fcdf594aeab375f0aa98b8fd8",
+    "embedded_tuning_file_sha256": "992d7e2487cc53ca0ab2d8f64ce4ec66f76b2430b834d276f47378c2e3d88c1c",
+    "tuning_source": "embedded",
+    "tuning_file_sha256": null,
+    "rules_profile_id": "test-pzl-automated",
+    "rules_version": "test-v2",
+    "rules_status": "FictionalTest",
+    "rules_hash": "7ad9776729b4a71d60af352d620df561d02f699e036fd6f4a4870b82635f4fa7",
+    "embedded_rules_file_sha256": "b016b37bd94e1fcf7594525cfe3d6b590853619b4a9e13de5683a7bfc6bcab45",
+    "called_pitch_mode": "Automated",
+    "advancement_policy_version": "advancement-policy-v1",
+    "park": {
+      "stadium": "stadium-sim-neutral",
+      "profile": "pf-sim-neutral",
+      "version": 1,
+      "home_runs_permille": 1000,
+      "hits_permille": 1000,
+      "extra_base_hits_permille": 1000
+    },
+    "player_input_set_content_version": "player-input-set-v3",
+    "player_input_set_id": "d79cc0473fcfe2c2e1488a5fee745d155527301e1ffa5ba39434378b1a40a898",
+    "cohort_inputs_hash": "9343ad41d1e808c0afc2f47a01e8c9f54c1028656dcb6f75f44e48a21305cb70",
+    "policy_id": "normal-balanced-v1",
+    "event_budget": 3000,
+    "competition_key": "sim"
+  },
+  "games": [
+    {
+      "index": 1,
+      "game_id": "game:sim:neutral-v1-000001",
+      "seed": 3
+    },
+    {
+      "index": 2,
+      "game_id": "game:sim:neutral-v1-000002",
+      "seed": 11
+    }
+  ],
+  "results": {
+    "games_requested": 2,
+    "games_completed": 2,
+    "games_failed": 0,
+    "games_cancelled": 0,
+    "games_not_started": 0,
+    "plate_appearances": 156,
+    "pitches": 456,
+    "committed_events": 612,
+    "end_kinds": {
+      "ExtraInnings": 1,
+      "Regulation": 1
+    },
+    "error_codes": [],
+    "run_result_hash": "9e991e896d1bb4761e183644aeda01a64195ebc6cd8c1de857bc617bba7a8903",
+    "games": [
+      {
+        "game_id": "game:sim:neutral-v1-000001",
+        "seed": 3,
+        "status": "Completed",
+        "end_kind": "ExtraInnings",
+        "event_hash": "a302d609ec984f661a2ecf3685c71c22c246fb539bd06dd9034ccffdac6a1813",
+        "rng_hash": "11111bd1eca76ed1526b06852117c90b5baccf0179fb8539d08144235a5a02e1",
+        "result_hash": "200b618df7b5fe8ccaa30bee6a6153449b922ad02d3d48b1e72eabc2b561bb8e",
+        "error_code": null
+      },
+      {
+        "game_id": "game:sim:neutral-v1-000002",
+        "seed": 11,
+        "status": "Completed",
+        "end_kind": "Regulation",
+        "event_hash": "ef8e7339ee03ec6c23934c2767d52034089733cf78d9b11644edf2e5caf1dd29",
+        "rng_hash": "9b617f09a2c7ec266f27d11fb2f6b1039855df6293b427b73d9d958bcbc73dc4",
+        "result_hash": "77c3ba79103a616dae15ed5f3c6a9c52ef8a45da989836c77df13a013cad9256",
+        "error_code": null
+      }
+    ]
+  },
+  "environment_not_hashed": {
+    "started_utc": "2026-10-17T08:26:53.7535617+00:00",
+    "finished_utc": "2026-10-17T08:26:54.2254181+00:00",
+    "elapsed_milliseconds": 471.8564,
+    "os_description": "Microsoft Windows 10.0.26200",
+    "runtime_version": ".NET 8.0.31",
+    "git_commit": "97045829d5836ff6dec8b40109c84d016d92c340",
+    "git_dirty": true,
+    "peak_working_set_bytes": 56709120
+  }
+}

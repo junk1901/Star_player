@@ -1,5 +1,7 @@
 # Phase 3-F F-C1 Policy Proposal
 
+> **이후 상태 (2026-10-17):** 정책 동결은 `97045829d5836ff6dec8b40109c84d016d92c340`로 로컬 Commit됨 → `FC1_POLICY_CONTRACT_FROZEN_COMMITTED`(미푸시). F-C2-A 구현(검토 대기, `PHASE_3F_FC2A_IMPLEMENTATION_REPORT.md`), F-C2-B/C·F-C3 `NOT_STARTED`. 아래 개정 2 문구는 그 시점 기록으로 보존한다.
+>
 > **문서 상태 (2026-10-17 개정 2): `OWNER_APPROVED` — `FC1_POLICY_CONTRACT_FROZEN_UNCOMMITTED`.** 소유자가 FC-D1~FC-D12 권장 정책을 승인했다. **권위 문서는 [ADR-008](../decisions/ADR-008.md)**이고, 이 문서는 근거·해설용 보고서다. 둘이 다르면 ADR-008이 우선하며, ADR-008이 승인값으로 적지 않은 이 문서의 수치(Seed 범위·상한·블록 크기·셀별 경기 수 등)는 후보로 남는다(`FINAL_EXECUTION_FREEZE_PENDING`). F-C2·F-C3 `NOT_STARTED`. 아래 원래 상태 문구는 승인 이전 기록으로 보존한다.
 >
 > (승인 이전 기록) **문서 상태: `DRAFT — OWNER APPROVAL REQUIRED`**
@@ -883,7 +885,7 @@ C를 추천하는 이유: F1·F6~F8과 F2~F5는 판정 코호트가 다르고(FC
 
 - **승인:** 프로젝트 소유자가 FC-D1~FC-D12 권장 정책을 승인했다(`OWNER_APPROVED`, 2026-10-17, 소유자 `TASK.md` "Star Player Phase 3-F F-C1 Policy Contract Freeze", 기준 HEAD `5492e80eba7d347f7deabe5dbdb98931f92db0f3`).
 - **권위 문서:** [ADR-008](../decisions/ADR-008.md). 이 문서는 근거·대안·산술·48셀 표·후보 Seed 범위를 담은 해설 보고서다.
-- **문서 상태:** `FC1_POLICY_CONTRACT_FROZEN_UNCOMMITTED` (Staging·Commit 안 함).
+- **문서 상태:** `FC1_POLICY_CONTRACT_FROZEN_UNCOMMITTED` (Staging·Commit 안 함) — 작성 시점 기록. 이후 `97045829d5836ff6dec8b40109c84d016d92c340`로 로컬 Commit되어 `FC1_POLICY_CONTRACT_FROZEN_COMMITTED`.
 - **실행 데이터:** `FINAL_EXECUTION_FREEZE_PENDING`. F-C2 `NOT_STARTED`, F-C3 `NOT_STARTED`. Phase 3-F Gate·Phase 3 Gate `INCOMPLETE`.
 
 | ID | 승인 내용 (요지, 정확한 문구는 ADR-008) | 이 문서 대비 차이·유예 |
