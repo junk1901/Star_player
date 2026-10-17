@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>StarPlayer.SimHarness</RootNamespace>
+    <AssemblyName>StarPlayer.SimHarness</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A consumer of the production engine only: Domain (data types) and Simulation (reducer, resolver, commit gate). No Infrastructure, no Application, no InternalsVisibleTo. -->
+    <ProjectReference Include="..\..\src\StarPlayer.Domain\StarPlayer.Domain.csproj" />
+    <ProjectReference Include="..\..\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The run is pinned to these two authoritative content files; they are embedded unchanged (single source, no copy of the numbers in code). -->
+    <EmbeddedResource Include="..\..\content\tuning\virtual_tuning_v4.json" LogicalName="virtual_tuning_v4.json" />
+    <EmbeddedResource Include="..\..\content\rules\game_rules_profiles_v2.json" LogicalName="game_rules_profiles_v2.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Only the harness' own tests see its internals (a plain-event overload of the recorder for hand-written fixtures). -->
+    <InternalsVisibleTo Include="StarPlayer.SimHarness.Tests" />
+  </ItemGroup>
+</Project>

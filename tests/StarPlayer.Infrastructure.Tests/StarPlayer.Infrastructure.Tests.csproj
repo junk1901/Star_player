@@ -11,6 +11,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\StarPlayer.Infrastructure\StarPlayer.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\StarPlayer.Application\StarPlayer.Application.csproj" />
+    <!-- Phase 3-F F-02: the loader conformance matrix runs the production readers and the harness reader side by side. -->
+    <ProjectReference Include="..\..\tools\StarPlayer.SimHarness\StarPlayer.SimHarness.csproj" />
   </ItemGroup>
   <ItemGroup>
     <!-- The same public-graph audit as Domain.Tests, so the tuning profile is checked with identical code. -->

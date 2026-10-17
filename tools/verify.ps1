@@ -101,7 +101,7 @@ $newestClientSource = ($clientSources | Measure-Object LastWriteTimeUtc -Maximum
 $b = Invoke-Logged 'B1' 'dotnet' 'build StarPlayer.sln -c Release --disable-build-servers -nr:false -p:UseSharedCompilation=false' $root 900
 $warnings = if ($b.Text -match '(\d+) Warning\(s\)') { [int]$Matches[1] } else { -1 }
 $status = if ($b.Exit -eq 0 -and $warnings -eq 0) { 'PASS' } else { 'FAIL' }
-Add-Result 'B1' 'Release build (all 9 projects)' 'dotnet build StarPlayer.sln -c Release --disable-build-servers -nr:false' $b.Exit $status "warnings=$warnings"
+Add-Result 'B1' 'Release build (all 11 projects)' 'dotnet build StarPlayer.sln -c Release --disable-build-servers -nr:false' $b.Exit $status "warnings=$warnings"
 
 # ---- 1b. Build configuration mapping and real output ----
 function Get-SolutionMappingErrors($path) {
@@ -142,7 +142,8 @@ $tests = @(
     @('U3', 'Application tests (includes architecture dependency checks)', 'tests\StarPlayer.Application.Tests'),
     @('U3a', 'Architecture boundary tests (project refs, compiled client refs, presenter sources)', 'tests\StarPlayer.Application.Tests', 'FullyQualifiedName~ArchitectureTests'),
     @('U3b', 'Simulation determinism detector tests', 'tests\StarPlayer.Application.Tests', 'FullyQualifiedName~SimulationDeterminismTests'),
-    @('U4', 'Infrastructure tests (real SQLite integration)', 'tests\StarPlayer.Infrastructure.Tests')
+    @('U4', 'Infrastructure tests (real SQLite integration)', 'tests\StarPlayer.Infrastructure.Tests'),
+    @('U5', 'Phase 3-F SimHarness tests (headless harness, input immutability, loader conformance, CLI exit codes)', 'tests\StarPlayer.SimHarness.Tests')
 )
 foreach ($t in $tests) {
     $filter = if ($t.Count -gt 3) { " --filter `"$($t[3])`"" } else { '' }

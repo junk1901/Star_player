@@ -1,0 +1,189 @@
+using System.Globalization;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+
+namespace StarPlayer.SimHarness;
+
+/// <summary>Facts about the machine and the moment of a run. They are RECORDED in the manifest but belong to no hash: the same configuration and seeds give the same result hashes anywhere, any time.</summary>
+public sealed record EnvironmentInfo(string? StartedUtc, string? FinishedUtc, double? ElapsedMilliseconds, string? OsDescription, string? RuntimeVersion, string? GitCommit, bool? GitDirty, long? PeakWorkingSetBytes = null)
+{
+    public static EnvironmentInfo Capture(DateTimeOffset started, DateTimeOffset finished, string? gitCommit, bool? gitDirty) =>
+        new(started.ToString("O", CultureInfo.InvariantCulture), finished.ToString("O", CultureInfo.InvariantCulture), (finished - started).TotalMilliseconds,
+            System.Runtime.InteropServices.RuntimeInformation.OSDescription, System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription, gitCommit, gitDirty,
+            System.Diagnostics.Process.GetCurrentProcess().PeakWorkingSet64);
+}
+
+/// <summary>The manifest (what was run, pinned, so it can be run again), the summary (what happened) and the short text.</summary>
+public static class RunReport
+{
+    public const string ManifestVersion = "simharness-manifest-v1";
+    public const string SummaryVersion = "simharness-summary-v1";
+
+    public static readonly JsonSerializerOptions Json = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
+
+    public static object Manifest(RunResult run, EnvironmentInfo? environment, string? tuningFileSha256 = null)
+    {
+        var c = run.Config;
+        return new
+        {
+            manifest_version = ManifestVersion,
+            run = new { run_id = c.RunId, mode = c.Mode, cohort_id = c.Cohort.CohortId, cohort_kind = c.Cohort.Kind.ToString(), input_schema_version = RunConfig.InputSchemaVersion, config_hash = run.ConfigHash },
+            engine = new
+            {
+                probability_model_version = c.Execution.ProbabilityModelVersion,
+                tuning_version = c.Execution.TuningVersion,
+                tuning_hash = c.Execution.TuningHash,
+                embedded_tuning_file_sha256 = HarnessData.ResourceHash(HarnessData.TuningResource),
+                tuning_source = tuningFileSha256 is null ? "embedded" : "file",
+                tuning_file_sha256 = tuningFileSha256,
+                rules_profile_id = c.Rules.ProfileId,
+                rules_version = c.Rules.Version,
+                rules_status = c.Rules.Status.ToString(),
+                rules_hash = c.Rules.ContentHash,
+                embedded_rules_file_sha256 = HarnessData.ResourceHash(HarnessData.RulesResource),
+                called_pitch_mode = c.Rules.CalledPitchMode?.ToString(),
+                advancement_policy_version = c.AdvancementPolicyVersion,
+                park = new { stadium = c.Park.Stadium.Value, profile = c.Park.Profile.Value, version = c.Park.Version, home_runs_permille = c.Park.HomeRuns.Permille, hits_permille = c.Park.Hits.Permille, extra_base_hits_permille = c.Park.ExtraBaseHits.Permille },
+                player_input_set_content_version = c.Cohort.InputSet.ContentVersion,
+                player_input_set_id = c.Cohort.InputSet.Id,
+                cohort_inputs_hash = c.Cohort.InputsHash,
+                policy_id = c.Policy.Id,
+                event_budget = c.EventBudget,
+                competition_key = c.CompetitionKey,
+            },
+            games = run.Specs.Select(s => new { index = s.GameIndex, game_id = s.GameId, seed = s.Seed }).ToList(),
+            results = new
+            {
+                games_requested = run.Requested,
+                games_completed = run.CompletedCount,
+                games_failed = run.FailedCount,
+                games_cancelled = run.CancelledCount,
+                games_not_started = run.NotStartedCount,
+                plate_appearances = run.Aggregate.PlateAppearances,
+                pitches = run.Aggregate.Pitches,
+                committed_events = run.Games.Sum(g => (long)g.CommittedEvents),
+                end_kinds = run.Games.Where(g => g.EndKind != GameEndKind.None).GroupBy(g => g.EndKind.ToString()).OrderBy(g => g.Key, StringComparer.Ordinal).ToDictionary(g => g.Key, g => g.Count()),
+                error_codes = run.Games.Where(g => g.Failure is not null).Select(g => g.Failure!.Code).Distinct().Order(StringComparer.Ordinal).ToList(),
+                run_result_hash = run.RunResultHash,
+                games = run.Games.Select(g => new
+                {
+                    game_id = g.Game.GameId, seed = g.Game.Seed, status = g.Status.ToString(), end_kind = g.EndKind.ToString(), event_hash = g.EventHash, rng_hash = g.RngHash, result_hash = g.ResultHash,
+                    error_code = g.Failure?.Code,
+                }).ToList(),
+            },
+            environment_not_hashed = environment,
+        };
+    }
+
+    /// <summary>COMPLETED, GAMES_FAILED (a game did not complete) or METRICS_ERROR (the games completed, the metrics could not be computed). A verdict of NOT_EVALUATED is none of the errors.</summary>
+    public static string RunStatus(RunResult run) => !run.AllCompleted ? "GAMES_FAILED" : run.MetricsComputed ? "COMPLETED" : "METRICS_ERROR";
+
+    public static object Summary(RunResult run) => new
+    {
+        summary_version = SummaryVersion,
+        run_status = RunStatus(run),
+        run_id = run.Config.RunId,
+        config_hash = run.ConfigHash,
+        run_result_hash = run.RunResultHash,
+        official_verdict = "NOT_EVALUATED",
+        official_verdict_note = "F-A/B: 최소 표본 기준과 Virtual League 코호트가 승인되지 않아 공식 지표 판정은 하지 않습니다. 100,000 PA와 100경기 Gate는 실행하지 않았습니다.",
+        games = run.Games.Select(g => new
+        {
+            game_id = g.Game.GameId,
+            seed = g.Game.Seed,
+            status = g.Status.ToString(),
+            outcome = g.Outcome?.ToString(),
+            away_runs = g.AwayRuns,
+            home_runs = g.HomeRuns,
+            final_inning = g.FinalInning,
+            final_half = g.FinalHalf.ToString(),
+            end_kind = g.EndKind.ToString(),
+            plate_appearances = g.Counters.PlateAppearances,
+            pitches = g.Counters.Pitches,
+            committed_events = g.CommittedEvents,
+            event_hash = g.EventHash,
+            rng_hash = g.RngHash,
+            result_hash = g.ResultHash,
+            error_code = g.Failure?.Code,
+            elapsed_ms = Math.Round(g.ElapsedMilliseconds, 1),
+        }).ToList(),
+        metrics = run.Metrics.IsSuccess
+            ? new
+            {
+                cohort_id = run.Metrics.Value.CohortId,
+                cohort_kind = run.Metrics.Value.CohortKind,
+                error_code = (string?)null,
+                error = (string?)null,
+                items = run.Metrics.Value.Metrics.Select(m => new
+                {
+                    f_id = m.FId, metric_id = m.TargetId, numerator = m.Numerator, denominator = m.Denominator, numerator_count = m.NumeratorCount, denominator_count = m.DenominatorCount,
+                    measured_ppm = m.MeasuredPpm, target_low_ppm = m.TargetLowPpm, target_high_ppm = m.TargetHighPpm, deviation_ppm = m.DeviationPpm,
+                    recommended_cohort = m.RecommendedCohort, evaluated_cohort = m.EvaluatedCohortId, sample_rule = m.SampleRule, status = m.Status.ToString(), reason = m.Reason,
+                    wilson_95_diagnostic_ppm = m.Wilson is { } w ? new[] { w.LowPpm, w.HighPpm } : null,
+                }).ToList<object>(),
+            }
+            : new { cohort_id = run.Config.Cohort.CohortId, cohort_kind = run.Config.Cohort.Kind.ToString(), error_code = (string?)run.Metrics.Error!.Value.Code, error = (string?)$"{run.Metrics.Error.Value.Code}: {run.Metrics.Error.Value.Message}", items = new List<object>() },
+        cross_check = run.Games.Select(g => new
+        {
+            game_id = g.Game.GameId, seed = g.Game.Seed, passed = g.CrossCheck?.Passed, mismatches = g.CrossCheck?.Mismatches.Select(m => new { m.Name, from_events = m.FromEvents, from_box_score = m.FromBoxScore }).ToList(),
+        }).ToList(),
+        failures = run.Games.Where(g => g.Failure is not null).Select(g => new
+        {
+            game_id = g.Game.GameId, seed = g.Game.Seed, status = g.Status.ToString(), code = g.Failure!.Code, message = g.Failure.Message, stage = g.Failure.Stage, event_sequence = g.Failure.EventSequence,
+            revision = g.Failure.Revision, rng_hash = g.Failure.RngHash, last_receipts = g.Failure.LastReceipts,
+        }).ToList(),
+    };
+
+    public static string Text(RunResult run)
+    {
+        var t = new StringBuilder();
+        var c = run.Config;
+        t.AppendLine($"Star Player SimHarness - run {c.RunId} (mode {c.Mode}, cohort {c.Cohort.CohortId}/{c.Cohort.Kind}, {c.Execution.ProbabilityModelVersion}/{c.Execution.TuningVersion}, rules {c.Rules.ProfileId})");
+        t.AppendLine($"games: {run.Requested} requested, {run.CompletedCount} completed, {run.FailedCount} failed, {run.CancelledCount} cancelled, {run.NotStartedCount} not started");
+        t.AppendLine($"PA {run.Aggregate.PlateAppearances}  pitches {run.Aggregate.Pitches}  events {run.Games.Sum(g => (long)g.CommittedEvents)}  config {Short(run.ConfigHash)}  result {Short(run.RunResultHash)}");
+        foreach (var g in run.Games)
+        {
+            t.Append($"  {g.Game.GameIndex:D3} {g.Game.GameId} seed={g.Game.Seed} {g.Status}");
+            t.AppendLine(g.Status == GameRunStatus.Completed || g.Outcome is not null
+                ? $" away {g.AwayRuns} - home {g.HomeRuns} ({g.FinalInning}{(g.FinalHalf == StarPlayer.Domain.Baseball.Game.InningHalf.Top ? "T" : "B")}) {g.EndKind} {g.Outcome} PA={g.Counters.PlateAppearances} pitches={g.Counters.Pitches} events={g.CommittedEvents} event={Short(g.EventHash)} rng={Short(g.RngHash)}"
+                : "");
+            if (g.Failure is { } f)
+                t.AppendLine($"      FAILURE {f.Code} @{f.Stage} seq={f.EventSequence}: {f.Message}  (replay with GameId {g.Game.GameId}, seed {g.Game.Seed})");
+        }
+
+        t.AppendLine("metrics (official verdicts are NOT evaluated in F-A/B; the numbers are measurements, not results):");
+        if (!run.Metrics.IsSuccess)
+            t.AppendLine($"  ERROR {run.Metrics.Error!.Value.Code}: {run.Metrics.Error.Value.Message}");
+        else
+            foreach (var m in run.Metrics.Value.Metrics)
+                t.AppendLine($"  {m.FId} {m.TargetId,-22} {m.NumeratorCount}/{m.DenominatorCount} = {(m.MeasuredPpm is { } v ? v.ToString(CultureInfo.InvariantCulture) : "n/a")} ppm  target {m.TargetLowPpm}..{m.TargetHighPpm}  dev {(m.DeviationPpm is { } d ? d.ToString(CultureInfo.InvariantCulture) : "n/a")}  {m.Status}  [{m.RecommendedCohort} recommended]");
+        var bad = run.Games.Where(g => g.CrossCheck is { Passed: false }).ToList();
+        t.AppendLine(bad.Count == 0 ? "cross-check (events vs BoxScoreBuilder): all completed games match" : $"cross-check MISMATCH in {string.Join(", ", bad.Select(g => $"{g.Game.GameId} seed {g.Game.Seed}"))}");
+        return t.ToString();
+    }
+
+    public static IReadOnlyList<string> Write(RunResult run, EnvironmentInfo? environment, string directory, string? tuningFileSha256 = null)
+    {
+        Directory.CreateDirectory(directory);
+        var files = new List<string>();
+        void Put(string name, string content)
+        {
+            var path = Path.Combine(directory, name);
+            File.WriteAllText(path, content, new UTF8Encoding(false));
+            files.Add(path);
+        }
+
+        Put("manifest.json", JsonSerializer.Serialize(Manifest(run, environment, tuningFileSha256), Json));
+        Put("summary.json", JsonSerializer.Serialize(Summary(run), Json));
+        Put("summary.txt", Text(run));
+        return files;
+    }
+
+    private static string Short(string hash) => hash.Length > 12 ? hash[..12] : hash;
+}
