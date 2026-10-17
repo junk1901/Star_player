@@ -1302,3 +1302,5 @@ The scope belongs to the MODEL slot; the resolver supplies the catcher's rating 
 **Replay.** Cohort and policy registries (`neutral-v1`, `normal-balanced-v1`; ADR-008 cohorts not yet built are `Registry.cohort_not_implemented`, never replaced by another cohort). Replay checks the manifest and input schema versions, the rebuilt cohort input hash, exact rules / advancement values and, for a manifest with an `official` envelope, the attestation, its binding to the manifest, and every frozen pin; unfrozen is a refusal.
 
 **Not done.** F-C2-B (cohorts, evaluation policy), F-C2-C (strategy matrix, PZL checks, dry run), the Final Execution Freeze (including the build-provenance proof) and F-C3. Phase 3-F and Phase 3 gates `INCOMPLETE`.
+
+**N-04 (calibration stop / replay).** The early stop of a `fc3-cal` run and its replay are settled at policy level by `docs/decisions/ADR-009.md` (owner-approved 2026-10-17, documentation only; supplements ADR-008 FC-D5.3). The F-C2-A code described in this section is unchanged: it still compares the whole seed list and has no stop-aware executor; that is F-C2-B work (`NOT_STARTED`).
