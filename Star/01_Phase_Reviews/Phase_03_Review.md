@@ -503,3 +503,20 @@ PCG32, 스트림 ID/키 유도, `GameRandom`(스트림 집합·스냅샷·복원
 - **PZL 목록:** ROADMAP 문장은 **12개 절**이다(조항별 재집계, 임의 삭제 없음). 이전 "11개"는 정정. F-C 정책(F1 same_hand 4% 보정, F2~F5 Virtual League, 최소 표본, 지배 전략 행렬, 대표 코호트)은 확정하지 않음.
 - **테스트:** 신규 SimHarness +14(Cohort 8, CLI 6), Infrastructure +87(대조 행렬). 전체 xUnit Release **2,528 PASS**(Domain 327, Simulation 741, Application 127, Infrastructure 1,233, SimHarness 100; 0 FAIL, 0 SKIP, 종료 코드 모두 0). 소규모 Smoke(시드 3·11·29): 이전 보고서와 같은 226 PA·673 투구·899 이벤트·F1~F8 값, replay 일치. Sabotage 4건(S1 Cohort 방어 제거 4개 실패, S2 Hash 결속 약화 1개, S3 필수성 약화 2개, S4 종료 코드 약화 3개) 모두 검출·원본 SHA-256 복구 확인. 전체 Mutation·`verify.ps1`·Codex `미실시`/`미검증`.
 - Phase 3-F Gate·Phase 3 Gate: `INCOMPLETE` 유지. 상태: `검토 대기` 유지(승인 아님). 상세: [보고서 부록](../../docs/reports/PHASE_3F_FA_FB_IMPLEMENTATION_REPORT.md) · ADR-007 부록 · [game-engine §34](../../docs/game-engine.md).
+
+## 부록 2026-10-17 — 3-F F-A/B 로컬 Commit 및 F-C1 정책 제안서 초안 (Claude Code 기록, 독립 검토 `미실시`)
+
+- **Commit:** `5492e80eba7d347f7deabe5dbdb98931f92db0f3` (Parent `430f42d0dbd61c51fbde5cb10fbf2e98d1eecc02`), 메시지 `feat: implement phase 3-F deterministic harness and metrics`, 38개 파일(수정 11·신규 27), 명시적 상대경로 Staging, 보호 사용자 파일 3개 제외. **미푸시.** 위 F-A/B 부록의 "미커밋" 서술은 Commit 이전 상태다.
+- **Closeout 검증:** `dotnet build StarPlayer.sln -c Release` 종료 코드 0·경고 0, `dotnet test StarPlayer.sln -c Release` 종료 코드 0 — **2,528 PASS**(Domain 327, Application 127, Simulation 741, Infrastructure 1,233, SimHarness 100), 0 FAIL, 0 SKIP. 별도 프로세스 3회 실행 Hash 동일, replay 일치. `verify.ps1` 전체 `미검증`(미실행, U5 등록은 정적 확인). Codex F-01~F-04 재검토 `미실시`.
+- **NOTE:** 미등록 CLI 옵션 무시(`run --seedz 1` → 기본 Seed, Exit 0; F-C2 선행), `GameRulesJson` `profiles[n]=null` NRE(Harness 경로 아님), 9명 아닌 라인업은 경기 시작 시 엔진이 거부.
+- **F-C1:** [정책 제안서](../../docs/reports/PHASE_3F_FC1_POLICY_PROPOSAL.md) 작성, 상태 `DRAFT — OWNER APPROVAL REQUIRED`. FC-D1~FC-D12는 모두 승인 대기이며 동결 아님. 코드·테스트·Tuning 변경, 공식 Seed 활성화, 대규모 실행 없음. F-C2/F-C3 미착수.
+- Phase 3-E 독립 최종 검토는 여전히 대기. Phase 3-F Gate·Phase 3 Gate: `INCOMPLETE` 유지. 상태: `검토 대기` 유지(승인 아님).
+
+## 부록 2026-10-17 — 3-F F-C1 정책 계약 동결 (소유자 승인 기록, Claude Code 문서 반영, 독립 검토 `미실시`)
+
+- **승인:** 소유자가 FC-D1~FC-D12 권장 정책을 승인했다(`OWNER_APPROVED`, 소유자 `TASK.md` "Star Player Phase 3-F F-C1 Policy Contract Freeze", 기준 HEAD `5492e80` 불변). 이 부록은 소유자 승인 사실의 기록이며 Phase 리뷰 승인(`승인 완료`)이 아니다.
+- **문서:** 권위 [ADR-008](../../docs/decisions/ADR-008.md) (신규), 해설 [정책 제안서](../../docs/reports/PHASE_3F_FC1_POLICY_PROPOSAL.md) 개정 2(§20 승인 기록, 기존 분석 보존), [동결 보고서](../../docs/reports/PHASE_3F_FC1_POLICY_FREEZE_REPORT.md), `docs/game-engine.md` §35, `docs/SYSTEM_CONTRACTS.md` 항목, ROADMAP 3-F 상태 노트, [결정 노트](../02_Decisions/2026-10-17_Phase_3F_FC1_Policy_Freeze.md).
+- **동결된 정책:** F1 코호트 충돌 해소(`neutral-mixed-v1`, Tuning 원문·JSON 불변), F1·F8 3/7·4/7 층화 표준화(층별·경기 군집 분산, 합산 Wilson 미적용), F6·F7 관측 집계, F2~F5 `virtual-league-v1`, 최소 분모 8개와 F1·F8 층별 최소 분모(재검산 일치), L1~L4 각 ≥ 100,000 PA + 모드별 100경기, 48셀 δ 0.05·α 0.05·검정력 0.8·Holm·IUT·paired 금지, A-1 가정은 F-C2 필수 검증, PZL 12a 필수·12b `DEFERRED`(Phase 5·6·28, Phase 3 Gate 비차단 예외), 실패·재실행 규칙, Official Mode 요구(F-C2 구현 계약).
+- **미동결 (`FINAL_EXECUTION_FREEZE_PENDING`):** 공식 Seed Manifest·파일 Hash, 48셀 셀별 표본 수, 최종 Cohort 인스턴스·Hash, Dry Run 이후 실행 상한, 실행 직전 Git SHA.
+- **검증:** 문서만 변경. 코드·테스트·Tuning·Seed 파일 변경 0, 보호 파일 3개 SHA-256 시작·종료 동일, Staging 0, `git diff --check` PASS(보고서 L절). 전체 xUnit·`verify.ps1`은 재실행하지 않음(2,528 PASS는 `5492e80`의 과거 결과).
+- F-C2·F-C3 `NOT_STARTED`. Phase 3-F Gate·Phase 3 Gate: `INCOMPLETE` 유지. 상태: `검토 대기` 유지(승인 아님).
