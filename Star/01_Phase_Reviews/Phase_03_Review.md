@@ -578,3 +578,30 @@ PCG32, 스트림 ID/키 유도, `GameRandom`(스트림 집합·스냅샷·복원
 - **Commit 후보:** 정확히 16개(수정 11 + 신규 5). 보호 파일 3개(`TASK.md`, `docs/2023recordRule.pdf`, `docs/2026-official-baseball-rules.pdf`) 제외. 로컬 Closeout Commit 미실시, 스테이징 없음.
 - **범위 구분:** 이것은 F-C2-C **라이브러리** Closeout 준비일 뿐 F-C2 공식 통합 완료가 아니다. 미완료: 공식 Seed Manifest·외부 SHA Pin, 48셀 Preflight·Replay 연결, 공식 48셀 CLI, 공식 결과 형식, PZL 잔여 검사, Dry Pilot, Final Execution Freeze 준비. 셀당 표본 수 미동결의 `NOT_EVALUATED`는 공식 통계 결과가 아니다.
 - **상태:** 위 두 F-C2-C 부록의 `검토 대기`·재검토 `미실시` 표기는 작성 시점 기록이며 이 부록이 최신이다. 리뷰 상태 `검토 대기` 유지(`승인 완료` 아님). Official Execution `NOT_READY`, Final Execution Freeze `PENDING`, Phase 3-F·Phase 3 Gate `INCOMPLETE`.
+
+## 부록 2026-10-18 — 3-F F-C2-C 로컬 Closeout Commit과 F-C2 공식 통합 구현 (Claude Code 구현·자체 시험, 독립 리뷰 `미실시`)
+
+- **F-C2-C 로컬 Closeout Commit 완료:** `58692e4` (`feat: implement phase 3-F F-C2-C dominance evaluation`, 미푸시). 위 F-C2-C 부록의 "Closeout Commit 미실시"는 작성 시점 기록이다.
+- **범위:** F-C2-A/B/C를 연결한 48셀 공식 경로 — 승인 Pin에서만 도출한 Seed 계획, 48셀 Fail-Closed Preflight(셀별 기존 Preflight·Attestation v1), `official-dom`·`replay-dom` CLI, 셀별 기존 Manifest+공식 envelope 저장과 DRAFT 48셀 색인, 신뢰 입력 기반 Replay(전체 재실행·평가 재계산). 하네스만 변경, 기존 Hash·Attestation·run-result·Stop/Replay·Dominance 통계 계약 불변. [보고서](../../docs/reports/PHASE_3F_FC2_OFFICIAL_INTEGRATION_REPORT.md) · `docs/game-engine.md` §39.
+- **시험:** 신규 12개(합성 비공식 Fixture: 임시 Seed 48개·셀당 2경기·시험 전용 승인값), 기존 whitelist 단언 1곳 확장. 표적 Sabotage 유효 변형 8/8 검출(동등 변형 2개 근거 기록). `verify.ps1` try1 `GATE: FAIL`(whitelist 시험 미갱신, 증거 보존) → run1 **`GATE: PASS`, 2,758 PASS / 0 FAIL / 0 SKIP**(SimHarness 330). 원시 증거 `build/verify-archive/PHASE_3F_FC2_OFFICIAL_INTEGRATION_run1/`, 기존 증거 277개 파일 전후 SHA-256 동일.
+- **Official Execution 차단:** `OfficialApprovals.Current`로는 `official-dom`이 Exit 2로 거부하고 게임을 시작하지 않는다(자식 프로세스 시험). 빌드 출처 미승인으로 bin/obj도 `NOT_READY`.
+- **소유자 결정 필요(BLOCKED):** 48셀 공식 결과 스키마·행렬 수준 Hash, 셀↔Seed 결속의 Freeze 표현, 실행 상한 의미, 빌드 출처·승인 출력 경로, 코호트 InputsHash 동결, `fc3-cal`/`fc3-int` 공식 실행 경로, 승인 Pin 집합 결합(보고서 §9).
+- **미착수:** PZL 잔여 검사, Dry Pilot, Final Execution Freeze, F-C3.
+- **상태:** 리뷰 상태 `검토 대기`(`승인 완료` 아님). F-C2-A/B/C 라이브러리 로컬 Closeout 완료 · F-C2 Official Integration 구현·자체 검증 후 독립 리뷰 대기 · F-C2 전체 미완료 · Official Execution `NOT_READY` · Final Execution Freeze `PENDING` · Phase 3-F·Phase 3 Gate `INCOMPLETE`.
+
+## 부록 2026-10-18 — 3-F F-C2 공식 통합 FIX1: Codex OI-01·OI-02 수정 (Claude Code 구현·자체 시험, 재검토 `미실시`)
+
+- **OI-01(MAJOR):** 출력 생성·쓰기를 볼륨 루트부터 OS 핸들로 고정(부모 핸들 기준 상대 생성, 링크 미추적, 실행 중 삭제 공유 금지, `FILE_CREATE` 배타 생성, 핸들 기준 최종 경로 확인). Junction 교체·실행 중 이동·같은 Run ID 동시 실행·생성 불가 사례를 수정 전 실제로 재현(외부 기록·혼합 기록 확인) → 수정 후 모두 거부·외부 0개. 보유 중인 빈 디렉터리의 Mount point 변환은 막을 수 없지만 Fail-Closed 중단만 일어남을 실측.
+- **OI-02(MINOR):** Replay가 Preflight와 같은 `PlanSizeCheck`(공통 함수)를 재실행 전에 적용. 일관되게 위조한 n=3 색인이 수정 전 MATCH였음을 재현 → 수정 후 재실행 0회로 거부.
+- **검증:** 신규 시험 13개(SimHarness 343), 표적 Sabotage 유효 변형 모두 검출(동등 변형 1개 근거 기록), `verify.ps1` run2 **`GATE: PASS` 2,771 PASS / 0 FAIL / 0 SKIP**, 기존 증거 335개 파일 불변. [보고서 §12](../../docs/reports/PHASE_3F_FC2_OFFICIAL_INTEGRATION_REPORT.md).
+- **불변:** ConfigHash·Attestation v1·run-result-v1/v2·Stop/Replay·Dominance 통계·DRAFT 색인·B-1~B-7. 공식 루트·표본 수·스키마·빌드 출처 미확정.
+- **상태:** 리뷰 상태 `검토 대기`(`승인 완료` 아님). OI-01·OI-02 해결 후보, 독립 재검토 대기. Official Execution `NOT_READY`, Final Execution Freeze `PENDING`, Phase 3-F·Phase 3 Gate `INCOMPLETE`.
+
+## 부록 2026-10-18 — 3-F F-C2 공식 통합 Closeout 준비: Codex High 집중 재검토 반영 (문서 정리만, 코드·시험 변경 없음)
+
+- **재검토 결과(소유자 보고):** Codex High 집중 재검토(READ-ONLY — 빌드·시험을 직접 재실행하지 않음)에서 OI-01(핸들 기반 경로 고정·배타적 생성·직접 쓰기)·OI-02(Preflight/Replay 공통 `PlanSizeCheck`) 모두 해결, 신규 BLOCKER/MAJOR/MINOR 0건. 위 FIX1 부록의 "해결 후보"·"재검토 `미실시`"는 작성 시점 기록이며 삭제하지 않는다. 기존 Codex 링크 검토: 354개 상대 경로 미해결 0건.
+- **최종 검증 기준:** `verify.ps1` FIX1 **run2**(최종 트리) `GATE: PASS`, 2,771 PASS / 0 FAIL / 0 SKIP — 로그 SHA-256 `c0255c22…97d9`, Result JSON `93aefd38…79da`, 원시 `build/verify-archive/PHASE_3F_FC2_OFFICIAL_INTEGRATION_FIX1_run2/`. try1 FAIL·Integration run1 PASS·FIX1 run1 PASS는 별도 보존하며 FIX1 run1은 최종 트리 근거가 아니다. 이번 정리에서 빌드·시험·`verify.ps1`을 재실행하지 않았고 기존 로그·Archive에 쓰지 않았다(SHA-256·`build/verify` = run2 Archive 읽기 전용 확인).
+- **비차단 NOTE 3건(동작 변경 없음, [보고서 §13-3](../../docs/reports/PHASE_3F_FC2_OFFICIAL_INTEGRATION_REPORT.md)):** ① `0xC0000280`은 `STATUS_REPARSE_POINT_NOT_RESOLVED`(`STATUS_REPARSE_POINT_ENCOUNTERED`는 `0xC000050B`) — 비교·거부 동작은 정상, 상수/주석 명칭 정정은 후속 비기능 정리. ② 모든 쓰기·Flush I/O 예외가 typed `ABORTED_INTEGRITY`가 되는 것은 아님 — Native 경로 오류는 명시 처리되지만 일반 `IOException`은 상위 CLI 거부로 처리되며 완전한 중단 색인이 항상 생성된다고 보장하지 않음(시험 재현 `미검증`). ③ "TEMP 잔여 0"은 이번 FIX1 시험이 만든 자원에 한정 — Codex가 이전 날짜 잔여 디렉터리 1개를 관찰했고 삭제·변경하지 않음.
+- **Commit 후보:** 19개(수정 10 + 신규 9), 파일별 Manifest는 보고서 §13-4. 보호 파일 `TASK.md`·`docs/2023recordRule.pdf`·`docs/2026-official-baseball-rules.pdf` 제외. Staging 0, 로컬 Closeout Commit 미실시.
+- **미결:** B-1~B-7(B-6 `fc3-cal`/`fc3-int` 공식 실행 경로는 F-C2 잔여 구현이며 자동으로 F-C3에 넘기지 않음), PZL #5·#6·#10·#12a, Dry Pilot, Final Execution Freeze, 실제 Official Execution. 공식 결과 색인은 DRAFT·`official_evidence: false`.
+- **상태:** 리뷰 상태 `검토 대기`(`승인 완료` 아님). F-C2 Official Integration `READY_FOR_OWNER_CLOSEOUT_REVIEW` · Official Execution `NOT_READY` · Final Execution Freeze `PENDING` · F-C2 전체·Phase 3-F·Phase 3 Gate `INCOMPLETE`.

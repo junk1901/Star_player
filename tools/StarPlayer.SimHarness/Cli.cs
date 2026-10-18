@@ -52,6 +52,17 @@ public static class Cli
             OfficialFixed.ToDictionary(o => o, o => o == "tuning"
                 ? "--tuning은 시험용 입력이므로 공식 실행에서 사용할 수 없습니다(FC-D10)."
                 : $"--{o}는 공식 실행에서 지정할 수 없습니다(승인된 Seed Manifest와 실행 프로파일이 결정합니다).", StringComparer.Ordinal)),
+        // the official 48-cell matrix (ADR-008 FC-D4): the whole plan — 48 pinned seed files, per-cell size — comes only from the approvals; no seed file or pin is accepted from the command line
+        ["official-dom"] = new(new Dictionary<string, OptionSpec>(StringComparer.Ordinal) { ["run-id"] = PathText, ["out"] = PathText },
+            new HashSet<string> { "run-id" },
+            OfficialFixed.Concat(["seed-manifest", "seed-sha256"]).ToDictionary(o => o, o => o switch
+            {
+                "tuning" => "--tuning은 시험용 입력이므로 공식 실행에서 사용할 수 없습니다(FC-D10).",
+                "seed-manifest" or "seed-sha256" => $"--{o}: 48셀 공식 실행의 Seed 파일과 Pin은 승인값(OfficialApprovals)에서만 읽습니다.",
+                _ => $"--{o}는 공식 실행에서 지정할 수 없습니다(승인된 Seed Manifest와 실행 프로파일이 결정합니다).",
+            }, StringComparer.Ordinal)),
+        // replay of an official 48-cell result directory against the approvals (never against what the result files claim)
+        ["replay-dom"] = new(new Dictionary<string, OptionSpec>(StringComparer.Ordinal) { ["result"] = PathText }, new HashSet<string> { "result" }, new Dictionary<string, string>()),
     };
 
     public static Result<CliCommand> Parse(IReadOnlyList<string> args)

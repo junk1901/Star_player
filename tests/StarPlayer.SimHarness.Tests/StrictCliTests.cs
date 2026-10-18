@@ -145,7 +145,11 @@ public class StrictCliTests
     [Fact]
     public void Each_command_has_one_authoritative_whitelist()
     {
-        Assert.Equal(new[] { "dry", "official", "replay", "run" }, Cli.Commands.Keys.Order(StringComparer.Ordinal).ToArray());     // F-C2-B adds the non-official stop-aware dry run (ADR-009 SR-D4)
+        // F-C2-B adds the non-official stop-aware dry run (ADR-009 SR-D4); the F-C2 official integration adds the 48-cell run and its replay
+        Assert.Equal(new[] { "dry", "official", "official-dom", "replay", "replay-dom", "run" }, Cli.Commands.Keys.Order(StringComparer.Ordinal).ToArray());
+        Assert.Equal(new[] { "out", "run-id" }, Cli.Commands["official-dom"].Options.Keys.Order(StringComparer.Ordinal).ToArray());   // no seed file, pin or size from the command line
+        Assert.Equal(new[] { "run-id" }, Cli.Commands["official-dom"].Required.ToArray());
+        Assert.Equal(new[] { "result" }, Cli.Commands["replay-dom"].Options.Keys.ToArray());
         Assert.Equal(new[] { "advancement", "event-budget", "out", "rules", "run-id", "seeds", "tuning" }, Cli.Commands["run"].Options.Keys.Order(StringComparer.Ordinal).ToArray());
         Assert.Equal(new[] { "manifest", "seed-manifest", "seed-sha256" }, Cli.Commands["replay"].Options.Keys.Order(StringComparer.Ordinal).ToArray());   // + the dry replay pin (SR-D8.6)
         Assert.Equal(new[] { "out", "run-id", "seed-manifest", "seed-sha256" }, Cli.Commands["dry"].Options.Keys.Order(StringComparer.Ordinal).ToArray());

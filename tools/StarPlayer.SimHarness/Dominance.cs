@@ -105,8 +105,8 @@ public static class DominanceMatrix
         return cells;
     }
 
-    /// <summary>The run configuration of <paramref name="cell"/>: every input from the registries and the fixed official profile, nothing from a caller.</summary>
-    public static Result<RunConfig> Config(DominanceCell cell, string runId)
+    /// <summary>The run configuration of <paramref name="cell"/>: every input from the registries and the fixed official profile, nothing from a caller (the mode label is outside the config hash).</summary>
+    public static Result<RunConfig> Config(DominanceCell cell, string runId, string mode = "dominance")
     {
         var tuning = HarnessData.LoadTuningV4();
         var rules = HarnessData.LoadRules(cell.RulesProfileId);
@@ -115,7 +115,7 @@ public static class DominanceMatrix
         var policy = PolicyRegistry.Resolve(cell.PolicyId);
         if (new Error?[] { tuning.Error, rules.Error, park.Error, cohort.Error, policy.Error }.FirstOrDefault(e => e is not null) is { } error)
             return Result<RunConfig>.Failure(error);
-        return RunConfig.Create(runId, "dominance", cohort.Value, rules.Value, tuning.Value, park.Value, OfficialProfile.AdvancementPolicyVersion, OfficialProfile.EventBudget, policy.Value,
+        return RunConfig.Create(runId, mode, cohort.Value, rules.Value, tuning.Value, park.Value, OfficialProfile.AdvancementPolicyVersion, OfficialProfile.EventBudget, policy.Value,
             cell.CompetitionKey);
     }
 

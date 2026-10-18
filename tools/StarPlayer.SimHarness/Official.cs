@@ -149,17 +149,7 @@ public static class OfficialPreflight
         void Unavailable(string id) => Add(id, CheckStatus.NotReady, "Official.input_unavailable", "앞선 검사가 통과하지 않아 확인할 입력이 없습니다.");
 
         Add("cli", CheckStatus.Pass, null, "명령줄이 엄격 파서를 통과했습니다.");
-        Add("git_integrity", git.State switch { GitIntegrityState.Clean => CheckStatus.Pass, GitIntegrityState.BuildOutputUnverified => CheckStatus.NotReady, _ => CheckStatus.Fail }, git.Code, git.Message);
-        if (a.GitCommitSha is null)
-            Add("git_sha", CheckStatus.NotReady, "Official.git_sha_not_approved", "공식 실행 Git SHA가 아직 동결되지 않았습니다.");
-        else if (git.HeadSha != a.GitCommitSha)
-            Add("git_sha", CheckStatus.Fail, "Official.git_sha_mismatch", $"HEAD {git.HeadSha ?? "(없음)"}이(가) 승인 SHA {a.GitCommitSha}와 다릅니다.");
-        else
-            Add("git_sha", CheckStatus.Pass, null, $"HEAD = 승인 SHA {a.GitCommitSha}");
-
-        var tuning = HarnessData.LoadTuningV4();
-        var tuningOk = tuning.IsSuccess && tuning.Value.Model.Version.Value == OfficialProfile.ModelVersion && tuning.Value.Tuning.Value == OfficialProfile.TuningVersion && tuning.Value.ContentHash == OfficialProfile.TuningHash;
-        Add("model_tuning", tuningOk ? CheckStatus.Pass : CheckStatus.Fail, tuningOk ? null : "Official.model_tuning_not_approved", tuningOk ? $"{OfficialProfile.ModelVersion}/{OfficialProfile.TuningVersion} {OfficialProfile.TuningHash}" : "내장 모델·튜닝이 승인값과 다릅니다.");
+        var tuning = EnvironmentChecks(checks, a, git);
 
         SeedManifest? manifest = null;
         var pinned = a.SeedManifestPins.TryGetValue(r.SeedManifestPath, out var pin);
@@ -238,16 +228,7 @@ public static class OfficialPreflight
 
         var output = OfficialOutput.Resolve(r.RepositoryRoot, r.OutDirectory, r.RunId);
         Add("output_directory", output.IsSuccess ? CheckStatus.Pass : CheckStatus.Fail, output.IsSuccess ? null : output.Error!.Value.Code, output.IsSuccess ? output.Value : output.Error!.Value.Message);
-
-        if (a.ExecutionPolicyId is null || a.ExecutionPolicyHash is null)
-            Add("execution_policy", CheckStatus.NotReady, "Official.execution_policy_not_frozen", "공식 실행 정책(ID·해시)이 아직 동결되지 않았습니다.");
-        else if (a.ExecutionPolicyId != OfficialProfile.Id || a.ExecutionPolicyHash != OfficialProfile.Hash())
-            Add("execution_policy", CheckStatus.Fail, "Official.execution_policy_mismatch", "승인된 실행 정책이 이 하네스의 공식 실행 프로파일과 다릅니다.");
-        else
-            Add("execution_policy", CheckStatus.Pass, null, $"{OfficialProfile.Id} {OfficialProfile.Hash()}");
-
-        Add("execution_path", a.ExecutionPathReady ? CheckStatus.Pass : CheckStatus.NotReady, a.ExecutionPathReady ? null : "Official.not_ready",
-            a.ExecutionPathReady ? "공식 실행 경로 준비됨" : "F-C2-B/C(공식 코호트·평가 정책·전략 행렬)와 Final Execution Freeze가 없어 공식 실행을 시작할 수 없습니다.");
+        ExecutionChecks(checks, a);
 
         OfficialAttestation? attestation = null;
         if (checks.All(c => c.Status == CheckStatus.Pass))
@@ -272,6 +253,39 @@ public static class OfficialPreflight
             Unavailable("attestation");
 
         return new PreflightReport(checks, git.HeadSha, tuning.IsSuccess ? tuning.Value : null, manifest, rules, output.IsSuccess ? output.Value : null, attestation);
+    }
+
+    /// <summary>The run-independent checks <c>git_integrity</c>, <c>git_sha</c> and <c>model_tuning</c> (shared with the 48-cell preflight); returns the embedded tuning read.</summary>
+    internal static Result<TuningProfile> EnvironmentChecks(List<PreflightCheck> checks, OfficialApprovals a, GitIntegrityReport git)
+    {
+        void Add(string id, CheckStatus status, string? code, string message) => checks.Add(new PreflightCheck(id, status, code, message));
+        Add("git_integrity", git.State switch { GitIntegrityState.Clean => CheckStatus.Pass, GitIntegrityState.BuildOutputUnverified => CheckStatus.NotReady, _ => CheckStatus.Fail }, git.Code, git.Message);
+        if (a.GitCommitSha is null)
+            Add("git_sha", CheckStatus.NotReady, "Official.git_sha_not_approved", "공식 실행 Git SHA가 아직 동결되지 않았습니다.");
+        else if (git.HeadSha != a.GitCommitSha)
+            Add("git_sha", CheckStatus.Fail, "Official.git_sha_mismatch", $"HEAD {git.HeadSha ?? "(없음)"}이(가) 승인 SHA {a.GitCommitSha}와 다릅니다.");
+        else
+            Add("git_sha", CheckStatus.Pass, null, $"HEAD = 승인 SHA {a.GitCommitSha}");
+
+        var tuning = HarnessData.LoadTuningV4();
+        var tuningOk = tuning.IsSuccess && tuning.Value.Model.Version.Value == OfficialProfile.ModelVersion && tuning.Value.Tuning.Value == OfficialProfile.TuningVersion && tuning.Value.ContentHash == OfficialProfile.TuningHash;
+        Add("model_tuning", tuningOk ? CheckStatus.Pass : CheckStatus.Fail, tuningOk ? null : "Official.model_tuning_not_approved", tuningOk ? $"{OfficialProfile.ModelVersion}/{OfficialProfile.TuningVersion} {OfficialProfile.TuningHash}" : "내장 모델·튜닝이 승인값과 다릅니다.");
+        return tuning;
+    }
+
+    /// <summary>The checks <c>execution_policy</c> and <c>execution_path</c> (shared with the 48-cell preflight).</summary>
+    internal static void ExecutionChecks(List<PreflightCheck> checks, OfficialApprovals a)
+    {
+        void Add(string id, CheckStatus status, string? code, string message) => checks.Add(new PreflightCheck(id, status, code, message));
+        if (a.ExecutionPolicyId is null || a.ExecutionPolicyHash is null)
+            Add("execution_policy", CheckStatus.NotReady, "Official.execution_policy_not_frozen", "공식 실행 정책(ID·해시)이 아직 동결되지 않았습니다.");
+        else if (a.ExecutionPolicyId != OfficialProfile.Id || a.ExecutionPolicyHash != OfficialProfile.Hash())
+            Add("execution_policy", CheckStatus.Fail, "Official.execution_policy_mismatch", "승인된 실행 정책이 이 하네스의 공식 실행 프로파일과 다릅니다.");
+        else
+            Add("execution_policy", CheckStatus.Pass, null, $"{OfficialProfile.Id} {OfficialProfile.Hash()}");
+
+        Add("execution_path", a.ExecutionPathReady ? CheckStatus.Pass : CheckStatus.NotReady, a.ExecutionPathReady ? null : "Official.not_ready",
+            a.ExecutionPathReady ? "공식 실행 경로 준비됨" : "Final Execution Freeze가 없어 공식 실행을 시작할 수 없습니다(OfficialApprovals.ExecutionPathReady = false).");
     }
 }
 
