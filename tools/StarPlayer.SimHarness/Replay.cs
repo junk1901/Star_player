@@ -6,7 +6,7 @@ using StarPlayer.Simulation.Randomness;
 namespace StarPlayer.SimHarness;
 
 /// <summary>
-/// The cohorts a run or a replay may name. Only implemented cohorts resolve; an ADR-008 cohort not built yet (<c>neutral-opp-v1</c>, the strategy matrix, F-C2-C) is DECLARED here so that naming it is
+/// The cohorts a run or a replay may name. Only implemented cohorts resolve (all four ADR-008 cohorts are implemented since F-C2-C); an id declared but not built would be
 /// <c>Registry.cohort_not_implemented</c> rather than unknown, and no id is ever answered with another cohort's inputs.
 /// </summary>
 public static class CohortRegistry
@@ -14,11 +14,12 @@ public static class CohortRegistry
     private static readonly Dictionary<string, Func<CohortInputs>> Factories = new(StringComparer.Ordinal)
     {
         [NeutralCohort.Id] = NeutralCohort.Create,
+        [NeutralCohort.OppositeId] = NeutralCohort.CreateOpposite,
         [CalibrationCohorts.NeutralMixedId] = CalibrationCohorts.NeutralMixed,
         [CalibrationCohorts.VirtualLeagueId] = CalibrationCohorts.VirtualLeague,
     };
 
-    private static readonly HashSet<string> DeclaredNotImplemented = new(StringComparer.Ordinal) { "neutral-opp-v1" };
+    private static readonly HashSet<string> DeclaredNotImplemented = new(StringComparer.Ordinal);
 
     public static IEnumerable<string> Implemented => Factories.Keys;
 
@@ -28,10 +29,12 @@ public static class CohortRegistry
         : Result<CohortInputs>.Failure(new Error("Registry.cohort_unknown", $"등록되지 않은 코호트입니다: '{id}'."));
 }
 
-/// <summary>The game policies a run or a replay may name (the 12 strategy-matrix policies are F-C2-C).</summary>
+/// <summary>The game policies a run or a replay may name: the calibration policy and the 12 strategy-matrix policies of ADR-008 FC-D4 (F-C2-C).</summary>
 public static class PolicyRegistry
 {
-    private static readonly Dictionary<string, Func<IGamePolicy>> Factories = new(StringComparer.Ordinal) { ["normal-balanced-v1"] = () => new NormalBalancedPolicy() };
+    // every policy is a stateless pure function of the public state (A-1), so one shared instance per id is safe
+    private static readonly Dictionary<string, Func<IGamePolicy>> Factories = DominancePolicy.All.Prepend<IGamePolicy>(new NormalBalancedPolicy())
+        .ToDictionary(p => p.Id, p => (Func<IGamePolicy>)(() => p), StringComparer.Ordinal);
 
     public static IEnumerable<string> Implemented => Factories.Keys;
 

@@ -229,7 +229,14 @@ public static class NeutralCohort
 {
     public const string Id = "neutral-v1";
 
-    public static CohortInputs Create()
+    /// <summary>ADR-008 FC-D4 / proposal §6.2: the opposite-hand cohort of the strategy matrix — <c>neutral-v1</c> with the starter and reliever throwing left (batters still bat right, every rating 50).</summary>
+    public const string OppositeId = "neutral-opp-v1";
+
+    public static CohortInputs Create() => Build(Id, ThrowingHand.Right, "모든 능력치 50, 우투우타, 지명타자 라인업(중립 코호트)");
+
+    public static CohortInputs CreateOpposite() => Build(OppositeId, ThrowingHand.Left, "모든 능력치 50, 우타자, 선발·구원 좌투, 지명타자 라인업(반대 손 중립 코호트)");
+
+    private static CohortInputs Build(string cohortId, ThrowingHand pitcherThrows, string description)
     {
         var sheets = new List<PlayerSheet>();
         TeamSetup Team(string label, string club)
@@ -239,22 +246,22 @@ public static class NeutralCohort
             for (var i = 0; i < positions.Length; i++)
             {
                 var id = Pid($"sim-{label}-b{i + 1}");
-                sheets.Add(Sheet(id, club, $"가상 {label} 타자 {i + 1}", pitcher: false, hitter: true, catcher: positions[i] == FieldPosition.Catcher));
+                sheets.Add(Sheet(id, club, $"가상 {label} 타자 {i + 1}", ThrowingHand.Right, pitcher: false, hitter: true, catcher: positions[i] == FieldPosition.Catcher));
                 lineup.Add(new LineupSlot(i + 1, id, positions[i]));
             }
 
             var starter = Pid($"sim-{label}-sp");
-            sheets.Add(Sheet(starter, club, $"가상 {label} 선발", pitcher: true, hitter: false, catcher: false));
+            sheets.Add(Sheet(starter, club, $"가상 {label} 선발", pitcherThrows, pitcher: true, hitter: false, catcher: false));
             var benchHitter = Pid($"sim-{label}-bh");
             var benchPitcher = Pid($"sim-{label}-bp");
-            sheets.Add(Sheet(benchHitter, club, $"가상 {label} 벤치 타자", pitcher: false, hitter: true, catcher: false));
-            sheets.Add(Sheet(benchPitcher, club, $"가상 {label} 구원", pitcher: true, hitter: false, catcher: false));
+            sheets.Add(Sheet(benchHitter, club, $"가상 {label} 벤치 타자", ThrowingHand.Right, pitcher: false, hitter: true, catcher: false));
+            sheets.Add(Sheet(benchPitcher, club, $"가상 {label} 구원", pitcherThrows, pitcher: true, hitter: false, catcher: false));
             return new TeamSetup(lineup, starter, [benchHitter, benchPitcher]);
         }
 
         var away = Team("a", "club-sim-a");
         var home = Team("h", "club-sim-h");
-        return Must(CohortInputs.Create(Id, CohortKind.Neutral, "모든 능력치 50, 우투우타, 지명타자 라인업(중립 코호트)", away, home, sheets));
+        return Must(CohortInputs.Create(cohortId, CohortKind.Neutral, description, away, home, sheets));
     }
 
     internal static PlayerId Pid(string text) => Must(PlayerId.Create(text));
@@ -264,8 +271,8 @@ public static class NeutralCohort
     internal static readonly FieldPosition[] LineupPositions = [FieldPosition.CenterField, FieldPosition.Shortstop, FieldPosition.RightField, FieldPosition.DesignatedHitter, FieldPosition.LeftField,
         FieldPosition.FirstBase, FieldPosition.ThirdBase, FieldPosition.SecondBase, FieldPosition.Catcher];
 
-    private static PlayerSheet Sheet(PlayerId id, string club, string name, bool pitcher, bool hitter, bool catcher) =>
-        MakeSheet(id, club, name, ThrowingHand.Right, hitter ? new HitterRatings(S(), S(), S(), S(), S(), S()) : null, pitcher ? Pitcher(50, 50, 50) : null,
+    private static PlayerSheet Sheet(PlayerId id, string club, string name, ThrowingHand throws, bool pitcher, bool hitter, bool catcher) =>
+        MakeSheet(id, club, name, throws, hitter ? new HitterRatings(S(), S(), S(), S(), S(), S()) : null, pitcher ? Pitcher(50, 50, 50) : null,
             catcher ? new CatcherRatings(S(), S(), S(), S()) : null);
 
     /// <summary>A pitcher's ratings: the given Stuff / Control / Velocity, Endurance 50 (no fatigue input exists) and a Fastball-50 repertoire.</summary>

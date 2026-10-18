@@ -63,6 +63,12 @@ public sealed record GameRunResult(
     int CommittedEvents, MetricCounters Counters, CrossCheckResult? CrossCheck, string EventHash, string RngHash, string ResultHash, double ElapsedMilliseconds)
 {
     public bool Completed => Status == GameRunStatus.Completed;
+
+    /// <summary>
+    /// The strategy-matrix observation of an engine-final game (ADR-008 FC-D4.2): the runs of the 16 half-innings of innings 1-8, or the error of its line-score cross-check; null for a game that never
+    /// reached a final state. It is a pure function of the committed events, so it is NOT part of <see cref="ResultHash"/> (<c>game-result-v1</c> is unchanged) and a replay compares it by re-execution.
+    /// </summary>
+    public RegulationRuns? Regulation { get; init; }
 }
 
 /// <summary>

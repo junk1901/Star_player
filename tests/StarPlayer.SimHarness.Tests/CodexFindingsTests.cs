@@ -303,7 +303,7 @@ public sealed class CodexFindingsTests : IDisposable
         // A10: a policy / cohort nobody approved, substituted consistently
         Assert.Equal("Replay.attestation_manifest_mismatch", OfficialCode(s, m => Attest(m, a => a with { PolicyId = "aggressive-attack-v1" })));
         Assert.Equal("Registry.policy_unknown", OfficialCode(s, m => { m["engine"]!["policy_id"] = "aggressive-attack-v1"; Attest(m, a => a with { PolicyId = "aggressive-attack-v1" }); }));
-        Assert.Equal("Registry.cohort_not_implemented", OfficialCode(s, m => { m["run"]!["cohort_id"] = "neutral-opp-v1"; Attest(m, a => a with { CohortId = "neutral-opp-v1" }); }));
+        Assert.Equal("Replay.cohort_hash_mismatch", OfficialCode(s, m => { m["run"]!["cohort_id"] = "neutral-opp-v1"; Attest(m, a => a with { CohortId = "neutral-opp-v1" }); }));   // F-C2-C: built now; its inputs are not the recorded ones
         // the profile fields: a model / tuning / rules hash / budget the approved execution profile does not name
         Assert.Equal("Replay.attestation_manifest_mismatch", OfficialCode(s, m => Attest(m, a => a with { ModelVersion = "prob-model-v3" })));
         Assert.Equal("Replay.official_profile_mismatch", OfficialCode(s, m => { m["engine"]!["event_budget"] = 2999; Attest(m, a => a with { EventBudget = 2999 }); }));

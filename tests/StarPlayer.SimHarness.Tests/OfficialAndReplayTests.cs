@@ -35,15 +35,17 @@ public sealed class OfficialAndReplayTests : IDisposable
         Assert.Equal(LegacyNeutralInputsHash, neutral.InputsHash);                          // the same input hash as before the registry
         Assert.Equal("normal-balanced-v1", H.Ok(PolicyRegistry.Resolve("normal-balanced-v1")).Id);
 
-        Assert.Equal("Registry.cohort_not_implemented", CohortRegistry.Resolve("neutral-opp-v1").Error!.Value.Code);   // the strategy-matrix cohort is F-C2-C; no placeholder now
+        var opposite = H.Ok(CohortRegistry.Resolve("neutral-opp-v1"));                     // F-C2-C builds the strategy-matrix cohort (ADR-008 FC-D4): its own id and inputs, never neutral-v1's
+        Assert.Equal("neutral-opp-v1", opposite.CohortId);
+        Assert.NotEqual(neutral.InputsHash, opposite.InputsHash);
         foreach (var built in new[] { "neutral-mixed-v1", "virtual-league-v1" })                                          // F-C2-B builds the two calibration cohorts (ADR-008 FC-D1 / FC-D2)
             Assert.Equal(built, H.Ok(CohortRegistry.Resolve(built)).CohortId);
         foreach (var unknown in new[] { "nope", "Neutral-v1", "neutral-v2", "", null })
             Assert.Equal("Registry.cohort_unknown", CohortRegistry.Resolve(unknown).Error!.Value.Code);
         foreach (var unknown in new[] { "patient-careful-v1", "Normal-balanced-v1", "", null })
             Assert.Equal("Registry.policy_unknown", PolicyRegistry.Resolve(unknown).Error!.Value.Code);
-        Assert.Equal(new[] { "neutral-mixed-v1", "neutral-v1", "virtual-league-v1" }, CohortRegistry.Implemented.Order(StringComparer.Ordinal).ToArray());
-        Assert.Equal(new[] { "normal-balanced-v1" }, PolicyRegistry.Implemented.ToArray());
+        Assert.Equal(new[] { "neutral-mixed-v1", "neutral-opp-v1", "neutral-v1", "virtual-league-v1" }, CohortRegistry.Implemented.Order(StringComparer.Ordinal).ToArray());
+        Assert.Equal(new[] { "normal-balanced-v1" }.Concat(DominancePolicy.All.Select(p => p.Id)).Order(StringComparer.Ordinal), PolicyRegistry.Implemented.Order(StringComparer.Ordinal));   // + the 12 matrix policies (F-C2-C)
     }
 
     // ---------------------------------------------------------------- attestation
@@ -201,7 +203,7 @@ public sealed class OfficialAndReplayTests : IDisposable
         var (rules, rulesSha) = PutManifest(DomManifest(rules: "test-one-inning-tie"), "rules.json");
         Refused(Preflight(rules, FixtureApprovals(rules, rulesSha)), "rules", CheckStatus.Fail, "Official.rules_not_approved");
         var (opp, oppSha) = PutManifest(DomManifest(cohort: "neutral-opp-v1"), "opp.json");
-        Refused(Preflight(opp, FixtureApprovals(opp, oppSha)), "cohort", CheckStatus.NotReady, "Registry.cohort_not_implemented");
+        Refused(Preflight(opp, FixtureApprovals(opp, oppSha)), "cohort_hash", CheckStatus.NotReady, "Official.cohort_hash_not_frozen");   // F-C2-C: built and approved for fc3-dom, but its InputsHash is not frozen
         var (mixed, mixedSha) = PutManifest(DomManifest(cohort: "neutral-mixed-v1"), "mixed.json");
         Refused(Preflight(mixed, FixtureApprovals(mixed, mixedSha)), "cohort", CheckStatus.Fail, "Official.cohort_not_approved_for_family");   // FC-D4: the matrix runs on neutral-v1 / neutral-opp-v1
         var cal = DomManifest(family: "fc3-cal");
@@ -319,7 +321,7 @@ public sealed class OfficialAndReplayTests : IDisposable
     public void Replay_refuses_unregistered_or_mismatched_inputs_instead_of_falling_back()
     {
         Assert.Equal("Registry.cohort_unknown", ReplayCode(m => m["run"]!["cohort_id"] = "neutral-v9"));
-        Assert.Equal("Registry.cohort_not_implemented", ReplayCode(m => m["run"]!["cohort_id"] = "neutral-opp-v1"));
+        Assert.Equal("Replay.cohort_hash_mismatch", ReplayCode(m => m["run"]!["cohort_id"] = "neutral-opp-v1"));        // F-C2-C: now built, so the recorded neutral-v1 hash no longer matches it
         Assert.Equal("Replay.cohort_hash_mismatch", ReplayCode(m => m["run"]!["cohort_id"] = "neutral-mixed-v1"));      // F-C2-B: now built, so the recorded neutral-v1 hash no longer matches it
         Assert.Equal("Replay.cohort_hash_mismatch", ReplayCode(m => m["engine"]!["cohort_inputs_hash"] = new string('0', 64)));
         Assert.Equal("Registry.policy_unknown", ReplayCode(m => m["engine"]!["policy_id"] = "patient-careful-v1"));

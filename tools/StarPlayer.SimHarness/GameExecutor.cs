@@ -186,6 +186,6 @@ public static class GameExecutor
             .Append(last?.LastEventSequence ?? 0).Append('|').Append(eventHash).Append('|').Append(rngHash).Append('|').Append(failure?.Code ?? "-").Append('|')
             .Append(counters.Canonical());
         return new GameRunResult(game, status, failure, final?.Outcome, kind, state?.AwayRuns ?? 0, state?.HomeRuns ?? 0, inning, half, last?.LastEventSequence ?? 0, counters, cross,
-            eventHash, rngHash, Hashing.Sha256(text.ToString()), elapsed);
+            eventHash, rngHash, Hashing.Sha256(text.ToString()), elapsed) { Regulation = done ? RegulationRuns.Of(state!) : null };
     }
 }

@@ -55,11 +55,11 @@ public static class OfficialProfile
 
 /// <summary>
 /// Everything that must be frozen before an official run (Final Execution Freeze). <see cref="Current"/> is F-C2-A's truth: nothing is approved, so no official run or official replay can start.
-/// Any other instance exists only in tests.
+/// Any other instance exists only in tests. <see cref="DominanceGamesPerCell"/> is the frozen per-cell sample size of the 48-cell matrix (ADR-008 FC-D4.7); null until that freeze.
 /// </summary>
 public sealed record OfficialApprovals(
     string? GitCommitSha, string? ExecutionPolicyId, string? ExecutionPolicyHash, IReadOnlyDictionary<string, string> SeedManifestPins, IReadOnlyDictionary<string, string> CohortInputsHashes,
-    bool ExecutionPathReady)
+    bool ExecutionPathReady, int? DominanceGamesPerCell = null)
 {
     public static OfficialApprovals Current { get; } = new(null, null, null, StarPlayer.SimHarness.SeedManifestPins.Official, new Dictionary<string, string>(StringComparer.Ordinal), false);
 }

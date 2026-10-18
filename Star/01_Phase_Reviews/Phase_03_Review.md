@@ -555,3 +555,26 @@ PCG32, 스트림 ID/키 유도, `GameRandom`(스트림 집합·스냅샷·복원
 - **증거(Git 추적):** `docs/reports/PHASE_3F_FC2B_VERIFY_LOG.md`(run1), `…_FIX1_VERIFY_LOG.md`, `…_FIX2_VERIFY_LOG.md`, `…_FIX3_VERIFY_LOG.md`(SHA-256 `c74b7957…9fbd`). 원시 증거는 `build/verify-archive/PHASE_3F_FC2B_{run1,FIX1_run1,FIX2_run1,FIX3_run1}/`(Git 무시 로컬 자료, Commit에 포함되지 않음). [보고서 §L~§N](../../docs/reports/PHASE_3F_FC2B_IMPLEMENTATION_REPORT.md)
 - **정책:** ADR-008/009 정책 본문 불변(ADR-009는 Status 구현 상태 표기만 갱신). 지표 계산 오류를 층 `NOT_EVALUATED`(ADR-009 SR-D9.2 현행)로 둘지 `FAIL`로 바꿀지는 소유자 몫의 열린 해석 질문(보고서 §M-7)이며 바꾸지 않았다.
 - **미실시/남음:** F-C2-B **로컬 Closeout Commit 미실시**(소유자 결정 대기), F-C2-C `NOT_STARTED`, Official Execution `NOT_READY`, Final Execution Freeze `PENDING`. Phase 3-F Gate·Phase 3 Gate `INCOMPLETE`. 상태 `검토 대기` 유지(`승인 완료` 아님; GPT Chat/소유자 검토 기록 전까지 변경하지 않음).
+
+## 부록 2026-10-18 — 3-F F-C2-C 48셀 전략 지배력 검증 구현 (Claude Code 구현·자체 시험, 독립 리뷰 `미실시`)
+
+- **범위:** ADR-008 FC-D4 48셀 행렬(승인 축으로 생성, 제안서 §6.6 표와 행 단위 일치), 12개 행렬 정책·`neutral-opp-v1`, 1~8회 반이닝 득점 관측, Welch·IUT·Holm 판정, 셀 무결성·Gate 결합, 재실행 Replay, 가정 A-1 검증. 하네스만 변경, 기준 HEAD `f2e6eb3`(F-C2-B 로컬 Closeout Commit) 불변, 미스테이징·미커밋·미푸시. [보고서](../../docs/reports/PHASE_3F_FC2C_IMPLEMENTATION_REPORT.md) · `docs/game-engine.md` §38.
+- **시험:** 신규 21개, 기존 단언 4곳 갱신(미구현 자리표시 → 구현 후 거부 사유). Sabotage 12/12 검출. `verify.ps1 -LogName PHASE_3F_FC2C_VERIFY_LOG.md` `GATE: PASS`, **2,741 PASS / 0 FAIL / 0 SKIP**(SimHarness 313). 원시 증거 `build/verify-archive/PHASE_3F_FC2C_run1/`, 기존 증거 전후 SHA-256 동일.
+- **주의:** 셀당 공식 표본 수가 미동결(FC-D4.7)이라 Gate는 `NOT_EVALUATED`로만 나온다. 공식 48셀 실행·공식 데이터 없음. 소유자 확인 필요: Final Execution Freeze 값, `fc3-dom` 지표 실패 = FAIL 해석, 분산 0 비교 = NOT_EVALUATED(보고서 §J).
+- **상태:** `검토 대기`. Official Execution `NOT_READY`, Final Execution Freeze `PENDING`, Phase 3-F·Phase 3 Gate `INCOMPLETE`.
+
+## 부록 2026-10-18 — 3-F F-C2-C 독립 리뷰 지적 수정 FIX1 (Claude Code 구현·자체 시험, 재검토 `미실시`)
+
+- **지적:** FC2C-01 MAJOR(Dominance 셀이 `run.MetricsComputed == false`를 보지 않아 FC-D9.1 FAIL 누락) · FC2C-02 MINOR(`Cells`/`ByCompetitionKey`가 형변환으로 변경 가능).
+- **수정:** `Dominance.cs`만. 지표 계산 실패 → `MetricsFailure`·Gate FAIL(오류 코드 사유 보존, 표본 미동결·부족·누락 셀보다 우선), 카탈로그 → `ReadOnlyCollection` + `FrozenDictionary`. ADR-008/009 본문, 48셀·통계·Replay·Hash 계약 불변. 상세 [보고서 §M](../../docs/reports/PHASE_3F_FC2C_IMPLEMENTATION_REPORT.md).
+- **시험:** 신규 5개(수정 전 4개 실패로 재현 + 오판 방지 보호 시험 1개), `verify.ps1 -LogName PHASE_3F_FC2C_FIX1_VERIFY_LOG.md` `GATE: PASS`, **2,746 PASS / 0 FAIL / 0 SKIP**(SimHarness 318). 원시 증거 `build/verify-archive/PHASE_3F_FC2C_FIX1_run1/`, 기존 증거 181개 파일 전후 SHA-256 동일.
+- **미완료(이번에 구현 안 함):** 공식 Seed Manifest·외부 SHA Pin 결속, 공식 Preflight/Replay 연결, 48셀 CLI, 공식 결과 저장 형식, PZL 잔여 검사·Dry Pilot, Final Execution Freeze — F-C2 전체 완료 전 별도 후속 작업(F-C3로 자동 이관 아님).
+- **상태:** F-C2-C `검토 대기`(`승인 완료` 아님). Official Execution `NOT_READY`, Final Execution Freeze `PENDING`, Phase 3-F·Phase 3 Gate `INCOMPLETE`.
+
+## 부록 2026-10-18 — 3-F F-C2-C 라이브러리 Closeout 준비 (상태 문서 정합화, 코드·시험 변경 없음)
+
+- **Codex High 재검토 결과(Claude Code가 판정한 것이 아님):** FC2C-01(Dominance Metrics 계산 실패 → FAIL)·FC2C-02(48셀 카탈로그·조회 맵 외부 변경 차단) 모두 해결, 신규 BLOCKER/MAJOR/MINOR 0. Codex가 문서 링크 345개를 읽기 전용으로 확인해 미해결 경로 0을 보고했으며, 이번 준비에서 Verify·빌드·시험은 **재실행하지 않았다**.
+- **증거:** `verify.ps1` `GATE: PASS`, 2,746 PASS / 0 FAIL / 0 SKIP(FIX1 시점). FIX1 로그 `docs/reports/PHASE_3F_FC2C_FIX1_VERIFY_LOG.md` SHA-256 `af3e7c19…505a`(현재 파일 해시 일치 확인). 원시 증거 `build/verify-archive/PHASE_3F_FC2C_FIX1_run1/`은 Git 무시 로컬 자료. 기존 F-C2-A/B/C 증거 불변.
+- **Commit 후보:** 정확히 16개(수정 11 + 신규 5). 보호 파일 3개(`TASK.md`, `docs/2023recordRule.pdf`, `docs/2026-official-baseball-rules.pdf`) 제외. 로컬 Closeout Commit 미실시, 스테이징 없음.
+- **범위 구분:** 이것은 F-C2-C **라이브러리** Closeout 준비일 뿐 F-C2 공식 통합 완료가 아니다. 미완료: 공식 Seed Manifest·외부 SHA Pin, 48셀 Preflight·Replay 연결, 공식 48셀 CLI, 공식 결과 형식, PZL 잔여 검사, Dry Pilot, Final Execution Freeze 준비. 셀당 표본 수 미동결의 `NOT_EVALUATED`는 공식 통계 결과가 아니다.
+- **상태:** 위 두 F-C2-C 부록의 `검토 대기`·재검토 `미실시` 표기는 작성 시점 기록이며 이 부록이 최신이다. 리뷰 상태 `검토 대기` 유지(`승인 완료` 아님). Official Execution `NOT_READY`, Final Execution Freeze `PENDING`, Phase 3-F·Phase 3 Gate `INCOMPLETE`.
