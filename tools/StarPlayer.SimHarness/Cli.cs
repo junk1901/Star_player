@@ -37,7 +37,15 @@ public static class Cli
             ["run-id"] = PathText,
             ["out"] = PathText,
         }, new HashSet<string>(), new Dictionary<string, string>()),
-        ["replay"] = new(new Dictionary<string, OptionSpec>(StringComparer.Ordinal) { ["manifest"] = PathText }, new HashSet<string> { "manifest" }, new Dictionary<string, string>()),
+        // --seed-manifest / --seed-sha256: the operator's pin of a fc2-dry seed file, the trusted stop parameters of a stop-aware dry replay (ADR-009 SR-D8.6); refused for every other replay
+        ["replay"] = new(new Dictionary<string, OptionSpec>(StringComparer.Ordinal) { ["manifest"] = PathText, ["seed-manifest"] = PathText, ["seed-sha256"] = PathText },
+            new HashSet<string> { "manifest" }, new Dictionary<string, string>()),
+        // the non-official stop-aware dry run (ADR-009 SR-D4): its seeds, cohort, policy, rules, block size and small PA target come only from the pinned fc2-dry seed file
+        ["dry"] = new(new Dictionary<string, OptionSpec>(StringComparer.Ordinal) { ["seed-manifest"] = PathText, ["seed-sha256"] = PathText, ["run-id"] = PathText, ["out"] = PathText },
+            new HashSet<string> { "seed-manifest", "seed-sha256" },
+            OfficialFixed.ToDictionary(o => o, o => o == "tuning"
+                ? "--tuning은 시험용 입력이므로 dry run에서도 사용할 수 없습니다."
+                : $"--{o}는 dry run에서 지정할 수 없습니다(고정된 dry Seed 파일과 고정 실행 프로파일이 결정합니다).", StringComparer.Ordinal)),
         // an official run takes its seeds, cohort, policy and rules profile only from the pinned seed manifest and the approved execution profile, never from the command line
         ["official"] = new(new Dictionary<string, OptionSpec>(StringComparer.Ordinal) { ["seed-manifest"] = PathText, ["run-id"] = PathText, ["out"] = PathText },
             new HashSet<string> { "seed-manifest", "run-id" },

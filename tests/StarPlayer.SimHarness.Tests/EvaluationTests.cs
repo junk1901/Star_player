@@ -54,8 +54,8 @@ public class EvaluationTests
     public void The_recommended_cohort_of_each_metric_is_the_scope_decision_and_is_reported_not_inferred_from_the_file()
     {
         var recommended = MetricsEvaluator.Definitions.ToDictionary(d => d.FId, d => d.RecommendedCohort);
-        Assert.All(new[] { "F1", "F2", "F3", "F4", "F5" }, f => Assert.Equal(CohortKind.VirtualLeague, recommended[f]));
-        Assert.All(new[] { "F6", "F7", "F8" }, f => Assert.Equal(CohortKind.Neutral, recommended[f]));
+        Assert.All(new[] { "F2", "F3", "F4", "F5" }, f => Assert.Equal(CohortKind.VirtualLeague, recommended[f]));
+        Assert.All(new[] { "F1", "F6", "F7", "F8" }, f => Assert.Equal(CohortKind.Neutral, recommended[f]));      // ADR-008 FC-D1.8 (C-1): F1 moved from VirtualLeague to the neutral cohort
         // the file's own descriptions are NOT reinterpreted: F1 says "neutral inputs", F2-F5 say "league average"
         Assert.Contains("neutral inputs", H.Tuning.Targets.Single(t => t.Id == "pa_strikeout_rate").Description, StringComparison.Ordinal);
         Assert.Contains("league average", H.Tuning.Targets.Single(t => t.Id == "pa_walk_rate").Description, StringComparison.Ordinal);
@@ -137,7 +137,9 @@ public class EvaluationTests
         Assert.Equal(1_000_000L, all.MeasuredPpm);
         Assert.Equal(1_000_000L - 260_000L, all.DeviationPpm);
         var judged = One(Counts(pa: 50, so: 50, ab: 50), "F1", policy: Approved(10, Neutral.CohortId));
-        Assert.Equal(MetricStatus.NotEvaluated, judged.Status);                          // F1's cohort is the virtual league, not the neutral one
+        Assert.Equal(MetricStatus.Fail, judged.Status);                                  // ADR-008 FC-D1.8: F1's cohort is now the neutral one (it was the virtual league in F-A/B)
+        var league = One(Counts(pa: 50, so: 50, ab: 50), "F1", H.Variant("league-x", _ => null), Approved(10, "league-x"));
+        Assert.Equal(MetricStatus.NotEvaluated, league.Status);
     }
 
     // ---------------------------------------------------------------- the status ladder
@@ -230,13 +232,13 @@ public class EvaluationTests
         var policy = Approved(10, league.CohortId, Neutral.CohortId);
         var c = Counts(pa: 1000, so: 200, bb: 80, hbp: 9, hr: 25, ab: 900, h: 250, sf: 8, pitches: 1000, located: 1000, zone: 550, swings: 450, swinging: 100);
 
-        // the virtual-league cohort IS the recommended one for F1-F5 (verdict possible once approved) and NOT for F6-F8; the neutral cohort is the reverse
+        // the virtual-league cohort IS the recommended one for F2-F5 (verdict possible once approved) and NOT for F1, F6-F8; the neutral cohort is the reverse (ADR-008 FC-D1.8 moved F1 to the neutral side)
         var asLeague = H.Ok(MetricsEvaluator.Evaluate(c, league, H.Tuning, policy)).Metrics;
-        Assert.All(asLeague.Take(5), m => Assert.NotEqual(MetricStatus.NotEvaluated, m.Status));
-        Assert.All(asLeague.Skip(5), m => Assert.Equal(MetricStatus.NotEvaluated, m.Status));
+        Assert.All(asLeague.Skip(1).Take(4), m => Assert.NotEqual(MetricStatus.NotEvaluated, m.Status));
+        Assert.All(asLeague.Skip(5).Prepend(asLeague[0]), m => Assert.Equal(MetricStatus.NotEvaluated, m.Status));
         var asNeutral = H.Ok(MetricsEvaluator.Evaluate(c, Neutral, H.Tuning, policy)).Metrics;
-        Assert.All(asNeutral.Take(5), m => Assert.Equal(MetricStatus.NotEvaluated, m.Status));
-        Assert.All(asNeutral.Skip(5), m => Assert.NotEqual(MetricStatus.NotEvaluated, m.Status));
+        Assert.All(asNeutral.Skip(1).Take(4), m => Assert.Equal(MetricStatus.NotEvaluated, m.Status));
+        Assert.All(asNeutral.Skip(5).Prepend(asNeutral[0]), m => Assert.NotEqual(MetricStatus.NotEvaluated, m.Status));
     }
 
     [Fact]

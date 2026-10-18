@@ -35,7 +35,8 @@ public static class GameExecutor
         if (run.CheckPins() is { } pins)
             return Stopped(GameRunStatus.Failed, null, pins.Code, pins.Message, "config");
 
-        var begun = GameStarter.Begin(new GameStart(game.GameId, run.Rules, run.Cohort.Away, run.Cohort.Home, run.Execution), game.Seed);
+        var (away, home) = run.Cohort.SetupFor(game.GameIndex);                                 // the cohort's own per-game rotation; a non-rotating cohort returns its two setups unchanged
+        var begun = GameStarter.Begin(new GameStart(game.GameId, run.Rules, away, home, run.Execution), game.Seed);
         if (!begun.IsSuccess)
             return Stopped(GameRunStatus.Failed, null, begun.Error!.Value.Code, begun.Error.Value.Message, "start");
         var cursor = begun.Value;

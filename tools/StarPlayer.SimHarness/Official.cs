@@ -356,9 +356,13 @@ public static class OfficialReplay
     /// advancement_policy_version, event_budget, execution policy (the fixed official profile; park / budget also against the manifest) · config_hash (Verify: the manifest, then
     /// <see cref="ReplayPlan.CheckAgainst"/>: recomputed from the recorded games) · the games (the parsed seed file).
     /// </summary>
-    public static Error? VerifyAgainstSeedFile(OfficialAttestation att, RecordedRun run, OfficialApprovals a, string? repositoryRoot)
+    public static Error? VerifyAgainstSeedFile(OfficialAttestation att, RecordedRun run, OfficialApprovals a, string? repositoryRoot) => VerifyAgainstSeedFile(att, run, a, repositoryRoot, out _);
+
+    /// <summary>The same check, also handing back the verified seed file (null unless it passed), whose family and stop parameters an official replay then trusts (ADR-009 SR-D7.4, SR-D8.2).</summary>
+    public static Error? VerifyAgainstSeedFile(OfficialAttestation att, RecordedRun run, OfficialApprovals a, string? repositoryRoot, out SeedManifest? verified)
     {
         static Error E(string code, string message) => new(code, message);
+        verified = null;
         if (repositoryRoot is null)
             return E("Replay.official_seed_manifest_unavailable", "공식 replay에는 승인·고정된 Seed Manifest 파일이 필요하지만 저장소 루트를 알 수 없어 읽을 수 없습니다(Hash 문자열만으로는 검증되지 않음).");
         var read = SeedManifestReader.Read(repositoryRoot, att.SeedManifestPath, a.SeedManifestPins.GetValueOrDefault(att.SeedManifestPath));
@@ -386,9 +390,10 @@ public static class OfficialReplay
             != (OfficialProfile.Id, OfficialProfile.Hash(), OfficialProfile.ModelVersion, OfficialProfile.TuningVersion, OfficialProfile.TuningHash, OfficialProfile.AdvancementPolicyVersion, OfficialProfile.EventBudget)
             || !OfficialProfile.RulesHashes.TryGetValue(att.RulesProfileId, out var rulesHash) || rulesHash != att.RulesHash)
             return E("Replay.official_profile_mismatch", "Attestation의 모델·튜닝·규칙·진루 정책·이벤트 예산·실행 정책이 고정된 공식 실행 프로파일과 다릅니다.");
-        return run.Games.Select(g => new SeedEntry(g.GameIndex, g.Seed, g.GameId)).SequenceEqual(sm.Seeds)
-            ? null
-            : E("Replay.seed_games_mismatch", "replay가 실행할 경기 목록(index·Seed·GameId)이 승인된 Seed 파일의 경기 목록과 정확히 같지 않습니다.");
+        if (!run.Games.Select(g => new SeedEntry(g.GameIndex, g.Seed, g.GameId)).SequenceEqual(sm.Seeds))
+            return E("Replay.seed_games_mismatch", "replay가 실행할 경기 목록(index·Seed·GameId)이 승인된 Seed 파일의 경기 목록과 정확히 같지 않습니다.");
+        verified = sm;
+        return null;
     }
 
     public static Error? Verify(JsonElement official, string manifestConfigHash, OfficialApprovals a)

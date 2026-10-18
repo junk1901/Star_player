@@ -10,7 +10,7 @@ reviewed_by: ""
 branch: "main"
 commit: "3-C2A: 'feat: add phase 3c2a deterministic pitch branch resolver' (기준 HEAD d3570b76e93246076253681568b709d3ea1d5a3b 다음 커밋; SHA는 git log 참조 — 문서가 자기 커밋 SHA를 담을 수 없음; 3-C1은 d3570b7)"
 roadmap_anchor: "phase-3--seeded-game-simulation--prototype-1"
-last_updated: "2026-10-17"
+last_updated: "2026-10-18"
 tags:
   - star-player
   - phase-review
@@ -535,3 +535,23 @@ PCG32, 스트림 ID/키 유도, `GameRandom`(스트림 집합·스냅샷·복원
 - **미동결 (`FINAL_EXECUTION_FREEZE_PENDING`):** 공식 Seed Manifest·파일 Hash, 48셀 셀별 표본 수, 최종 Cohort 인스턴스·Hash, Dry Run 이후 실행 상한, 실행 직전 Git SHA.
 - **검증:** 문서만 변경. 코드·테스트·Tuning·Seed 파일 변경 0, 보호 파일 3개 SHA-256 시작·종료 동일, Staging 0, `git diff --check` PASS(보고서 L절). 전체 xUnit·`verify.ps1`은 재실행하지 않음(2,528 PASS는 `5492e80`의 과거 결과).
 - F-C2·F-C3 `NOT_STARTED`. Phase 3-F Gate·Phase 3 Gate: `INCOMPLETE` 유지. 상태: `검토 대기` 유지(승인 아님).
+
+## 부록 2026-10-18 — 3-F F-C2-B 구현 (Claude Code 구현·자체 시험, 독립 리뷰 `미실시`)
+
+- **범위:** ADR-009 N-04 정지/Replay(B-1), Calibration Cohort `neutral-mixed-v1`·`virtual-league-v1`(B-2), ADR-008 층화 Metrics·`fc-evaluation-policy-v1`(B-3). 하네스만 변경. 기준 HEAD `e9209b3` 불변, 미스테이징·미커밋·미푸시. [보고서](../../docs/reports/PHASE_3F_FC2B_IMPLEMENTATION_REPORT.md) · [결정 노트](../02_Decisions/2026-10-18_Phase_3F_FC2B_Stop_Replay_Evaluation.md) · `docs/game-engine.md` §37.
+- **B-1 선행 검증:** `StopReplayTests` 20 PASS, 표적 Sabotage 7/7 검출 후 B-2 착수. ADR-009 Open 항목(dry 신뢰 출처, 버전 필드, v2 바이트 배치, 라벨·코드, dry 목표 상한)은 정책 변경 없이 구현 세부로 결정(보고서 §C).
+- **시험(실제):** `dotnet build StarPlayer.sln -c Release --no-incremental` 경고 0·오류 0; `dotnet test StarPlayer.sln -c Release --no-build` 2,715 PASS / 0 FAIL / 0 SKIP(SimHarness 287). B-2·B-3 Sabotage 9/9 검출(1건은 시험 보강 후). Legacy replay 2개 CLI `REPLAY MATCH`, `official` Exit 2 유지.
+- **기존 시험 수정:** `StrictCliTests`(dry 명령), `OfficialAndReplayTests`(코호트 구현), `EvaluationTests`(FC-D1.8 F1 코호트) — 계약 반영, 삭제·약화 없음.
+- **`verify.ps1`:** `-LogName PHASE_3F_FC2B_VERIFY_LOG.md`로 실행, `GATE: PASS`(exit 0). 기존 Phase 2·F-C2-A 로그·원시 증거 보존, 새 원시 로그는 `build/verify-archive/PHASE_3F_FC2B_run1/`.
+- **미해결:** Final Execution Freeze, 공식 실행 활성화·출력 쓰기, F-C2-C, 독립 리뷰. Phase 3-F Gate·Phase 3 Gate `INCOMPLETE`. 상태 `검토 대기`(승인 아님).
+
+## 부록 2026-10-18 — 3-F F-C2-B Codex 지적 수정(FIX1~FIX3)과 소유자 Closeout 검토 준비 (`READY_FOR_OWNER_CLOSEOUT_REVIEW`)
+
+> 위 "3-F F-C2-B 구현" 부록의 `검토 대기`/`독립 리뷰 미실시` 표기는 구현 시점의 기록이며 지우지 않는다. 최신 상태는 이 부록이다.
+
+- **독립 리뷰와 수정 대응:** Codex High 리뷰 → FIX1: FC2B-01(MAJOR, Integration Gate가 지표 계산 실패에도 PASS), FC2B-02(MINOR, v2 Replay가 `games_*`·`pitches`·`run_status`·경기별 `event_hash`/`rng_hash`/`error_code`를 대조하지 않음). → FIX2: FC2B-03(층 Gate에서 지표 오류가 실패 경기를 `NOT_EVALUATED`로 숨김), FC2B-04(`CombineStrata`에서 누락 층이 알려진 FAIL을 숨김). Codex 재검토는 FIX2 시점 코드를 확인했고 BLOCKER 0 / MAJOR 0 / MINOR 1이었다. → FIX3: 남은 MINOR(`CombineStrata` FAIL 분기가 다른 비PASS 층의 상태·사유를 출력하지 않음)를 Claude Code가 수정(판정·우선순위 불변, 사유 출력만 보강).
+- **검증 주체 구분:** FIX1·FIX2는 Codex 재검토를 거쳤다. **FIX3은 Claude Code의 자체 수정과 전체 검증(`verify.ps1` `GATE: PASS`)만 통과했고 Codex가 FIX3을 별도로 재검토하지 않았다.**
+- **시험(실제, FIX3 `verify.ps1`):** Release 경고 0·오류 0; Domain 327 · Simulation 741 · Application 127 · Infrastructure 1,233 · SimHarness 292 = **2,720 PASS / 0 FAIL / 0 SKIP**; Godot headless·Windows export·Exported program·문서 링크 PASS.
+- **증거(Git 추적):** `docs/reports/PHASE_3F_FC2B_VERIFY_LOG.md`(run1), `…_FIX1_VERIFY_LOG.md`, `…_FIX2_VERIFY_LOG.md`, `…_FIX3_VERIFY_LOG.md`(SHA-256 `c74b7957…9fbd`). 원시 증거는 `build/verify-archive/PHASE_3F_FC2B_{run1,FIX1_run1,FIX2_run1,FIX3_run1}/`(Git 무시 로컬 자료, Commit에 포함되지 않음). [보고서 §L~§N](../../docs/reports/PHASE_3F_FC2B_IMPLEMENTATION_REPORT.md)
+- **정책:** ADR-008/009 정책 본문 불변(ADR-009는 Status 구현 상태 표기만 갱신). 지표 계산 오류를 층 `NOT_EVALUATED`(ADR-009 SR-D9.2 현행)로 둘지 `FAIL`로 바꿀지는 소유자 몫의 열린 해석 질문(보고서 §M-7)이며 바꾸지 않았다.
+- **미실시/남음:** F-C2-B **로컬 Closeout Commit 미실시**(소유자 결정 대기), F-C2-C `NOT_STARTED`, Official Execution `NOT_READY`, Final Execution Freeze `PENDING`. Phase 3-F Gate·Phase 3 Gate `INCOMPLETE`. 상태 `검토 대기` 유지(`승인 완료` 아님; GPT Chat/소유자 검토 기록 전까지 변경하지 않음).

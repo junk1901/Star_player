@@ -43,26 +43,17 @@ public sealed record SeedManifest(
 {
     /// <summary>
     /// FC-D5.3 stop rule, checked after <paramref name="gamesPlayed"/> games with <paramref name="cumulativePa"/> plate appearances: only at a block boundary may a run stop; it stops when the PA target
-    /// (calibration only) is reached or when every declared seed has run. No seed is ever added beyond the manifest.
+    /// is reached or when every declared seed has run. No seed is ever added beyond the manifest. The rule itself is <see cref="StopRule.Decide"/> (one shared implementation, ADR-009 SR-D1.4).
     /// </summary>
-    public BlockDecision AfterGames(int gamesPlayed, long cumulativePa)
-    {
-        ArgumentOutOfRangeException.ThrowIfNegative(cumulativePa);
-        if (gamesPlayed < 0 || gamesPlayed > Seeds.Count)
-            throw new ArgumentOutOfRangeException(nameof(gamesPlayed), gamesPlayed, $"0~{Seeds.Count}이어야 합니다.");
-        if (gamesPlayed % BlockSizeGames != 0)
-            return BlockDecision.Continue;
-        if (PaTarget is { } target && cumulativePa >= target)
-            return BlockDecision.StopTargetReached;
-        return gamesPlayed == Seeds.Count ? BlockDecision.StopSeedsExhausted : BlockDecision.Continue;
-    }
+    public BlockDecision AfterGames(int gamesPlayed, long cumulativePa) => StopRule.Decide(BlockSizeGames, PaTarget, Seeds.Count, gamesPlayed, cumulativePa);
 }
 
 /// <summary>
 /// F-C2-A seed-manifest reader (FC-D5). The file is read only from a repository-relative <c>.json</c> path inside the given root, and only against a SHA-256 of its RAW bytes pinned outside the file;
 /// then it is parsed strictly (no unknown, missing or repeated member) and checked: schema and GameId-rule versions, a known family, a competition key of that family, contiguous indices 1..n in
 /// file order, unique indices and GameIds, every GameId equal to <see cref="RunConfig.Spec"/>'s <c>game:{key}:{cohort}-{index:D6}</c>, whole blocks within the declared cap, a calibration PA target
-/// of at least 100,000 (FC-D7.1) and exactly 100 integration games (FC-D7.2). Block size and caps themselves are the manifest's declaration (Final Execution Freeze), not chosen here.
+/// of at least 100,000 (FC-D7.1), a dry-run PA target that is absent or small (ADR-009 SR-D4.1), <c>max_games</c> equal to the seed count in an official file (SR-D6) and exactly 100 integration
+/// games (FC-D7.2). Block size and caps themselves are the manifest's declaration (Final Execution Freeze), not chosen here.
 /// </summary>
 public static class SeedManifestReader
 {
@@ -72,6 +63,9 @@ public static class SeedManifestReader
     public const string GameIdRuleV1 = "game-id-v1";
 
     public const long CalibrationMinPa = 100_000;
+
+    /// <summary>The largest <c>fc2-dry</c> PA target (ADR-009 SR-D4.1 "small positive"; F-C2-B detail): strictly below the official floor, so a dry run can never be sized like a calibration stratum.</summary>
+    public const long DryMaxPa = CalibrationMinPa - 1;
 
     public const int IntegrationGames = 100;
 
@@ -164,8 +158,15 @@ public static class SeedManifestReader
             return Fail("Seed.cap_exceeded", $"Seed {seeds.Count}개 / 상한 {d.MaxGames}이(가) 선언 상한(또는 {MaxIndex})을 넘습니다.");
         if (seeds.Count % d.BlockSizeGames != 0)
             return Fail("Seed.block_incomplete", $"Seed {seeds.Count}개는 블록 {d.BlockSizeGames}경기의 배수가 아닙니다(불완전한 블록).");
-        if (d.Family == "fc3-cal" ? d.PaTarget is not >= CalibrationMinPa : d.PaTarget is not null)
-            return Fail("Seed.pa_target_invalid", d.Family == "fc3-cal" ? $"calibration은 pa_target {CalibrationMinPa} 이상이 필요합니다." : "pa_target은 calibration(fc3-cal)에만 둡니다.");
+        if (d.Family == "fc3-cal" ? d.PaTarget is not >= CalibrationMinPa : d.Family == "fc2-dry" ? d.PaTarget is not (null or (>= 1 and <= DryMaxPa)) : d.PaTarget is not null)
+            return Fail("Seed.pa_target_invalid", d.Family switch
+            {
+                "fc3-cal" => $"calibration은 pa_target {CalibrationMinPa} 이상이 필요합니다.",
+                "fc2-dry" => $"dry run의 pa_target은 없거나 1~{DryMaxPa}의 작은 양수여야 합니다(공식 하한 {CalibrationMinPa} 미만, ADR-009 SR-D4).",
+                _ => "pa_target은 calibration(fc3-cal)과 dry run(fc2-dry)에만 둡니다(SR-D5).",
+            });
+        if (SeedFamilies.All[d.Family].Official && d.MaxGames != seeds.Count)
+            return Fail("Seed.max_games_mismatch", $"공식 Seed Manifest는 max_games({d.MaxGames})가 Seed 수({seeds.Count})와 같아야 합니다(ADR-009 SR-D6).");
         if (d.Family == "fc3-int" && seeds.Count != IntegrationGames)
             return Fail("Seed.integration_size_invalid", $"integration은 정확히 {IntegrationGames}경기여야 합니다(받은 값 {seeds.Count}).");
         if (seeds.GroupBy(s => s.Index).FirstOrDefault(g => g.Count() > 1) is { } index)

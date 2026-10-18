@@ -6,14 +6,19 @@ using StarPlayer.Simulation.Randomness;
 namespace StarPlayer.SimHarness;
 
 /// <summary>
-/// The cohorts a run or a replay may name. Only implemented cohorts resolve; the ADR-008 cohorts F-C2-B will build are DECLARED here so that naming one is <c>Registry.cohort_not_implemented</c>
-/// rather than unknown, and no id is ever answered with another cohort's inputs.
+/// The cohorts a run or a replay may name. Only implemented cohorts resolve; an ADR-008 cohort not built yet (<c>neutral-opp-v1</c>, the strategy matrix, F-C2-C) is DECLARED here so that naming it is
+/// <c>Registry.cohort_not_implemented</c> rather than unknown, and no id is ever answered with another cohort's inputs.
 /// </summary>
 public static class CohortRegistry
 {
-    private static readonly Dictionary<string, Func<CohortInputs>> Factories = new(StringComparer.Ordinal) { [NeutralCohort.Id] = NeutralCohort.Create };
+    private static readonly Dictionary<string, Func<CohortInputs>> Factories = new(StringComparer.Ordinal)
+    {
+        [NeutralCohort.Id] = NeutralCohort.Create,
+        [CalibrationCohorts.NeutralMixedId] = CalibrationCohorts.NeutralMixed,
+        [CalibrationCohorts.VirtualLeagueId] = CalibrationCohorts.VirtualLeague,
+    };
 
-    private static readonly HashSet<string> DeclaredNotImplemented = new(StringComparer.Ordinal) { "neutral-opp-v1", "neutral-mixed-v1", "virtual-league-v1" };
+    private static readonly HashSet<string> DeclaredNotImplemented = new(StringComparer.Ordinal) { "neutral-opp-v1" };
 
     public static IEnumerable<string> Implemented => Factories.Keys;
 
@@ -35,10 +40,22 @@ public static class PolicyRegistry
         : Result<IGamePolicy>.Failure(new Error("Registry.policy_unknown", $"등록되지 않은 정책입니다: '{id}'."));
 }
 
+/// <summary>
+/// An operator-supplied pin of a <c>fc2-dry</c> seed file (<c>replay --seed-manifest REL --seed-sha256 HEX</c>): the trusted source of a dry replay's stop parameters (ADR-009 SR-D8.6, F-C2-B decision).
+/// It comes from outside the manifest, is accepted only for a <c>fc2-dry</c> competition key, and never for an official replay, which trusts <see cref="OfficialApprovals"/> alone.
+/// </summary>
+public sealed record DryStopPin(string Path, string Sha256);
+
 /// <summary>What a validated manifest asks to replay: <see cref="Rules"/> is <c>automated</c> / <c>non-automated</c>, <see cref="Advancement"/> is <c>v1</c> / <c>v2</c>.</summary>
 public sealed record ReplayPlan(
     string RunId, CohortInputs Cohort, IGamePolicy Policy, string Rules, string Advancement, int EventBudget, string CompetitionKey, IReadOnlyList<GameSpec> Games, string ConfigHash, string RunResultHash)
 {
+    /// <summary>The trusted stop parameters (from the pinned seed file) of a stop-aware replay; null for a legacy / full-execution replay.</summary>
+    public StopPlan? Stop { get; init; }
+
+    /// <summary>What the stop-aware manifest claims; compared after the re-derivation, never trusted (SR-D8.3).</summary>
+    public RecordedStopResult? Recorded { get; init; }
+
     /// <summary>
     /// The check that needs the rebuilt configuration, made BEFORE any game starts: every recorded game must be exactly what the configuration's own rule makes of its index and seed (the recorded
     /// id is never replaced by a regenerated one), and the configuration hash of those games must be the recorded one (so a changed seed is refused here, not only noticed in the result hash).
@@ -91,7 +108,81 @@ public static class ReplayCheck
     private static string Required(JsonElement parent, string name) =>
         parent.GetProperty(name).GetString() ?? throw new FormatException($"필수 문자열 필드 '{name}'가 null입니다.");
 
-    public static Result<ReplayPlan> Validate(JsonElement root, OfficialApprovals approvals, string? repositoryRoot = null)
+    /// <summary>A key of the non-official dry-run namespace (<c>fc2-dry</c> or <c>fc2-dry-…</c>, exact case as the seed reader requires).</summary>
+    public static bool IsDryCompetitionKey(string key) => key == "fc2-dry" || key.StartsWith("fc2-dry-", StringComparison.Ordinal);
+
+    /// <summary>The manifest's result version: absent is <c>run-result-v1</c> (every manifest written before F-C2-B); otherwise exactly <c>run-result-v1</c> or <c>run-result-v2</c>.</summary>
+    private static Result<string> ResultVersion(JsonElement results)
+    {
+        if (!results.TryGetProperty("run_result_version", out var v))
+            return Result<string>.Success(RunResultText.V1);
+        return v.ValueKind == JsonValueKind.String && v.GetString() is RunResultText.V1 or RunResultText.V2
+            ? Result<string>.Success(v.GetString()!)
+            : Result<string>.Failure(new Error("Replay.result_version_unknown", $"알 수 없는 results.run_result_version입니다(지원: {RunResultText.V1}, {RunResultText.V2})."));
+    }
+
+    /// <summary>
+    /// ADR-009 SR-D7.4 / SR-D8: the required result version follows from the TRUSTED plan (the pinned seed file's family), never from the manifest. With a trusted stop plan the manifest must be v2
+    /// and carry a well-formed stop record over exactly the leading games of the whole plan; without one, a v2 result or a stop record is refused.
+    /// </summary>
+    private static Result<ReplayPlan> WithStop(ReplayPlan plan, JsonElement results, string version, StopPlan? trusted, string competitionKey)
+    {
+        static Result<ReplayPlan> Bad(string code, string message) => Result<ReplayPlan>.Failure(new Error(code, message));
+        var hasStop = results.TryGetProperty("stop", out var stop);
+        if (trusted is null)
+        {
+            if (version == RunResultText.V1 && !hasStop)
+                return Result<ReplayPlan>.Success(plan);
+            return IsDryCompetitionKey(competitionKey)
+                ? Bad("Replay.stop_parameters_untrusted", "정지 인식(v2) dry 결과의 정지 파라미터는 고정된 dry Seed 파일에서만 얻습니다(--seed-manifest/--seed-sha256 필요; 기록값은 신뢰하지 않음).")
+                : Bad("Replay.stop_not_allowed", $"Competition Key '{competitionKey}'의 실행에는 정지 기록·run-result-v2가 허용되지 않습니다(정지 규칙은 fc3-cal과 fc2-dry에만, SR-D5).");
+        }
+
+        if (version != RunResultText.V2)
+            return Bad("Replay.result_version_downgrade", $"고정된 Seed 파일(family '{trusted.Family}')은 {RunResultText.V2}와 정지 기록을 요구합니다(매니페스트 {version}; 자기 선언으로 낮출 수 없음).");
+        if (!hasStop)
+            return Bad("Replay.stop_record_missing", "정지 인식 결과에 results.stop이 없습니다(기본값으로 채우지 않음).");
+        var record = StopRecord.FromJson(stop);
+        if (!record.IsSuccess)
+            return Result<ReplayPlan>.Failure(record.Error!.Value);
+        var games = results.GetProperty("games").EnumerateArray()
+            .Select(g => new RecordedGame(Required(g, "game_id"), g.GetProperty("seed").GetUInt64(), Required(g, "status"), Required(g, "result_hash"), Required(g, "event_hash"), Required(g, "rng_hash"),
+                g.GetProperty("error_code").GetString())).ToList();
+        if (games.Any(g => g.Status == nameof(GameRunStatus.Cancelled)))
+            return Bad("Replay.run_not_terminated", "취소된 경기가 있는 실행을 정지 규칙으로 끝난 실행으로 제시할 수 없습니다(SR-D3.5).");
+        var recorded = new RecordedStopResult(record.Value, results.GetProperty("plate_appearances").GetInt64(), games, results.GetProperty("games_requested").GetInt32(),
+            results.GetProperty("games_completed").GetInt32(), results.GetProperty("games_failed").GetInt32(), results.GetProperty("pitches").GetInt64(), Required(results, "run_status"));
+        return StopReplay.Precheck(trusted, recorded) is { } refused
+            ? Result<ReplayPlan>.Failure(refused)
+            : Result<ReplayPlan>.Success(plan with { Stop = trusted, Recorded = recorded });
+    }
+
+    /// <summary>A dry replay's trusted plan: the operator-pinned <c>fc2-dry</c> seed file, bound to the manifest's key, cohort, policy, rules, whole game list and recorded seed-file pin.</summary>
+    private static Result<StopPlan> DryPlan(DryStopPin pin, string? repositoryRoot, JsonElement root, string competitionKey, string cohortId, string policyId, string rulesProfileId,
+        IReadOnlyList<GameSpec> games)
+    {
+        static Result<StopPlan> Bad(string code, string message) => Result<StopPlan>.Failure(new Error(code, message));
+        if (repositoryRoot is null)
+            return Bad("Replay.dry_seed_manifest_unavailable", "dry Seed 파일을 읽을 저장소 루트를 알 수 없습니다.");
+        var read = SeedManifestReader.Read(repositoryRoot, pin.Path, pin.Sha256);
+        if (!read.IsSuccess)
+            return Result<StopPlan>.Failure(read.Error!.Value);
+        var sm = read.Value;
+        if (sm.Family != "fc2-dry")
+            return Bad("Replay.dry_seed_family_invalid", $"dry replay의 Seed 파일 family는 fc2-dry여야 합니다(받은 값 '{sm.Family}').");
+        if (sm.CompetitionKey != competitionKey)
+            return Bad("Replay.competition_key_mismatch", $"Competition Key가 고정된 dry Seed 파일의 '{sm.CompetitionKey}'와 다릅니다(매니페스트 '{competitionKey}').");
+        if (sm.CohortId != cohortId || sm.PolicyId != policyId || sm.RulesProfileId != rulesProfileId)
+            return Bad("Replay.seed_manifest_binding_mismatch", "코호트·정책·규칙 프로파일이 고정된 dry Seed 파일의 선언과 다릅니다.");
+        if (!games.Select(g => new SeedEntry(g.GameIndex, g.Seed, g.GameId)).SequenceEqual(sm.Seeds))
+            return Bad("Replay.seed_games_mismatch", "매니페스트의 경기 목록이 고정된 dry Seed 파일의 전체 계획과 정확히 같지 않습니다(SR-D1.1).");
+        if (!root.TryGetProperty("seed_manifest", out var recorded) || recorded.ValueKind != JsonValueKind.Object
+            || recorded.GetProperty("path").GetString() != pin.Path || recorded.GetProperty("sha256").GetString() != pin.Sha256)
+            return Bad("Replay.seed_manifest_hash_mismatch", "매니페스트가 기록한 Seed 파일 경로·SHA-256이 지정한 dry Seed 파일 고정값과 다릅니다.");
+        return StopPlan.FromSeedManifest(sm, pin.Path);
+    }
+
+    public static Result<ReplayPlan> Validate(JsonElement root, OfficialApprovals approvals, string? repositoryRoot = null, DryStopPin? dryPin = null)
     {
         static Result<ReplayPlan> Fail(string code, string message) => Result<ReplayPlan>.Failure(new Error(code, message));
         try
@@ -110,6 +201,14 @@ public static class ReplayCheck
                 return Fail("Replay.official_envelope_missing", $"공식 계열 경기(mode '{mode}', Competition Key '{competitionKey}')의 매니페스트에 official envelope가 없습니다(공식 replay를 일반 replay로 낮출 수 없음).");
             if (hasEnvelope && mode != "official")
                 return Fail("Replay.official_mode_mismatch", $"official envelope가 있는 매니페스트의 mode가 'official'이 아닙니다(받은 값 '{mode}').");
+            if (dryPin is not null && (hasEnvelope || !IsDryCompetitionKey(competitionKey)))
+                return Fail("Replay.dry_seed_manifest_unexpected", $"--seed-manifest/--seed-sha256는 fc2-dry 실행의 replay에만 쓸 수 있습니다(Competition Key '{competitionKey}'; 공식 replay는 승인된 고정값만 사용).");
+            var results = root.GetProperty("results");
+            if (results.TryGetProperty("run_status", out var status) && status.GetString() is RunReport.StatusCancelled or RunReport.StatusAborted)
+                return Fail("Replay.run_not_terminated", $"run_status '{status.GetString()}'인 실행은 정지 규칙으로 끝나지 않았으므로 replay 대상 결과가 아닙니다(SR-D3.4·SR-D3.5).");
+            var version = ResultVersion(results);
+            if (!version.IsSuccess)
+                return Result<ReplayPlan>.Failure(version.Error!.Value);
             if (engine.TryGetProperty("tuning_file_sha256", out var customTuning) && customTuning.ValueKind == JsonValueKind.String)
                 return Fail("Replay.test_tuning_not_replayable", "replay는 --tuning으로 읽은 시험용 튜닝 파일의 실행을 다시 만들 수 없습니다(매니페스트에 파일 해시만 있음).");
             var cohort = CohortRegistry.Resolve(run.GetProperty("cohort_id").GetString());
@@ -140,6 +239,7 @@ public static class ReplayCheck
             var games = RecordedGames(root.GetProperty("games"), competitionKey, cohort.Value.CohortId);
             if (!games.IsSuccess)
                 return Result<ReplayPlan>.Failure(games.Error!.Value);
+            StopPlan? trusted = null;
             if (hasEnvelope)
             {
                 if (OfficialReplay.Verify(official, configHash, approvals) is { } refused)
@@ -155,12 +255,22 @@ public static class ReplayCheck
                 var parkText = $"{park.GetProperty("stadium").GetString()}|{park.GetProperty("profile").GetString()}|{park.GetProperty("version").GetInt32()}|{park.GetProperty("home_runs_permille").GetInt32()}|"
                     + $"{park.GetProperty("hits_permille").GetInt32()}|{park.GetProperty("extra_base_hits_permille").GetInt32()}";
                 if (OfficialReplay.VerifyAgainstSeedFile(a, new RecordedRun(competitionKey, cohort.Value.CohortId, policy.Value.Id, engine.GetProperty("rules_profile_id").GetString()!, parkText, games.Value),
-                    approvals, repositoryRoot) is { } unbound)
+                    approvals, repositoryRoot, out var verified) is { } unbound)
                     return Result<ReplayPlan>.Failure(unbound);
+                if (StopPlan.FamilyIsStopAware(verified!.Family))                                  // fc3-cal: the pinned file's family requires v2 and a stop record (SR-D7.4)
+                    trusted = StopPlan.FromSeedManifest(verified, a.SeedManifestPath).Value;
+            }
+            else if (dryPin is not null)
+            {
+                var dry = DryPlan(dryPin, repositoryRoot, root, competitionKey, cohort.Value.CohortId, policy.Value.Id, Required(engine, "rules_profile_id"), games.Value);
+                if (!dry.IsSuccess)
+                    return Result<ReplayPlan>.Failure(dry.Error!.Value);
+                trusted = dry.Value;
             }
 
-            return Result<ReplayPlan>.Success(new ReplayPlan(Required(run, "run_id"), cohort.Value, policy.Value, rules, advancement, engine.GetProperty("event_budget").GetInt32(),
-                competitionKey, games.Value, configHash, Required(root.GetProperty("results"), "run_result_hash")));
+            var plan = new ReplayPlan(Required(run, "run_id"), cohort.Value, policy.Value, rules, advancement, engine.GetProperty("event_budget").GetInt32(),
+                competitionKey, games.Value, configHash, Required(results, "run_result_hash"));
+            return WithStop(plan, results, version.Value, trusted, competitionKey);
         }
         catch (Exception e) when (e is KeyNotFoundException or InvalidOperationException or FormatException)
         {

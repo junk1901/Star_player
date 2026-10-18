@@ -35,13 +35,14 @@ public sealed class OfficialAndReplayTests : IDisposable
         Assert.Equal(LegacyNeutralInputsHash, neutral.InputsHash);                          // the same input hash as before the registry
         Assert.Equal("normal-balanced-v1", H.Ok(PolicyRegistry.Resolve("normal-balanced-v1")).Id);
 
-        foreach (var declared in new[] { "neutral-opp-v1", "neutral-mixed-v1", "virtual-league-v1" })
-            Assert.Equal("Registry.cohort_not_implemented", CohortRegistry.Resolve(declared).Error!.Value.Code);   // ADR-008 names them; F-C2-B builds them; no placeholder now
+        Assert.Equal("Registry.cohort_not_implemented", CohortRegistry.Resolve("neutral-opp-v1").Error!.Value.Code);   // the strategy-matrix cohort is F-C2-C; no placeholder now
+        foreach (var built in new[] { "neutral-mixed-v1", "virtual-league-v1" })                                          // F-C2-B builds the two calibration cohorts (ADR-008 FC-D1 / FC-D2)
+            Assert.Equal(built, H.Ok(CohortRegistry.Resolve(built)).CohortId);
         foreach (var unknown in new[] { "nope", "Neutral-v1", "neutral-v2", "", null })
             Assert.Equal("Registry.cohort_unknown", CohortRegistry.Resolve(unknown).Error!.Value.Code);
         foreach (var unknown in new[] { "patient-careful-v1", "Normal-balanced-v1", "", null })
             Assert.Equal("Registry.policy_unknown", PolicyRegistry.Resolve(unknown).Error!.Value.Code);
-        Assert.Equal(new[] { "neutral-v1" }, CohortRegistry.Implemented.ToArray());
+        Assert.Equal(new[] { "neutral-mixed-v1", "neutral-v1", "virtual-league-v1" }, CohortRegistry.Implemented.Order(StringComparer.Ordinal).ToArray());
         Assert.Equal(new[] { "normal-balanced-v1" }, PolicyRegistry.Implemented.ToArray());
     }
 
@@ -318,7 +319,8 @@ public sealed class OfficialAndReplayTests : IDisposable
     public void Replay_refuses_unregistered_or_mismatched_inputs_instead_of_falling_back()
     {
         Assert.Equal("Registry.cohort_unknown", ReplayCode(m => m["run"]!["cohort_id"] = "neutral-v9"));
-        Assert.Equal("Registry.cohort_not_implemented", ReplayCode(m => m["run"]!["cohort_id"] = "neutral-mixed-v1"));
+        Assert.Equal("Registry.cohort_not_implemented", ReplayCode(m => m["run"]!["cohort_id"] = "neutral-opp-v1"));
+        Assert.Equal("Replay.cohort_hash_mismatch", ReplayCode(m => m["run"]!["cohort_id"] = "neutral-mixed-v1"));      // F-C2-B: now built, so the recorded neutral-v1 hash no longer matches it
         Assert.Equal("Replay.cohort_hash_mismatch", ReplayCode(m => m["engine"]!["cohort_inputs_hash"] = new string('0', 64)));
         Assert.Equal("Registry.policy_unknown", ReplayCode(m => m["engine"]!["policy_id"] = "patient-careful-v1"));
         Assert.Equal("Replay.schema_unsupported", ReplayCode(m => m["manifest_version"] = "simharness-manifest-v2"));

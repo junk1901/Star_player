@@ -17,6 +17,51 @@ public sealed record MetricDefinition(string FId, string TargetId, CohortKind Re
 public sealed record EvaluationPolicy(IReadOnlyDictionary<string, long> MinDenominatorByTarget, IReadOnlySet<string> ApprovedCohortIds)
 {
     public static EvaluationPolicy Unapproved { get; } = new(new Dictionary<string, long>(), new HashSet<string>());
+
+    /// <summary>
+    /// The owner-approved calibration evaluation policy of ADR-008 (F-C2-B): FC-D6.3 minimum denominators, FC-D6.4 stratum minimums of F1 / F8, FC-D1 / FC-D2 official cohorts (F1, F6, F7, F8 on
+    /// <c>neutral-mixed-v1</c>; F2 to F5 on <c>virtual-league-v1</c>), FC-D1.3 standardization of F1 / F8 (weights 3/7, 4/7) and the FC-D7.1 stratum floor of 100,000 valid PA. Applied by
+    /// <see cref="StratifiedEvaluator"/>; it is a policy, not an execution approval (no official run is enabled by it).
+    /// </summary>
+    public static EvaluationPolicy FcEvaluationV1 { get; } = new(
+        new Dictionary<string, long>(StringComparer.Ordinal)
+        {
+            ["pa_strikeout_rate"] = 8_158, ["pa_walk_rate"] = 15_297, ["pa_hit_by_pitch_rate"] = 38_239, ["pa_home_run_rate"] = 29_964, ["babip"] = 40_906, ["pitch_zone_rate"] = 3_043,
+            ["pitch_swing_rate"] = 4_795, ["swing_miss_rate"] = 6_229,
+        },
+        new HashSet<string>(StringComparer.Ordinal) { CalibrationCohorts.NeutralMixedId, CalibrationCohorts.VirtualLeagueId })
+    {
+        Id = "fc-evaluation-policy-v1",
+        IsApproved = true,
+        StratumMinimums = new Dictionary<string, (long Same, long Opposite)>(StringComparer.Ordinal) { ["F1"] = (3_497, 4_662), ["F8"] = (2_670, 3_560) },
+        StandardizedMetrics = new HashSet<string>(StringComparer.Ordinal) { "F1", "F8" },
+        OfficialCohortByMetric = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["F1"] = CalibrationCohorts.NeutralMixedId, ["F6"] = CalibrationCohorts.NeutralMixedId, ["F7"] = CalibrationCohorts.NeutralMixedId, ["F8"] = CalibrationCohorts.NeutralMixedId,
+            ["F2"] = CalibrationCohorts.VirtualLeagueId, ["F3"] = CalibrationCohorts.VirtualLeagueId, ["F4"] = CalibrationCohorts.VirtualLeagueId, ["F5"] = CalibrationCohorts.VirtualLeagueId,
+        },
+        StratumMinPa = SeedManifestReader.CalibrationMinPa,
+    };
+
+    public string Id { get; init; } = "unapproved";
+
+    /// <summary>Only an approved policy can give a calibration gate other than NOT_EVALUATED.</summary>
+    public bool IsApproved { get; init; }
+
+    /// <summary>FC-D6.4: per-handedness-stratum minimum denominators of the standardized metrics.</summary>
+    public IReadOnlyDictionary<string, (long Same, long Opposite)> StratumMinimums { get; init; } = new Dictionary<string, (long, long)>();
+
+    /// <summary>FC-D1.3: the metrics whose official estimate is the 3/7 · 4/7 standardization.</summary>
+    public IReadOnlySet<string> StandardizedMetrics { get; init; } = new HashSet<string>();
+
+    /// <summary>FC-D1 / FC-D2: the one cohort on which each metric is officially judged.</summary>
+    public IReadOnlyDictionary<string, string> OfficialCohortByMetric { get; init; } = new Dictionary<string, string>();
+
+    /// <summary>FC-D7.1: the valid-PA floor of a calibration stratum.</summary>
+    public long StratumMinPa { get; init; }
+
+    /// <summary>SHA-256 of the canonical policy text (traceability of an evaluation; not an approval by itself).</summary>
+    public string Hash() => Hashing.Sha256(StratifiedEvaluator.Canonical(this));
 }
 
 public sealed record WilsonInterval(long LowPpm, long HighPpm);
@@ -33,7 +78,8 @@ public static class MetricsEvaluator
     /// <summary>F1-F8 in order. Formulas are the F-A/B scope's; the target ids are the ones declared in the tuning file's <c>targets[]</c>.</summary>
     public static IReadOnlyList<MetricDefinition> Definitions { get; } =
     [
-        new("F1", "pa_strikeout_rate", CohortKind.VirtualLeague, "SO", "PA", c => (c.Strikeouts, c.PlateAppearances)),
+        // ADR-008 FC-D1.8 (C-1 resolved): F1 is judged on the neutral cohort (neutral-mixed-v1, standardized); the F-A/B recommendation VirtualLeague is history
+        new("F1", "pa_strikeout_rate", CohortKind.Neutral, "SO", "PA", c => (c.Strikeouts, c.PlateAppearances)),
         new("F2", "pa_walk_rate", CohortKind.VirtualLeague, "BB", "PA", c => (c.Walks, c.PlateAppearances)),
         new("F3", "pa_hit_by_pitch_rate", CohortKind.VirtualLeague, "HBP", "PA", c => (c.HitByPitch, c.PlateAppearances)),
         new("F4", "pa_home_run_rate", CohortKind.VirtualLeague, "HR", "PA", c => (c.HomeRuns, c.PlateAppearances)),
@@ -70,7 +116,9 @@ public static class MetricsEvaluator
 
             MetricStatus status;
             string reason;
-            if (den == 0)
+            if (policy.StandardizedMetrics.Contains(definition.FId))
+                (status, reason) = (MetricStatus.NotEvaluated, "공식 추정은 손잡이 층 표준화입니다(관측 합산은 진단; StratifiedEvaluator, FC-D1.3).");
+            else if (den == 0)
                 (status, reason) = (MetricStatus.InsufficientSample, "분모가 0입니다.");
             else if (!minKnown)
                 (status, reason) = (MetricStatus.NotEvaluated, "최소 표본 기준이 승인되지 않았습니다(F-C 선행 결정).");
