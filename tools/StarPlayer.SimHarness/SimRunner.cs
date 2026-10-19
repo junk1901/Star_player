@@ -73,15 +73,18 @@ public static class SimRunner
         return RunSpecs(config, seeds.Select((seed, i) => config.Spec(i + 1, seed)).ToList(), policy, cancellation);
     }
 
-    /// <summary>Plays exactly the given games (a replay's RECORDED index / game id / seed, already checked by <see cref="ReplayPlan.CheckAgainst"/>); nothing is regenerated.</summary>
-    public static RunResult RunSpecs(RunConfig config, IReadOnlyList<GameSpec> specs, EvaluationPolicy? policy = null, CancellationToken cancellation = default)
+    /// <summary>
+    /// Plays exactly the given games (a replay's RECORDED index / game id / seed, already checked by <see cref="ReplayPlan.CheckAgainst"/>); nothing is regenerated. <paramref name="play"/> is a test seam
+    /// (default: the production <see cref="GameExecutor"/>), as in <see cref="RunStopAware"/>.
+    /// </summary>
+    public static RunResult RunSpecs(RunConfig config, IReadOnlyList<GameSpec> specs, EvaluationPolicy? policy = null, CancellationToken cancellation = default, Func<GameSpec, GameRunResult>? play = null)
     {
         ArgumentNullException.ThrowIfNull(config);
         ArgumentNullException.ThrowIfNull(specs);
         var results = new List<GameRunResult>();
         foreach (var spec in specs)
         {
-            var result = GameExecutor.Play(config, spec, cancellation);
+            var result = play is null ? GameExecutor.Play(config, spec, cancellation) : play(spec);
             results.Add(result);
             if (result.Status == GameRunStatus.Cancelled)
                 break;

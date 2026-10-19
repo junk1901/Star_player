@@ -46,6 +46,10 @@ public static class Program
                 "dry" => DryCommand(options),
                 "official-dom" => OfficialDominanceCommand(options),
                 "replay-dom" => ReplayDominanceCommand(options),
+                "official-cal" => OfficialFamilyCommand(OfficialFamilyPlan.Calibration, options),
+                "replay-cal" => ReplayFamilyCommand(OfficialFamilyPlan.Calibration, options),
+                "official-int" => OfficialFamilyCommand(OfficialFamilyPlan.Integration, options),
+                "replay-int" => ReplayFamilyCommand(OfficialFamilyPlan.Integration, options),
                 _ => Usage($"Cli.command_unknown: {parsed.Value.Name}"),
             };
         }
@@ -138,9 +142,13 @@ public static class Program
         Console.WriteLine(JsonSerializer.Serialize(OfficialOutput.Result(report), RunReport.Json));
         foreach (var c in report.Checks.Where(c => c.Status != CheckStatus.Pass))
             Console.Error.WriteLine($"OFFICIAL PREFLIGHT {c.Status} {c.Id} {c.Code}: {c.Message}");
-        return Usage(report.Manifest?.Family == DominanceMatrix.Family
-            ? "Official.dominance_matrix_required: fc3-dom Seed 파일 하나는 48셀 행렬의 한 셀이므로 단독 실행하지 않습니다(official-dom 명령; 게임 미실행)."
-            : report.Ready ? "Official.execution_not_implemented: 이 계열의 공식 실행 경로는 구현되지 않았습니다(게임 미실행)." : $"{report.ErrorCode}: 공식 Preflight가 실행을 거부했습니다(게임 미실행).");
+        return Usage(report.Manifest?.Family switch
+        {
+            DominanceMatrix.Family => "Official.dominance_matrix_required: fc3-dom Seed 파일 하나는 48셀 행렬의 한 셀이므로 단독 실행하지 않습니다(official-dom 명령; 게임 미실행).",
+            "fc3-cal" => "Official.family_plan_required: fc3-cal Seed 파일 하나는 calibration 4층 계획의 한 층이므로 단독 실행하지 않습니다(official-cal 명령; 게임 미실행).",
+            "fc3-int" => "Official.family_plan_required: fc3-int Seed 파일 하나는 integration 두 모드 계획의 한 모드이므로 단독 실행하지 않습니다(official-int 명령; 게임 미실행).",
+            _ => report.Ready ? "Official.execution_not_implemented: 이 계열의 공식 실행 경로는 구현되지 않았습니다(게임 미실행)." : $"{report.ErrorCode}: 공식 Preflight가 실행을 거부했습니다(게임 미실행).",
+        });
     }
 
     /// <summary>
@@ -178,6 +186,44 @@ public static class Program
         if (outcome.Error is { } e && !outcome.GamesExecuted)
             return Usage($"{e.Code}: {e.Message}");
         Console.WriteLine(outcome.Error is { } d ? $"REPLAY DIFFERS {d.Code}: {d.Message}" : $"REPLAY MATCH 48 cells, dominance gate {DominanceEvaluation.Text(outcome.Evaluation!.Gate)}");
+        return outcome.Error is null ? 0 : 1;
+    }
+
+    /// <summary>
+    /// The official calibration / integration run (F-C2 B-6): <see cref="FamilyPreflight"/> against <see cref="OfficialApprovals.Current"/> and the real Git state; a refused preflight prints its document
+    /// and exits 2 without starting a game. Only a READY preflight enters <see cref="FamilyOfficial.Execute"/>. With the current approvals (no Final Execution Freeze) it always refuses.
+    /// </summary>
+    private static int OfficialFamilyCommand(OfficialFamilyPlan plan, IReadOnlyDictionary<string, string> o)
+    {
+        var root = RepositoryRoot();
+        if (root is null)
+            return Usage("Official.repository_unknown: StarPlayer.sln이 있는 저장소 안에서 실행해야 합니다.");
+        var approvals = OfficialApprovals.Current;
+        var report = FamilyPreflight.Run(plan, new DominanceOfficialRequest(root, o["run-id"], o.GetValueOrDefault("out")), approvals, GitIntegrity.Check(root));
+        if (!report.Ready)
+        {
+            Console.WriteLine(JsonSerializer.Serialize(FamilyOfficial.PreflightDocument(report, o["run-id"]), RunReport.Json));
+            foreach (var c in report.Checks.Where(c => c.Status != CheckStatus.Pass))
+                Console.Error.WriteLine($"OFFICIAL-{plan.Family.ToUpperInvariant()} PREFLIGHT {c.Status} {c.Id} {c.Code}: {c.Message}");
+            return Usage($"{report.ErrorCode}: {plan.Family} 공식 Preflight가 실행을 거부했습니다(게임 미실행, 통계 판정 아님).");
+        }
+
+        var result = FamilyOfficial.Execute(report, o["run-id"], approvals, root);
+        Console.WriteLine(FamilyOfficial.Text(result));
+        Console.WriteLine($"output: {report.OutputDirectory}");
+        return result.ExitCode;
+    }
+
+    /// <summary>Replay of an official calibration / integration result directory against <see cref="OfficialApprovals.Current"/>: 0 match, 1 a difference found by re-execution, 2 refused before any game.</summary>
+    private static int ReplayFamilyCommand(OfficialFamilyPlan plan, IReadOnlyDictionary<string, string> o)
+    {
+        var root = RepositoryRoot();
+        if (root is null)
+            return Usage("Official.repository_unknown: StarPlayer.sln이 있는 저장소 안에서 실행해야 합니다.");
+        var outcome = FamilyOfficialReplay.Verify(plan, o["result"], OfficialApprovals.Current, root);
+        if (outcome.Error is { } e && !outcome.GamesExecuted)
+            return Usage($"{e.Code}: {e.Message}");
+        Console.WriteLine(outcome.Error is { } d ? $"REPLAY DIFFERS {d.Code}: {d.Message}" : $"REPLAY MATCH {plan.Family} {plan.Units.Count} units, family gate {GateText.Of(outcome.Evaluation!.Gate)}");
         return outcome.Error is null ? 0 : 1;
     }
 
@@ -261,6 +307,8 @@ public static class Program
         Console.Error.WriteLine("       StarPlayer.SimHarness official --seed-manifest REPO_RELATIVE_FILE --run-id ID [--out build/simharness/official/DIR]");
         Console.Error.WriteLine("       StarPlayer.SimHarness official-dom --run-id ID [--out build/simharness/official/DIR]");
         Console.Error.WriteLine("       StarPlayer.SimHarness replay-dom --result OFFICIAL_48_CELL_RESULT_DIR");
+        Console.Error.WriteLine("       StarPlayer.SimHarness official-cal|official-int --run-id ID [--out build/simharness/official/DIR]");
+        Console.Error.WriteLine("       StarPlayer.SimHarness replay-cal|replay-int --result OFFICIAL_FAMILY_RESULT_DIR");
         return 2;
     }
 

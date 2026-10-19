@@ -39,6 +39,13 @@ public static class OfficialProfile
     /// <summary>FC-D3: calibration and integration measure with <c>normal-balanced-v1</c> only.</summary>
     public const string CalibrationPolicy = "normal-balanced-v1";
 
+    /// <summary>
+    /// The approved cohorts of an official family: <see cref="FamilyCohorts"/>, or for <c>fc3-int</c> (which ADR-008 does not name) the freeze slot <see cref="OfficialApprovals.IntegrationCohortIds"/>;
+    /// null (undeclared, NOT_READY) for every other case. The slot is null in <see cref="OfficialApprovals.Current"/>, so production integration stays undeclared.
+    /// </summary>
+    public static IReadOnlySet<string>? CohortsOf(string family, OfficialApprovals a) =>
+        FamilyCohorts.TryGetValue(family, out var cohorts) ? cohorts : family == "fc3-int" ? a.IntegrationCohortIds : null;
+
     public static string ParkTextOf(ParkFactorSnapshot p) => $"{p.Stadium.Value}|{p.Profile.Value}|{p.Version}|{p.HomeRuns.Permille}|{p.Hits.Permille}|{p.ExtraBaseHits.Permille}";
 
     public static string Hash()
@@ -56,10 +63,12 @@ public static class OfficialProfile
 /// <summary>
 /// Everything that must be frozen before an official run (Final Execution Freeze). <see cref="Current"/> is F-C2-A's truth: nothing is approved, so no official run or official replay can start.
 /// Any other instance exists only in tests. <see cref="DominanceGamesPerCell"/> is the frozen per-cell sample size of the 48-cell matrix (ADR-008 FC-D4.7); null until that freeze.
+/// <see cref="IntegrationCohortIds"/> is the owner's declaration of the <c>fc3-int</c> cohort(s), which ADR-008 FC-D7.2 does not name (F-C2 B-6; an open owner decision, no value is chosen here):
+/// null until declared, so every integration preflight and replay stays NOT_READY / refused.
 /// </summary>
 public sealed record OfficialApprovals(
     string? GitCommitSha, string? ExecutionPolicyId, string? ExecutionPolicyHash, IReadOnlyDictionary<string, string> SeedManifestPins, IReadOnlyDictionary<string, string> CohortInputsHashes,
-    bool ExecutionPathReady, int? DominanceGamesPerCell = null)
+    bool ExecutionPathReady, int? DominanceGamesPerCell = null, IReadOnlySet<string>? IntegrationCohortIds = null)
 {
     public static OfficialApprovals Current { get; } = new(null, null, null, StarPlayer.SimHarness.SeedManifestPins.Official, new Dictionary<string, string>(StringComparer.Ordinal), false);
 }
@@ -200,7 +209,7 @@ public static class OfficialPreflight
         CohortInputs? cohort = null;
         if (manifest is null)
             Unavailable("cohort");
-        else if (!OfficialProfile.FamilyCohorts.TryGetValue(manifest.Family, out var allowed))
+        else if (OfficialProfile.CohortsOf(manifest.Family, a) is not { } allowed)
             Add("cohort", CheckStatus.NotReady, "Official.family_cohorts_not_declared", $"ADR-008은 family '{manifest.Family}'의 공식 코호트를 정하지 않았습니다.");
         else if (!allowed.Contains(manifest.CohortId))
             Add("cohort", CheckStatus.Fail, "Official.cohort_not_approved_for_family", $"코호트 '{manifest.CohortId}'는 {manifest.Family}의 승인 코호트({string.Join(", ", allowed)})가 아닙니다.");
@@ -395,7 +404,7 @@ public static class OfficialReplay
             return E("Replay.competition_key_mismatch", $"Competition Key가 승인된 Seed 파일의 '{sm.CompetitionKey}'와 다릅니다(Attestation '{att.CompetitionKey}', 매니페스트 '{run.CompetitionKey}').");
         if (new[] { att.CohortId, run.CohortId }.Any(c => c != sm.CohortId) || new[] { att.PolicyId, run.PolicyId }.Any(p => p != sm.PolicyId) || new[] { att.RulesProfileId, run.RulesProfileId }.Any(r => r != sm.RulesProfileId))
             return E("Replay.seed_manifest_binding_mismatch", "코호트·정책·규칙 프로파일이 승인된 Seed 파일의 선언과 다릅니다.");
-        if (!OfficialProfile.FamilyCohorts.TryGetValue(sm.Family, out var cohorts) || !cohorts.Contains(sm.CohortId)
+        if (OfficialProfile.CohortsOf(sm.Family, a) is not { } cohorts || !cohorts.Contains(sm.CohortId)
             || (sm.Family is "fc3-cal" or "fc3-int" && sm.PolicyId != OfficialProfile.CalibrationPolicy))
             return E("Replay.official_profile_mismatch", $"family '{sm.Family}'에 승인되지 않은 코호트 '{sm.CohortId}' 또는 정책 '{sm.PolicyId}'입니다.");
         if (att.ParkSnapshot != OfficialProfile.ParkText || run.Park != att.ParkSnapshot)

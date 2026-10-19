@@ -104,15 +104,9 @@ public static class DominancePreflight
     public static PinScan PinnedCells(string root, OfficialApprovals a)
     {
         static PinScan Fail(string code, string message) => new(CheckStatus.Fail, code, message, []);
-        var dom = new List<(string Path, SeedManifest Manifest)>();
-        foreach (var (path, pin) in a.SeedManifestPins.OrderBy(p => p.Key, StringComparer.Ordinal))
-        {
-            var read = SeedManifestReader.Read(root, path, pin);
-            if (!read.IsSuccess)
-                return Fail(read.Error!.Value.Code, $"고정된 Seed 파일 '{path}': {read.Error.Value.Message}");
-            if (read.Value.Family == DominanceMatrix.Family)
-                dom.Add((path, read.Value));
-        }
+        if (OfficialPins.ReadAll(root, a, out var all) is { } unreadable)
+            return Fail(unreadable.Code, unreadable.Message);
+        var dom = all.Where(p => p.Manifest.Family == DominanceMatrix.Family).ToList();
 
         if (dom.Count == 0)
             return new PinScan(CheckStatus.NotReady, "Official.dominance_seed_manifests_not_frozen", "고정된 fc3-dom Seed 파일이 없습니다(Final Execution Freeze 전; 공식 Seed와 Pin은 승인값에서만).", []);
@@ -132,6 +126,52 @@ public static class DominancePreflight
             ? Fail("Official.dominance_cells_missing", $"48셀 중 {missing.Count}셀에 고정된 Seed 파일이 없습니다: {string.Join(", ", missing.Take(8))}{(missing.Count > 8 ? " …" : "")}(일부 셀만 공식 실행할 수 없음).")
             : new PinScan(CheckStatus.Pass, null, $"고정된 fc3-dom Seed 파일 48개가 48셀에 하나씩 결속됩니다.", cells.OrderBy(c => c.Cell.Number).ToList());
     }
+}
+
+/// <summary>Shared by the official multi-run paths (48-cell matrix, calibration, integration) so they read the approved pins and write a run's files in exactly one way.</summary>
+internal static class OfficialPins
+{
+    /// <summary>
+    /// Every approved pin, read against its pin, in path order. A pinned file that cannot be read is an integrity failure of the WHOLE approved set, whatever its family (F-C2 B-7: the conservative
+    /// fail-closed coupling, kept until the owner decides otherwise).
+    /// </summary>
+    public static Error? ReadAll(string root, OfficialApprovals a, out List<(string Path, SeedManifest Manifest)> files)
+    {
+        files = [];
+        foreach (var (path, pin) in a.SeedManifestPins.OrderBy(p => p.Key, StringComparer.Ordinal))
+        {
+            var read = SeedManifestReader.Read(root, path, pin);
+            if (!read.IsSuccess)
+                return new Error(read.Error!.Value.Code, $"고정된 Seed 파일 '{path}': {read.Error.Value.Message}");
+            files.Add((path, read.Value));
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// A run's directory and its three files, all created new through handles pinned below <paramref name="parent"/>: <c>manifest.json</c> (the existing <c>simharness-manifest-v1</c> with the existing
+    /// <c>simharness-official-v1</c> envelope and attestation v1), <c>summary.json</c>, <c>summary.txt</c>; returns the manifest's SHA-256.
+    /// </summary>
+    public static Result<string> WriteRun(PinnedDirectory parent, string name, OfficialAttestation att, RunResult run, EnvironmentInfo environment)
+    {
+        var created = parent.CreateSubdirectory(name);
+        if (!created.IsSuccess)
+            return Result<string>.Failure(created.Error!.Value);
+        using var directory = created.Value;
+        var manifest = JsonSerializer.SerializeToNode(RunReport.Manifest(run, environment), RunReport.Json)!.AsObject();
+        manifest["official"] = JsonSerializer.SerializeToNode(new { schema_version = OfficialAttestation.EnvelopeVersion, attestation = att, attestation_hash = att.Hash() }, RunReport.Json);
+        var sha = directory.WriteNewFile("manifest.json", Utf8(JsonSerializer.Serialize(manifest, RunReport.Json)));
+        if (!sha.IsSuccess)
+            return sha;
+        var summary = directory.WriteNewFile("summary.json", Utf8(JsonSerializer.Serialize(RunReport.Summary(run), RunReport.Json)));
+        if (!summary.IsSuccess)
+            return summary;
+        var text = directory.WriteNewFile("summary.txt", Utf8(RunReport.Text(run)));
+        return text.IsSuccess ? sha : text;
+    }
+
+    public static byte[] Utf8(string content) => new UTF8Encoding(false).GetBytes(content);
 }
 
 public enum DominanceRunTermination { Completed, Cancelled, AbortedIntegrity }
@@ -262,26 +302,10 @@ public static class DominanceOfficial
     };
 
     /// <summary>The cell's directory and its three files, all created new through handles pinned below the run directory; returns the manifest's SHA-256.</summary>
-    private static Result<string> WriteCell(PinnedDirectory cells, DominanceCellPreflight plan, RunResult run, EnvironmentInfo environment)
-    {
-        var created = cells.CreateSubdirectory(plan.Pinned.Cell.Id.ToLowerInvariant());
-        if (!created.IsSuccess)
-            return Result<string>.Failure(created.Error!.Value);
-        using var cell = created.Value;
-        var att = plan.Report.Attestation!;
-        var manifest = JsonSerializer.SerializeToNode(RunReport.Manifest(run, environment), RunReport.Json)!.AsObject();
-        manifest["official"] = JsonSerializer.SerializeToNode(new { schema_version = OfficialAttestation.EnvelopeVersion, attestation = att, attestation_hash = att.Hash() }, RunReport.Json);
-        var sha = cell.WriteNewFile("manifest.json", Utf8(JsonSerializer.Serialize(manifest, RunReport.Json)));
-        if (!sha.IsSuccess)
-            return sha;
-        var summary = cell.WriteNewFile("summary.json", Utf8(JsonSerializer.Serialize(RunReport.Summary(run), RunReport.Json)));
-        if (!summary.IsSuccess)
-            return summary;
-        var text = cell.WriteNewFile("summary.txt", Utf8(RunReport.Text(run)));
-        return text.IsSuccess ? sha : text;
-    }
+    private static Result<string> WriteCell(PinnedDirectory cells, DominanceCellPreflight plan, RunResult run, EnvironmentInfo environment) =>
+        OfficialPins.WriteRun(cells, plan.Pinned.Cell.Id.ToLowerInvariant(), plan.Report.Attestation!, run, environment);
 
-    private static byte[] Utf8(string content) => new UTF8Encoding(false).GetBytes(content);
+    private static byte[] Utf8(string content) => OfficialPins.Utf8(content);
 
     private static object Checks(IEnumerable<PreflightCheck> checks) =>
         checks.Select(c => new { id = c.Id, status = c.Status switch { CheckStatus.Pass => "PASS", CheckStatus.Fail => "FAIL", _ => "NOT_READY" }, code = c.Code, message = c.Message }).ToList();

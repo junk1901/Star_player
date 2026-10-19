@@ -626,3 +626,21 @@ PCG32, 스트림 ID/키 유도, `GameRandom`(스트림 집합·스냅샷·복원
 - Commit 후보: 15개(수정 9 + 신규 6), 파일별 Manifest는 보고서 §11-5. 보호 파일 `TASK.md`·`docs/2023recordRule.pdf`·`docs/2026-official-baseball-rules.pdf` 제외. Staging 0.
 - 미결: P-1~P-6, B-1~B-8(B-6 `fc3-cal`/`fc3-int` 공식 실행 연결은 F-C2 잔여 구현), Final Execution Freeze 승인값, 실제 Official Execution. Official Execution `NOT_READY`, Final Execution Freeze `PENDING`, F-C2 전체·Phase 3-F·Phase 3 Gate `INCOMPLETE`.
 - 보고서: [PHASE_3F_FC2_PZL_DRY_PILOT_REPORT.md §11](../../docs/reports/PHASE_3F_FC2_PZL_DRY_PILOT_REPORT.md)
+
+## 부록 — F-C2 B-6 `fc3-cal`·`fc3-int` 공식 실행 경로 (2026-10-19, `검토 대기`)
+
+- 상태: 구현·자체 시험 완료, **`검토 대기`**(GPT Chat 검토 `미실시`, Codex 리뷰 `미실시`). 기준 HEAD `1b386d3`(PZL·Dry Pilot 로컬 Closeout Commit) 불변, 미스테이징·미커밋·미푸시.
+- 구현: `FamilyOfficial.cs`(Family Preflight → 실행 → 단위 저장 → DRAFT 색인 → Replay), 명령 `official-cal`·`replay-cal`·`official-int`·`replay-int`. 계획은 승인 Pin에서만 도출, 단위별 기존 단일 Preflight·Attestation v1, calibration은 기존 정지 규칙 실행기(블록 경계 정지·블록마다 Pin 재검증), integration은 모드별 100경기 전체 실행, 출력은 OI-01 `PinnedDirectory`, 평가는 기존 평가기만.
+- 시험: 신규 17개(SimHarness 370), 표적 Sabotage 7건 모두 검출(try1의 시험 공백 1건은 시험 추가로 보완, 두 시도 보존). 전체 Verify 결과는 `docs/reports/PHASE_3F_FC2_B6_VERIFY_LOG.md`.
+- 차단 유지: 현재 승인값으로 네 명령 모두 Exit 2·게임 0회·출력 0. 공식 Seed·Pin·표본 수·코호트·Schema·Hash 미생성. `fc3-int` 코호트는 ADR-008 미정(B-6a, 빈 슬롯 `IntegrationCohortIds`).
+- 미결: B-6a~B-6d, B-1~B-8, P-1~P-6. Official Execution `NOT_READY`, Final Execution Freeze `PENDING`, F-C2 전체·Phase 3-F·Phase 3 Gate `INCOMPLETE`.
+- 보고서: [PHASE_3F_FC2_B6_OFFICIAL_CAL_INT_REPORT.md](../../docs/reports/PHASE_3F_FC2_B6_OFFICIAL_CAL_INT_REPORT.md)
+
+## 부록 2026-10-19 — 3-F F-C2 B-6 DRAFT Closeout 준비 (Claude Code 문서 정리, 코드·시험 변경 없음)
+
+- 상태: `검토 대기` 유지(`승인 완료` 아님; GPT Chat 검토·소유자 Closeout 승인 기록 없음). B-6 DRAFT `READY_FOR_OWNER_CLOSEOUT_REVIEW`. 기준 HEAD `1b386d3503465ce0ba66d9721936b3f667aece1a` 불변, 미스테이징·미커밋·미푸시, 로컬 Closeout Commit 미실시. 위 부록의 "독립 리뷰 `미실시`"는 작성 당시 기록이며 이 부록이 최신이다.
+- 독립 리뷰: Codex High 집중 재검토(소유자 전달 요약, READ-ONLY, 빌드·시험 재실행 없음). 최초 MINOR 2건 — B6-01(Metrics 오류 층이 Family 결합에서 누락되어 표본 부족보다 우선), B6-02(Integration Replay가 Manifest pitches·plate_appearances 미비교) — 모두 해결, 신규 BLOCKER/MAJOR/MINOR 0.
+- 검증: FIX1 `verify.ps1` `GATE: PASS` 2,805 PASS / 0 FAIL / 0 SKIP(SimHarness 374). 로그 SHA-256 `6317522e…c23e`, `verify-result.json` `e306964d…147b0`; 이번에는 해시 재확인만 했고 빌드·시험·Verify·Sabotage는 재실행하지 않았다.
+- NOTE: (1) `schema_status`·`official_evidence`는 공식 Replay 인증 필드가 아님(B-1 소관); (2) 기존 증거 스냅샷 1,003개 중 현재 1,002개 동일, 1개는 FIX1 Addendum이 추가된 B-6 보고서; (3) Codex의 READ-ONLY 링크 검사는 전체 Verify 재실행과 별개(재실행 `미실시`); (4) B-6a~d·B-1~B-8·P-1~P-6 미확정.
+- Commit 후보: 16개(수정 11 + 신규 5), 보호 파일 3개 제외, Staging 0. Official Execution `NOT_READY`, Final Execution Freeze `PENDING`, F-C2 전체·Phase 3-F·Phase 3 Gate `INCOMPLETE`.
+- 보고서: [PHASE_3F_FC2_B6_OFFICIAL_CAL_INT_REPORT.md Closeout Addendum](../../docs/reports/PHASE_3F_FC2_B6_OFFICIAL_CAL_INT_REPORT.md)

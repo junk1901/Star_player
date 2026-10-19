@@ -145,8 +145,16 @@ public class StrictCliTests
     [Fact]
     public void Each_command_has_one_authoritative_whitelist()
     {
-        // F-C2-B adds the non-official stop-aware dry run (ADR-009 SR-D4); the F-C2 official integration adds the 48-cell run and its replay
-        Assert.Equal(new[] { "dry", "official", "official-dom", "replay", "replay-dom", "run" }, Cli.Commands.Keys.Order(StringComparer.Ordinal).ToArray());
+        // F-C2-B adds the non-official stop-aware dry run (ADR-009 SR-D4); the F-C2 official integration adds the 48-cell run and its replay; B-6 adds the calibration and integration runs and replays
+        Assert.Equal(new[] { "dry", "official", "official-cal", "official-dom", "official-int", "replay", "replay-cal", "replay-dom", "replay-int", "run" }, Cli.Commands.Keys.Order(StringComparer.Ordinal).ToArray());
+        foreach (var plan in new[] { "official-cal", "official-int" })
+        {
+            Assert.Equal(new[] { "out", "run-id" }, Cli.Commands[plan].Options.Keys.Order(StringComparer.Ordinal).ToArray());   // no seed file, pin, target or size from the command line
+            Assert.Equal(new[] { "run-id" }, Cli.Commands[plan].Required.ToArray());
+            Assert.Equal(Cli.Commands["official-dom"].Forbidden.Keys.Order(StringComparer.Ordinal), Cli.Commands[plan].Forbidden.Keys.Order(StringComparer.Ordinal));
+        }
+
+        Assert.All(new[] { "replay-cal", "replay-int" }, r => Assert.Equal(new[] { "result" }, Cli.Commands[r].Options.Keys.ToArray()));
         Assert.Equal(new[] { "out", "run-id" }, Cli.Commands["official-dom"].Options.Keys.Order(StringComparer.Ordinal).ToArray());   // no seed file, pin or size from the command line
         Assert.Equal(new[] { "run-id" }, Cli.Commands["official-dom"].Required.ToArray());
         Assert.Equal(new[] { "result" }, Cli.Commands["replay-dom"].Options.Keys.ToArray());
