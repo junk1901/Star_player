@@ -196,7 +196,29 @@ public static class RunReport
             revision = g.Failure.Revision, rng_hash = g.Failure.RngHash, last_receipts = g.Failure.LastReceipts,
         }).ToList(),
         calibration_evaluation = run.StopAware ? Evaluation(run) : null,
+        regulation_runs_diagnostic = run.StopAware ? RegulationDiagnostic(run) : null,
+        pzl_checks = new
+        {
+            note = "이 실행 하나의 Pitch Zone Lite 검사 결과(파생 데이터, 어떤 Hash에도 없음). 공식 절 PASS는 F-C3 공식 실행 증거가 필요합니다(ADR-008 FC-D8·FC-D12). #6은 Infrastructure.Tests의 JSON 왕복 시험입니다.",
+            checks = PzlChecks.Evaluate(run).Select(c => new { id = c.Id, clause = c.Clause, status = c.Status, reason = c.Reason, counts = c.Counts }).ToList(),
+        },
     };
+
+    /// <summary>
+    /// The fc2-dry σ_g measurement (proposal §6.5): the game observation of FC-D4.2 (innings 1-8 runs / 16) over the completed games whose line score cross-checked. A measurement only: the σ_g pilot rule
+    /// (maximum × 1.2, rounding to 50 games) and the per-cell sample size are Final Execution Freeze candidates (ADR-008 FC-D4.7, N-1) and are not computed here. Derived data: in no hash.
+    /// </summary>
+    private static object RegulationDiagnostic(RunResult run)
+    {
+        var completed = run.Games.Where(g => g.Completed).ToList();
+        var sample = CellSample.Of(completed.Where(g => g.Regulation is { Ok: true }).Select(g => g.Regulation!.Total));
+        return new
+        {
+            note = "진단 측정값(판정 아님). σ_g 파일럿 규칙(최댓값×1.2, 50경기 올림)과 셀당 표본 수는 Final Execution Freeze 후보이며 계산하지 않습니다.",
+            games = sample.Games, regulation_errors = completed.Count(g => g.Regulation is not { Ok: true }), total_runs_innings_1_8 = sample.TotalRuns, sum_of_squares = sample.SumOfSquares,
+            mean_runs_per_half_inning = sample.Games > 0 ? sample.Mean : (double?)null, sigma_g_game_observation_sd = sample.Variance is { } v ? Math.Sqrt(v) : (double?)null,
+        };
+    }
 
     /// <summary>The ADR-008 stratified evaluation of a stop-aware run under <see cref="EvaluationPolicy.FcEvaluationV1"/> (a dry run's gate is always NOT_EVALUATED). Derived data: in no hash.</summary>
     private static object Evaluation(RunResult run)
@@ -273,6 +295,7 @@ public static class RunReport
         }
         var bad = run.Games.Where(g => g.CrossCheck is { Passed: false }).ToList();
         t.AppendLine(bad.Count == 0 ? "cross-check (events vs BoxScoreBuilder): all completed games match" : $"cross-check MISMATCH in {string.Join(", ", bad.Select(g => $"{g.Game.GameId} seed {g.Game.Seed}"))}");
+        t.AppendLine(PzlChecks.Text(PzlChecks.Evaluate(run)));
         return t.ToString();
     }
 

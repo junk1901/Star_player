@@ -84,6 +84,7 @@ public static class Program
         RunReport.Write(result, environment, directory, tuningFileSha256);
         Console.Write(RunReport.Text(result));
         Console.WriteLine($"output: {directory}");
+        ReportPzlFailures(result);
         if (!result.MetricsComputed)
             Console.Error.WriteLine($"METRICS ERROR {result.Metrics.Error!.Value.Code}: {result.Metrics.Error.Value.Message} (run {built.Value.RunId}, config {result.ConfigHash}, inputs {built.Value.Cohort.InputsHash})");
         return ExitCodeOf(result);
@@ -222,7 +223,15 @@ public static class Program
         RunReport.Write(result, EnvironmentInfo.Capture(started, DateTimeOffset.UtcNow, sha, dirty), directory);
         Console.Write(RunReport.Text(result));
         Console.WriteLine($"output: {directory}");
+        ReportPzlFailures(result);
         return ExitCodeOf(result);
+    }
+
+    /// <summary>A failed Pitch Zone Lite check is never silent: it is in summary.json / summary.txt and on stderr. The exit code keeps its meaning (exit 0 is never a gate verdict, SR-D9).</summary>
+    private static void ReportPzlFailures(RunResult run)
+    {
+        foreach (var c in PzlChecks.Evaluate(run).Where(c => c.Status == PzlChecks.Fail))
+            Console.Error.WriteLine($"PZL CHECK FAIL {c.Id}: {c.Reason} (run {run.Config.RunId}, config {run.ConfigHash})");
     }
 
     private static Result<RunConfig> Build(string runId, string mode, string rules, string advancement, int eventBudget, TuningProfile? custom = null, CohortInputs? cohort = null, IGamePolicy? policy = null,

@@ -69,6 +69,9 @@ public sealed record GameRunResult(
     /// reached a final state. It is a pure function of the committed events, so it is NOT part of <see cref="ResultHash"/> (<c>game-result-v1</c> is unchanged) and a replay compares it by re-execution.
     /// </summary>
     public RegulationRuns? Regulation { get; init; }
+
+    /// <summary>What the game's committed events showed for Pitch Zone Lite #5 / #10 / #12a (<see cref="PzlRecorder"/>); derived data, NOT part of <see cref="ResultHash"/>.</summary>
+    public PzlGameObservation? Pzl { get; init; }
 }
 
 /// <summary>

@@ -605,3 +605,24 @@ PCG32, 스트림 ID/키 유도, `GameRandom`(스트림 집합·스냅샷·복원
 - **Commit 후보:** 19개(수정 10 + 신규 9), 파일별 Manifest는 보고서 §13-4. 보호 파일 `TASK.md`·`docs/2023recordRule.pdf`·`docs/2026-official-baseball-rules.pdf` 제외. Staging 0, 로컬 Closeout Commit 미실시.
 - **미결:** B-1~B-7(B-6 `fc3-cal`/`fc3-int` 공식 실행 경로는 F-C2 잔여 구현이며 자동으로 F-C3에 넘기지 않음), PZL #5·#6·#10·#12a, Dry Pilot, Final Execution Freeze, 실제 Official Execution. 공식 결과 색인은 DRAFT·`official_evidence: false`.
 - **상태:** 리뷰 상태 `검토 대기`(`승인 완료` 아님). F-C2 Official Integration `READY_FOR_OWNER_CLOSEOUT_REVIEW` · Official Execution `NOT_READY` · Final Execution Freeze `PENDING` · F-C2 전체·Phase 3-F·Phase 3 Gate `INCOMPLETE`.
+
+## 부록 2026-10-18 — 3-F F-C2 PZL 잔여 검사·비공식 Dry Pilot (Claude Code 구현·자체 시험, 독립 리뷰 `미실시`)
+
+- 상태: `검토 대기`. 기준 HEAD `5d7264a`(F-C2 Official Integration DRAFT 로컬 Closeout Commit) 불변, 미스테이징·미커밋·미푸시.
+- PZL #5·#10·#12a 실행 수준 검사(Harness, Hash 밖 파생 데이터), #6 Infrastructure ef2 JSON 왕복 Replay 시험(비공식 대체 표본 20경기, 공식 표본은 BLOCKED), #12b `DEFERRED`. 신규 시험 13개, Sabotage 13건 검출.
+- 비공식 Dry Pilot 1,030경기: 별도 프로세스 재실행 Hash 동일, Replay MATCH 9/9, 거부 경로 22개 기대대로, 공식 명령 전부 거부·공식 출력 0. σ_g 측정만(표본 수 미도출), batch-means DEFF 1건 > 2(묶음 2개) 소유자 보고.
+- `verify.ps1` try1 `GATE: FAIL`(기존 경계 시험이 RNG·확률 형식 이름 언급을 거부 → 코드 수정, 시험 약화 없음), run2 `GATE: PASS` 2,784 PASS / 0 FAIL / 0 SKIP.
+- 미결: 보고서 §5 P-1~P-6, B-1~B-8(B-6은 F-C2 잔여 구현). Official Execution `NOT_READY`, Final Execution Freeze `PENDING`, Phase 3-F·Phase 3 Gate `INCOMPLETE`. GPT Chat·Codex 검토 결과는 기록되지 않았다(`미실시`).
+- 보고서: [PHASE_3F_FC2_PZL_DRY_PILOT_REPORT.md](../../docs/reports/PHASE_3F_FC2_PZL_DRY_PILOT_REPORT.md)
+
+## 부록 2026-10-19 — 3-F F-C2 PZL·Dry Pilot Closeout 준비 (Claude Code 문서 정리, 소유자 전달 독립 리뷰 반영)
+
+- 상태: `검토 대기`(`승인 완료` 아님; GPT Chat 검토·소유자 Closeout 승인 기록 없음). F-C2 PZL·Dry Pilot `READY_FOR_OWNER_CLOSEOUT_REVIEW`. 기준 HEAD `5d7264a` 불변, 미스테이징·미커밋·미푸시, 로컬 Closeout Commit 미실시. 이 부록은 문서만 갱신했고 코드·시험 변경, 빌드·시험·Verify·Dry Pilot 재실행은 없다.
+- 독립 리뷰: Codex High, READ-ONLY, 전체 시험 미재실행, PZL #5·#6·#10·#12a 및 비공식 Dry Pilot에 BLOCKER 0 / MAJOR 0(소유자 전달 요약, Codex 원문은 이 세션에서 읽지 않음). 위 2026-10-18 부록의 "독립 리뷰 `미실시`"는 작성 당시 기록이며 이 부록이 최신이다.
+- 구현 완료: PZL #5·#10·#12a 실행 수준 검사, #6 Infrastructure ef2 JSON 왕복 Replay 시험(비공식 20경기 표본). #12b `DEFERRED`(#12a와 구별).
+- 비공식 Dry Pilot: 9 Runs / 1,030경기, 314,453 사건 관찰(위치 사건 = `ef2` 236,855), 기록된 위반 0, Replay MATCH 9/9. Official Evidence 아님.
+- 검증: 최종 `verify.ps1` run2 `GATE: PASS` 2,784 PASS / 0 FAIL / 0 SKIP(log SHA-256 `bd69e9e7…a231`, `verify-result.json` `46c7aa02…041b`, archive `…_PZL_DRY_PILOT_run1/`; try1 `GATE: FAIL` 별도 보존). 이번 세션은 해시·시각·합계의 읽기 전용 재확인만 했다. 기존 증거 492개 전체 불변 주장은 과거 해시 목록으로 재검증하지 않았다(`미검증`).
+- 비차단 NOTE(보고서 §11-3): (1) `PzlChecks.Evaluate`가 `Pzl == null` 경기를 0 관찰로 대체해 혼합 RunResult의 일부 누락이 보이지 않을 수 있음 → 공식 PZL 증거 처리 시 경기별 관찰 존재·확정 사건 수 = 관찰 수·누락 경기 PASS 금지 확인; (2) `summary.json`은 비인증 파생 결과이며 위조해도 Replay MATCH(결속은 P-5 / B-1); (3) #6 Sabotage S7·S8·S10은 신규 20경기 표본에서 검출되지 않고 넓은 JSON/Replay 시험에서 검출, 공식 #6 표본은 `BLOCKED`; (4) #12b `DEFERRED`.
+- Commit 후보: 15개(수정 9 + 신규 6), 파일별 Manifest는 보고서 §11-5. 보호 파일 `TASK.md`·`docs/2023recordRule.pdf`·`docs/2026-official-baseball-rules.pdf` 제외. Staging 0.
+- 미결: P-1~P-6, B-1~B-8(B-6 `fc3-cal`/`fc3-int` 공식 실행 연결은 F-C2 잔여 구현), Final Execution Freeze 승인값, 실제 Official Execution. Official Execution `NOT_READY`, Final Execution Freeze `PENDING`, F-C2 전체·Phase 3-F·Phase 3 Gate `INCOMPLETE`.
+- 보고서: [PHASE_3F_FC2_PZL_DRY_PILOT_REPORT.md §11](../../docs/reports/PHASE_3F_FC2_PZL_DRY_PILOT_REPORT.md)

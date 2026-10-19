@@ -18,10 +18,12 @@ public static class GameExecutor
 {
     private const int TailReceipts = 12;
 
-    public static GameRunResult Play(RunConfig run, GameSpec game, CancellationToken cancellation = default)
+    /// <param name="observe">Called with each confirmed commit, after the harness' own observation (a read-only test seam for the Pitch Zone Lite #6 JSON round trip; it cannot change the game).</param>
+    public static GameRunResult Play(RunConfig run, GameSpec game, CancellationToken cancellation = default, Action<CommitRecord>? observe = null)
     {
         var timer = Stopwatch.StartNew();
         var recorder = new MetricsRecorder();
+        var pzl = new PzlRecorder(game.GameId);
 
         GameRunResult Stopped(GameRunStatus status, GameCursor? cursor, string code, string message, string stage, CrossCheckResult? cross = null)
         {
@@ -29,7 +31,7 @@ public static class GameExecutor
             var receipts = current?.State.AppliedEvents ?? [];
             var failure = new RunFailure(code, message, stage, current?.LastEventSequence ?? 0, current?.Revision ?? 0, current?.Rng.StateHash ?? "-",
                 receipts.Skip(Math.Max(0, receipts.Count - TailReceipts)).Select(r => new ReceiptRef(r.EventId, r.Kind, r.Fingerprint)).ToList());
-            return Build(run, game, status, failure, current, recorder.Counters, cross, timer.Elapsed.TotalMilliseconds);
+            return Build(run, game, status, failure, current, recorder.Counters, cross, timer.Elapsed.TotalMilliseconds, pzl.Finish(current?.State.AppliedEvents, current?.Rng.Streams.Select(s => s.Stream.Canonical)));
         }
 
         if (run.CheckPins() is { } pins)
@@ -50,9 +52,11 @@ public static class GameExecutor
                 if (before.LastEventSequence >= run.EventBudget)
                     return Stopped(GameRunStatus.Failed, cursor, "Harness.event_budget_exceeded", $"경기가 이벤트 예산 {run.EventBudget}건 안에 끝나지 않았습니다(종료로 취급하지 않음).", "budget");
 
-                var step = Advance(run, cursor, cancellation);
+                var step = Advance(run, cursor, cancellation, out var pitch);
                 if (!step.IsSuccess)
                     return Stopped(GameRunStatus.Failed, cursor, step.Error!.Value.Code, step.Error.Value.Message, "advance");
+                pzl.Observe(step.Value, pitch);
+                observe?.Invoke(step.Value);
                 var seen = recorder.Observe(step.Value);
                 if (seen == ObserveOutcome.SequenceGap)
                     return Stopped(GameRunStatus.Failed, cursor, "Harness.event_sequence_gap", "확정된 사건 순번이 건너뛰었습니다.", "observe");
@@ -74,7 +78,7 @@ public static class GameExecutor
                 return Stopped(GameRunStatus.Failed, cursor, "Harness.crosscheck_mismatch", $"이벤트 집계와 BoxScore가 다릅니다: {text}", "crosscheck", cross);
             }
 
-            return Build(run, game, GameRunStatus.Completed, null, last, recorder.Counters, cross, timer.Elapsed.TotalMilliseconds);
+            return Build(run, game, GameRunStatus.Completed, null, last, recorder.Counters, cross, timer.Elapsed.TotalMilliseconds, pzl.Finish(last.State.AppliedEvents, last.Rng.Streams.Select(s => s.Stream.Canonical)));
         }
         catch (OperationCanceledException)
         {
@@ -88,8 +92,10 @@ public static class GameExecutor
 
     // ---------------------------------------------------------------- one action
 
-    private static Result<CommitRecord> Advance(RunConfig run, GameCursor cursor, CancellationToken ct)
+    /// <param name="pitch">The preparation of the pitch this step committed (null for a step that commits no pitch); read only by <see cref="PzlRecorder"/>.</param>
+    private static Result<CommitRecord> Advance(RunConfig run, GameCursor cursor, CancellationToken ct, out PreparedPitch? pitch)
     {
+        pitch = null;
         var current = cursor.Current;
         var state = current.State;
         var legal = GameReducer.LegalActions(state);
@@ -128,6 +134,7 @@ public static class GameExecutor
         var prepared = PitchPreparation.Prepare(state, current.Rng, tuning, intent, take, batter, pitcher, ct, null, inputs);
         if (!prepared.IsSuccess)
             return Result<CommitRecord>.Failure(prepared.Error!.Value);
+        pitch = prepared.Value;
 
         if (prepared.Value.Draft.Kind != PitchBranchKind.InPlay)
         {
@@ -168,7 +175,8 @@ public static class GameExecutor
 
     // ---------------------------------------------------------------- the result and its hashes
 
-    private static GameRunResult Build(RunConfig run, GameSpec game, GameRunStatus status, RunFailure? failure, AuthoritativeGame? last, MetricCounters counters, CrossCheckResult? cross, double elapsed)
+    private static GameRunResult Build(RunConfig run, GameSpec game, GameRunStatus status, RunFailure? failure, AuthoritativeGame? last, MetricCounters counters, CrossCheckResult? cross, double elapsed,
+        PzlGameObservation pzl)
     {
         var state = last?.State;
         var final = state?.Final;                                   // an engine-final game keeps its outcome even when the harness then rejects its data
@@ -186,6 +194,6 @@ public static class GameExecutor
             .Append(last?.LastEventSequence ?? 0).Append('|').Append(eventHash).Append('|').Append(rngHash).Append('|').Append(failure?.Code ?? "-").Append('|')
             .Append(counters.Canonical());
         return new GameRunResult(game, status, failure, final?.Outcome, kind, state?.AwayRuns ?? 0, state?.HomeRuns ?? 0, inning, half, last?.LastEventSequence ?? 0, counters, cross,
-            eventHash, rngHash, Hashing.Sha256(text.ToString()), elapsed) { Regulation = done ? RegulationRuns.Of(state!) : null };
+            eventHash, rngHash, Hashing.Sha256(text.ToString()), elapsed) { Regulation = done ? RegulationRuns.Of(state!) : null, Pzl = pzl };
     }
 }
