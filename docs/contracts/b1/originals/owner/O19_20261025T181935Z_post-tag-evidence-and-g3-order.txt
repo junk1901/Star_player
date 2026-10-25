@@ -1,0 +1,80 @@
+
+
+<pasted_content id="8be2">
+Star Player — B1 Post-Tag 증거 보존 및 G3 조사 준비
+현재 기준
+B1 코드 기준본이 깨끗한 체크아웃에서 모든 검증을 통과했다.
+Tag:
+b1-code-accepted-2026-10-26
+대상 Commit:
+7bdde7dd091f9a66957bc740c77d470c7732b3ad
+검증 결과:
+
+* GATE PASS
+* 3,041 PASS / 0 FAIL / 0 SKIP
+* Manifest 213/213
+* D3 5/5
+* Codex 원본 12/12
+* RED 로그 3/3
+* Golden 4/4
+* Dry Pilot 9 Run 동일
+* D1 깨진 링크 0개
+
+이 Tag는 B1 코드 구현 수용 기준본으로 유지한다.
+1. 후속 증거 문서 정리
+다음 자료를 보존 대상으로 승인한다.
+
+* B1_GIT_BASELINE_REPORT.md
+* 구현 로그 추가 기록
+* 깨끗한 체크아웃 Verify 로그 사본 2개
+* O17 OWNER 지시 원문
+
+현재 시점의 후속 OWNER 지시 원문도 실제 세션 로그에서 확보할 수 있는 경우 출처를 확인해 보존한다.
+각 자료에 대해 원본 경로, 시각, 바이트 SHA, 출처와 독립 검증 여부를 기록한다.
+원문 재작성·추정 복원 금지.
+민감정보 검사 후 보존하고, 해당 자료가 승인 계약 원본이나 Codex 판정 원본이라고 잘못 표시하지 않는다.
+2. Post-Tag Evidence Index
+기존 B1 구현 Manifest 213개 항목은 수정하지 않는다.
+후속 증거에 대한 별도 색인과 SHA 목록을 작성한다.
+기존 Tag에서 고정한 내용과 Tag 이후 추가된 증거를 명확히 구분한다.
+원본이 .txt인 경우 임의로 .md로 변경하지 않는다.
+3. 문서 전용 Commit
+이번 후속 작업은 증거 보존 및 문서 정리에 한정한다.
+코드·테스트·Golden·승인 계약·기존 OWNER 원문·루트 TASK.md는 수정하지 않는다.
+변경 파일을 명시적으로 Stage하고 내용과 SHA를 검증한다.
+Post-Tag 증거 파일만 별도 로컬 Commit으로 보존한다.
+기존 Tag를 이동·삭제·재생성하지 않는다.
+Commit 이후 D1 링크 검사, D3 SHA 검사, 추가 증거 SHA 검사와 Git 변경 범위를 확인한다.
+코드와 테스트가 바뀌지 않았다면 기존 Tag의 전체 Verify 결과를 그대로 구분해 인용하되, 후속 문서 Commit에서 새로 전체 Verify를 실행했다고 주장하지 않는다.
+Remote Push는 금지한다.
+4. G3 빌드 재현성 원인 조사
+현재 서로 다른 깨끗한 체크아웃에서 SimHarness DLL SHA가 서로 다르다.
+게임 Hash와 Manifest는 동일하지만 바이너리 바이트는 다르다.
+이번에는 기존 빌드 결과만 이용해 읽기 전용 원인 조사를 진행한다.
+확인할 항목:
+
+* SDK·컴파일러 버전 및 빌드 옵션
+* PE 및 .NET 어셈블리 메타데이터
+* Module Version ID(MVID)
+* PDB 경로·체크섬·디버그 정보
+* SourceLink와 PathMap 설정
+* 빌드 절대 경로 포함 여부
+* EmbeddedResource 바이트
+* AssemblyVersion 및 InformationalVersion
+* Deterministic / ContinuousIntegrationBuild 설정
+* 입력 파일 및 환경 차이
+
+가능하면 실제 바이트 차이가 발생한 PE 영역과 해당 빌드 입력을 구분한다.
+경로가 원인이라고 추정만 하지 않는다.
+게임 계산식이나 DLL 출력을 임의로 변경하지 않는다.
+G3 운영 Build Provenance 완료나 Build Freeze를 선언하지 않는다.
+5. 최종 보고
+후속 증거 Commit SHA와 변경 파일 목록을 제출한다.
+G3 조사에서는 확인된 사실, 가능한 원인, 추가 재현 시험 필요 사항을 구분한다.
+실제 빌드 정책 변경이나 공식 G3 실행은 별도 OWNER 결정 대상으로 남긴다.
+Remote Push 금지.
+운영 Gate G1~G9 실행 금지.
+Official Execution = NOT_READY
+Final Execution Freeze = PENDING
+Phase 3 = INCOMPLETE
+</pasted_content id="8be2">

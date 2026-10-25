@@ -1,0 +1,96 @@
+
+
+<pasted_content id="8be2">
+Star Player — B1 Git 기준본 검증 실패 후속 OWNER 결정
+현재 두 로컬 Commit은 유지한다.
+
+* G2 Commit: b2635ab201003ccaa42d86866646946f216773af
+* B1 Baseline Commit: c15360c814f45629fd659abb7d7b34663b629966
+
+깨끗한 체크아웃에서 D1과 U6가 실패했으므로 Tag를 보류한 조치를 인정한다.
+다음 두 수정안을 채택한다.
+결정 1 — D1
+Codex 원본 12개 파일을 .md에서 .txt로 변경한다.
+조건:
+
+* 원본 파일의 내용 바이트 변경 금지
+* 각 원본 SHA-256 유지
+* Git blob 바이트 보존
+* 파일명·경로 변경 이력 기록
+* 출처 색인 및 구현 Manifest의 경로 갱신
+* 갱신한 SHA 목록 전체 검증
+* 관련 .gitattributes에서 .txt 파일의 바이트 보존 보장
+
+Codex 원문의 절대경로 링크를 수정하거나 삭제하지 않는다.
+D1 검사 범위는 축소하지 않는다.
+D1 스크립트의 링크 검사 규칙도 변경하지 않는다.
+결정 2 — U6
+tools/verify.ps1의 EvidenceVerifier U6 명령 타임아웃만 600초에서 1,800초로 변경한다.
+조건:
+
+* 다른 단계의 제한은 유지
+* 테스트 제외·SKIP 금지
+* 실패 판정 완화 금지
+* 무제한 실행으로 변경 금지
+* 제한시간 초과 시 계속 FAIL
+* 테스트 내용과 기대값 변경 금지
+
+이전에 깨끗한 체크아웃에서 U6가 17분 53초 소요됐다는 사실과, 타임아웃 조정 근거를 보고서에 기록한다.
+가능하면 U6의 Restore·Build·Test 실행 시간도 구분해 기록한다.
+결정 3 — 로컬 Commit
+이번 D1·U6 수정과 관련된 문서 색인, Manifest, .gitattributes 변경만 별도 로컬 Commit으로 기록한다.
+기존 B1 구현 코드, 계약, OWNER 결정 원문, 루트 TASK.md, PDF는 변경하지 않는다.
+Stage 대상은 명시적으로 검토한다.
+Remote Push는 금지한다.
+결정 4 — 깨끗한 체크아웃 재검증
+새 Commit을 만든 후 해당 Commit에서 새로운 깨끗한 체크아웃을 생성하여 검증한다.
+필수 검사:
+
+1. 전체 구현 Manifest SHA
+2. D3 보호 파일 5개 SHA
+3. Codex 원본 12개 내용 SHA
+4. Release Build
+5. 전체 tools/verify.ps1 — GATE PASS 필수
+6. 전체 테스트 0 FAIL, 0 SKIP
+7. 기존 Golden 4개
+8. Godot·Export·Cold-copy
+9. D1 문서 링크 검사
+10. Dry Pilot 9 Run — ALL_9_IDENTICAL=True
+11. Git 작업 트리 불변성
+
+U6 테스트 70/70 PASS와 실제 실행 시간을 별도로 보고한다.
+D1 및 U6 실패가 해결됐다는 이유로 다른 실패를 무시하지 않는다.
+결정 5 — Annotated Tag
+깨끗한 체크아웃에서 위 검증 조건을 모두 만족한 경우에만 현재 검증된 Commit을 대상으로 Annotated Tag를 생성한다.
+Tag 이름:
+b1-code-accepted-2026-10-26
+같은 Tag가 이미 존재하면 임의로 덮어쓰지 않는다.
+Tag가 실제로 가리키는 Commit SHA와 검증에 사용한 Commit SHA의 동일성을 확인한다.
+하나라도 실패하면 Tag를 생성하지 않고 원인과 증거를 보고한다.
+이 Tag는 B1 코드 구현 수용 기준본만 의미하며, 운영 빌드 동결이나 공식 실행 허가를 의미하지 않는다.
+결정 6 — DLL SHA 차이
+깨끗한 체크아웃의 SimHarness DLL SHA가 기존 작업 트리와 다른 원인을 G3 운영 Build Provenance 미결 사항으로 유지한다.
+경로 정보 포함 등은 가능성으로만 기록하고, 확인 전에는 원인으로 확정하지 않는다.
+Game Hash와 Manifest 불변성이 유지된다는 사실과 바이너리 자체의 재현성은 구분한다.
+현재 단계에서는 DLL SHA가 다르다는 이유만으로 게임 계산식을 변경하지 않는다.
+운영 Build Freeze 전에 실제 원인을 조사하고 빌드 입력·출력 바이트 정책을 확정해야 한다.
+최종 보고
+docs/reports/B1_GIT_BASELINE_REPORT.md를 갱신하거나 후속 보고서를 작성한다.
+다음을 포함한다.
+
+* 세 번째 Commit SHA
+* D1 해결 결과
+* U6 제한 변경 및 실제 실행 시간
+* 최종 GATE 결과
+* Manifest·D3·원본 증거 SHA 결과
+* Dry Pilot 결과
+* Annotated Tag 및 대상 Commit SHA
+* 깨끗한 체크아웃 상태
+* 운영 G1~G9 잔여 사항
+
+원본 출처의 NOT_INDEPENDENTLY_VERIFIED 상태를 임의 변경하지 않는다.
+Remote Push 금지.
+Official Execution = NOT_READY.
+Final Execution Freeze = PENDING.
+Phase 3 = INCOMPLETE.
+</pasted_content id="8be2">
