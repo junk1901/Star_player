@@ -5,3 +5,46 @@ docs/reports/PHASE_3C3B_PRIORITY_VERIFY_STDOUT_run2.txt -text whitespace=cr-at-e
 docs/reports/PHASE_3C3B_TREE_MANIFEST_snap0_before_run1.txt -text whitespace=cr-at-eol
 docs/reports/PHASE_3C3B_TREE_MANIFEST_snap3_before_commit.txt -text whitespace=cr-at-eol
 docs/reports/PHASE_3C3B_TREE_MANIFEST_snap.ps1.txt -text whitespace=cr-at-eol
+B1-T00_FINAL_CONTRACT_DRAFT.md -text
+docs/contracts/b1/B1-T00_FINAL_CONTRACT.approved.md -text
+tests/Fixtures/b1-golden/** -text
+# work orders kept byte-exact (TASK.md stays the protected NSC-6 evidence; new orders live here)
+docs/tasks/** -text
+# ---- B1 code baseline, OWNER decision G2 (2026-10-26): keep the reviewed bytes exactly; no blanket renormalization ----
+# exact bytes: D3 protected files, contract records and preserved originals, B1 evidence reports and logs, embedded build inputs (the bytes the reviewed build embedded)
+TASK.md -text
+docs/contracts/b1/** -text
+docs/reports/B1_* -text
+content/tuning/virtual_tuning_v4.json -text
+content/rules/game_rules_profiles_v2.json -text
+docs/2023recordRule.pdf binary
+docs/2026-official-baseball-rules.pdf binary
+# explicit line endings for the reviewed sources and documents, as they are in the reviewed working tree
+tools/StarPlayer.EvidenceVerifier/** text eol=lf
+tools/StarPlayer.SimHarness/Evidence/** text eol=lf
+tests/StarPlayer.EvidenceVerifier.Tests/** text eol=lf
+tests/StarPlayer.SimHarness.Tests/Evidence/** text eol=lf
+tools/b1-golden/** text eol=lf
+.gitattributes text eol=lf
+Star/01_Phase_Reviews/Phase_03F_B1_Review.md text eol=lf
+Star/02_Decisions/2026-10-24_B1_Owner_Decision_2.md text eol=lf
+Star/02_Decisions/2026-10-24_B1_T00_Owner_Approval.md text eol=lf
+Star/02_Decisions/2026-10-25_B1_Owner_Decision_3.md text eol=lf
+Star/03_Issues/2026-10-24_B1_Open_Items.md text eol=lf
+StarPlayer.sln text eol=lf
+src/StarPlayer.Infrastructure/Fixtures/EventJsonV2Codec.cs text eol=lf
+tests/StarPlayer.Application.Tests/TrustedBoundaryTests.cs text eol=lf
+tests/StarPlayer.Infrastructure.Tests/OfficialPzl6VerificationTests.cs text eol=lf
+tests/StarPlayer.Infrastructure.Tests/StarPlayer.Infrastructure.Tests.csproj text eol=lf
+tests/StarPlayer.SimHarness.Tests/DominanceOfficialTests.cs text eol=lf
+tools/StarPlayer.SimHarness/DominanceOfficial.cs text eol=lf
+tools/StarPlayer.SimHarness/FamilyOfficial.cs text eol=lf
+tools/StarPlayer.SimHarness/GameExecutor.cs text eol=lf
+tools/StarPlayer.SimHarness/HarnessData.cs text eol=lf
+tools/StarPlayer.SimHarness/Official.cs text eol=lf
+tools/StarPlayer.SimHarness/PathSafety.cs text eol=lf
+tools/StarPlayer.SimHarness/Replay.cs text eol=lf
+tools/b1-drypilot-repro.ps1 text eol=lf
+tools/verify.ps1 text eol=lf
+CURRENT_STATE.md text eol=crlf
+Star/00_Dashboard.md text eol=crlf
