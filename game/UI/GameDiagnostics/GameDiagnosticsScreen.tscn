@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://UI/GameDiagnostics/GameDiagnosticsScreen.cs" id="1_screen"]
 [ext_resource type="Script" path="res://Components/BaseDiamond.cs" id="2_bases"]
 
-[node name="GameDiagnosticsScreen" type="Control"]
+[node name="GameDiagnosticsScreen" type="Control" unique_id=1969789454]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_screen")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=563421412]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +21,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.09, 0.1, 0.13, 1)
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="." unique_id=1937460089]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,94 +33,94 @@ theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 70
 theme_override_constants/margin_bottom = 40
 
-[node name="Column" type="VBoxContainer" parent="Margin"]
+[node name="Column" type="VBoxContainer" parent="Margin" unique_id=213060421]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="HeaderRow" type="HBoxContainer" parent="Margin/Column"]
+[node name="HeaderRow" type="HBoxContainer" parent="Margin/Column" unique_id=124128182]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="TitleLabel" type="Label" parent="Margin/Column/HeaderRow"]
+[node name="TitleLabel" type="Label" parent="Margin/Column/HeaderRow" unique_id=305266412]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 48
 text = "경기 진단 (Phase 2) — 스크립트 테스트 경기"
 
-[node name="BackButton" type="Button" parent="Margin/Column/HeaderRow"]
+[node name="BackButton" type="Button" parent="Margin/Column/HeaderRow" unique_id=1453291888]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(320, 76)
 layout_mode = 2
 theme_override_font_sizes/font_size = 34
 text = "뒤로"
 
-[node name="Body" type="HBoxContainer" parent="Margin/Column"]
+[node name="Body" type="HBoxContainer" parent="Margin/Column" unique_id=1657396856]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 28
 
-[node name="Left" type="VBoxContainer" parent="Margin/Column/Body"]
+[node name="Left" type="VBoxContainer" parent="Margin/Column/Body" unique_id=669911819]
 custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="GameList" type="ItemList" parent="Margin/Column/Body/Left"]
+[node name="GameList" type="ItemList" parent="Margin/Column/Body/Left" unique_id=78639402]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 26
 
-[node name="NextButton" type="Button" parent="Margin/Column/Body/Left"]
+[node name="NextButton" type="Button" parent="Margin/Column/Body/Left" unique_id=810611188]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "다음 사건 진행"
 
-[node name="RestartButton" type="Button" parent="Margin/Column/Body/Left"]
+[node name="RestartButton" type="Button" parent="Margin/Column/Body/Left" unique_id=206929151]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "처음부터 다시"
 
-[node name="RunButton" type="Button" parent="Margin/Column/Body/Left"]
+[node name="RunButton" type="Button" parent="Margin/Column/Body/Left" unique_id=1775171017]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "경기 끝까지 진행 (진단용)"
 
-[node name="Right" type="VBoxContainer" parent="Margin/Column/Body"]
+[node name="Right" type="VBoxContainer" parent="Margin/Column/Body" unique_id=810165189]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="StatusLabel" type="Label" parent="Margin/Column/Body/Right"]
+[node name="StatusLabel" type="Label" parent="Margin/Column/Body/Right" unique_id=1087047023]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "-"
 autowrap_mode = 3
 
-[node name="ScoreGrid" type="GridContainer" parent="Margin/Column/Body/Right"]
+[node name="ScoreGrid" type="GridContainer" parent="Margin/Column/Body/Right" unique_id=1011101425]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 4
 columns = 13
 
-[node name="InfoRow" type="HBoxContainer" parent="Margin/Column/Body/Right"]
+[node name="InfoRow" type="HBoxContainer" parent="Margin/Column/Body/Right" unique_id=257266998]
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="Bases" type="Control" parent="Margin/Column/Body/Right/InfoRow"]
+[node name="Bases" type="Control" parent="Margin/Column/Body/Right/InfoRow" unique_id=331767073]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 script = ExtResource("2_bases")
 
-[node name="InfoLabel" type="Label" parent="Margin/Column/Body/Right/InfoRow"]
+[node name="InfoLabel" type="Label" parent="Margin/Column/Body/Right/InfoRow" unique_id=1176261704]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -128,18 +128,18 @@ theme_override_font_sizes/font_size = 30
 text = "-"
 autowrap_mode = 3
 
-[node name="EventLabel" type="Label" parent="Margin/Column/Body/Right"]
+[node name="EventLabel" type="Label" parent="Margin/Column/Body/Right" unique_id=469315488]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "-"
 autowrap_mode = 3
 
-[node name="BoxScroll" type="ScrollContainer" parent="Margin/Column/Body/Right"]
+[node name="BoxScroll" type="ScrollContainer" parent="Margin/Column/Body/Right" unique_id=1501452198]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="BoxLabel" type="Label" parent="Margin/Column/Body/Right/BoxScroll"]
+[node name="BoxLabel" type="Label" parent="Margin/Column/Body/Right/BoxScroll" unique_id=473350613]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -147,7 +147,7 @@ theme_override_font_sizes/font_size = 24
 text = "-"
 autowrap_mode = 3
 
-[node name="CheckLabel" type="Label" parent="Margin/Column"]
+[node name="CheckLabel" type="Label" parent="Margin/Column" unique_id=193391112]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 190)
 layout_mode = 2

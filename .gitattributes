@@ -48,3 +48,5 @@ tools/b1-drypilot-repro.ps1 text eol=lf
 tools/verify.ps1 text eol=lf
 CURRENT_STATE.md text eol=crlf
 Star/00_Dashboard.md text eol=crlf
+# Godot scenes keep the LF bytes Godot 4.7.2 writes (G3 scene migration candidate, 2026-10-26; tracked .tscn are exactly the 4 scenes)
+*.tscn text eol=lf
