@@ -8,6 +8,7 @@
   - 이 목록의 SHA는 이 기계(system `core.autocrlf=true`)의 작업 트리 바이트입니다. 커밋 후 다른 설정으로 체크아웃하면 줄바꿈이 바뀌어 일부 SHA가 달라질 수 있습니다(5절).
 - Stage·Commit·Push·Tag는 하지 않았습니다(6절은 OWNER 허가 후 계획).
 - **2026-10-26 갱신:** 기준본 Commit `c15360c` 이후 D1·U6 수정으로 경로 12개와 SHA 5개를 바꿨습니다(9절). 다른 205개 경로의 SHA는 그대로입니다.
+- **2026-10-26 2차 갱신:** 커밋되지 않았던 Red 원시 로그 3개를 추가했습니다(9절 끝, 210 → 213개).
 
 ## 1. 요약
 
@@ -20,10 +21,10 @@
 | 시험 코드 | 33 | 3 | 30 |
 | Golden 고정 입력·기대값 | 60 | 0 | 60 |
 | Golden 독립 계산기 | 2 | 0 | 2 |
-| 검수·실행 기록 | 14 | 0 | 14 |
+| 검수·실행 기록 | 17 | 0 | 17 |
 | 작업 지시 | 8 | 0 | 8 |
 | 상태·Vault 문서 | 7 | 2 | 5 |
-| **합계** | **210** | **15** | **195** |
+| **합계** | **213** | **15** | **198** |
 
 - 마지막 verify(2026-10-25 19:40:30 +09:00 `GATE: PASS` 3,041) 이후 수정된 코드·스크립트·시험·Golden 파일: **0개**. 이후 바뀐 것은 문서, 보존 원문과 `.gitattributes`(G2 규칙 추가)뿐입니다.
 
@@ -245,7 +246,7 @@
 | `tools/b1-golden/fields.py` | 미추적 | 10,222 | `6c7f45d23e6e8415c1a606198889d96fdb459829b24901d0e002c11c81060771` |
 | `tools/b1-golden/golden.py` | 미추적 | 6,535 | `c2cfed76469f8946e9c4f539aeb45dc7d050300702c0dbea1c839952e769b592` |
 
-### 검수·실행 기록 (14)
+### 검수·실행 기록 (17)
 
 | 경로 | 상태 | 바이트 | SHA-256 |
 |---|---|---:|---|
@@ -255,12 +256,15 @@
 | `docs/reports/B1_OWNER_ACCEPTANCE_DRAFT.md` | 미추적 | 7,301 | `d4d9b1d24989157ffe0a548cfbc0741e7248f681a5ed98023e72c61c709de61b` |
 | `docs/reports/B1_T11_CODEX_FINAL_PASS_RECEIVED.md` | 미추적 | 3,956 | `093df922bb6713cbec5765e4f427910fd75b17b51c9817b1d32b0f94ed0d2ca6` |
 | `docs/reports/B1_T11_CODEX_REVIEW_RECEIVED.md` | 미추적 | 22,028 | `e36fb586c403e9abe5539214b40cd36ca13b8f6ba14e187e1eedfb3d86a61d14` |
+| `docs/reports/B1_T11_FIX_R2_RED.log` | 무시됨(`.gitignore` `*.log`, 9절) | 8,060 | `81a470b0b3878c2080b21e45db99787b9d77306ba90f19e7e0ccfcc6f7cb4368` |
 | `docs/reports/B1_T11_FIX_R2_REPORT.md` | 미추적 | 18,739 | `405b2d3fd032a171be5c1468c471da2ac0d74488a4add14e11536da9bf3abc39` |
 | `docs/reports/B1_T11_FIX_R2_VERIFY_LOG.md` | 미추적 | 6,319 | `2c6de56f216d980865434bbedb64a8a9298423b75169d6d5961eca481abf031d` |
 | `docs/reports/B1_T11_FIX_REPORT.md` | 미추적 | 18,069 | `f8e915401533446cc51700b2642d918bc2df0f1c2b7a6d760a300a6b8e30a17c` |
 | `docs/reports/B1_T11_R2B_VALUE_BINDING_REPORT.md` | 미추적 | 14,186 | `4afd359acc35fa0b4a6952e5daabcb96ac83f72678f8d3e6a84b30cacfb6f0ff` |
+| `docs/reports/B1_T11_R2B_VALUE_RED.log` | 무시됨(`.gitignore` `*.log`, 9절) | 2,934 | `20439359442817f9002adce0d217f8720024bdb54829dae42fa2c61c7502f420` |
 | `docs/reports/B1_T11_R2B_VALUE_VERIFY_LOG.md` | 미추적 | 6,319 | `565d6737fabfc3eba10705c71e9041baf6e1dc03f7a330de6d4007dfe746f92e` |
 | `docs/reports/B1_T11_R2_FINAL_FIX_REPORT.md` | 미추적 | 19,142 | `4a8d2fd602e4411be1972cf4dc006169f65bfe4cca0c7dd64d29b6af83b703a6` |
+| `docs/reports/B1_T11_R2_FINAL_RED.log` | 무시됨(`.gitignore` `*.log`, 9절) | 3,361 | `c266c5a7ac608a19aa71ed00f846b67e68c8c5593241060829938a13d9c70474` |
 | `docs/reports/B1_T11_R2_FINAL_VERIFY_LOG.md` | 미추적 | 6,319 | `101ffcbe1a375a3f1b924d46170a91b00c34b019a18ee80ef201ae37c88dc249` |
 | `docs/reports/B1_VERIFY_LOG.md` | 미추적 | 6,319 | `725a250ee6f9d8b1700f2389d529e1aa32ea4052ac3e5b78f03f640b67d89244` |
 
@@ -391,3 +395,27 @@ sha256sum -c docs/contracts/b1/B1-T00_BASELINE.sha256
 - Claude가 쓴 기록 문서 2개(`B1_CODE_ACCEPTANCE_OWNER_DECISION.md`, `Phase_03F_B1_Review.md`): C10 원문 링크의 대상 경로 `.md` → `.txt`만 바꿨습니다. 다른 문구는 그대로입니다. OWNER 원문이 아닙니다.
 - `tools/verify.ps1`(결정 2): U6 명령 제한 시간만 600초 → 1,800초. 다른 단계 제한, 시험 범위, 판정 규칙은 그대로입니다.
 - `.gitattributes`: 변경 없음. 기존 `docs/contracts/b1/** -text`가 `.txt`에도 적용됩니다.
+
+### Red 원시 로그 3개 추가 (OWNER 결정 2026-10-26, D1 잔여 오류 수정)
+
+- **누락 원인:** 이 목록은 `git status --untracked-files=all`로 만들었습니다. 이 명령은 `.gitignore`를 따르므로 `*.log`(41행)에 걸린 아래 3개가 빠졌습니다. 그러나 B1 보고서는 이 3개를 링크합니다.
+- **처리:**
+  - 원본 작업 트리 파일을 그대로 추가했습니다. 내용과 개행(CRLF와 LF가 섞인 원래 바이트)은 수정하지 않았습니다.
+  - SHA-256은 각 보고서에 기록된 값과 같습니다: `B1_T11_FIX_R2_REPORT.md` 32행, `B1_T11_R2_FINAL_FIX_REPORT.md` 78행, `B1_T11_R2B_VALUE_BINDING_REPORT.md` 69행.
+- **바이트 보존:** 기존 `docs/reports/B1_* -text` 규칙이 적용됩니다(`git check-attr`: `text: unset`). `.gitattributes`는 바꾸지 않았습니다.
+- **`.gitignore`:**
+  - `*.log`는 유지했습니다.
+  - 이 3개의 정확한 경로만 예외(`!/docs/reports/…`)로 추가했습니다. 다른 로그 11개와 새 로그는 계속 무시됩니다.
+  - `.gitignore`는 목록 대상이 아니라서 변경 전후 값만 적습니다: 624 B · `e1303447c3ab9bf0d06400bc5d11178f372e1bb421938c2e8a714aa3e181d0e1` → 889 B · `5333f2d086f740623f90e0d86fec1cfaa15cc3d9964c1c06310f6253442eaea0`.
+
+| 경로 | 바이트 | SHA-256 | 개행 |
+|---|---:|---|---|
+| `docs/reports/B1_T11_FIX_R2_RED.log` | 8,060 | `81a470b0b3878c2080b21e45db99787b9d77306ba90f19e7e0ccfcc6f7cb4368` | CRLF 75 + LF 7 |
+| `docs/reports/B1_T11_R2_FINAL_RED.log` | 3,361 | `c266c5a7ac608a19aa71ed00f846b67e68c8c5593241060829938a13d9c70474` | CRLF 29 + LF 3 |
+| `docs/reports/B1_T11_R2B_VALUE_RED.log` | 2,934 | `20439359442817f9002adce0d217f8720024bdb54829dae42fa2c61c7502f420` | CRLF 25 + LF 4 |
+
+**D1 이전 실패 개수(같은 D1 코드로 전체 개수 집계):**
+
+- 최초 깨끗한 체크아웃(`c15360c`): 실제 오류 **128개** = Codex 원문 관련 **122개** + Red 로그 누락 관련 **6개**
+- 두 번째 깨끗한 체크아웃(`ff368a9`): Codex 관련 0개, Red 로그 관련 6개
+- 기존 보고서의 "116개"는 **오기**입니다. 당시 원시 증거(verify 로그·결과 파일)는 고치지 않았습니다.

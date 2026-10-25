@@ -39,6 +39,10 @@ secrets/
 
 # Logs and temporary files
 *.log
+# B1 evidence (OWNER decision 2026-10-26): only these three Red raw logs linked from the B1 T11 reports are tracked; every other *.log stays ignored
+!/docs/reports/B1_T11_FIX_R2_RED.log
+!/docs/reports/B1_T11_R2_FINAL_RED.log
+!/docs/reports/B1_T11_R2B_VALUE_RED.log
 logs/
 tmp/
 temp/
