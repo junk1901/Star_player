@@ -12,7 +12,7 @@
 | 항목 | 결정 |
 |---|---|
 | B1 코드 구현 | B1-T00 승인 기술 계약과 OWNER 결정에 따른 B1 코드 구현을 **현재 검수 범위에서 수용**. 범위는 B1 코드 구현에 한정 |
-| 수용 근거(원문 열거) | Codex T11 최종 PASS([C10 원문](originals/codex/C10_20261025T140659Z_verdict-final-pass.md) `cd5e5cd6…c2e7`), 기존 MAJOR·MINOR 해결, Claude 자체 검증 3,041 PASS / 0 FAIL / 0 SKIP, Dry Pilot 9 Run 동일, D3 5개 일치, 정상 Family·Phase Receipt 발급 시험 |
+| 수용 근거(원문 열거) | Codex T11 최종 PASS([C10 원문](originals/codex/C10_20261025T140659Z_verdict-final-pass.txt) `cd5e5cd6…c2e7`), 기존 MAJOR·MINOR 해결, Claude 자체 검증 3,041 PASS / 0 FAIL / 0 SKIP, Dry Pilot 9 Run 동일, D3 5개 일치, 정상 Family·Phase Receipt 발급 시험 |
 | G2 개행 정책 | 검수된 정확한 바이트를 우선 보존. D3·Golden·Raw SHA 증거·내장 입력 JSON은 정확한 바이트(`-text`), 일반 소스·문서는 명시적 개행 정책. 검증 없는 일괄 LF 정규화 금지 |
 | Commit·Tag | 원문 5항 조건 8개를 모두 충족하면 **로컬 Commit과 annotated Tag를 조건부 허가**. Manifest 기반 허용 목록으로 Stage(`git add -A` 금지), Commit 후 깨끗한 체크아웃에서 재검증, 불일치 시 Tag 중단 |
 | Remote Push | **허가하지 않음**(별도 OWNER 허가 필요) |

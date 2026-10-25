@@ -152,7 +152,9 @@ $tests = @(
 )
 foreach ($t in $tests) {
     $filter = if ($t.Count -gt 3) { " --filter `"$($t[3])`"" } else { '' }
-    $r = Invoke-Logged $t[0] 'dotnet' "test $($t[2]) -c Release --no-build$filter" $root 600
+    # OWNER decision (2026-10-26): U6 alone gets 1,800 s; a clean checkout measured 17 min 53 s. Expiry still kills the run and fails.
+    $limit = if ($t[0] -eq 'U6') { 1800 } else { 600 }
+    $r = Invoke-Logged $t[0] 'dotnet' "test $($t[2]) -c Release --no-build$filter" $root $limit
     if ($r.Text -match 'Failed:\s+(\d+), Passed:\s+(\d+), Skipped:\s+(\d+), Total:\s+(\d+)') {
         $failed = [int]$Matches[1]; $passed = [int]$Matches[2]; $skipped = [int]$Matches[3]
         $st = if ($r.Exit -eq 0 -and $failed -eq 0 -and $skipped -eq 0 -and $passed -gt 0) { 'PASS' } elseif ($failed -gt 0) { 'FAIL' } else { 'INCOMPLETE' }
@@ -316,7 +318,7 @@ $lines.Add("- Run at: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz')")
 $lines.Add("- OS: $([System.Environment]::OSVersion.VersionString) ($((Get-CimInstance Win32_OperatingSystem).Caption))")
 $lines.Add("- .NET SDK: $sdkVersion (pinned $pinned); Godot: $godotVersion")
 $lines.Add("- Git: $commit ($dirty)")
-$lines.Add('- Build servers: MSBUILDDISABLENODEREUSE=1, DOTNET_CLI_USE_MSBUILD_SERVER=0, UseSharedCompilation=false for this script only; `--disable-build-servers -nr:false` on the solution build; per-command time limits (build/export 900 s, tests 600 s, Godot runs 300 s) with kill of only the timed-out process tree')
+$lines.Add('- Build servers: MSBUILDDISABLENODEREUSE=1, DOTNET_CLI_USE_MSBUILD_SERVER=0, UseSharedCompilation=false for this script only; `--disable-build-servers -nr:false` on the solution build; per-command time limits (build/export 900 s, tests 600 s except U6 1,800 s, Godot runs 300 s) with kill of only the timed-out process tree')
 $lines.Add("- **Gate result: $gate**")
 $lines.Add('')
 $lines.Add('| ID | Check | Command | Exit | Status | Detail |')

@@ -7,6 +7,7 @@
   - 검수받은 구현은 HEAD `257403ddae557a54c4013c17705370caeac7a2e0` 위의 **미커밋 작업 트리**이며, HEAD만으로는 복원되지 않습니다.
   - 이 목록의 SHA는 이 기계(system `core.autocrlf=true`)의 작업 트리 바이트입니다. 커밋 후 다른 설정으로 체크아웃하면 줄바꿈이 바뀌어 일부 SHA가 달라질 수 있습니다(5절).
 - Stage·Commit·Push·Tag는 하지 않았습니다(6절은 OWNER 허가 후 계획).
+- **2026-10-26 갱신:** 기준본 Commit `c15360c` 이후 D1·U6 수정으로 경로 12개와 SHA 5개를 바꿨습니다(9절). 다른 205개 경로의 SHA는 그대로입니다.
 
 ## 1. 요약
 
@@ -47,26 +48,26 @@
 | `docs/contracts/b1/B1-T00_OWNER_APPROVAL_RECORD.md` | 미추적 | 3,351 | `cb8dd03b560abe6af198232174fe4274c8f4caf03fdfcc0d1a57286199bec2e5` |
 | `docs/contracts/b1/B1-T00_OWNER_DECISION_2.md` | 미추적 | 12,339 | `fb469705a3a545d5b3c4cd84372de9f015eadb1f80005a52ec554b00aee18d51` |
 | `docs/contracts/b1/B1-T00_OWNER_DECISION_3.md` | 미추적 | 7,934 | `bcb7bee78a177e2b6674982b91ed083f3416cbd4eb18f75457d67e61380035e0` |
-| `docs/contracts/b1/B1_CODE_ACCEPTANCE_OWNER_DECISION.md` | 미추적 | 2,559 | `ed547ee72f1e5cd6f0aa3078a39c9033d5f0c3e324a36d4dea822e157b2a3214` |
+| `docs/contracts/b1/B1_CODE_ACCEPTANCE_OWNER_DECISION.md` | 미추적 | 2,560 | `b9b9c970bbc08ebbb148f7fc06c0a4a54d6d26b4851a2d81ca92cb0dc1a3faeb` |
 | `docs/contracts/b1/B1_FIELD_TRACEABILITY.md` | 미추적 | 72,459 | `2914bb02fff17faa107fe79697f2bbe56482ebb2e1a99eafb49247d4eea52ca3` |
 | `docs/contracts/b1/B1_OWNER_DECISION_PROPOSALS.md` | 미추적 | 11,579 | `a1bf7f062650c2f7ee10b121364234402fe1a402091b6cb8ba0e7b0067fdf889` |
 | `docs/contracts/b1/B1_OWNER_DECISION_PROPOSALS_3.md` | 미추적 | 16,069 | `c833ff61d8ba2b10fea00e72099498ba364f0e2a10a10c075b305388553b6cea` |
 | `docs/contracts/b1/B1_OWNER_DECISION_PROPOSALS_3_FINAL.md` | 미추적 | 22,024 | `94bdf0c60679d4a6117d645dd99a1ac8310178efa0f77a8465dcfe3d32b99b3d` |
 | `docs/contracts/b1/B1_TRACEABILITY.md` | 미추적 | 13,494 | `f860a778ae2d1f5e2d95ea73d278bf75bcfaaf3763c1c0b2f2696bc1283219da` |
-| `docs/contracts/b1/originals/INDEX.md` | 미추적 | 15,881 | `2c30a316d40085c60411144dfd214e87c2fd7ab6cb97efeb5b2764d74014c181` |
-| `docs/contracts/b1/originals/codex/C01_20261024T134703Z_request-t11-integrated-review.md` | 미추적 | 6,486 | `16d86f03d70a2be79726c0dfc3e7161ab9ada77e526ab661698a89ee3dd0baf4` |
-| `docs/contracts/b1/originals/codex/C02_20261024T185557Z_verdict-1-fix-required.md` | 미추적 | 22,088 | `2c20a1023a2c8f7ed54fdf9a919a5de21565b662d7f1c067e6010cd50885c9b9` |
-| `docs/contracts/b1/originals/codex/C03_20261025T011302Z_request-t11-targeted-review.md` | 미추적 | 2,497 | `4157c4aa057e535500d938782f36518751b57cf135754d295cc51e658442c6d3` |
-| `docs/contracts/b1/originals/codex/C04_20261025T012037Z_verdict-2-fix-required.md` | 미추적 | 17,030 | `5e54ddd90b2a6e3e7e2e3f4d3bf6aa37a20378c0064d225091ffca975f2b3f9f` |
-| `docs/contracts/b1/originals/codex/C05_20261025T083549Z_request-r1-r4-review.md` | 미추적 | 7,320 | `75a86142cd2196627f7ebed68ff2d88ea8259d8581b12a6bd4ffc0048bb05ca4` |
-| `docs/contracts/b1/originals/codex/C06_20261025T084256Z_verdict-3-fix-required.md` | 미추적 | 11,995 | `63473f314ae9c23cd90fe48766e3a1f24ea1dd96e73c890f3661cad6d50e6cb7` |
-| `docs/contracts/b1/originals/codex/C07_20261025T094543Z_request-r2-review.md` | 미추적 | 5,964 | `e361e06497b632fc434f317bb4645ef409fa6c0f0dbf3626957d0622b48d71df` |
-| `docs/contracts/b1/originals/codex/C08_20261025T095126Z_verdict-4-fix-required.md` | 미추적 | 10,612 | `00606fb422e4b68c76cd4785f5f2d9444811debb35eedcf05e9a7128cf552b1d` |
-| `docs/contracts/b1/originals/codex/C09_20261025T104601Z_request-final-review.md` | 미추적 | 7,585 | `5858a25d38335b17caf34f6509c15b483e009300c4e8142fbd6e30448c53b85a` |
-| `docs/contracts/b1/originals/codex/C10_20261025T140659Z_verdict-final-pass.md` | 미추적 | 9,511 | `cd5e5cd6c3252d97fe4338cc4851c707b2013d80ace0d11d282606297be1c2e7` |
-| `docs/contracts/b1/originals/codex/P01_20261024T014436Z_verdict-b1-t00-ready-for-owner-approval.md` | 미추적 | 4,739 | `2410455673e77c1074cb055e5810932d7fdd19d7f162fae7a6a67a949e2cfd38` |
-| `docs/contracts/b1/originals/codex/P02_20261024T032640Z_verdict-b1-t00-source-reconciled.md` | 미추적 | 4,712 | `17237addd3f37b08b5e7753069489e616ed0b5cdbd373117fcc3ade5551d0d26` |
-| `docs/contracts/b1/originals/index.json` | 미추적 | 17,891 | `98f38a6d09e05022607e669748da8cb625507ae2ca72cbc042356a536bad1b5e` |
+| `docs/contracts/b1/originals/INDEX.md` | 미추적 | 19,624 | `c9c79c7eba91712e803cd22ce975aef0f3f6f4a49f1cfb6b0912bca8173cc519` |
+| `docs/contracts/b1/originals/codex/C01_20261024T134703Z_request-t11-integrated-review.txt` | 미추적 | 6,486 | `16d86f03d70a2be79726c0dfc3e7161ab9ada77e526ab661698a89ee3dd0baf4` |
+| `docs/contracts/b1/originals/codex/C02_20261024T185557Z_verdict-1-fix-required.txt` | 미추적 | 22,088 | `2c20a1023a2c8f7ed54fdf9a919a5de21565b662d7f1c067e6010cd50885c9b9` |
+| `docs/contracts/b1/originals/codex/C03_20261025T011302Z_request-t11-targeted-review.txt` | 미추적 | 2,497 | `4157c4aa057e535500d938782f36518751b57cf135754d295cc51e658442c6d3` |
+| `docs/contracts/b1/originals/codex/C04_20261025T012037Z_verdict-2-fix-required.txt` | 미추적 | 17,030 | `5e54ddd90b2a6e3e7e2e3f4d3bf6aa37a20378c0064d225091ffca975f2b3f9f` |
+| `docs/contracts/b1/originals/codex/C05_20261025T083549Z_request-r1-r4-review.txt` | 미추적 | 7,320 | `75a86142cd2196627f7ebed68ff2d88ea8259d8581b12a6bd4ffc0048bb05ca4` |
+| `docs/contracts/b1/originals/codex/C06_20261025T084256Z_verdict-3-fix-required.txt` | 미추적 | 11,995 | `63473f314ae9c23cd90fe48766e3a1f24ea1dd96e73c890f3661cad6d50e6cb7` |
+| `docs/contracts/b1/originals/codex/C07_20261025T094543Z_request-r2-review.txt` | 미추적 | 5,964 | `e361e06497b632fc434f317bb4645ef409fa6c0f0dbf3626957d0622b48d71df` |
+| `docs/contracts/b1/originals/codex/C08_20261025T095126Z_verdict-4-fix-required.txt` | 미추적 | 10,612 | `00606fb422e4b68c76cd4785f5f2d9444811debb35eedcf05e9a7128cf552b1d` |
+| `docs/contracts/b1/originals/codex/C09_20261025T104601Z_request-final-review.txt` | 미추적 | 7,585 | `5858a25d38335b17caf34f6509c15b483e009300c4e8142fbd6e30448c53b85a` |
+| `docs/contracts/b1/originals/codex/C10_20261025T140659Z_verdict-final-pass.txt` | 미추적 | 9,511 | `cd5e5cd6c3252d97fe4338cc4851c707b2013d80ace0d11d282606297be1c2e7` |
+| `docs/contracts/b1/originals/codex/P01_20261024T014436Z_verdict-b1-t00-ready-for-owner-approval.txt` | 미추적 | 4,739 | `2410455673e77c1074cb055e5810932d7fdd19d7f162fae7a6a67a949e2cfd38` |
+| `docs/contracts/b1/originals/codex/P02_20261024T032640Z_verdict-b1-t00-source-reconciled.txt` | 미추적 | 4,712 | `17237addd3f37b08b5e7753069489e616ed0b5cdbd373117fcc3ade5551d0d26` |
+| `docs/contracts/b1/originals/index.json` | 미추적 | 18,829 | `7b2a3ecfc3bd092315f3bf1267fe4046d7ed74c56d6ea78b7eab38cfc2ae8f00` |
 | `docs/contracts/b1/originals/owner/O01_20261024T044515Z_b1-t00-owner-approval-record-request.txt` | 미추적 | 1,238 | `0e5afea6cf2421aba1f164aea27bac2e1802563fba31dc5f311886e50a452cbf` |
 | `docs/contracts/b1/originals/owner/O02_20261024T051023Z_b1-t00-t11-batch-implementation-order.txt` | 미추적 | 5,561 | `71892ed5fbd6e9992dfca3167370fb1a6bba51fe69464d19be67700bdf762f8e` |
 | `docs/contracts/b1/originals/owner/O03_20261024T052524Z_b1-t00-final-approval-and-nsc-decisions.txt` | 미추적 | 4,972 | `bf41b92850d74274401603ba3b9dded15f54cdbd8d0ebd8a8b4d885c1634bb55` |
@@ -91,7 +92,7 @@
 | `.gitattributes` | 수정(추적) | 2,993 | `f339e2ef904d0866995890c8ac7c95db17dd0f54c6a146cdbd75fed930f9d419` |
 | `StarPlayer.sln` | 수정(추적) | 8,747 | `328cef9b7b57ea54ec6fbd73570253a0589741045d9e3d1bb4e3515637a22635` |
 | `tools/b1-drypilot-repro.ps1` | 미추적 | 2,337 | `e8236b63c446695a908d96aa78727814ceee6869d6b750ac096b3438c8c4ee16` |
-| `tools/verify.ps1` | 수정(추적) | 28,646 | `afd792c505e818f9978d2533dac8a9b9e7c3d0ea75f9d15a807b66e1c6d79eec` |
+| `tools/verify.ps1` | 수정(추적) | 28,857 | `4fdd39d5354227b09ffec70c14393fe8cef41154133ddec25d510a8428d86c8f` |
 
 ### 제품·도구 코드 (36)
 
@@ -282,7 +283,7 @@
 |---|---|---:|---|
 | `CURRENT_STATE.md` | 수정(추적) | 182,451 | `f1bb99281e84521bec784161dd8e55b181f11df60d4719e1348be865abf2db40` |
 | `Star/00_Dashboard.md` | 수정(추적) | 69,066 | `038b3671a73774902ae3b45c1ee4ba930341fbc447e63b128757cc66dfa1a1c2` |
-| `Star/01_Phase_Reviews/Phase_03F_B1_Review.md` | 미추적 | 11,095 | `0d474215877894702d5f41244a72ab93155d96889df87dccb3973e80518811d3` |
+| `Star/01_Phase_Reviews/Phase_03F_B1_Review.md` | 미추적 | 11,096 | `5f658c5ff3f7195d38ed667bac3f76c1d76fc190d617a06a12d3d80c10db7fe2` |
 | `Star/02_Decisions/2026-10-24_B1_Owner_Decision_2.md` | 미추적 | 1,128 | `4919c5ced00f098bc158a868b060668d362a16c6b64e8dcbf7180aac8be54e88` |
 | `Star/02_Decisions/2026-10-24_B1_T00_Owner_Approval.md` | 미추적 | 1,069 | `9b60b2cb6491f6e7d703cae8510888909daa1c663c26eea68dfe54af8ec93214` |
 | `Star/02_Decisions/2026-10-25_B1_Owner_Decision_3.md` | 미추적 | 788 | `7b293b4a8b891e927c4ffc7409e23961e47ec671a0c63ea98cd0488c09adc29d` |
@@ -369,3 +370,24 @@ sha256sum -c docs/contracts/b1/B1-T00_BASELINE.sha256
 ```
 
 목록을 다시 만들 때는 같은 `git status` 명령으로 경로를 모으고, 작업 트리 바이트의 SHA-256을 계산합니다. 파일이 바뀌면 이 문서와 `.sha256`을 함께 다시 생성합니다.
+
+## 9. 기준본 Commit 이후 변경 (D1·U6, OWNER 후속 결정 2026-10-26)
+
+기준본 Commit `c15360c814f45629fd659abb7d7b34663b629966`의 목록에서 아래만 바꿨습니다. 변경 전 값은 그 Commit에 그대로 남아 있습니다.
+
+**경로 변경(결정 1, 내용 바이트·SHA-256·Git blob 그대로):** Codex 원문 12개 `docs/contracts/b1/originals/codex/*.md` → `*.txt`. 파일별 이전·현재 경로는 [원문 색인](../contracts/b1/originals/INDEX.md) 4절에 있습니다.
+
+**내용 변경:**
+
+| 경로 | 변경 전 바이트 · SHA-256 | 변경 후 바이트 · SHA-256 |
+|---|---|---|
+| `docs/contracts/b1/originals/INDEX.md` | 15,881 · `2c30a316d40085c60411144dfd214e87c2fd7ab6cb97efeb5b2764d74014c181` | 19,624 · `c9c79c7eba91712e803cd22ce975aef0f3f6f4a49f1cfb6b0912bca8173cc519` |
+| `docs/contracts/b1/originals/index.json` | 17,891 · `98f38a6d09e05022607e669748da8cb625507ae2ca72cbc042356a536bad1b5e` | 18,829 · `7b2a3ecfc3bd092315f3bf1267fe4046d7ed74c56d6ea78b7eab38cfc2ae8f00` |
+| `tools/verify.ps1` | 28,646 · `afd792c505e818f9978d2533dac8a9b9e7c3d0ea75f9d15a807b66e1c6d79eec` | 28,857 · `4fdd39d5354227b09ffec70c14393fe8cef41154133ddec25d510a8428d86c8f` |
+| `docs/contracts/b1/B1_CODE_ACCEPTANCE_OWNER_DECISION.md` | 2,559 · `ed547ee72f1e5cd6f0aa3078a39c9033d5f0c3e324a36d4dea822e157b2a3214` | 2,560 · `b9b9c970bbc08ebbb148f7fc06c0a4a54d6d26b4851a2d81ca92cb0dc1a3faeb` |
+| `Star/01_Phase_Reviews/Phase_03F_B1_Review.md` | 11,095 · `0d474215877894702d5f41244a72ab93155d96889df87dccb3973e80518811d3` | 11,096 · `5f658c5ff3f7195d38ed667bac3f76c1d76fc190d617a06a12d3d80c10db7fe2` |
+
+- 원문 색인 2개: 12개 경로 갱신과 변경 이력(`INDEX.md` 4절, `index.json`의 `previous_file`) 추가
+- Claude가 쓴 기록 문서 2개(`B1_CODE_ACCEPTANCE_OWNER_DECISION.md`, `Phase_03F_B1_Review.md`): C10 원문 링크의 대상 경로 `.md` → `.txt`만 바꿨습니다. 다른 문구는 그대로입니다. OWNER 원문이 아닙니다.
+- `tools/verify.ps1`(결정 2): U6 명령 제한 시간만 600초 → 1,800초. 다른 단계 제한, 시험 범위, 판정 규칙은 그대로입니다.
+- `.gitattributes`: 변경 없음. 기존 `docs/contracts/b1/** -text`가 `.txt`에도 적용됩니다.
