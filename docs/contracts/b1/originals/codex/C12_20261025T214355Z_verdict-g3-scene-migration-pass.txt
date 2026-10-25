@@ -1,0 +1,125 @@
+**최종 Verdict: PASS**
+
+이번 Scene 변경안에서 새로운 **MAJOR·MINOR 결함은 발견하지 않았습니다.** 허용된 수정 범위, 51개 ID, PCK 재현성 및 회귀 증거가 일치합니다. 이는 **READ-ONLY 코드 검수 통과**이며 Commit·Tag 변경 승인이나 운영 G3 PASS가 아닙니다.
+
+**1. 기준 상태 및 수정 범위**
+
+직접 확인한 상태입니다.
+
+- HEAD: `cd5f4137af562a99927d8cb549a07cd6b9c39bf6`
+- 기존 Tag의 대상 Commit: `7bdde7dd091f9a66957bc740c77d470c7732b3ad`
+- Staging: **0건**
+- 추적 수정: **Scene 4개 + `.gitattributes`**
+- 미추적 파일: 이번 검수 요청·TASK·보고서·Manifest·검증 로그 **6개**
+
+| Scene | 노드 수 | 판정 |
+|---|---:|---|
+| [Main.tscn](E:/Madegame/Star_player/game/Bootstrap/Main.tscn:1) | 1 | 적합 |
+| [MainMenu.tscn](E:/Madegame/Star_player/game/UI/MainMenu/MainMenu.tscn:1) | 14 | 적합 |
+| [PlayerDiagnosticsScreen.tscn](E:/Madegame/Star_player/game/UI/PlayerDiagnostics/PlayerDiagnosticsScreen.tscn:1) | 13 | 적합 |
+| [GameDiagnosticsScreen.tscn](E:/Madegame/Star_player/game/UI/GameDiagnostics/GameDiagnosticsScreen.tscn:1) | 23 | 적합 |
+| **합계** | **51** | **적합** |
+
+기존 Commit의 Scene과 현재 파일에서 허용된 차이인 `unique_id`, `load_steps`, 개행만 제거·정규화하면 **전체 내용이 정확히 일치**합니다. 계층, 이름, Parent, 타입, Script·Resource 참조, 속성값 및 Signal 연결의 추가 변경은 없습니다.
+
+**2. unique_id: 적합**
+
+- 모든 51개 노드에 ID가 존재합니다.
+- 모두 양의 Int32 범위이며, 네 Scene 전체에서 중복이 없습니다.
+- 보존된 PCK의 각 Scene `node_ids`와 소스 ID가 **노드 순서까지 일치**합니다.
+- 현재 Scene은 진단 재저장본 `R1_pack` 및 검증 clone의 Scene과 Raw SHA가 같습니다.
+- 동일 입력으로 만든 Export 5개에서 새로운 ID 차이가 발생하지 않았습니다.
+
+Godot 해당 버전 소스도 `unique_id`를 읽어 SceneState에 전달하고 저장하는 경로를 갖습니다. `load_steps` 제거 역시 현재 TSCN 형식과 부합합니다. [Godot 해당 Commit 소스](https://raw.githubusercontent.com/godotengine/godot/ed1daf0bf001b61586d9930840f2f1394092c079/scene/resources/resource_format_text.cpp), [TSCN 공식 문서](https://docs.godotengine.org/en/stable/engine_details/file_formats/tscn.html).
+
+**3. `.gitattributes`: 적합**
+
+[`.gitattributes:52`](E:/Madegame/Star_player/.gitattributes:52)에 주석과 `*.tscn text eol=lf`만 추가됐습니다. 기존 규칙은 그대로입니다.
+
+현재 추적된 `.tscn`은 정확히 네 개이며 모두 LF입니다. Git 필터 적용 결과와 원본 바이트의 blob ID도 일치합니다. 이 규칙은 `core.autocrlf`에 의존하지 않고 해당 파일의 LF 체크아웃을 지정합니다. 향후 추가되는 `.tscn`에도 적용되는 정책이며, D3 보호 파일이나 다른 확장자에는 적용되지 않습니다. [Git 공식 속성 규칙](https://git-scm.com/docs/gitattributes).
+
+**4. PCK 재현성: 증거 충분**
+
+다음 보존본을 직접 비교했습니다.
+
+- 같은 폴더: `M_A1`, `M_A2`
+- Import Cache 유지: `M_C_warm`
+- 다른 폴더: `M_B1`, `M_B2`
+
+**5개 PCK 전체 원시 바이트가 동일**합니다. `node_ids`를 제외한 비교가 아닙니다.
+
+```text
+크기: 13,452 bytes
+SHA-256:
+3a187e19e7737c3329d81a2e76fe357c30f117c9033af5fcfc3706ea0c49e799
+```
+
+실행 스크립트에서 정상 Godot Export 이후 PCK를 수정하는 단계는 발견하지 않았습니다. 각 실행의 Scene 입력 SHA, Godot 버전 및 설정도 대조했습니다. clone 사이 설정 파일 바이트는 동일하며, 현재 저장소와 일부 설정 파일의 Raw SHA 차이는 **CRLF/LF 차이뿐**입니다.
+
+나머지 Export 파일 197개는 5회 실행의 크기·SHA 목록이 동일합니다. 현재 남아 있는 두 최종 Export 디렉터리의 실제 파일도 해당 목록과 모두 일치합니다. 다만 **각 실행의 197개 전체 파일을 별도 보관한 것은 아니므로**, 과거 세 실행의 이 부분은 보존된 SHA 목록에 의존합니다. PCK 자체는 5개 모두 별도 보존돼 있습니다.
+
+근거: [재현성 기록](E:/Madegame/Star_player/docs/reports/B1_G3_SCENE_MIGRATION_REPORT.md:73), [실행 스크립트](E:/Madegame/g3x/tools/run_pck.ps1:24).
+
+**5. E3/E4 및 전체 회귀: 제출 증거 충족**
+
+Claude 실행 로그와 보존 결과물을 대조했습니다.
+
+| 항목 | 확인 결과 |
+|---|---|
+| xUnit | **3,041 PASS / 0 FAIL / 0 SKIP**. U3a·U3b 중복 합산 없음 |
+| Golden | 기존 4개 기대값 변경 없음, 제출 검증 통과 |
+| Godot G1~G4·E1~E4 | 보존 결과에서 PASS·Exit 0 |
+| E3 | 자체 점검 7/7, `hidden_identifier_leaks=0` |
+| E4 | 자체 점검 7/7, 경기 종료·BoxScore 확인 |
+| 화면 5개 | 이전 기준본과 **파일 바이트 동일** |
+| 진단 텍스트 6개 | 이전 기준본과 **파일 바이트 동일** |
+| 관련 Godot 실행 로그 | ERROR/WARNING 0 |
+| Dry Pilot 9 Run | 보존된 새·기존 Manifest를 직접 비교하여 환경 정보 외 동일 |
+
+따라서 이전에 부족했던 **E3/E4 증거는 이번 자료에서 충족**됐습니다. 이는 Godot 검증 항목이며, 미실시 운영 Gate G1~G9를 통과시킨 것이 아닙니다.
+
+[검증 로그](E:/Madegame/Star_player/docs/reports/B1_SCENE_MIGRATION_VERIFY_LOG.md:20)의 SHA와 [원시 결과](E:/Madegame/g3x/smv/build/verify/verify-result.json)의 SHA도 확인했습니다.
+
+- 검증 로그: `8ba6afaf…ccab48`
+- 원시 결과: `143cd6ba…dbe8a4`
+
+**6. 기존 B1 기준본 및 신규 Manifest: 적합**
+
+- 승인 계약 SHA는 지정된 `1338a2f7…b97d64`입니다.
+- 루트 TASK SHA는 `ecbc0859…6f825`입니다.
+- **D3 보호 파일 5개 모두 일치**합니다.
+- 기존 213개 Manifest 원문은 역사적 기준본 그대로입니다.
+- 보존된 B1 검증 checkout에서는 **213개 모두 일치**합니다.
+- 현재 작업 트리는 **`.gitattributes` 한 항목만 예상대로 불일치**합니다. 역사적 Manifest를 수정할 이유가 없습니다.
+- 새 [Scene Migration Manifest](E:/Madegame/Star_player/docs/reports/B1_G3_SCENE_MIGRATION_MANIFEST.sha256)의 **5개 SHA는 현재 파일과 모두 일치**합니다.
+
+기존 Tag와 현재 HEAD 사이의 게임·엔진·테스트·콘텐츠 코드 차이는 없고, 이번 후보도 해당 코드를 변경하지 않습니다. 기존 Hash 계산식, RNG 소비, Replay 순서 및 Golden 기대값을 수정한 흔적은 없습니다.
+
+**7. Findings 및 증거 한계**
+
+**MAJOR: 없음. MINOR: 없음. 비차단 NOTE 1건입니다.**
+
+[보고서:82](E:/Madegame/Star_player/docs/reports/B1_G3_SCENE_MIGRATION_REPORT.md:82)의 warm 조건인 “빌드 출력 유지(삭제 없음)”는 범위를 좁혀 읽어야 합니다. [스크립트:31](E:/Madegame/g3x/tools/run_pck.ps1:31)은 `-NoClean`에서도 `build/export`를 삭제합니다.
+
+정확한 조건은 **Import Cache와 bin/obj 유지, Export 디렉터리 재생성**입니다. Import Cache 유지 재현성 검증은 유효하므로 차단 결함은 아닙니다. 후속 문서 정리 시 이 표현만 명확히 하면 됩니다.
+
+또한 검증 실행은 **역사적 코드 Commit에 후보 5개 파일을 적용한 clone**에서 수행됐습니다. 현재 HEAD와의 코드 동일성은 확인했지만, 아직 존재하지 않는 새 소스 Commit의 바이너리·Provenance까지 검증한 것은 아닙니다.
+
+**8. 새 Source Commit 및 OWNER 후속 조건**
+
+향후 OWNER가 변경안을 별도 승인하고 새 Commit을 만들 경우 다음을 **새 Commit 기준으로 다시 결속**해야 합니다.
+
+- SourceLink Commit
+- DLL/PDB 및 Verifier Binary SHA
+- Build Provenance
+- Test Profile
+- ApprovalRecord의 source Git Commit
+
+이는 [승인 계약 §18.3](E:/Madegame/Star_player/B1-T00_FINAL_CONTRACT_DRAFT.md:1536)의 결속 조건입니다. 기존 Tag를 이동하거나 과거 승인·Manifest를 소급 수정해서는 안 됩니다.
+
+공식 SourceLink URL, B-4 Clause ID, TRUST_CONFIG, Apphost 포함 여부 및 Environment Profile은 계속 미확정입니다. 이번 PASS는 이 결정을 대신하지 않습니다.
+
+**결론: Scene Migration 변경안의 독립 코드 검수는 PASS입니다. 파일·Git 상태를 변경하지 않았습니다.**
+
+미실행: 빌드·테스트·Export·Dry Pilot·운영 Gate를 재실행하지 않았으며, 실행 PASS는 Claude의 보존 증거에 대한 판정입니다.  
+남은 제한: **Official Execution = NOT_READY / Final Execution Freeze = PENDING / Phase 3 = INCOMPLETE**. Commit·Tag 변경 및 운영 승인은 부여하지 않습니다.

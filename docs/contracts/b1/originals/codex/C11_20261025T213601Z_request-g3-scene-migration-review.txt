@@ -1,0 +1,237 @@
+# Star Player — G3 Scene Migration 최종 READ-ONLY 독립 검수
+
+## 목적
+
+Godot 4.7.2에서 발견한 PCK 비결정성 문제를 해결하기 위해 네 Scene의 unique_id를 소스에 저장하는 변경안을 작성했다.
+
+Claude Code는 변경안과 전체 회귀 검증을 완료했다.
+
+이번 Codex 작업은 변경안의 계약 적합성, 수정 범위, PCK 재현성 증거 및 기존 B1 코드 기준본 불변성을 독립 검토하는 것이다.
+
+수정·Commit·Tag 생성은 허가하지 않는다.
+
+## 1. 기준
+
+B1 기존 Code Tag:\
+b1-code-accepted-2026-10-26
+
+B1 Code Commit:\
+7bdde7dd091f9a66957bc740c77d470c7732b3ad
+
+현재 HEAD:\
+cd5f4137af562a99927d8cb549a07cd6b9c39bf6
+
+현재 변경안은 미커밋 작업 트리의 수정이다.
+
+기존 213개 Manifest는 역사적 B1 Code Tag의 기준본으로 유지한다.
+
+## 2. 필수 검토 자료
+
+다음 파일을 실제로 읽는다.
+
+- B1_G3_SCENE_MIGRATION_CODEX_REVIEW_REQUEST.md
+- B1_G3_SCENE_MIGRATION_TASK.md
+- B1_G3_SCENE_MIGRATION_REPORT.md
+- B1_G3_SCENE_MIGRATION_MANIFEST.md
+- B1_G3_SCENE_MIGRATION_MANIFEST.sha256
+- B1_SCENE_MIGRATION_VERIFY_LOG.md
+- B1_G3_GODOT_PCK_REPRO_REPORT.md
+- B1_G3_FULL_BUILD_DIAGNOSTIC_REPORT.md
+- 승인 B1-T00 계약
+- 현재 .gitattributes
+- 변경된 Scene 4개
+- 관련 Godot Import/Export 코드 및 설정
+
+보고서의 주장만 인용하지 말고 실제 Git diff와 소스 내용을 독립 확인한다.
+
+## 3. 수정 범위 검수
+
+허용 변경 대상은 다음뿐이다.
+
+- Main
+- MainMenu
+- PlayerDiagnosticsScreen
+- GameDiagnosticsScreen
+- .gitattributes
+
+각 Scene의 실제 경로를 확인한다.
+
+기존 기준본과 비교해 다음 변화만 있는지 검증한다.
+
+1. unique_id 추가
+2. load_steps 제거
+3. LF 개행 정규화
+
+총 51개 노드의 unique_id 추가가 실제 diff와 일치하는지 확인한다.
+
+다음 항목이 변경되지 않았는지 검증한다.
+
+- Scene 계층
+- Node 이름 및 경로
+- Parent 경로
+- Node 타입
+- Script 참조
+- Resource 참조
+- 기존 속성과 값
+- Signal 연결
+- 게임 로직 및 동작
+
+의도하지 않은 수정이 있으면 구체적인 파일·행과 영향도를 Finding으로 기록한다.
+
+## 4. unique_id 검수
+
+다음을 확인한다.
+
+- 각 Scene의 모든 필수 Node에 unique_id 존재
+- unique_id 형식 적합
+- 중복 또는 충돌 없음
+- 기존 Node와 생성된 ID의 대응 정확
+- 저장된 Scene ID와 Export된 PCK node_ids 일치
+- 같은 Scene 바이트를 재사용하면 새로운 ID를 생성하지 않음
+- 네 Scene이 정상적으로 로드되고 참조가 유지됨
+
+진단용 Scene과 현재 변경안의 Raw SHA가 동일하다는 주장도 확인한다.
+
+## 5. .gitattributes 검수
+
+추가된 규칙:
+
+\*.tscn text eol=lf
+
+다음 사항을 확인한다.
+
+1. 기존 속성 규칙과 충돌하지 않는가?
+2. 현재 추적 파일 중 영향을 받는 대상은 정확히 네 Scene인가?
+3. Git blob에 저장되는 바이트가 의도한 LF 소스와 일치하는가?
+4. Windows의 core.autocrlf 설정과 무관하게 동일한 체크아웃 결과를 보장하는가?
+5. D3 보호 파일에는 영향이 없는가?
+6. 다른 소스·Golden·계약 파일을 변경시키지 않는가?
+7. 새 .tscn 파일에 적용되는 향후 정책 범위를 명확히 설명했는가?
+
+기존 213개 Manifest에서 .gitattributes SHA가 현재 작업 트리와 다른 것은 예상된 상태로 구분한다.
+
+역사적 Manifest를 수정하는 방식으로 해결하도록 지시하지 않는다.
+
+새 Scene Migration Manifest의 5개 SHA를 별도로 검수한다.
+
+## 6. PCK 재현성 증거
+
+Claude 제출 결과:
+
+- Same-folder 반복 Export 동일
+- Import Cache 유지 Export 동일
+- Different-folder 반복 Export 동일
+- StarPlayer.pck SHA 동일
+- 다른 Export 파일 197개 동일
+- PCK 내부 node_ids와 Scene unique_id 일치
+
+각 결과의 실제 로그, SHA 목록, 비교 방법을 검토한다.
+
+특히 다음을 확인한다.
+
+- PCK 전체 원시 바이트 비교인지
+- node_ids를 비교에서 제외하지 않았는지
+- 사후 PCK 패치가 없는지
+- 모든 Export가 동일한 Scene 입력 바이트와 동일한 Godot 설정을 사용했는지
+- 반복 출력물을 실제로 별도 보존하고 비교했는지
+
+실험 로그만 확인했을 경우 Codex 직접 실행 PASS로 표시하지 않는다.
+
+## 7. 전체 회귀 증거
+
+Claude 보고:
+
+- tools/verify.ps1 GATE PASS
+- 3,041 PASS / 0 FAIL / 0 SKIP
+- Golden 4개 PASS
+- Dry Pilot 9 Run ALL_9_IDENTICAL=True
+- Godot G1\~G4 PASS
+- E1\~E4 PASS
+- E3 7/7
+- hidden_identifier_leaks=0
+- 화면 5개 전체 동일
+- 진단 텍스트 6개 전체 동일
+- ERROR/WARNING 0
+- Exit Code 0
+
+원시 로그와 결과물을 대조한다.
+
+Godot 검증의 G1\~G4와 미실시 운영 Gate G1\~G9를 혼동하지 않는다.
+
+기존 게임 Hash, RNG, Replay, Golden 기대값과 Scene 동작이 변경되지 않았는지 확인한다.
+
+이전 누락 사항인 E3/E4 증거가 실제로 충족됐는지 별도로 판정한다.
+
+## 8. 기존 B1 기준본 보호
+
+다음 항목의 불변성을 확인한다.
+
+- B1 Code Tag 및 대상 Commit
+- 기존 승인 계약
+- 루트 TASK.md
+- D3 보호 파일 5개
+- 기존 OWNER 원문
+- B1 구현 Manifest 213개 원본
+- 기존 Golden 및 게임 계산 코드
+
+현재 작업 트리의 수정과 기존 Tag의 역사적 바이트를 구분한다.
+
+새 변경안을 수용하더라도 기존 Tag를 이동하거나 소급 변경하는 것은 허가되지 않는다.
+
+## 9. Source Commit 및 Provenance 영향
+
+변경안이 Commit되면 source_git_sha가 변경된다는 점을 검토한다.
+
+다음 항목은 새 소스 Commit 기준으로 다시 결속해야 한다.
+
+- SourceLink Commit
+- DLL/PDB SHA
+- Verifier Binary SHA
+- Build Provenance
+- Test Profile
+- ApprovalRecord의 source Git Commit
+
+이 항목은 후속 운영 승인 의존성으로 기록한다.
+
+기존 승인 기록이나 Provenance를 이번 검수에서 수정하지 않는다.
+
+공식 SourceLink URL, B-4 Clause ID, TRUST_CONFIG, Apphost 포함 여부 및 Environment Profile이 아직 미확정임을 유지한다.
+
+## 10. 최종 판정
+
+다음 항목을 개별 판정한다.
+
+1. Scene 변경 범위 적합성
+2. unique_id 전체 적합성
+3. .gitattributes 정책 적합성
+4. PCK 재현성 증거의 충분성
+5. E3/E4 회귀 증거의 충분성
+6. 기존 B1 기준본 불변성
+7. 신규 Manifest 정확성
+8. 새 Source Commit에 따른 Provenance 후속 조건
+9. 새로운 MAJOR·MINOR Finding
+10. OWNER의 별도 승인 필요 사항
+
+최종 Verdict:
+
+PASS / FIX_REQUIRED / BLOCKED / INSUFFICIENT_EVIDENCE
+
+PASS인 경우에도 이는 Scene 변경안의 READ-ONLY 검수 통과이며, Commit 승인이나 운영 G3 PASS를 의미하지 않는다.
+
+## 11. 수행 제한
+
+READ-ONLY 검수.
+
+- 코드·Scene 수정 금지
+- 문서·TASK 수정 금지
+- .gitattributes 수정 금지
+- Stage·Commit·Push·Tag 금지
+- 임의 빌드·테스트·Export 실행 금지
+- 운영 Gate 실행 금지
+- 미실행 시험 직접 PASS 주장 금지
+
+실제 확인한 사실, 제출 로그에 의존한 사실, 확인 불가능한 사항을 구분해 보고한다.
+
+Official Execution = NOT_READY\
+Final Execution Freeze = PENDING\
+Phase 3 = INCOMPLETE
