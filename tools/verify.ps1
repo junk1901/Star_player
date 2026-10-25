@@ -50,7 +50,11 @@ function Invoke-Logged($id, $exe, [string]$arguments, $workingDirectory = $root,
     }
     $text = (Get-Content $log -Raw -Encoding UTF8) + (Get-Content $err -Raw -Encoding UTF8)
     if ($timedOut) { $text = "$text`nTIMED OUT after $timeoutSec s; process tree killed by verify.ps1" ; Write-Host "[TIMEOUT] $id exceeded $timeoutSec s" }
-    Set-Content -Path $log -Value $text -Encoding UTF8
+    # a grandchild of the step (e.g. a test that runs a child dotnet test) can still hold the inherited log handle for a moment after the step exits
+    for ($try = 1; ; $try++) {
+        try { Set-Content -Path $log -Value $text -Encoding UTF8 -ErrorAction Stop; break }
+        catch { if ($try -ge 30) { throw }; Start-Sleep -Seconds 1 }
+    }
     Remove-Item $err -ErrorAction SilentlyContinue
     return @{ Exit = $exit; Text = [string]$text; TimedOut = $timedOut }
 }
@@ -101,7 +105,7 @@ $newestClientSource = ($clientSources | Measure-Object LastWriteTimeUtc -Maximum
 $b = Invoke-Logged 'B1' 'dotnet' 'build StarPlayer.sln -c Release --disable-build-servers -nr:false -p:UseSharedCompilation=false' $root 900
 $warnings = if ($b.Text -match '(\d+) Warning\(s\)') { [int]$Matches[1] } else { -1 }
 $status = if ($b.Exit -eq 0 -and $warnings -eq 0) { 'PASS' } else { 'FAIL' }
-Add-Result 'B1' 'Release build (all 11 projects)' 'dotnet build StarPlayer.sln -c Release --disable-build-servers -nr:false' $b.Exit $status "warnings=$warnings"
+Add-Result 'B1' 'Release build (all 13 projects)' 'dotnet build StarPlayer.sln -c Release --disable-build-servers -nr:false' $b.Exit $status "warnings=$warnings"
 
 # ---- 1b. Build configuration mapping and real output ----
 function Get-SolutionMappingErrors($path) {
@@ -143,7 +147,8 @@ $tests = @(
     @('U3a', 'Architecture boundary tests (project refs, compiled client refs, presenter sources)', 'tests\StarPlayer.Application.Tests', 'FullyQualifiedName~ArchitectureTests'),
     @('U3b', 'Simulation determinism detector tests', 'tests\StarPlayer.Application.Tests', 'FullyQualifiedName~SimulationDeterminismTests'),
     @('U4', 'Infrastructure tests (real SQLite integration)', 'tests\StarPlayer.Infrastructure.Tests'),
-    @('U5', 'Phase 3-F SimHarness tests (headless harness, input immutability, loader conformance, CLI exit codes)', 'tests\StarPlayer.SimHarness.Tests')
+    @('U5', 'Phase 3-F SimHarness tests (headless harness, input immutability, loader conformance, CLI exit codes)', 'tests\StarPlayer.SimHarness.Tests'),
+    @('U6', 'B-1 EvidenceVerifier tests (TEST_ONLY end-to-end verification, registry, receipts, pipe descriptor rules)', 'tests\StarPlayer.EvidenceVerifier.Tests')
 )
 foreach ($t in $tests) {
     $filter = if ($t.Count -gt 3) { " --filter `"$($t[3])`"" } else { '' }
@@ -275,6 +280,20 @@ foreach ($f in $mdFiles) {
     }
 }
 Add-Result 'D1' 'Relative markdown links in root docs, docs/ and Star/ resolve' 'scan *.md links' $(if ($broken.Count) { 1 } else { 0 }) $(if ($broken.Count) { 'FAIL' } else { 'PASS' }) $(if ($broken.Count) { ($broken | Select-Object -First 8) -join '; ' } else { "$($mdFiles.Count) files checked" })
+
+# B1-T00 baseline: the approved contract, its preserved copy, TASK.md and the owner's PDFs keep their recorded SHA-256 (docs/contracts/b1/B1-T00_BASELINE.sha256).
+$baseline = Join-Path $root 'docs\contracts\b1\B1-T00_BASELINE.sha256'
+$baseBad = @()
+if (-not (Test-Path $baseline)) { $baseBad += 'baseline list missing' }
+else {
+    foreach ($line in Get-Content $baseline) {
+        if ($line -notmatch '^([0-9a-f]{64})  (.+)$') { $baseBad += "bad line: $line"; continue }
+        $file = Join-Path $root ($Matches[2] -replace '/', '\')
+        if (-not (Test-Path $file)) { $baseBad += "missing $($Matches[2])" }
+        elseif ((Get-FileHash $file -Algorithm SHA256).Hash.ToLower() -ne $Matches[1]) { $baseBad += "changed $($Matches[2])" }
+    }
+}
+Add-Result 'D3' 'B1-T00 approved contract baseline and protected files keep their SHA-256' 'Get-FileHash vs docs/contracts/b1/B1-T00_BASELINE.sha256' $(if ($baseBad.Count) { 1 } else { 0 }) $(if ($baseBad.Count) { 'FAIL' } else { 'PASS' }) $(if ($baseBad.Count) { $baseBad -join '; ' } else { '5 files match' })
 
 $changed = @(& git status --porcelain 2>$null)
 Add-Result 'D2' 'Changed files vs HEAD (informational; no commit is made by this script)' 'git status --porcelain' 0 'INFO' "$($changed.Count) entries"

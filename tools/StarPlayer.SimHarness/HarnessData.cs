@@ -42,6 +42,23 @@ public static class HarnessData
         return reader.ReadToEnd();
     }
 
+    /// <summary>
+    /// B1 T11 R2-A: every data file a run consumes — each embedded resource (logical name) and the repository file it is built from (<c>SimHarness.csproj</c> EmbeddedResource; a test pins the two lists
+    /// and the assembly's resources to be exactly these). Everything else a run uses (park, cohorts, policies, profiles) is code, not an input file.
+    /// </summary>
+    public static IReadOnlyList<(string Name, string RepositoryPath)> Inputs { get; } =
+        [(TuningResource, "content/tuning/virtual_tuning_v4.json"), (RulesResource, "content/rules/game_rules_profiles_v2.json")];
+
+    /// <summary>B1 T11 R2-A: the exact bytes of an embedded input as the run reads them (the resource stream itself, before any decoding).</summary>
+    public static byte[] ResourceBytes(string name)
+    {
+        using var stream = typeof(HarnessData).Assembly.GetManifestResourceStream(name)
+            ?? throw new InvalidOperationException($"내장 데이터 '{name}'이(가) 어셈블리에 없습니다.");
+        using var copy = new MemoryStream();
+        stream.CopyTo(copy);
+        return copy.ToArray();
+    }
+
     /// <summary>SHA-256 of the embedded file's UTF-8 text (line endings as embedded): the provenance of the exact content a run read.</summary>
     public static string ResourceHash(string name) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(ReadResource(name)))).ToLowerInvariant();
 

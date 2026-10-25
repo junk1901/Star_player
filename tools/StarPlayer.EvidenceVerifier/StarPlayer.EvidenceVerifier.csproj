@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>StarPlayer.EvidenceVerifier</RootNamespace>
+    <AssemblyName>StarPlayer.EvidenceVerifier</AssemblyName>
+    <!-- LibraryImport (R03-4 2: the prescribed CreateFileW declaration) generates marshalling stubs -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- B-1 independent verification tool (B1-T00 T05/T06b/T09): it may read Infrastructure, the harness may not (§11.3). No InternalsVisibleTo into a production assembly. -->
+    <ProjectReference Include="..\..\src\StarPlayer.Domain\StarPlayer.Domain.csproj" />
+    <ProjectReference Include="..\..\src\StarPlayer.Simulation\StarPlayer.Simulation.csproj" />
+    <ProjectReference Include="..\..\src\StarPlayer.Infrastructure\StarPlayer.Infrastructure.csproj" />
+    <ProjectReference Include="..\StarPlayer.SimHarness\StarPlayer.SimHarness.csproj" />
+    <PackageReference Include="Microsoft.Data.Sqlite" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="StarPlayer.EvidenceVerifier.Tests" />
+    <!-- the Phase root test (its own child dotnet test run) sets the E2-1 environment seam: a dotnet test host carries DOTNET_ variables -->
+    <InternalsVisibleTo Include="StarPlayer.Infrastructure.Tests" />
+  </ItemGroup>
+</Project>

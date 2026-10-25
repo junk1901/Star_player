@@ -1,0 +1,96 @@
+
+
+<pasted_content id="d6a8">
+Star Player B1-T00 — OWNER 최종 승인 및 미결 사항 결정
+프로젝트 OWNER로서 다음 사항을 승인한다.
+1. B1-T00 계약 승인
+다음 문서의 바이트를 최종 기술 계약 기준본으로 승인한다.
+문서: `B1-T00_FINAL_CONTRACT_DRAFT.md`
+SHA-256:
+`1338a2f7e4bf2e95e9cbc3aa6ff29364791b8d774965dbce73a1e329a7b97d64`
+승인 근거:
+
+* 기술 계약: READY_FOR_OWNER_APPROVAL
+* Codex 최종 원문 통합 검수: SOURCE_RECONCILED
+
+기준 Git HEAD:
+`257403ddae557a54c4013c17705370caeac7a2e0`
+TASK.md SHA-256:
+`ecbc0859c809c68151c93f92058c31a7ab0b84ce8d8cc9a4a25512b7dd06f825`
+승인자: 본 작업 지시를 발행한 프로젝트 OWNER. 개인 이름이나 서명은 임의 생성하지 않는다.
+승인 일시: 이 지시의 실제 수신 일시를 Asia/Seoul 기준으로 기록한다.
+승인 방식: OWNER의 명시적 텍스트 승인.
+2. 기준본 고정 승인
+Claude 권장안을 채택한다.
+
+* 계약 파일은 현재 경로 유지
+* UTF-8 BOM 없음, LF 유지
+* `.gitattributes`에 `B1-T00_FINAL_CONTRACT_DRAFT.md -text` 추가
+* 승인 문서 원본 바이트 변경 금지
+* 적용 후 파일 SHA 재계산 및 일치 검증
+* 현재 TASK.md 및 사용자 PDF 원본 보존
+
+`.gitattributes`만으로 파일이 물리적으로 수정 불가능해지는 것은 아니므로, 승인된 바이트의 별도 보존본과 SHA 검증 절차도 마련한다.
+Git Commit 및 Push는 별도 승인 없이 수행하지 않는다.
+3. NSC-4 — B안 채택
+Trust Anchor의 파일 및 상위 디렉터리에 대한 ACL 검사는 B안을 채택한다.
+허용되는 앵커 관리 주체:
+
+* SYSTEM
+* BUILTIN\Administrators
+* NT SERVICE\TrustedInstaller
+
+그 외 주체에게 파일·디렉터리 변경, 쓰기, 삭제, 하위 객체 삭제, ACL 변경, 소유자 변경 권한을 부여하는 ACE가 있으면 Fail-Closed로 거부한다.
+세부 요구:
+
+* 파일 소유자는 위 허용 주체에 속해야 한다.
+* Generic Access Mask를 실제 File/Directory 권한으로 해석한다.
+* 상속 ACE, 그룹 ACE, NULL DACL, 예상하지 못한 ACE 형식도 안전하게 처리한다.
+* 검증 프로세스와 증거 작성자는 해당 보호 경로의 쓰기·삭제·ACL 변경 실효 권한을 가져서는 안 된다.
+* 검증·증거 작성 계정이 관리자 권한으로 이 검사를 우회하는 운영은 허용하지 않는다.
+* OWNER 등록 주체와 관리자 권한으로 앵커를 관리하는 주체는 운영 권한을 구분한다.
+* 상위 디렉터리까지 포함한 검증이 실제 Windows 환경에서 실패하면 임의로 보안 조건을 완화하지 않고 보고한다.
+
+기존 §16 T2의 Fail-Closed 원칙은 유지한다.
+4. NSC-5 — 권장안 채택
+Registry 서비스 설정에 다음 필드를 추가하는 OWNER 결정을 채택한다.
+필드명: `registry_database_path`
+타입: JSON string이며, 새 검증 타입 `WINDOWS_LOCAL_ABS_PATH`를 적용한다.
+허용:
+
+* 로컬 드라이브 기반 절대 파일 경로
+* 예: `C:\StarPlayerRegistry\registry.db`
+
+거부:
+
+* UNC 및 장치·확장 경로
+* 상대 경로 및 드라이브 상대 경로
+* `.` 및 `..` 경로 구간
+* 제어 문자, 잘못된 경로 문자
+* 예약 장치 이름 및 대체 데이터 스트림 경로
+* Reparse Point
+* 저장소 루트 또는 증거 루트 내부 경로
+
+경로 구문 검증만으로 통과시키지 않고 실제 정규화 경로, 보안 설정, 접근 대상 확인을 수행한다.
+서비스 설정은 기존 계약대로 시작 시 한 번만 읽고 불변 스냅샷으로 사용한다.
+5. 결정 기록 관리
+NSC-4와 NSC-5는 이번 OWNER의 신규 확정 결정이므로, 기존 SHA로 승인된 계약 문서의 본문을 덮어쓰지 않는다.
+별도 OWNER 결정 기록에 정확한 규범, 검증 기준, 적용 시점 및 원본 계약과의 관계를 명시한다.
+Codex 최종 T11 검수 범위에 이 결정 기록의 정합성과 구현 준수 여부를 포함한다.
+S00~S07 원문 자료집의 로컬 보관 위치가 확인되지 않았다면 위치를 만들어 적지 않는다. 기존 Codex 검수 결과와 확인되지 않은 자료 보존 상태를 구분해 기록한다.
+6. 일괄 구현 허가
+위 승인 기록과 기준본 보존이 완료된 뒤 B1-T00~T10 구현을 허가한다.
+
+* 구현: Claude Code
+* 독립 검수: Codex (최종 T11)
+* 중간 Codex 검수 생략
+* 단계별 자체 테스트·회귀 검증은 생략하지 않음
+* 임의 기능 확장·계약 변경 금지
+
+전체 구현 후 Codex에 제출할 통합 검수 보고서를 작성하고 중단한다.
+이번 결정은 Official Execution 활성화나 Final Execution Freeze를 허가하지 않는다.
+Official Execution = NOT_READY
+Final Execution Freeze = PENDING
+AT-4(P-1) 등의 Windows 실측은 실제 성공 증거가 없으면 PASS로 기록하지 않는다.
+Phase 3 전체 완료 승인도 이번 작업에 포함하지 않는다.
+</pasted_content id="d6a8">

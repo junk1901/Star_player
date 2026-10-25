@@ -50,6 +50,9 @@ public sealed record FamilyPreflightReport(OfficialFamilyPlan Plan, IReadOnlyLis
 /// </summary>
 public static class FamilyPreflight
 {
+    /// <summary>The <c>unit_preflight</c> message when every unit is ready (one definition, also the B1 verifier's expected READY record, T11 R2-B).</summary>
+    public static string AllUnitsReady(string family, int units) => $"{family} {units}개 단위 모두 단일 Manifest 공식 Preflight를 통과했습니다(단위별 Attestation v1).";
+
     public static FamilyPreflightReport Run(OfficialFamilyPlan plan, DominanceOfficialRequest r, OfficialApprovals a, GitIntegrityReport git)
     {
         var checks = new List<PreflightCheck>();
@@ -72,7 +75,7 @@ public static class FamilyPreflight
             static PreflightCheck FirstUnmet(PreflightReport p) => p.Checks.FirstOrDefault(k => k.Status == CheckStatus.Fail) ?? p.Checks.First(k => k.Status != CheckStatus.Pass);
             var bad = units.Where(u => !u.Report.Ready).Select(u => (u.Pinned.Unit, Check: FirstUnmet(u.Report))).ToList();
             if (bad.Count == 0)
-                Add("unit_preflight", CheckStatus.Pass, null, $"{plan.Family} {units.Count}개 단위 모두 단일 Manifest 공식 Preflight를 통과했습니다(단위별 Attestation v1).");
+                Add("unit_preflight", CheckStatus.Pass, null, AllUnitsReady(plan.Family, units.Count));
             else
             {
                 var worst = bad.FirstOrDefault(b => b.Check.Status == CheckStatus.Fail) is { Check: not null } failed ? failed : bad[0];
@@ -206,6 +209,8 @@ public static class FamilyOfficial
             if (!pinned.IsSuccess)
                 return Done(DominanceRunTermination.AbortedIntegrity, pinned.Error);
             output = pinned.Value;
+            if (OfficialPins.WritePreflight(output, PreflightDocument(report, runId), report.Units.Select(u => (u.Pinned.Unit.Id, u.Report))) is { } unrecorded)   // B1 T11 R2-B: before the first unit
+                return Done(DominanceRunTermination.AbortedIntegrity, unrecorded);
             var created = output.CreateSubdirectory("units");
             if (!created.IsSuccess)
                 return Done(DominanceRunTermination.AbortedIntegrity, created.Error);
@@ -423,7 +428,11 @@ public static class FamilyOfficial
 }
 
 /// <summary>The answer of a family replay: null error is a match; <see cref="GamesExecuted"/> tells a refusal before any game from a difference found by re-execution.</summary>
-public sealed record FamilyReplayOutcome(Error? Error, bool GamesExecuted, FamilyEvaluation? Evaluation);
+public sealed record FamilyReplayOutcome(Error? Error, bool GamesExecuted, FamilyEvaluation? Evaluation)
+{
+    /// <summary>B-1 (B1-T06b): the re-executed unit runs of a MATCH, in plan order, for the independent evidence projection; null otherwise. Not part of any comparison.</summary>
+    public IReadOnlyList<RunResult>? Reruns { get; init; }
+}
 
 /// <summary>
 /// Replay of an official calibration / integration result directory against TRUSTED inputs only. Before any game: the index format, family and completeness; the plan re-derived from the
@@ -437,7 +446,7 @@ public static class FamilyOfficialReplay
 {
     /// <param name="play">Test seam replacing the production <see cref="GameExecutor"/>; it never changes what is compared.</param>
     public static FamilyReplayOutcome Verify(OfficialFamilyPlan plan, string resultDirectory, OfficialApprovals a, string repositoryRoot, CancellationToken cancellation = default,
-        Func<RunConfig, GameSpec, GameRunResult>? play = null)
+        Func<RunConfig, GameSpec, GameRunResult>? play = null, ReplayAuthority? authority = null)
     {
         static FamilyReplayOutcome Refuse(string code, string message) => new(new Error(code, message), false, null);
         static FamilyReplayOutcome Differs(string code, string message) => new(new Error(code, message), true, null);
@@ -487,7 +496,7 @@ public static class FamilyOfficialReplay
                     return Refuse("Replay.manifest_invalid", $"{trusted.Unit.Id}: 같은 JSON 항목이 두 번 나옵니다: '{dup}'.");
                 using var manifestDoc = JsonDocument.Parse(bytes);
                 var manifest = manifestDoc.RootElement;
-                var validated = ReplayCheck.Validate(manifest, a, repositoryRoot);
+                var validated = ReplayCheck.Validate(manifest, a, repositoryRoot, null, authority);
                 if (!validated.IsSuccess)
                     return Refuse(validated.Error!.Value.Code, $"{trusted.Unit.Id}: {validated.Error.Value.Message}");
                 var p = validated.Value;
@@ -564,7 +573,7 @@ public static class FamilyOfficialReplay
 
         var status = FamilyOfficial.StatusOf(DominanceRunTermination.Completed, reruns, evaluation);
         return recordedCanonical == evaluation.Canonical() && recordedGate == GateText.Of(evaluation.Gate) && recordedReason == evaluation.Reason && recordedStatus == status
-            ? new FamilyReplayOutcome(null, true, evaluation)
+            ? new FamilyReplayOutcome(null, true, evaluation) { Reruns = reruns }
             : Differs("FamOfficial.evaluation_mismatch", "재실행 결과로 다시 계산한 판정·Gate·실행 상태가 기록과 다릅니다.");
     }
 }

@@ -1,0 +1,37 @@
+
+
+<pasted_content id="d6a8">
+Star Player B1 — T11 이전 미완료 항목 정리 및 구현 보완
+최종 verify.ps1 GATE: PASS와 2,952개 테스트 통과 보고를 확인했다.
+그러나 B1-T00~T10 중 부분 충족 항목이 남아 있으므로 현재 상태를 최종 구현 완료로 판정하지 않는다.
+OWNER가 요청한 검수 방식은 계속 유지한다.
+
+* Claude Code가 B1 구현 담당
+* Codex는 모든 구현 보완 후 T11 통합 검수 1회
+* 중간 Codex 리뷰 생략
+
+1. OWNER 결정안 준비
+NSC-4에 대해서는 Windows ACL의 실제 적용 권한과 INHERIT_ONLY_ACE, 상위 디렉터리의 경로 교체 권한을 구분하여 검토한다.
+기존 B안의 보안 목표를 유지하면서 현실적인 보호 경로를 구성하는 최소 정정안을 제시한다.
+T05에 대해서는 기존 Infrastructure JSON codec을 독립 EvidenceVerifier에서 재사용할 수 있는 최소 변경안을 제시한다.
+각 안에는 기존 계약과의 차이, 변경 파일, 수용 시험, 보안·회귀 영향을 명시한다.
+이 두 항목의 규범 변경은 OWNER의 별도 채택 없이 적용하지 않는다.
+2. 기존 승인 범위의 미완료 구현 보완
+새 OWNER 결정을 필요로 하지 않는 부분은 기존 일괄 구현 허가에 따라 계속 수행한다.
+특히 다음을 완성한다.
+
+* T00 필드별 Traceability 및 승인 범위 내 문서 정합성
+* T06a Registry 기반 Approval Record 조회 및 TRUST_CONFIG 사후 대조
+* T06b Calibration 검증과 Test Profile 실제 실행·TRX 대조
+* T09 Named Pipe 서비스·클라이언트 및 실제 신뢰 경계
+* T10 독립 Calibration Golden, 전체 반례, 회귀 검증
+
+새 계약 해석이 필요하면 승인된 규범을 변경하지 말고 해당 항목만 BLOCKED로 분리한다.
+3. 완료 기준
+실제 수행된 항목만 PASS로 표시한다.
+전체 테스트 GATE PASS와 TASK 수용 기준 충족을 별도 판정한다.
+Windows 전용 운영 실측은 코드 구현 및 테스트 상태와 구분하고, 미실시 상태를 명확히 기록한다.
+통합 보고서 7절의 구현 해석 7건을 기존 승인 계약과 대조해, 단순 구현 선택인지 새로운 OWNER 결정이 필요한 사항인지 분류한다.
+모든 계약 필수 구현과 가능한 자체 검증이 완료되면 통합 보고서를 갱신하고 T11 검수용으로 제출한다.
+Git Commit·Push, Official Execution, Final Execution Freeze는 기존 금지 상태를 유지한다.
+</pasted_content id="d6a8">

@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.SimHarness", "to
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.SimHarness.Tests", "tests\StarPlayer.SimHarness.Tests\StarPlayer.SimHarness.Tests.csproj", "{355238FA-59E8-4FF1-B7EB-B7E856BCE518}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.EvidenceVerifier", "tools\StarPlayer.EvidenceVerifier\StarPlayer.EvidenceVerifier.csproj", "{9F050779-51B3-4B93-96E8-BEC0BFCFE8CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarPlayer.EvidenceVerifier.Tests", "tests\StarPlayer.EvidenceVerifier.Tests\StarPlayer.EvidenceVerifier.Tests.csproj", "{7F9CB732-FD96-4483-BC6D-211FB919F6BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +88,14 @@ Global
 		{355238FA-59E8-4FF1-B7EB-B7E856BCE518}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{355238FA-59E8-4FF1-B7EB-B7E856BCE518}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{355238FA-59E8-4FF1-B7EB-B7E856BCE518}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F050779-51B3-4B93-96E8-BEC0BFCFE8CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F050779-51B3-4B93-96E8-BEC0BFCFE8CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F050779-51B3-4B93-96E8-BEC0BFCFE8CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F050779-51B3-4B93-96E8-BEC0BFCFE8CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F9CB732-FD96-4483-BC6D-211FB919F6BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F9CB732-FD96-4483-BC6D-211FB919F6BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F9CB732-FD96-4483-BC6D-211FB919F6BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F9CB732-FD96-4483-BC6D-211FB919F6BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{228C9F99-257B-47A4-9968-A3F9ADCC2A22} = {1014E48A-695E-4AB7-8F7D-61354D090EE8}
@@ -96,5 +108,7 @@ Global
 		{3B181684-BD05-461E-9B55-29C2666DE479} = {4D7FE29D-D307-4D96-8615-7FEAFDE35A4E}
 		{939A5AE5-843A-4E47-AF0B-2B9F5C6FBE39} = {374965CB-23AB-4842-8619-F00B121AC58F}
 		{355238FA-59E8-4FF1-B7EB-B7E856BCE518} = {4D7FE29D-D307-4D96-8615-7FEAFDE35A4E}
+		{9F050779-51B3-4B93-96E8-BEC0BFCFE8CA} = {374965CB-23AB-4842-8619-F00B121AC58F}
+		{7F9CB732-FD96-4483-BC6D-211FB919F6BF} = {4D7FE29D-D307-4D96-8615-7FEAFDE35A4E}
 	EndGlobalSection
 EndGlobal

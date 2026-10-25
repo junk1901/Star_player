@@ -1,0 +1,42 @@
+
+
+<pasted_content id="d6a8">
+Star Player B1 — OWNER 결정안 7건 최종 정합성 확인
+D3 복구 및 verify.ps1 GATE PASS 결과를 확인했다.
+이번 작업은 남은 OWNER 결정안 7건을 최종 확정 가능한 규범으로 정리하기 위한 것이다.
+기준 문서:
+
+* B1-T00 승인 기술 계약
+* B1-T00 OWNER 승인 기록
+* 기존 OWNER 결정 1·2
+* docs/contracts/b1/B1_OWNER_DECISION_PROPOSALS_3.md
+* docs/reports/B1_T11_FIX_REPORT.md
+
+다음 방향으로 결정안을 정리한다.
+
+1. violations: 현재 경기별·원인 카운터별 생성 방식을 유지하되 기존 정렬·중복 금지·증거 결속 규칙 준수 여부 확인
+2. RAW_INVENTORY: 기존 {format, artifacts} 구현을 유지하고 정확한 형식 ID와 스키마를 명시
+3. witness_digest: 앞 세 수치의 BITS64 표현을 채택하는 안으로 정리. 기존 Hash와 운영 Golden 영향 명시
+4. PZL #6: 현재 두 Reducer 재생 결과 비교와 실제 Production 결과 비교의 범위를 구분. §6에서 요구하는 최종 GameState·공식 기록 전체 비교를 충족하지 못하는 부분이 있다면 최소 보완안 작성
+5. GAME_RESULTS: 신규 simharness-game-results-v1 형식 채택을 기본안으로 하되, 기존 R-13 Artifact DAG에 맞게 Unit PZL을 통한 참조 구조 검토. Header/GameResult/End의 정확한 필드·타입·정렬·JCS·LF·건수·SHA 검증 규칙 명시
+6. run/<run_id>/...: 현재 구현의 내부 배치는 인정하되, B-4 공식 출력 경로 동결과 구분
+7. PZL6의 20경기 JSON: Unit마다 정확히 하나인 GAME_RESULTS bundle과 중복 계산되지 않도록 역할·참조 범위·Artifact ID·보존 개수를 명시
+
+특히 4·5·7번은 기존 승인 계약과 실제 구현이 충돌하지 않는지 검증한다.
+기존 계약에 명시된 규범을 약화하거나 새로운 Hash/RNG/Replay 계산식을 도입하지 않는다.
+결과로 다음을 제출한다.
+
+* 7건 각각의 최종 OWNER 승인 권장 문장
+* 기존 승인 계약과의 충돌 여부
+* 현재 구현을 유지할 수 있는 항목
+* 구현 보완이 필요한 항목
+* 새 규범이 필요한 항목
+* Codex 표적 재검수에 포함할 최소 시험
+
+이번 지시는 결정안 정리이며 아직 신규 규범의 확정 승인이나 GAME_RESULTS 구현 착수 허가가 아니다.
+원본 계약·승인 기록·TASK.md·PDF 변경 금지.
+Commit·Push 금지.
+Official Execution = NOT_READY.
+Final Execution Freeze = PENDING.
+Phase 3 = INCOMPLETE.
+</pasted_content id="d6a8">

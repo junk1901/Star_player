@@ -1,0 +1,133 @@
+
+
+<pasted_content id="d6a8">
+Star Player — B1 코드 수용 및 Git 기준본 고정 OWNER 결정
+1. B1 코드 구현 수용
+Codex T11 최종 판정 PASS를 확인했다.
+B1-T00 승인 기술 계약과 OWNER 결정에 따른 B1 코드 구현을 현재 검수 범위에서 수용한다.
+수용 근거:
+
+* Codex T11 최종 PASS
+* 기존 MAJOR·MINOR Findings 해결
+* Claude 자체 검증 3,041 PASS / 0 FAIL / 0 SKIP
+* Dry Pilot 9 Run 동일
+* D3 보호 파일 5개 SHA 일치
+* 정상 Family 및 Phase Receipt 발급 시험
+
+이 수용은 B1 코드 구현에 한정된다.
+다음 상태는 유지한다.
+
+* Official Execution = NOT_READY
+* Final Execution Freeze = PENDING
+* Phase 3 = INCOMPLETE
+
+Windows 운영 보안 Gate 및 실제 공식 실행은 승인하지 않는다.
+2. OWNER 지시 원문 보존
+기존 승인 기록 및 OWNER 결정 1~3, R2 지시의 출처를 정리한다.
+Claude Code의 로컬 세션 기록이나 채팅 내역에 실제 원문이 존재한다면 원본을 확보하고 출처·시각·SHA를 함께 보존한다.
+원문을 확보할 수 없다면 UNAVAILABLE 또는 NOT_INDEPENDENTLY_VERIFIED로 기록한다.
+과거 승인 메시지를 재작성하거나 현재 작성한 문서를 당시의 원본으로 위장하지 않는다.
+이번 B1 코드 수용은 현재 시점의 별도 OWNER 결정으로 기록하며, 과거 승인 출처 공백을 자동으로 해소했다고 주장하지 않는다.
+원문에 API Key·Token·계정 비밀정보가 포함되어 있다면 공개 저장소에 무단 포함하지 않는다.
+3. Codex 독립 검수 원본 보존
+Codex의 T11 최초 FIX_REQUIRED, 후속 2~4차 재검수 및 최종 PASS 보고서를 확보한다.
+가능하면 Codex가 실제 작성한 원문을 그대로 보존한다.
+실제 Codex 세션 원본이 아닌 채팅 전달본은 출처를 명확히 구분한다.
+각 기록에 다음을 포함한다.
+
+* 실제 출처
+* 작성 또는 수신 시각
+* 원본 파일 SHA-256
+* 검수 판정
+* 검수 범위
+* Codex 직접 확인 사항과 Claude 제출 시험 증거의 구분
+
+검수 판정을 요약하거나 수정한 자료를 원본으로 표시하지 않는다.
+4. Git 개행 정책 G2
+현재 검수된 파일의 정확한 바이트를 우선 보존하는 정책을 채택한다.
+`.gitattributes`에 다음 원칙을 적용한다.
+
+* D3 보호 파일: 정확한 바이트 보존
+* Golden 및 Raw SHA 고정 증거: 정확한 바이트 보존
+* 내장 입력 튜닝·규칙 JSON: 현재 검수된 바이트 보존
+* 일반 소스·문서: 명시적 개행 정책 적용
+
+정확한 바이트 보존이 필요한 파일에는 `-text`를 적용한다.
+현재 CRLF인 파일을 검증 없이 LF로 일괄 정규화하지 않는다.
+특히 루트 TASK.md와 승인 계약·보존본·PDF의 실제 바이트는 변경하지 않는다.
+G2 설정 후 다음을 검증한다.
+
+1. 기존 파일 SHA와 작업 트리 바이트
+2. Git Index에 저장될 blob 바이트
+3. D3 보호 파일 5개 SHA
+4. 빌드 입력 JSON의 정확한 바이트
+5. 구현 Manifest 전체의 SHA
+6. 불필요한 개행 변환과 파일 변경 발생 여부
+
+B1 코드 기준본의 바이트 보존과 향후 운영 Build Freeze는 구분한다.
+5. Commit 및 Tag 조건부 허가
+다음 조건을 모두 만족하면 로컬 Commit과 annotated Tag를 진행하도록 조건부 허가한다.
+조건:
+
+1. G2 정책 적용 완료
+2. 구현 Manifest에 포함된 파일 전체 검토
+3. Stage 대상 파일과 실제 수정 범위 일치
+4. 비밀정보·임시 파일·불필요한 빌드 산출물 제외
+5. D3 SHA 5개 일치
+6. 보호 파일의 Git blob과 승인 바이트 동일
+7. Stage된 파일의 diff 및 신규 파일 목록 검토
+8. 승인 계약과 기존 OWNER 결정 원문 불변
+
+`git add -A`로 미추적 파일 전체를 무분별하게 Stage하지 않는다.
+Manifest 기반 허용 목록으로 Stage한다.
+필요하면 개행 정책과 구현 기준본을 나누어 Commit할 수 있다.
+Commit 후 별도의 깨끗한 체크아웃에서 다음을 실행한다.
+
+* 구현 Manifest SHA 검증
+* D3 SHA 검사
+* 전체 tools/verify.ps1
+* Dry Pilot 9 Run 재현
+* Golden 4개
+* 문서 링크 검사
+* Git 추적 파일 변경 및 개행 확인
+
+검증 중 SHA 불일치나 계약 위반이 발견되면 Tag 생성을 중단하고 보고한다.
+모든 조건을 만족한 뒤 최종 Commit을 가리키는 annotated Tag를 생성한다.
+Tag 이름에는 B1 코드 수용 범위임을 명시하고, 운영 준비 완료나 Phase 3 완료를 의미하는 이름은 사용하지 않는다.
+Remote Push는 별도 OWNER 허가가 필요하다. 이번 지시로 Push를 허용하지 않는다.
+6. 운영 Gate
+`B1_OPERATIONAL_GATE_PLAN.md`의 G1~G9 순서와 의존성 정리 방향을 수용한다.
+그러나 이번 결정은 실제 운영 Gate 실행 허가가 아니다.
+다음은 별도 검토·승인이 필요하다.
+
+* G1: B-4 공식 파일명 및 출력 경로
+* G2 후속: 운영 빌드 입력 정책 최종 동결
+* G3: 운영 Build Provenance
+* G4: Verifier Binary 및 Test Profile 실행 경로 신뢰
+* G5: 보호 신뢰 앵커 및 Windows 서비스 계정
+* G6: AT-1~AT-14r 및 정식 AT-4
+* G7: N27-d/e/f
+* G8: 승인 운영 Environment Profile
+* G9: N12 비트 Golden 및 witness_digest
+
+실제 계정, SID, Pin, SHA 및 Golden 값을 임의로 생성해 승인값으로 취급하지 않는다.
+7. 최종 보고
+다음을 보고한다.
+
+* B1 코드 수용 기록
+* 확보한 OWNER 및 Codex 원문 목록
+* 미확보 원본 목록
+* 최종 `.gitattributes` 정책
+* 구현 Manifest 및 SHA 검증 결과
+* Git Commit SHA
+* 최종 Tag
+* 깨끗한 체크아웃에서의 검증 결과
+* 미완료 운영 Gate
+
+모든 조건이 충족되지 않았다면 완료된 항목과 차단 항목을 구분하고 중단한다.
+기존 승인 기술 계약, 루트 TASK.md, OWNER 결정 원문, PDF는 변경하지 않는다.
+Remote Push 금지.
+Official Execution = NOT_READY
+Final Execution Freeze = PENDING
+Phase 3 = INCOMPLETE
+</pasted_content id="d6a8">

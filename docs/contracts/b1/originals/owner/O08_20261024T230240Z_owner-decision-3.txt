@@ -1,0 +1,111 @@
+
+
+<pasted_content id="d6a8">
+Star Player B1 — OWNER 최종 설계 결정 7건 승인 및 구현 허가
+1. OWNER 승인
+`docs/contracts/b1/B1_OWNER_DECISION_PROPOSALS_3_FINAL.md`에 정리한 7건에 대해 아래 결정을 채택한다.
+승인 범위는 B1의 증거 형식, 비교 범위, Archive 관리 및 구현 보완에 한정한다.
+기존 승인 계약과 OWNER 결정 기록의 원본은 변경하지 않는다. 이번 결정을 별도 OWNER 결정 기록으로 보존한다.
+2. 항목별 결정
+결정 1 — violations
+현재 구현의 경기별·원인 카운터별 1건 생성 방식을 채택한다.
+기존 Violation 4필드, 정렬·중복 금지, 재계산 검증 조건을 유지한다.
+결정 2 — RAW_INVENTORY
+형식 ID `simharness-raw-inventory-v1`을 채택한다.
+Root는 `format`, `artifacts`의 정확히 두 필드로 고정한다.
+artifacts에는 검증 스냅샷에 속한 필수 ORIGINAL 원본을 빠짐없이 포함한다. 자기 자신, 후속 영수증, Registry 기록, 나중에 생성한 Canonical Payload는 포함하지 않는다.
+동일 영수증의 ORIGINAL source_files와 정합성을 검사하고, 닫힌 Schema Reader·중복·누락·SHA 불일치 반례를 추가한다.
+결정 3 — witness_digest
+`difference`, `standard_error`, `lower_bound`에도 BITS64 표현을 적용한다.
+기존 구현을 유지하며 다른 수치 표현이나 통계 계산식을 변경하지 않는다.
+운영 Environment Profile의 witness_digest는 추후 승인된 운영 환경에서 별도로 생성하고 검증한다.
+결정 4 — PZL #6 최종 상태 비교
+기존 이중 Reducer 재생 비교를 유지하되 다음 비교를 추가한다.
+
+1. Production이 실제 확정한 최종 GameState 전 필드와 재생 결과 비교
+2. 기존 observe 경로로 수집한 커밋별 GameFact와 재생 결과 비교
+3. 최종 공식 기록, Receipt 및 전체 비교 필드 커버리지 검증
+
+T04a의 관찰 기능은 읽기 전용으로 확장한다.
+새 RNG 소비, Hash 계산식, 게임 상태 변경은 허용하지 않는다.
+F-26의 public 위임 메서드 대신 기존 구조 비교 방식을 사용하는 구현 선택을 승인하되, 누락 필드가 있거나 Production 상태와 비교하지 못하면 인증을 거부해야 한다.
+결정 5 — Unit별 GAME_RESULTS
+신규 형식 `simharness-game-results-v1`을 승인한다.
+각 Unit에서 실행된 모든 경기의 §3.6 GameResult를 보존하는 bundle을 정확히 하나 생성한다.
+구성:
+
+* Header 1행
+* 실행 경기 순서대로 GameResult 레코드 1행씩
+* End 1행
+
+최종 결정안에 명시한 Header·End 필드와 타입을 닫힌 Schema로 적용한다.
+Game 레코드의 구조는 `{game: GameResult, record}`로 한다. 내부 `game` 객체의 JCS 바이트가 부모 공식 결과 문서의 해당 GameResult 객체 JCS 바이트와 같아야 한다.
+직렬화는 승인된 JCS·UTF-8·LF 규칙을 적용하며 레코드 크기 상한, 경기 수·순서, GameId·Seed·ResultHash 일치, 파일 Raw SHA 및 ArtifactRef 결속을 검증한다.
+실패 경기 역시 누락하거나 다른 경기로 교체하지 않는다.
+Unit PZL의 additional_evidence.artifacts를 통해 참조하며, 기존 R-13 Artifact DAG를 유지한다.
+기존 GAME_EVENTS와 GAME_RESULTS의 증거 역할을 혼합하지 않는다.
+결정 6 — 출력 배치
+기존 `run/<run_id>/…` 배치를 현재 구현의 내부 출력 경로로 수용한다.
+이는 B-4의 공식 출력 경로와 실행 Manifest에 관한 OWNER 동결을 대신하지 않는다.
+파일 배치를 바꾼다는 이유로 기존 승인 Hash·Replay 의미나 Archive 검증을 변경하지 않는다.
+결정 7 — PZL #6 JSON 보존
+고정 20경기 JSON의 GAME_RESULTS 역할 사용을 중단한다.
+20개 JSON은 PZL6 증거에 소속시키되, 다음 사항을 추가 OWNER 규범으로 명시한다.
+
+* Integration PZL6 공식 문서 1개: `role=PZL6`, `game_id=null`
+* 고정 표본 20개의 JSON 파일: 각각 `role=PZL6`, `game_id`는 해당 경기 ID
+* 해당 20개 파일을 하나의 논리적 20경기 JSON bundle로 취급한다.
+* PZL6 관련 Artifact는 이 구조에서 총 21개이며 각 Artifact ID는 고유하다.
+* JSON 파일의 Artifact ID는 `pzl6-json-<mode>-<index:D2>` 형식을 사용한다.
+* JSON의 UnitId·GameId·Index·Seed는 승인된 모드별 최초 10경기 계획과 일치해야 한다.
+* 20개 JSON의 원본 바이트·SHA·길이를 각각 검증한다.
+* PZL6 공식 문서의 추가 증거 참조를 통해 결속하고 R-13 방향을 유지한다.
+* 이 20개 JSON은 Unit별 GAME_RESULTS 필수 개수에 포함하지 않는다.
+
+이것은 §21의 20경기 JSON bundle을 여러 물리 파일로 구현하는 방식을 명시적으로 고정한 신규 세부 규범이다. 기존 계약이 자동으로 21개 Artifact를 허용했다고 주장하지 않는다.
+3. 구현 지시
+위 결정을 별도 승인 기록에 남긴 뒤 필요한 코드와 시험을 구현한다.
+주요 변경:
+
+* RAW_INVENTORY Reader 및 영수증 결속 보완
+* PZL #6 Production 최종 상태와 커밋별 GameFact 비교
+* Unit별 GAME_RESULTS bundle 생성·검증
+* PZL6의 20경기 JSON 역할 및 참조 정정
+* Archive 필수 역할·개수·DAG 검증 보완
+
+기존 Codex T11-01~08 수정 결과를 보존한다.
+4. 필수 회귀 검증
+
+* 기존 Golden 전체
+* T11-01~08 직접 반례
+* 새로운 GAME_RESULTS의 누락·중복·순서 교체·SHA 변조
+* PZL6 20개 JSON과 Unit GAME_RESULTS의 역할·개수 충돌
+* Production 전체 GameState 및 GameFact 비교
+* T04a Observation Seam 변경 후 Dry Pilot 9 Run의 기존 Hash·RNG·Manifest 불변성
+* 전체 Release 테스트와 tools/verify.ps1
+* D3 보호 파일 SHA 일치
+
+전체 시험 PASS와 TASK 수용 조건 충족을 구분해 보고한다.
+5. 작업 제한
+승인된 B1 기술 계약 SHA와 기준본은 유지한다.
+TASK.md, PDF, 기존 OWNER 승인·결정 기록 원문을 변경하지 않는다.
+Git Commit·Push 금지.
+Official Execution = NOT_READY
+Final Execution Freeze = PENDING
+Phase 3 = INCOMPLETE
+운영 계정 생성, 보호 디렉터리 설치, 정식 AT 시험 및 공식 대규모 실행은 별도 승인 없이 수행하지 않는다.
+6. 완료 보고 및 Codex 재검수
+구현 및 자체 검증을 완료하면 다음을 제출한다.
+
+* 이번 OWNER 결정 7건의 적용 결과
+* Codex T11 Findings 8건의 수정 유지 증거
+* 새 GAME_RESULTS와 PZL6 검증 결과
+* 모든 테스트와 verify.ps1 결과
+* 기존 Hash·RNG·Replay 불변성
+* 미완료 운영 Gate
+* 변경 파일 및 Git 상태
+
+그 후 작업을 멈춘다.
+Codex는 T11 수정 8건과 이번 7개 결정의 구현을 READ-ONLY 표적 재검수한다.
+Codex 재검수 및 OWNER 최종 수용 이전에는 B1을 완료로 처리하지 않는다.
+</pasted_content id="d6a8">

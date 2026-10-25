@@ -1,0 +1,22 @@
+
+
+<pasted_content id="d6a8">
+계속 진행해.
+기존 `docs/tasks/B1_T11_FIX_R2_TASK.md`와 구현 로그를 확인하고, 완료된 R1~R4 수정은 유지한 채 중단 지점부터 재개해.
+다음 순서로 진행해.
+
+1. Infrastructure의 실제 Phase 영수증 끝-끝 발급 시험
+2. `tools/b1-drypilot-repro.ps1`로 Dry Pilot 9 Run 불변성 재검증
+3. 전체 `tools/verify.ps1` 실행 및 D3 SHA 확인
+4. `docs/reports/B1_T11_FIX_R2_REPORT.md` 작성
+5. 구현 로그, `CURRENT_STATE.md`, 리뷰 초안 업데이트
+
+명령 실행 승인 서비스가 계속 실패하면 보안 검사를 우회하지 말고 중단 원인을 보고해. 미실행 시험은 PASS로 기록하지 마.
+새 세션으로 넘어가더라도 TASK와 기존 로그를 읽어 중복 구현 없이 이어서 진행해.
+루트 TASK.md와 승인 계약·OWNER 결정 원문은 수정하지 마.
+Commit·Push 금지.
+Official Execution = NOT_READY.
+Final Execution Freeze = PENDING.
+Phase 3 = INCOMPLETE.
+모든 작업 완료 후 테스트 결과와 Codex 표적 재검수 준비 상태를 보고해.
+</pasted_content id="d6a8">

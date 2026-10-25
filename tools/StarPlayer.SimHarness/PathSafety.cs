@@ -81,7 +81,9 @@ internal sealed class PinnedDirectory : IDisposable
     private const uint DirectoryFile = 0x0001, SynchronousIoNonAlert = 0x0020, NonDirectoryFile = 0x0040, OpenReparsePoint = 0x0020_0000;
     private const uint ObjCaseInsensitive = 0x40;
     private const uint AttributeDirectory = 0x10, AttributeReparsePoint = 0x400;
-    private const int StatusObjectNameCollision = unchecked((int)0xC0000035), StatusReparsePointEncountered = unchecked((int)0xC0000280);
+    private const int StatusObjectNameCollision = unchecked((int)0xC0000035), StatusReparsePointEncountered = unchecked((int)0xC0000280),
+        StatusObjectNameNotFound = unchecked((int)0xC0000034), StatusObjectPathNotFound = unchecked((int)0xC000003A);
+    private const uint FileReadData = 0x0001;
 
     private readonly SafeFileHandle _handle;
     private readonly IReadOnlyList<SafeFileHandle> _ancestors;
@@ -108,7 +110,32 @@ internal sealed class PinnedDirectory : IDisposable
     /// Pins every existing directory from the volume root to <paramref name="root"/>, opens or creates (relative, link-refusing) each of <paramref name="segments"/> but the last, and creates the
     /// last one exclusively. The result holds the whole chain until it is disposed.
     /// </summary>
-    public static Result<PinnedDirectory> CreateNew(string root, IReadOnlyList<string> segments)
+    public static Result<PinnedDirectory> CreateNew(string root, IReadOnlyList<string> segments) =>
+        segments.Count == 0 ? Fail<PinnedDirectory>("Official.output_invalid", "고정할 경로 구성 요소가 올바르지 않습니다.") : Pin(root, segments, FileCreate, true, "Official.output_unpinnable");
+
+    /// <summary>
+    /// B1-T11-04 (evidence archive): pins every directory from the volume root through <paramref name="root"/> and <paramref name="segments"/> by handle exactly as <see cref="CreateNew"/> does — relative
+    /// opens that refuse links, no FILE_SHARE_DELETE — but the last directory is opened (or, with <paramref name="create"/>, created when absent) instead of created exclusively. While the result is held no
+    /// component can be renamed, deleted or swapped for a junction. A missing component without <paramref name="create"/> is <c>Official.output_missing</c>. B1 T11 R4: with <paramref name="createRoot"/>
+    /// the missing components of <paramref name="root"/> itself are created the same way: the chain is pinned up to the deepest existing ancestor and every missing component is created relative to its
+    /// pinned parent (never a path-based create before the check; the existence probe only chooses where creating starts, every component is still opened and checked by handle).
+    /// </summary>
+    public static Result<PinnedDirectory> Open(string root, IReadOnlyList<string> segments, bool create, bool createRoot = false)
+    {
+        if (!create || !createRoot)
+            return Pin(root, segments, create ? FileOpenIf : FileOpen, create, "Official.output_missing");
+        var existing = Path.TrimEndingDirectorySeparator(Path.GetFullPath(root));
+        var missing = new List<string>();
+        while (!Directory.Exists(existing) && Path.GetDirectoryName(existing) is { } parent)
+        {
+            missing.Insert(0, Path.GetFileName(existing));
+            existing = parent;
+        }
+
+        return Pin(existing, [.. missing, .. segments], FileOpenIf, true, "Official.output_missing");
+    }
+
+    private static Result<PinnedDirectory> Pin(string root, IReadOnlyList<string> segments, uint lastDisposition, bool createIntermediate, string missingCode)
     {
         if (!OperatingSystem.IsWindows())
             return Fail<PinnedDirectory>("Official.output_unpinnable", "공식 출력 경로를 OS 핸들로 고정할 수 없는 플랫폼입니다(Windows 전용).");
@@ -118,7 +145,7 @@ internal sealed class PinnedDirectory : IDisposable
             return Fail<PinnedDirectory>("Official.output_unpinnable", $"드라이브 문자 경로가 아닌 루트('{full}')는 고정할 수 없습니다.");
         var rootNames = full[3..].Split('\\', StringSplitOptions.RemoveEmptyEntries);
         var names = rootNames.Concat(segments).ToList();
-        if (segments.Count == 0 || names.Any(BadName))
+        if (names.Any(BadName))
             return Fail<PinnedDirectory>("Official.output_invalid", "고정할 경로 구성 요소가 올바르지 않습니다.");
 
         var chain = new List<SafeFileHandle>();
@@ -136,7 +163,7 @@ internal sealed class PinnedDirectory : IDisposable
             for (var i = 0; i < names.Count; i++)
             {
                 var last = i == names.Count - 1;
-                var child = Open(chain[^1], names[i], last ? FileCreate : i >= rootNames.Length ? FileOpenIf : FileOpen, true, Access(i >= rootNames.Length - 1));
+                var child = Open(chain[^1], names[i], last ? lastDisposition : i >= rootNames.Length && createIntermediate ? FileOpenIf : FileOpen, true, Access(i >= rootNames.Length - 1), missingCode);
                 if (!child.IsSuccess)
                     return Fail<PinnedDirectory>(child.Error!.Value);
                 chain.Add(child.Value);
@@ -194,6 +221,24 @@ internal sealed class PinnedDirectory : IDisposable
         return Result<string>.Success(Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant());
     }
 
+    /// <summary>B1-T11-04: opens an EXISTING file relative to this pinned directory (a link is opened as itself and refused), checks it through its handle and reads it through that handle with no write or
+    /// delete sharing. A missing file is <c>Official.output_missing</c>.</summary>
+    public Result<byte[]> ReadFile(string name)
+    {
+        if (BadName(name))
+            return Fail<byte[]>("Official.output_invalid", $"파일 이름 '{name}'가 올바르지 않습니다.");
+        var opened = Open(_handle, name, FileOpen, false, FileReadData | FileReadAttributes | Synchronize, "Official.output_missing", ShareRead);
+        if (!opened.IsSuccess)
+            return Fail<byte[]>(opened.Error!.Value);
+        using var stream = new FileStream(opened.Value, FileAccess.Read, 1, false);             // owns the handle from here on
+        var checkedFile = CheckChild(opened.Value, FullPath, false);
+        if (!checkedFile.IsSuccess)
+            return Fail<byte[]>(checkedFile.Error!.Value);
+        using var m = new MemoryStream();
+        stream.CopyTo(m);
+        return Result<byte[]>.Success(m.ToArray());
+    }
+
     private static uint Access(bool addChildren) => FileListDirectory | FileTraverse | FileReadAttributes | Synchronize | (addChildren ? FileAddFile | FileAddSubdirectory : 0);
 
     /// <summary>The handle is a plain object of the expected kind and a direct child of the pinned parent; returns its final path.</summary>
@@ -229,7 +274,7 @@ internal sealed class PinnedDirectory : IDisposable
     }
 
     /// <summary>NtCreateFile relative to <paramref name="parent"/> (absolute when null), refusing to follow a reparse point, sharing read / write but never delete.</summary>
-    private static Result<SafeFileHandle> Open(SafeFileHandle? parent, string name, uint disposition, bool directory, uint access)
+    private static Result<SafeFileHandle> Open(SafeFileHandle? parent, string name, uint disposition, bool directory, uint access, string missingCode = "Official.output_unpinnable", uint share = ShareRead | ShareWrite)
     {
         var buffer = Marshal.StringToHGlobalUni(name);
         var unicode = Marshal.AllocHGlobal(Marshal.SizeOf<UnicodeString>());
@@ -242,13 +287,14 @@ internal sealed class PinnedDirectory : IDisposable
             {
                 Length = Marshal.SizeOf<ObjectAttributes>(), RootDirectory = parent?.DangerousGetHandle() ?? IntPtr.Zero, ObjectName = unicode, Attributes = ObjCaseInsensitive,
             };
-            var status = NtCreateFile(out var handle, access, ref attributes, out _, IntPtr.Zero, 0, ShareRead | ShareWrite, disposition,
+            var status = NtCreateFile(out var handle, access, ref attributes, out _, IntPtr.Zero, 0, share, disposition,
                 (directory ? DirectoryFile : NonDirectoryFile) | SynchronousIoNonAlert | OpenReparsePoint, IntPtr.Zero, 0);
             if (status >= 0)
                 return Result<SafeFileHandle>.Success(handle);
             handle.Dispose();
             return status == StatusObjectNameCollision ? Fail<SafeFileHandle>("Official.output_exists", $"'{name}'가 이미 있습니다(덮어쓰거나 재사용하지 않음).")
                 : status == StatusReparsePointEncountered ? Fail<SafeFileHandle>("Official.output_reparse_point", $"'{name}'의 상위 디렉터리가 고정 후 링크/마운트 지점으로 바뀌어 거부합니다(NTSTATUS 0x{status:X8}).")
+                : status is StatusObjectNameNotFound or StatusObjectPathNotFound ? Fail<SafeFileHandle>(missingCode, $"'{name}'가 없습니다(NTSTATUS 0x{status:X8}).")
                 : Fail<SafeFileHandle>("Official.output_unpinnable", $"'{name}'를 고정해 열거나 만들 수 없습니다(NTSTATUS 0x{status:X8}).");
         }
         finally

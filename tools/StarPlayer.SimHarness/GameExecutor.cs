@@ -19,7 +19,8 @@ public static class GameExecutor
     private const int TailReceipts = 12;
 
     /// <param name="observe">Called with each confirmed commit, after the harness' own observation (a read-only test seam for the Pitch Zone Lite #6 JSON round trip; it cannot change the game).</param>
-    public static GameRunResult Play(RunConfig run, GameSpec game, CancellationToken cancellation = default, Action<CommitRecord>? observe = null)
+    /// <param name="events">B-1 per-event observation (B1-T04a): told the start position and, right after each publish, the commit, the canonical RNG before / after and the prepared pitch. Read-only; null = unchanged behaviour.</param>
+    public static GameRunResult Play(RunConfig run, GameSpec game, CancellationToken cancellation = default, Action<CommitRecord>? observe = null, Evidence.PzlEventObserver? events = null)
     {
         var timer = Stopwatch.StartNew();
         var recorder = new MetricsRecorder();
@@ -28,6 +29,8 @@ public static class GameExecutor
         GameRunResult Stopped(GameRunStatus status, GameCursor? cursor, string code, string message, string stage, CrossCheckResult? cross = null)
         {
             var current = cursor?.Current;
+            if (current is not null)
+                events?.Finished(current.State);                                               // B-1 OWNER decision 3 §4: read-only
             var receipts = current?.State.AppliedEvents ?? [];
             var failure = new RunFailure(code, message, stage, current?.LastEventSequence ?? 0, current?.Revision ?? 0, current?.Rng.StateHash ?? "-",
                 receipts.Skip(Math.Max(0, receipts.Count - TailReceipts)).Select(r => new ReceiptRef(r.EventId, r.Kind, r.Fingerprint)).ToList());
@@ -42,6 +45,7 @@ public static class GameExecutor
         if (!begun.IsSuccess)
             return Stopped(GameRunStatus.Failed, null, begun.Error!.Value.Code, begun.Error.Value.Message, "start");
         var cursor = begun.Value;
+        events?.Started(cursor.Current.Rng.Canonical());
 
         try
         {
@@ -52,10 +56,11 @@ public static class GameExecutor
                 if (before.LastEventSequence >= run.EventBudget)
                     return Stopped(GameRunStatus.Failed, cursor, "Harness.event_budget_exceeded", $"경기가 이벤트 예산 {run.EventBudget}건 안에 끝나지 않았습니다(종료로 취급하지 않음).", "budget");
 
-                var step = Advance(run, cursor, cancellation, out var pitch);
+                var step = Advance(run, cursor, cancellation, out var pitch, out var inPlay);
                 if (!step.IsSuccess)
                     return Stopped(GameRunStatus.Failed, cursor, step.Error!.Value.Code, step.Error.Value.Message, "advance");
                 pzl.Observe(step.Value, pitch);
+                events?.Committed(step.Value, before.Rng.Canonical(), cursor.Current.Rng.Canonical(), pitch, inPlay, run);
                 observe?.Invoke(step.Value);
                 var seen = recorder.Observe(step.Value);
                 if (seen == ObserveOutcome.SequenceGap)
@@ -78,6 +83,7 @@ public static class GameExecutor
                 return Stopped(GameRunStatus.Failed, cursor, "Harness.crosscheck_mismatch", $"이벤트 집계와 BoxScore가 다릅니다: {text}", "crosscheck", cross);
             }
 
+            events?.Finished(last.State);                                                      // B-1 OWNER decision 3 §4: read-only
             return Build(run, game, GameRunStatus.Completed, null, last, recorder.Counters, cross, timer.Elapsed.TotalMilliseconds, pzl.Finish(last.State.AppliedEvents, last.Rng.Streams.Select(s => s.Stream.Canonical)));
         }
         catch (OperationCanceledException)
@@ -93,9 +99,11 @@ public static class GameExecutor
     // ---------------------------------------------------------------- one action
 
     /// <param name="pitch">The preparation of the pitch this step committed (null for a step that commits no pitch); read only by <see cref="PzlRecorder"/>.</param>
-    private static Result<CommitRecord> Advance(RunConfig run, GameCursor cursor, CancellationToken ct, out PreparedPitch? pitch)
+    /// <param name="inPlay">The audit of the in-play candidate this step committed (null otherwise); read only by the B-1 observer for its advancement draws.</param>
+    private static Result<CommitRecord> Advance(RunConfig run, GameCursor cursor, CancellationToken ct, out PreparedPitch? pitch, out InPlayAudit? inPlay)
     {
         pitch = null;
+        inPlay = null;
         var current = cursor.Current;
         var state = current.State;
         var legal = GameReducer.LegalActions(state);
@@ -159,6 +167,7 @@ public static class GameExecutor
         }
         else
             finished = (InPlayPitchCandidate)plan.Value;
+        inPlay = finished.Audit;
         return Publish(cursor, PitchCommitGate.Stage(current, finished, tuning, batter, pitcher, ct, inputs), ct);
     }
 

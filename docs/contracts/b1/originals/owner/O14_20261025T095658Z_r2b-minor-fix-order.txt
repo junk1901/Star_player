@@ -1,0 +1,169 @@
+
+
+<pasted_content id="d6a8">
+Star Player — B1 T11 R2-B 마지막 MINOR 수정
+OWNER 작업 지시
+Codex의 최신 T11 READ-ONLY 재검수 판정은 FIX_REQUIRED다.
+R1, R2-A, R3, R4는 RESOLVED다.
+이번 작업은 R2-B의 남은 MINOR 1건만 수정한다.
+새로운 OWNER 규범이나 계약 변경은 필요하지 않다.
+1. 작업 TASK 생성
+먼저 다음 파일을 작성한다.
+`docs/tasks/B1_T11_R2B_VALUE_BINDING_TASK.md`
+이 지시문 전체와 아래 정보를 기록한다.
+
+* 최신 Codex Finding
+* 기존 계약 §21 관련 조건
+* 현재 코드의 결함 위치
+* 수정 범위와 수용 기준
+* RED/GREEN 시험
+* 전체 회귀 조건
+* 새 세션 작업 재개 절차
+
+기존 `docs/tasks/B1_T11_R2_FINAL_FIX_TASK.md`는 이전 작업 이력으로 보존한다.
+루트 TASK.md는 NSC-6 OWNER 승인 증거이므로 절대 수정하지 않는다.
+TASK 작성 후 이번 지시 범위의 구현과 시험을 진행한다.
+2. 수정 범위
+주요 검토 대상:
+
+* RequiredOriginals.cs
+* PreflightRecords.Verify
+* SameMembers
+* FamilyOfficial.cs / DominanceOfficial.cs
+* 기존 Preflight 생성 및 독립 재실행 경로
+
+현재 결함:
+SameMembers는 일부 필드의 이름과 순서만 확인하고 실제 값은 검사하지 않는다.
+Preflight를 독립 재실행했음에도 제출 기록의 일부 결정적 필드가 다른 경우 이를 거부하지 못한다.
+3. 수정 요구사항
+독립 재실행에서 생성한 기대 Preflight 기록과 제출된 기록을 비교한다.
+비교 대상은 기존 계약과 현재 공식 Preflight 형식이 정의한 모든 결정적 필드다.
+반드시 다음을 포함한다.
+
+* preflight.games_per_cell
+* schema_status
+* official_evidence
+* complete
+* family_gate
+* dominance_gate
+* 기타 Family 및 Dominance Preflight에 존재하는 결정적 필드 전체
+
+검사는 다음 조건을 만족해야 한다.
+
+1. 필드 이름과 순서를 검증한다.
+2. 필드 타입을 검증한다.
+3. 결정적 필드의 실제 값을 비교한다.
+4. 중첩 객체와 배열의 내용도 비교한다.
+5. 필수 필드 누락·추가·중복을 거부한다.
+6. 제출된 값을 그대로 기대값으로 사용하는 자기 검증은 금지한다.
+7. 기대값은 신뢰된 승인 입력과 독립 재실행 결과에서 도출한다.
+8. Raw SHA와 길이가 일치하더라도 결정적 값이 다르면 거부한다.
+9. 기존에 명시적으로 비교 제외된 환경·출력 경로 항목의 정책은 유지한다.
+10. 비교 제외 범위를 새로 넓히지 않는다.
+
+전체 JSON 바이트 동일성이 적합하지 않은 경우에는 기존 비교 제외 규칙을 적용한 결정적 필드 투영을 만들어 정확히 비교한다.
+A+에서 제외된 필드라는 이유만으로 Preflight 내용 비교에서도 제외해서는 안 된다.
+기존 오류 분류 및 Fail-Closed 정책을 유지한다.
+4. 필수 RED/GREEN 시험
+수정 전에 기존 결함을 재현하는 실패 시험을 작성한다.
+정상적인 Preflight 원본을 기준으로 각각 다음을 변조한다.
+
+* games_per_cell 변경
+* schema_status 변경
+* official_evidence false → true
+* complete false → true
+* family_gate 변경
+* dominance_gate NOT_EVALUATED → PASS
+* 결정적 숫자·문자열·boolean의 타입 변경
+* 중첩 결정적 필드 변경
+* 필수 필드 누락 또는 불필요한 필드 추가
+
+특히 다음 반례를 반드시 포함한다.
+
+1. 정상 Preflight를 생성한다.
+2. 결정적 필드 하나를 변경한다.
+3. 변경된 파일의 Raw SHA와 byte_length를 재계산한다.
+4. 필요한 ArtifactRef·Inventory 참조도 일관되게 갱신한다.
+5. 검증을 다시 수행한다.
+6. 단순 SHA 불일치가 아니라 Preflight 내용 검증에서 거부되는 것을 확인한다.
+
+정상 기록은 그대로 통과해야 한다.
+수정 전 실패 및 수정 후 성공 증거를 각각 보존한다. 수정 전에 실행하지 못한 시험은 RED 실행 완료라고 주장하지 않는다.
+5. 정상 발급 경로
+변경 후에도 다음 양성 경로가 유지되어야 한다.
+
+* Calibration 영수증 발급
+* Integration 영수증 발급
+* Dominance 영수증 발급
+* Phase Root 영수증 발급
+* INPUT_BUNDLE 4개 보존
+* PREFLIGHT 57개 보존
+* RAW_INVENTORY와 SourceFiles 일치
+* 승인·Build·Seed·Manifest 및 Regression Proof 결속
+
+기존 TEST_ONLY Seed 991000을 변경하지 않는다.
+Preflight의 기존 run_status=NOT_STARTED 및 error_code=Official.execution_not_implemented 의미를 임의로 변경하지 않는다.
+6. 기존 해결 사항 유지
+다음은 재설계하거나 검증을 약화하지 않는다.
+
+* R1 Frozen Snapshot
+* R2-A 실제 소비 입력 완전성
+* R3 Phase Artifact 충돌 방지
+* R4 PinnedDirectory 안전성
+* T11-01~08 기존 수정
+* OWNER 결정 7건
+* GAME_RESULTS 및 PZL6
+* Regression Proof
+* 기존 Hash/RNG/Replay 계산식
+
+테스트를 통과시키기 위해 기대값을 단순 변경하거나 필드 검사를 제거하지 않는다.
+7. 전체 회귀 검증
+수정 후 다음을 실행한다.
+
+* Release Build
+* 전체 테스트 프로젝트
+* Golden 4개
+* 정상 Phase 영수증 발급 시험
+* R1~R4 회귀 반례
+* OWNER 결정 7건 회귀 시험
+* tools/b1-drypilot-repro.ps1
+* tools/verify.ps1
+* D3 보호 파일 5개 SHA 검사
+
+이전 3,039 PASS는 수정 전 참고값이며, 변경 후 실행 결과를 새로 보고한다.
+Dry Pilot 9개 Run의 ConfigHash, RunResultHash 및 환경 제외 Manifest 불변성을 확인한다.
+최종 문서 수정 후 D1 링크와 D3 보호 SHA를 다시 확인한다.
+8. 결과 문서
+다음 파일을 생성한다.
+`docs/reports/B1_T11_R2B_VALUE_BINDING_REPORT.md`
+다음 사항을 포함한다.
+
+* 수정 코드와 함수·행 번호
+* 결정적 필드 전체 목록 및 비교 정책
+* 기존에 명시된 비교 제외 필드와 그 근거
+* RED/GREEN 실행 결과
+* 변조 후 Raw SHA 갱신 반례
+* 정상 Family 및 Phase 발급 성공
+* 전체 테스트·Golden·Dry Pilot·Verify 결과
+* Git HEAD 및 변경 파일
+* D3 보호 파일 SHA
+* 남은 운영 Gate와 OWNER 승인 출처 확인 사항
+
+기존 보고서를 소급해 변경하지 않는다.
+9. 금지 사항
+승인 계약 원본 변경 금지.
+OWNER 결정 원문 변경 금지.
+루트 TASK.md 변경 금지.
+D3 기준 SHA 변경 금지.
+Commit·Push 금지.
+운영 Gate 임의 실행 또는 PASS 처리 금지.
+Official Execution 활성화 금지.
+Final Execution Freeze 금지.
+10. 완료 조건
+R2-B의 결정적 필드 전체가 독립 재실행 결과와 비교되고, Raw SHA를 갱신한 내용 변조도 거부되어야 한다.
+전체 회귀 검증 이후 결과를 보고하고 작업을 멈춘다.
+Codex READ-ONLY 표적 재검수와 OWNER 최종 수용 전에는 B1 완료를 선언하지 않는다.
+Official Execution = NOT_READY
+Final Execution Freeze = PENDING
+Phase 3 = INCOMPLETE
+</pasted_content id="d6a8">

@@ -43,11 +43,15 @@ public sealed class DominanceOfficialWorld : IDisposable
 
     public static string SeedPath(DominanceCell c) => $"seeds/dom/{c.Id.ToLowerInvariant()}.json";
 
-    public static JsonObject SeedFile(DominanceCell c, int games = 2)
+    /// <param name="seedBase">Another fictional seed base (seed = base + index); null keeps the fixture's 990000.</param>
+    public static JsonObject SeedFile(DominanceCell c, int games = 2, long? seedBase = null)
     {
         var m = SeedManifestTests.Manifest("fc3-dom", c.CompetitionKey, games, games, games, cohort: c.CohortId);
         m["policy_id"] = c.PolicyId;
         m["rules_profile_id"] = c.RulesProfileId;
+        if (seedBase is { } b)
+            foreach (var s in (JsonArray)m["seeds"]!)
+                s!["seed"] = b + s["index"]!.GetValue<int>();
         return m;
     }
 

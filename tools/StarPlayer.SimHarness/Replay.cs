@@ -185,7 +185,7 @@ public static class ReplayCheck
         return StopPlan.FromSeedManifest(sm, pin.Path);
     }
 
-    public static Result<ReplayPlan> Validate(JsonElement root, OfficialApprovals approvals, string? repositoryRoot = null, DryStopPin? dryPin = null)
+    public static Result<ReplayPlan> Validate(JsonElement root, OfficialApprovals approvals, string? repositoryRoot = null, DryStopPin? dryPin = null, ReplayAuthority? authority = null)
     {
         static Result<ReplayPlan> Fail(string code, string message) => Result<ReplayPlan>.Failure(new Error(code, message));
         try
@@ -245,7 +245,7 @@ public static class ReplayCheck
             StopPlan? trusted = null;
             if (hasEnvelope)
             {
-                if (OfficialReplay.Verify(official, configHash, approvals) is { } refused)
+                if (OfficialReplay.Verify(official, configHash, approvals, authority) is { } refused)
                     return Result<ReplayPlan>.Failure(refused);
                 var a = OfficialAttestation.FromJson(official.GetProperty("attestation")).Value;
                 var recorded = (engine.GetProperty("competition_key").GetString(), run.GetProperty("cohort_id").GetString(), engine.GetProperty("cohort_inputs_hash").GetString(),

@@ -1,0 +1,32 @@
+
+
+<pasted_content id="b339">
+Star Player B1-T00 OWNER 승인 기록
+승인 대상: B1-T00 최종 단일 규범 기술 계약
+문서: `B1-T00_FINAL_CONTRACT_DRAFT.md`
+문서 SHA-256: `1338a2f7e4bf2e95e9cbc3aa6ff29364791b8d774965dbce73a1e329a7b97d64`
+Git HEAD: [승인 시점 실측값]
+TASK.md SHA-256: [승인 시점 실측값]
+승인자: [OWNER]
+승인 일시: [YYYY-MM-DD HH KST]
+승인 선언
+본인은 위 SHA-256으로 식별된 Star Player B1-T00 최종 단일 규범 기술 계약을 승인한다.
+승인 근거:
+
+* 기술 계약: READY_FOR_OWNER_APPROVAL
+* 원문 통합: SOURCE_RECONCILED
+* PATCH-01~06 및 MINOR-01~03 검수 종료
+* NSC-6 OWNER 결정 반영 및 독립 검수 완료
+
+승인 범위 및 제한
+이 승인은 B1-T00 기술 계약의 기준본 확정에 한정된다.
+
+* NSC-4는 T06a 구현·배치 전에 해결한다.
+* NSC-5는 T09 구현 전에 해결한다.
+* P-1/AT-4를 포함한 T09 Windows 실측은 미실시다.
+* T01 이후 구현 착수는 별도로 허가한다.
+* Official Execution은 NOT_READY로 유지한다.
+* Final Execution Freeze는 PENDING으로 유지한다.
+
+향후 규범 변경은 변경된 문서 SHA와 별도의 OWNER 승인 기록을 필요로 한다.
+</pasted_content id="b339">

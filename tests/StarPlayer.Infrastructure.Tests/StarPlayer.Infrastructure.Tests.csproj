@@ -13,6 +13,8 @@
     <ProjectReference Include="..\..\src\StarPlayer.Application\StarPlayer.Application.csproj" />
     <!-- Phase 3-F F-02: the loader conformance matrix runs the production readers and the harness reader side by side. -->
     <ProjectReference Include="..\..\tools\StarPlayer.SimHarness\StarPlayer.SimHarness.csproj" />
+    <!-- B1-T05: the official #6 round trip binds the internal v2 event JSON codec here (the Infrastructure friend list is a pinned boundary); the TEST_ONLY world is reused. -->
+    <ProjectReference Include="..\StarPlayer.EvidenceVerifier.Tests\StarPlayer.EvidenceVerifier.Tests.csproj" />
   </ItemGroup>
   <ItemGroup>
     <!-- The same public-graph audit as Domain.Tests, so the tuning profile is checked with identical code. -->

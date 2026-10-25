@@ -1,0 +1,84 @@
+
+
+<pasted_content id="d6a8">
+Star Player — B1 T11 표적 재검수 TASK 작성
+앞서 제안된 TASK 파일 작성 지시는 전달되지 않았지만, 현재 B1 구현과 OWNER 결정 7건 적용은 이미 완료된 것으로 보고됐다.
+따라서 과거 구현 작업 지시서를 소급해서 만들지 말고, 현재 상태를 기준으로 Codex 재검수용 TASK를 작성한다.
+생성 파일
+`docs/tasks/B1_T11_REVIEW_TASK.md`
+루트 `TASK.md`는 승인 증거이며 D3 보호 대상이므로 수정하지 않는다.
+1. 기준 확인
+다음 자료를 실제로 확인한다.
+
+* 승인된 B1-T00 최종 기술 계약
+* OWNER 승인 기록과 결정 기록 1~3
+* docs/reports/B1_T11_FIX_REPORT.md
+* docs/reports/B1_DECISION3_REPORT.md
+* Codex 최초 T11 FIX_REQUIRED 보고서
+* 현재 전체 verify.ps1 로그
+
+특히 OWNER 결정 3의 승인 근거가 실제 OWNER 지시인지 확인한다. 명시적 승인 근거가 없다면 승인 완료로 주장하지 않고 별도 확인 대상으로 기록한다.
+2. Codex 표적 재검수 범위
+A. T11 Findings 8건
+T11-01~08 각각에 대해:
+
+* 기존 Codex 지적
+* 수정된 코드 위치
+* 수정 내용
+* 추가된 회귀 시험
+* 계약상 충족해야 할 조건
+* 아직 남아 있는 위험
+
+을 정리한다.
+B. OWNER 결정 7건
+다음의 실제 구현·계약 준수를 확인하도록 한다.
+
+1. violations 생성 및 중복·정렬
+2. RAW_INVENTORY 닫힌 Reader와 영수증 결속
+3. witness_digest BITS64
+4. #6 Production 최종 GameState 및 GameFact 비교
+5. Unit별 GAME_RESULTS bundle과 R-13
+6. run/<run_id>/ 내부 배치
+7. PZL6 공식 문서 및 20경기 JSON의 역할·개수·Hash
+
+C. 불변성
+
+* 기존 GameResultHash·RunResultHash·ConfigHash
+* Attestation Hash
+* RNG 소비 및 Replay 순서
+* Dry Pilot 9 Run
+* 기존 Golden 4개
+* D3 기준본 SHA
+
+D. 시험 검수
+최종 3,026 PASS의 실제 범위를 확인한다.
+변경된 두 시험의 기대값이 단순히 오류를 숨기도록 완화된 것은 아닌지 검토한다.
+테스트 PASS와 계약 수용 PASS를 분리한다.
+3. Codex 수행 제한
+Codex는 READ-ONLY로 검수한다.
+
+* 코드·문서 수정 금지
+* Stage·Commit·Push 금지
+* 미실행 테스트를 PASS로 표시 금지
+* 운영 Gate를 임의로 충족 처리하지 않음
+
+Codex는 승인 계약과 OWNER 결정 기록을 우선하고, Claude의 완료 보고만으로 판정하지 않는다.
+4. 판정 형식
+다음 결과를 각각 제시하도록 한다.
+
+* T11-01~08: RESOLVED / NOT_RESOLVED / INSUFFICIENT_EVIDENCE
+* OWNER 결정 7건: COMPLIANT / NON_COMPLIANT / OWNER_DECISION_REQUIRED
+* T10 수용 기준 충족 여부
+* B1 전체 코드 구현 수용 가능 여부
+* Windows 운영 Gate 잔여 사항
+* Codex T11 재검수 최종 판정: PASS / FIX_REQUIRED / BLOCKED / INSUFFICIENT_EVIDENCE
+
+운영 Gate의 미완료와 코드 구현 결함을 구분한다.
+5. 최종 상태
+Official Execution = NOT_READY
+Final Execution Freeze = PENDING
+Phase 3 = INCOMPLETE
+이번 작업에서는 TASK 문서만 작성한다.
+코드 수정, 테스트 재실행, 계약 변경, Commit, Push는 하지 않는다.
+완료하면 생성한 TASK 파일의 경로와 내용, 검수 대상 자료의 존재 여부를 보고한다.
+</pasted_content id="d6a8">

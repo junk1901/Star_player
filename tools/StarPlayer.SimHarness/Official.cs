@@ -128,6 +128,17 @@ public sealed record OfficialAttestation(
     }
 }
 
+/// <summary>
+/// B1 R01-A/B (§14.5): who replays. <see cref="OfficialExecution"/> is the default and the unchanged rule; <see cref="TestOnlyVerification"/> is a TEST_ONLY verifier limited to the families its TEST_ONLY
+/// execution authorization names. Neither changes <see cref="OfficialApprovals.Current"/> or any command line.
+/// </summary>
+public sealed record ReplayAuthority(bool TestOnly, IReadOnlySet<string> AuthorizedFamilies)
+{
+    public static ReplayAuthority OfficialExecution { get; } = new(false, new HashSet<string>(StringComparer.Ordinal));
+
+    public static ReplayAuthority TestOnlyVerification(IEnumerable<string> authorizedFamilies) => new(true, authorizedFamilies.ToHashSet(StringComparer.Ordinal));
+}
+
 public enum CheckStatus { Pass, Fail, NotReady }
 
 public sealed record PreflightCheck(string Id, CheckStatus Status, string? Code, string Message);
@@ -242,19 +253,12 @@ public static class OfficialPreflight
         OfficialAttestation? attestation = null;
         if (checks.All(c => c.Status == CheckStatus.Pass))
         {
-            var park = HarnessData.NeutralPark();
-            var config = park.IsSuccess
-                ? RunConfig.Create(r.RunId, "official", cohort, rules, tuning.Value, park.Value, OfficialProfile.AdvancementPolicyVersion, OfficialProfile.EventBudget, policy, manifest!.CompetitionKey)
-                : Result<RunConfig>.Failure(park.Error!.Value);
-            if (!config.IsSuccess || OfficialProfile.ParkTextOf(config.Value.Park) != OfficialProfile.ParkText)
-                Add("attestation", CheckStatus.Fail, config.IsSuccess ? "Official.park_not_approved" : config.Error!.Value.Code, config.IsSuccess ? "구장 스냅샷이 승인값과 다릅니다." : config.Error!.Value.Message);
+            var built = BuildAttestation(r, a, manifest!, cohort!, rules!, tuning.Value, policy!);
+            if (!built.IsSuccess)
+                Add("attestation", CheckStatus.Fail, built.Error!.Value.Code, built.Error.Value.Message);
             else
             {
-                var c = config.Value;
-                attestation = new OfficialAttestation(OfficialAttestation.Version, a.GitCommitSha!, a.ExecutionPolicyId!, a.ExecutionPolicyHash!, r.SeedManifestPath, manifest!.FileSha256, manifest.Family,
-                    manifest.CompetitionKey, SeedManifestReader.GameIdRuleV1, cohort!.CohortId, cohort.InputsHash, policy!.Id, c.Execution.ProbabilityModelVersion, c.Execution.TuningVersion,
-                    c.Execution.TuningHash, rules!.ProfileId, rules.ContentHash, c.AdvancementPolicyVersion, OfficialProfile.ParkTextOf(c.Park), c.EventBudget,
-                    c.ConfigHash(manifest.Seeds.Select(s => c.Spec(s.Index, s.Seed))));
+                attestation = built.Value;
                 Add("attestation", CheckStatus.Pass, null, attestation.Hash());
             }
         }
@@ -262,6 +266,25 @@ public static class OfficialPreflight
             Unavailable("attestation");
 
         return new PreflightReport(checks, git.HeadSha, tuning.IsSuccess ? tuning.Value : null, manifest, rules, output.IsSuccess ? output.Value : null, attestation);
+    }
+
+    /// <summary>
+    /// B1 R01-D 5: the attestation block of <see cref="Run"/>, extracted unchanged (same construction, same failure codes <c>Official.park_not_approved</c> or the configuration error); <see cref="Run"/> calls it,
+    /// and the AMPV calls it directly to require its success.
+    /// </summary>
+    public static Result<OfficialAttestation> BuildAttestation(OfficialRequest r, OfficialApprovals a, SeedManifest manifest, CohortInputs cohort, GameRuleSnapshot rules, TuningProfile tuning, IGamePolicy policy)
+    {
+        var park = HarnessData.NeutralPark();
+        var config = park.IsSuccess
+            ? RunConfig.Create(r.RunId, "official", cohort, rules, tuning, park.Value, OfficialProfile.AdvancementPolicyVersion, OfficialProfile.EventBudget, policy, manifest.CompetitionKey)
+            : Result<RunConfig>.Failure(park.Error!.Value);
+        if (!config.IsSuccess || OfficialProfile.ParkTextOf(config.Value.Park) != OfficialProfile.ParkText)
+            return Result<OfficialAttestation>.Failure(config.IsSuccess ? new Error("Official.park_not_approved", "구장 스냅샷이 승인값과 다릅니다.") : config.Error!.Value);
+        var c = config.Value;
+        return Result<OfficialAttestation>.Success(new OfficialAttestation(OfficialAttestation.Version, a.GitCommitSha!, a.ExecutionPolicyId!, a.ExecutionPolicyHash!, r.SeedManifestPath, manifest.FileSha256,
+            manifest.Family, manifest.CompetitionKey, SeedManifestReader.GameIdRuleV1, cohort.CohortId, cohort.InputsHash, policy.Id, c.Execution.ProbabilityModelVersion, c.Execution.TuningVersion,
+            c.Execution.TuningHash, rules.ProfileId, rules.ContentHash, c.AdvancementPolicyVersion, OfficialProfile.ParkTextOf(c.Park), c.EventBudget,
+            c.ConfigHash(manifest.Seeds.Select(s => c.Spec(s.Index, s.Seed)))));
     }
 
     /// <summary>The run-independent checks <c>git_integrity</c>, <c>git_sha</c> and <c>model_tuning</c> (shared with the 48-cell preflight); returns the embedded tuning read.</summary>
@@ -282,6 +305,9 @@ public static class OfficialPreflight
         return tuning;
     }
 
+    /// <summary>The <c>execution_path</c> message of a ready path (one definition, also the B1 verifier's expected READY preflight record, T11 R2-B).</summary>
+    public const string ExecutionPathReadyMessage = "공식 실행 경로 준비됨";
+
     /// <summary>The checks <c>execution_policy</c> and <c>execution_path</c> (shared with the 48-cell preflight).</summary>
     internal static void ExecutionChecks(List<PreflightCheck> checks, OfficialApprovals a)
     {
@@ -294,7 +320,7 @@ public static class OfficialPreflight
             Add("execution_policy", CheckStatus.Pass, null, $"{OfficialProfile.Id} {OfficialProfile.Hash()}");
 
         Add("execution_path", a.ExecutionPathReady ? CheckStatus.Pass : CheckStatus.NotReady, a.ExecutionPathReady ? null : "Official.not_ready",
-            a.ExecutionPathReady ? "공식 실행 경로 준비됨" : "Final Execution Freeze가 없어 공식 실행을 시작할 수 없습니다(OfficialApprovals.ExecutionPathReady = false).");
+            a.ExecutionPathReady ? ExecutionPathReadyMessage : "Final Execution Freeze가 없어 공식 실행을 시작할 수 없습니다(OfficialApprovals.ExecutionPathReady = false).");
     }
 }
 
@@ -335,6 +361,11 @@ public static class OfficialOutput
             ? Result<string>.Failure(new Error("Official.output_exists", $"공식 출력 경로가 이미 있습니다(덮어쓰지 않음): '{rel}'."))
             : Result<string>.Success(full);
     }
+
+    /// <summary>B1 T11 R2-B: the preflight records of an official multi-unit run, next to its index (an internal layout like <c>run/&lt;run_id&gt;/</c>; final file names are B-4's).</summary>
+    public const string PreflightFile = "preflight.json", PreflightDirectory = "preflight";
+
+    public static string UnitPreflightName(string unitId) => unitId.ToLowerInvariant() + ".json";
 
     public static object Result(PreflightReport report) => new
     {
@@ -419,7 +450,25 @@ public static class OfficialReplay
         return null;
     }
 
-    public static Error? Verify(JsonElement official, string manifestConfigHash, OfficialApprovals a)
+    /// <summary>
+    /// B1 R01-A/B: <see cref="VerifyEnvelope"/>, then — only when it passed, at the readiness position — the authority gate. <see cref="ReplayAuthority.OfficialExecution"/> (the default) is the
+    /// unchanged rule; <see cref="ReplayAuthority.TestOnlyVerification"/> refuses a ready approvals instance (<c>Trust.test_only_flag_misuse</c>) and a family outside its authorized set (<c>Official.not_ready</c>).
+    /// </summary>
+    public static Error? Verify(JsonElement official, string manifestConfigHash, OfficialApprovals a, ReplayAuthority? authority = null)
+    {
+        if (VerifyEnvelope(official, manifestConfigHash, a) is { } refused)
+            return refused;
+        authority ??= ReplayAuthority.OfficialExecution;
+        if (!authority.TestOnly)
+            return a.ExecutionPathReady ? null : new Error("Official.not_ready", "공식 실행 경로가 준비되지 않아 공식 replay를 인정할 수 없습니다.");
+        if (a.ExecutionPathReady)
+            return new Error("Trust.test_only_flag_misuse", "TEST_ONLY 검증에 공식 실행 준비 상태(ExecutionPathReady=true)의 승인 인스턴스가 주어졌습니다.");
+        var family = OfficialAttestation.FromJson(official.GetProperty("attestation")).Value.SeedFamily;
+        return authority.AuthorizedFamilies.Contains(family) ? null : new Error("Official.not_ready", $"family '{family}'는 TEST_ONLY 실행 허가 대상이 아닙니다.");
+    }
+
+    /// <summary>B1 R01-A: every check of <see cref="Verify"/> before the readiness gate, in the same order, with the same conditions, codes and exception handling.</summary>
+    public static Error? VerifyEnvelope(JsonElement official, string manifestConfigHash, OfficialApprovals a)
     {
         try
         {
@@ -451,7 +500,7 @@ public static class OfficialReplay
                 return new Error("Official.git_sha_not_approved", "공식 Git SHA가 동결되지 않았습니다.");
             if (att.GitCommitSha != a.GitCommitSha)
                 return new Error("Replay.git_sha_mismatch", "Attestation의 Git SHA가 승인값과 다릅니다.");
-            return a.ExecutionPathReady ? null : new Error("Official.not_ready", "공식 실행 경로가 준비되지 않아 공식 replay를 인정할 수 없습니다.");
+            return null;
         }
         catch (Exception e) when (e is KeyNotFoundException or InvalidOperationException)
         {

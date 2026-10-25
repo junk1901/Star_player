@@ -1,0 +1,71 @@
+
+
+<pasted_content id="d6a8">
+Star Player B1 — D3 기준본 복구 및 T11 재검수 준비
+OWNER 결정
+기존 NSC-6 결정 근거 SHA를 유지하는 복원 방식을 채택한다.
+현재 TASK.md의 SHA에 맞춰 승인 기준 목록을 수정하는 것은 허가하지 않는다.
+1. D3 복구
+현재 TASK.md를 덮어쓰기 전에 원본 바이트 그대로 별도 작업 지시 보관 파일에 저장하고 SHA를 기록한다.
+다음으로 승인 당시 TASK.md의 정확한 원본을 찾는다.
+기존 승인 SHA-256:
+ecbc0859c809c68151c93f92058c31a7ab0b84ce8d8cc9a4a25512b7dd06f825
+확인된 원본에서만 TASK.md를 복원한다.
+복원 후:
+
+* TASK.md SHA 일치 확인
+* 승인 계약 SHA 확인
+* 승인 보존본 SHA 확인
+* PDF 두 개 SHA 확인
+* B1-T00_BASELINE.sha256 변경 없음 확인
+* tools/verify.ps1 전체 실행
+* 최종 Git 상태 기록
+
+원본을 확보하지 못했다면 내용을 재작성하여 SHA를 맞추려 하지 않는다. 승인 기준 변경을 임의로 진행하지 말고 정확한 차단 사유를 보고한다.
+앞으로 TASK.md를 일회성 개발 지시서로 교체하지 않는다. 새 작업 지시는 별도 docs/tasks/ 경로나 Claude Code 채팅으로 관리한다.
+2. T11 결함 수정 재확인
+B1-T11-01~08 수정 결과를 유지한다.
+기존에 구현한 수정 사항을 처음부터 다시 작성하지 않는다.
+D3 복구 후:
+
+* 신규 테스트 전체
+* 기존 Golden
+* Archive 및 Replay 결속
+* Certification 발급 경계
+* Phase 자식 영수증 검증
+* Pipe 종료와 자원 회수
+
+를 다시 확인한다.
+3. 잔여 OWNER 결정 문서 준비
+아래 항목의 현 구현과 계약 원문을 대조해 단일 OWNER 결정안을 정리한다.
+
+1. violations 생성 단위
+2. RAW_INVENTORY 파일 형식 및 형식 ID
+3. witness_digest 수치 표현
+4. PZL #6 최종 상태 비교
+5. §21 Unit별 GAME_RESULTS bundle 형식
+6. run/<run_id>/... 출력 배치
+7. PZL #6의 20경기 JSON을 GAME_RESULTS 역할로 사용하는 방식
+
+각 항목에 대해:
+
+* 현재 구현
+* 계약의 기존 요구
+* 필요한 최소 결정 문장
+* 변경 대상
+* Hash·Golden·Replay 영향
+* 수용 시험
+
+을 제시한다.
+이미 승인된 계약을 해석하는 것과 새 규범을 도입하는 것을 구분한다.
+특히 Unit별 GAME_RESULTS bundle은 §21의 필수 역할·개수·증거 범위를 지키는 정확한 형식을 제안한다. OWNER 승인 없이 새 형식을 확정하지 않는다.
+4. 결과 보고
+D3 복구 결과와 미결 OWNER 결정안을 보고한다.
+D3가 PASS여도 §21 bundle과 미결 규범이 남아 있다면 B1 전체를 완료 처리하지 않는다.
+기존 계약, 승인 기록, OWNER 결정 원문, PDF 원본은 변경하지 않는다.
+Commit·Push 금지.
+Official Execution = NOT_READY.
+Final Execution Freeze = PENDING.
+Phase 3 = INCOMPLETE.
+Codex 표적 재검수는 남은 구현·규범 결정을 정리한 뒤 요청한다.
+</pasted_content id="d6a8">

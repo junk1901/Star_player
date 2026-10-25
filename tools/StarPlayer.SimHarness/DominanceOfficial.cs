@@ -36,6 +36,9 @@ public sealed record DominancePreflightReport(IReadOnlyList<PreflightCheck> Chec
 /// </summary>
 public static class DominancePreflight
 {
+    /// <summary>The <c>cell_preflight</c> message when all 48 cells are ready (one definition, also the B1 verifier's expected READY record, T11 R2-B).</summary>
+    public const string AllCellsReady = "48셀 모두 단일 Manifest 공식 Preflight를 통과했습니다(셀별 Attestation v1).";
+
     public static DominancePreflightReport Run(DominanceOfficialRequest r, OfficialApprovals a, GitIntegrityReport git)
     {
         var checks = new List<PreflightCheck>();
@@ -63,7 +66,7 @@ public static class DominancePreflight
             static PreflightCheck FirstUnmet(PreflightReport p) => p.Checks.FirstOrDefault(k => k.Status == CheckStatus.Fail) ?? p.Checks.First(k => k.Status != CheckStatus.Pass);
             var bad = cells.Where(c => !c.Report.Ready).Select(c => (c.Pinned.Cell, Check: FirstUnmet(c.Report))).ToList();
             if (bad.Count == 0)
-                Add("cell_preflight", CheckStatus.Pass, null, "48셀 모두 단일 Manifest 공식 Preflight를 통과했습니다(셀별 Attestation v1).");
+                Add("cell_preflight", CheckStatus.Pass, null, AllCellsReady);
             else
             {
                 var worst = bad.FirstOrDefault(b => b.Check.Status == CheckStatus.Fail) is { Check: not null } failed ? failed : bad[0];
@@ -172,6 +175,26 @@ internal static class OfficialPins
     }
 
     public static byte[] Utf8(string content) => new UTF8Encoding(false).GetBytes(content);
+
+    /// <summary>
+    /// B1 T11 R2-B (§21 PREFLIGHT "Family·Unit별 필요 기록, 첫 경기 전"): the READY report the execution entered with, recorded before its first unit — <see cref="OfficialOutput.PreflightFile"/> (the
+    /// existing Family / Dominance preflight document) and <c>preflight/&lt;unit&gt;.json</c> per unit (the existing single-manifest result <see cref="OfficialOutput.Result"/>), created new through
+    /// the pinned output. Writes no game data; a failed write aborts the run before any game.
+    /// </summary>
+    public static Error? WritePreflight(PinnedDirectory output, object document, IEnumerable<(string UnitId, PreflightReport Report)> units)
+    {
+        var family = output.WriteNewFile(OfficialOutput.PreflightFile, Utf8(JsonSerializer.Serialize(document, RunReport.Json)));
+        if (!family.IsSuccess)
+            return family.Error;
+        var created = output.CreateSubdirectory(OfficialOutput.PreflightDirectory);
+        if (!created.IsSuccess)
+            return created.Error;
+        using var directory = created.Value;
+        foreach (var (unitId, report) in units)
+            if (directory.WriteNewFile(OfficialOutput.UnitPreflightName(unitId), Utf8(JsonSerializer.Serialize(OfficialOutput.Result(report), RunReport.Json))) is { IsSuccess: false } failed)
+                return failed.Error;
+        return null;
+    }
 }
 
 public enum DominanceRunTermination { Completed, Cancelled, AbortedIntegrity }
@@ -243,6 +266,8 @@ public static class DominanceOfficial
             if (!pinned.IsSuccess)
                 return Done(DominanceRunTermination.AbortedIntegrity, pinned.Error);
             output = pinned.Value;
+            if (OfficialPins.WritePreflight(output, PreflightDocument(report, runId), report.Cells.Select(c => (c.Pinned.Cell.Id, c.Report))) is { } unrecorded)   // B1 T11 R2-B: before the first cell
+                return Done(DominanceRunTermination.AbortedIntegrity, unrecorded);
             var cellsDirectory = output.CreateSubdirectory("cells");
             if (!cellsDirectory.IsSuccess)
                 return Done(DominanceRunTermination.AbortedIntegrity, cellsDirectory.Error);
@@ -382,7 +407,11 @@ public static class DominanceOfficial
 }
 
 /// <summary>The answer of a 48-cell replay: null error is a match; <see cref="GamesExecuted"/> tells a refusal before any game from a difference found by re-execution.</summary>
-public sealed record DominanceReplayOutcome(Error? Error, bool GamesExecuted, DominanceEvaluation? Evaluation);
+public sealed record DominanceReplayOutcome(Error? Error, bool GamesExecuted, DominanceEvaluation? Evaluation)
+{
+    /// <summary>B-1 (B1-T06b): the re-executed unit runs of a MATCH, in plan order, for the independent evidence projection; null otherwise. Not part of any comparison.</summary>
+    public IReadOnlyList<RunResult>? Reruns { get; init; }
+}
 
 /// <summary>
 /// Replay of an official 48-cell result directory against TRUSTED inputs only. The plan is re-derived from the approvals' pins (<see cref="DominancePreflight.PinnedCells"/>), never from the result
@@ -395,7 +424,7 @@ public static class DominanceOfficialReplay
 {
     /// <param name="rerun">A test seam that observes every re-execution (default: <see cref="SimRunner.RunSpecs"/>); it never changes what is compared.</param>
     public static DominanceReplayOutcome Verify(string resultDirectory, OfficialApprovals a, string repositoryRoot, CancellationToken cancellation = default,
-        Func<RunConfig, IReadOnlyList<GameSpec>, CancellationToken, RunResult>? rerun = null)
+        Func<RunConfig, IReadOnlyList<GameSpec>, CancellationToken, RunResult>? rerun = null, ReplayAuthority? authority = null)
     {
         rerun ??= (config, games, token) => SimRunner.RunSpecs(config, games, null, token);
         static DominanceReplayOutcome Refuse(string code, string message) => new(new Error(code, message), false, null);
@@ -451,7 +480,7 @@ public static class DominanceOfficialReplay
                     return Refuse("Replay.manifest_invalid", $"{cell.Id}: 같은 JSON 항목이 두 번 나옵니다: '{dup}'.");
                 using var manifestDoc = JsonDocument.Parse(bytes);
                 var manifest = manifestDoc.RootElement;
-                var plan = ReplayCheck.Validate(manifest, a, repositoryRoot);
+                var plan = ReplayCheck.Validate(manifest, a, repositoryRoot, null, authority);
                 if (!plan.IsSuccess)
                     return new DominanceReplayOutcome(new Error(plan.Error!.Value.Code, $"{cell.Id}: {plan.Error.Value.Message}"), false, null);
                 if (plan.Value.Stop is not null)
@@ -506,7 +535,7 @@ public static class DominanceOfficialReplay
         var status = DominanceOfficial.StatusOf(DominanceRunTermination.Completed, reruns, evaluation);
         return recordedCanonical == evaluation.Canonical() && recordedGate == DominanceEvaluation.Text(evaluation.Gate) && recordedReason == evaluation.GateReason && recordedStatus == status
             && recordedBatter == SideResult.Text(evaluation.Batter.Verdict) && recordedPitcher == SideResult.Text(evaluation.Pitcher.Verdict)
-            ? new DominanceReplayOutcome(null, true, evaluation)
+            ? new DominanceReplayOutcome(null, true, evaluation) { Reruns = reruns }
             : Differs("DomOfficial.evaluation_mismatch", "재실행 결과로 다시 계산한 48셀 판정·Gate·실행 상태가 기록과 다릅니다.");
     }
 }

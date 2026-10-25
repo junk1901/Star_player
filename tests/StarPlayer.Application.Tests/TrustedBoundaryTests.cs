@@ -47,11 +47,11 @@ public class TrustedBoundaryTests
     }
 
     /// <summary>Every type reachable through the public (and protected) signatures of the assembly's exported types.</summary>
-    private static HashSet<Type> PublicSurface(Assembly assembly)
+    private static HashSet<Type> PublicSurface(Assembly assembly, Type? except = null)
     {
         const BindingFlags all = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
         var found = new HashSet<Type>();
-        foreach (var exported in assembly.GetExportedTypes())
+        foreach (var exported in assembly.GetExportedTypes().Where(t => t != except))
         {
             foreach (var t in TypesIn(exported)) found.Add(t);
             if (exported.BaseType is { } baseType) foreach (var t in TypesIn(baseType)) found.Add(t);
@@ -89,8 +89,9 @@ public class TrustedBoundaryTests
     {
         var exported = InfrastructureAssembly.GetExportedTypes().Select(t => t.Name).Order().ToArray();
 
-        Assert.Equal(["GameDiagnosticsComposition", "PlayerInfoComposition", "SqliteStorageDiagnostics"], exported);
-        var surface = PublicSurface(InfrastructureAssembly);
+        // EventJsonV2Codec: the single B-1 #6 exception approved by OWNER decision 2 (2026-10-24, docs/contracts/b1/B1-T00_OWNER_DECISION_2.md); its own surface is pinned below
+        Assert.Equal(["EventJsonV2Codec", "GameDiagnosticsComposition", "PlayerInfoComposition", "SqliteStorageDiagnostics"], exported);
+        var surface = PublicSurface(InfrastructureAssembly, except: typeof(StarPlayer.Infrastructure.Fixtures.EventJsonV2Codec));
         Assert.DoesNotContain(surface, t => t.Assembly == DomainAssembly);
         Assert.DoesNotContain(surface, t => DangerousNames.Contains(t.Name));
         // The raw source, JSON reader and DTOs exist but are not visible outside the trusted boundary.
@@ -99,6 +100,26 @@ public class TrustedBoundaryTests
             var type = InfrastructureAssembly.GetTypes().Single(t => t.Name == name);
             Assert.False(type.IsVisible, $"{name} must not be public");
         }
+    }
+
+    /// <summary>
+    /// The B-1 #6 codec entry point (OWNER decision 2) is exactly two static forwarders to the existing format-2 writer / reader: its surface is the event type, the result type and the collections it
+    /// needs, nothing raw (no DTO, reader, world, rules or state type), and it is not used by the client.
+    /// </summary>
+    [Fact]
+    public void The_b1_event_codec_entry_point_exposes_only_the_existing_format_2_writer_and_reader()
+    {
+        var codec = typeof(StarPlayer.Infrastructure.Fixtures.EventJsonV2Codec);
+        Assert.True(codec.IsAbstract && codec.IsSealed);                                                     // static
+        var methods = codec.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Select(m => m.ToString()!).Order().ToArray();
+        Assert.Equal(
+        [
+            "StarPlayer.Domain.Common.Result`1[System.Collections.Generic.IReadOnlyList`1[StarPlayer.Domain.Baseball.Game.GameEvent]] Read(System.String)",
+            "System.String Write(System.Collections.Generic.IReadOnlyList`1[StarPlayer.Domain.Baseball.Game.GameEvent])",
+        ], methods);
+        var surface = PublicSurface(InfrastructureAssembly).Except(PublicSurface(InfrastructureAssembly, except: codec)).ToHashSet();
+        Assert.All(surface, t => Assert.True(t == codec || t.Name is "GameEvent" or "String" or "IReadOnlyList`1" or "Result`1" or "Object", $"unexpected type {t}"));
+        Assert.DoesNotContain(surface, t => DangerousNames.Contains(t.Name));
     }
 
     [Fact]
