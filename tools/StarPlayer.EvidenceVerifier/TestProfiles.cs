@@ -11,6 +11,17 @@ namespace StarPlayer.EvidenceVerifier;
 public sealed record TestCaseResult(string CaseId, string Outcome);
 
 /// <summary>
+/// G4-T2 (F-01, F-02): the child <c>dotnet test</c> is started from an absolute <see cref="Dotnet"/> path (never a name Windows would search for in the parent's image directory, the current directory or
+/// PATH) in a fixed <see cref="WorkingDirectory"/> (the build root, whose <c>global.json</c> pins the SDK), with the OWNER's extra start-environment prefixes removed as well (G4-T8).
+/// </summary>
+public sealed record TestRunner(string Dotnet, string WorkingDirectory, IReadOnlyList<string> ExtraForbiddenPrefixes)
+{
+    /// <summary>Outside an official session: the <c>dotnet.exe</c> of the runtime hosting this process (<c>dotnet\shared\Microsoft.NETCore.App\v\</c> three levels up).</summary>
+    public static TestRunner FromRuntime(string workingDirectory) =>
+        new(Path.GetFullPath(Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(), "..", "..", "..", "dotnet.exe")), workingDirectory, []);
+}
+
+/// <summary>
 /// T06b §12: the PZL Test Profile. <see cref="Required"/> is the §12.2 table with each abbreviated name written out as the test assemblies list it; <see cref="Run"/> executes the profile's cases from the
 /// test assemblies (SHA-checked against Build Provenance first) in a child <c>dotnet test</c> whose environment has no <c>DOTNET_</c> / <c>COMPlus_</c> variable (E4) and reads its own TRX; <see cref="Evidence"/>
 /// turns the result into each check's <c>test_evidence</c>. A missing, extra, duplicated, skipped or not-executed case is <c>Evidence.test_profile_mismatch</c>; a failure is a FAIL case, never hidden.
@@ -105,16 +116,19 @@ public static class TestProfiles
         }
     }
 
-    /// <summary>§12.1 fixture set: every file tracked under <c>tests/Fixtures/**</c> and <c>content/**</c> at <paramref name="commit"/>, path ordinal order, SHA-256 of the <c>git cat-file blob</c> bytes.</summary>
-    public static IReadOnlyList<JObject> Fixtures(string repositoryRoot, string commit)
+    /// <summary>
+    /// §12.1 fixture set: every file tracked under <c>tests/Fixtures/**</c> and <c>content/**</c> at <paramref name="commit"/>, path ordinal order, SHA-256 of the <c>git cat-file blob</c> bytes. An official
+    /// session passes its pinned <paramref name="git"/> (G4-T2, F-09).
+    /// </summary>
+    public static IReadOnlyList<JObject> Fixtures(string repositoryRoot, string commit, string git = "git")
     {
-        var listed = GitIntegrity.Run(repositoryRoot, ["ls-tree", "-r", "--name-only", commit, "--", "tests/Fixtures", "content"]);
+        var listed = GitIntegrity.Run(repositoryRoot, ["ls-tree", "-r", "--name-only", commit, "--", "tests/Fixtures", "content"], git);
         if (listed.ExitCode != 0)
             throw Mismatch("TestProfile.git_tree", $"git ls-tree {commit} 실패: {listed.Stderr}");
         var paths = System.Text.Encoding.UTF8.GetString(listed.Stdout).Split('\n', StringSplitOptions.RemoveEmptyEntries).Order(StringComparer.Ordinal).ToList();
         return paths.Select(p =>
         {
-            var blob = GitIntegrity.Run(repositoryRoot, ["cat-file", "blob", $"{commit}:{p}"]);
+            var blob = GitIntegrity.Run(repositoryRoot, ["cat-file", "blob", $"{commit}:{p}"], git);
             if (blob.ExitCode != 0)
                 throw Mismatch("TestProfile.git_blob", $"git cat-file {p} 실패");
             return J.O(("path", J.S(p)), ("git_blob_sha256", J.S(Convert.ToHexString(SHA256.HashData(blob.Stdout)).ToLowerInvariant())), ("byte_length", J.N(blob.Stdout.Length)));
@@ -122,9 +136,9 @@ public static class TestProfiles
     }
 
     /// <summary>§12.1: the profile's fixture list must be exactly the tree's.</summary>
-    public static void CheckFixtures(JObject profile, string repositoryRoot)
+    public static void CheckFixtures(JObject profile, string repositoryRoot, string git = "git")
     {
-        var expected = Fixtures(repositoryRoot, Text(profile["source_git_sha"]));
+        var expected = Fixtures(repositoryRoot, Text(profile["source_git_sha"]), git);
         if (!Jcs.Bytes(J.A(expected)).AsSpan().SequenceEqual(Jcs.Bytes(profile["fixtures"])))
             throw Mismatch("TestProfile.fixtures", "Profile의 fixtures가 source_git_sha 트리의 tests/Fixtures/**·content/** 추적 파일 집합·Blob SHA와 다릅니다.");
     }
@@ -141,22 +155,33 @@ public static class TestProfiles
     /// <summary>The xUnit method a case id names (display name up to the parameter list).</summary>
     public static string Method(string caseId) => caseId[(caseId.IndexOf('|') + 1)..] is var name && name.IndexOf('(') is var p and >= 0 ? name[..p] : caseId[(caseId.IndexOf('|') + 1)..];
 
+    private static bool IsReparse(string path) => (File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0;
+
     /// <summary>
     /// Runs the given cases of ONE test assembly in a child <c>dotnet test</c> (forbidden prefixes removed from its environment, E4) and returns every result of the methods they name (so a case the profile
-    /// does not list but the assembly now has is seen, not dropped).
+    /// does not list but the assembly now has is seen, not dropped). G4-T7 (F-17): the child writes into a NEW results directory of its own under <paramref name="workDirectory"/> (neither may be a reparse
+    /// point), which must then hold exactly the one expected TRX, read once.
     /// </summary>
-    public static IReadOnlyList<TestCaseResult> Run(string project, string assemblyPath, IEnumerable<string> caseIds, string workDirectory)
+    public static IReadOnlyList<TestCaseResult> Run(string project, string assemblyPath, IEnumerable<string> caseIds, string workDirectory, TestRunner runner)
     {
         var methods = caseIds.Where(c => c.StartsWith(project + "|", StringComparison.Ordinal)).Select(Method).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
         if (methods.Count == 0)
             return [];
+        if (!Path.IsPathFullyQualified(runner.Dotnet) || !File.Exists(runner.Dotnet) || !Path.IsPathFullyQualified(runner.WorkingDirectory) || !Directory.Exists(runner.WorkingDirectory))
+            throw Mismatch("TestProfile.runner", $"시험 실행 파일 '{runner.Dotnet}'·작업 디렉터리 '{runner.WorkingDirectory}'가 존재하는 절대경로가 아닙니다(G4-T2).");
         Directory.CreateDirectory(workDirectory);
-        var trx = $"{project}-{Guid.NewGuid():N}.trx";
+        var results = Path.Combine(workDirectory, $"{project}-{Guid.NewGuid():N}");
+        if (IsReparse(workDirectory) || Directory.Exists(results) || File.Exists(results))
+            throw Mismatch("TestProfile.results_directory", $"결과 디렉터리 '{results}'를 새로 만들 수 없습니다(Reparse Point 또는 이미 있음, G4-T7).");
+        Directory.CreateDirectory(results);
+        var trx = $"{project}.trx";
         var filter = string.Join('|', methods.Select(m => $"FullyQualifiedName={m}"));
-        var start = new ProcessStartInfo("dotnet") { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true };
-        foreach (var arg in new[] { "test", assemblyPath, "--filter", filter, "--logger", $"trx;LogFileName={trx}", "--results-directory", workDirectory })
+        var start = new ProcessStartInfo(runner.Dotnet) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true, WorkingDirectory = runner.WorkingDirectory };
+        foreach (var arg in new[] { "test", assemblyPath, "--filter", filter, "--logger", $"trx;LogFileName={trx}", "--results-directory", results })
             start.ArgumentList.Add(arg);
         foreach (var name in ExecutionEnvironment.ForbiddenVariables(Environment.GetEnvironmentVariables()))
+            start.Environment.Remove(name);
+        foreach (var name in start.Environment.Keys.Where(k => runner.ExtraForbiddenPrefixes.Any(x => k.StartsWith(x, StringComparison.OrdinalIgnoreCase))).ToList())
             start.Environment.Remove(name);
         using (var p = Process.Start(start)!)
         {
@@ -171,7 +196,18 @@ public static class TestProfiles
             _ = stdout.Result + stderr.Result;
         }
 
-        return Trx(project, File.ReadAllBytes(Path.Combine(workDirectory, trx)));
+        var path = Path.Combine(results, trx);
+        if (Directory.GetFiles(results, "*.trx", SearchOption.AllDirectories) is not [var only] || !string.Equals(only, path, StringComparison.OrdinalIgnoreCase) || IsReparse(results) || IsReparse(path))
+            throw Mismatch("TestProfile.trx", $"{project}: 결과 디렉터리에 기대한 TRX 하나만 있지 않습니다(G4-T7).");
+        byte[] bytes;
+        using (var s = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+        {
+            using var m = new MemoryStream();
+            s.CopyTo(m);
+            bytes = m.ToArray();
+        }
+
+        return Trx(project, bytes);
     }
 
     /// <summary>The results of a TRX file (VSTest 2010 schema): <c>UnitTestResult/@testName</c> and <c>@outcome</c>.</summary>

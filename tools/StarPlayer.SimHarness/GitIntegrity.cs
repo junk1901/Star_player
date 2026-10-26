@@ -164,9 +164,10 @@ public static class GitIntegrity
         return string.Equals(N(a), N(b), OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
     }
 
-    public static GitCommandResult Run(string workingDirectory, string[] args)
+    /// <summary>Runs git in <paramref name="workingDirectory"/>; the official verifier passes its pinned absolute <paramref name="executable"/> (G4-T2, F-09).</summary>
+    public static GitCommandResult Run(string workingDirectory, string[] args, string executable = "git")
     {
-        var start = new ProcessStartInfo("git") { WorkingDirectory = workingDirectory, RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
+        var start = new ProcessStartInfo(executable) { WorkingDirectory = workingDirectory, RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
         start.Environment["GIT_OPTIONAL_LOCKS"] = "0";
         foreach (var a in args)
             start.ArgumentList.Add(a);

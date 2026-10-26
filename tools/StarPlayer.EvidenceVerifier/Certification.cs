@@ -12,8 +12,11 @@ namespace StarPlayer.EvidenceVerifier;
 /// </summary>
 public sealed class CertificationSession
 {
-    internal CertificationSession(ResolvedApproval trust, IEvidenceRegistry registry, EnvironmentSnapshot c0, string repositoryRoot, string archiveRoot) =>
-        (Trust, Registry, C0, RepositoryRoot, ArchiveRoot) = (trust, registry, c0, repositoryRoot, archiveRoot);
+    internal CertificationSession(ResolvedApproval trust, IEvidenceRegistry registry, EnvironmentSnapshot c0, string repositoryRoot, string archiveRoot, ExecutionBinding? binding) =>
+        (Trust, Registry, C0, RepositoryRoot, ArchiveRoot, Binding) = (trust, registry, c0, repositoryRoot, archiveRoot, binding);
+
+    /// <summary>G4: the process binding of an official session (required when the record resolved official; optional for TEST_ONLY).</summary>
+    internal ExecutionBinding? Binding { get; }
 
     public ResolvedApproval Trust { get; }
 
@@ -77,21 +80,33 @@ public static class Certification
 
     private static EnvironmentSnapshot Capture() => CaptureSeam?.Invoke() ?? ExecutionEnvironment.Capture();
 
-    /// <summary>E2-1 → E2-2/E2-3 (trust bootstrap) → E2-4 → E2-5; any failure leaves no session.</summary>
+    /// <summary>
+    /// E2-1 → E2-2/E2-3 (trust bootstrap) → G4 execution binding → E2-4 → E2-5; any failure leaves no session. A record that resolves official needs the process <paramref name="binding"/> (G4: the
+    /// official entry point makes it before the anchor is read); without one only a TEST_ONLY session can exist.
+    /// </summary>
     public static CertificationSession Open(TrustAnchorV1 anchor, IEvidenceRegistry registry, string approvalRecordId, string approvalRecordSha256, string authorizationId, string repositoryRoot,
-        string archiveRoot)
+        string archiveRoot, ExecutionBinding? binding = null)
     {
         if (ExecutionEnvironment.ForbiddenVariables(VariablesSeam?.Invoke() ?? System.Environment.GetEnvironmentVariables()) is { Count: > 0 } forbidden)
             throw Environment("Environment.forbidden_variable", $"금지 접두사 환경 변수가 있습니다: {string.Join(", ", forbidden)} (E2-1).");
         var c0 = Capture();
         var trust = TrustBootstrap.Resolve(anchor, registry, approvalRecordId, approvalRecordSha256, authorizationId, repositoryRoot);
+        if (binding is null && trust.Resolution == ApprovalResolution.ResolvedOfficial)
+            throw EvidenceCodes.Fail(EvidenceCodes.ApprovalMismatch, "Execution.unbound", "", "execution_binding", "공식 승인 기록은 실행 결속(G4) 없이 세션을 열지 않습니다.");
+        if (binding is not null)
+        {
+            if (!string.Equals(archiveRoot, binding.Config.ArchiveRoot, StringComparison.OrdinalIgnoreCase))
+                throw EvidenceCodes.Fail(EvidenceCodes.ApprovalMismatch, "Execution.archive_root", "", "execution_binding", $"Archive root '{archiveRoot}'가 설치 설정 archive_root가 아닙니다.");
+            binding.BindBuild(trust.Build.Doc, Items(trust.Approval.Record["verifiers"]), repositoryRoot);
+        }
+
         if (ExecutionEnvironment.Mismatch(c0, trust.Environment.Doc) is { } bad)
             throw Environment("Environment.profile_mismatch", $"C0가 승인 Environment Profile과 다릅니다(E2-4): {bad}");
         if (Capture().Text() != c0.Text())
             throw Environment("Environment.c1_differs", "C1이 C0와 다릅니다(E2-4).");
         if (ExecutionEnvironment.GoldenMismatch(trust.Environment.Doc) is { } golden)
             throw Environment("Environment.bit_golden", $"비트 Golden이 승인 값과 다릅니다(E2-5): {golden}");
-        return new CertificationSession(trust, registry, c0, repositoryRoot, archiveRoot);
+        return new CertificationSession(trust, registry, c0, repositoryRoot, archiveRoot, binding);
     }
 
     /// <summary>E2-6: the family verified under the session's approval, authorization and registry trust; the result stays bound to this session.</summary>
@@ -105,20 +120,44 @@ public static class Certification
 
     /// <summary>
     /// §12.3: the session's Test Profile checked (required cases, fixture blobs of the approved commit, every TEST_ASSEMBLY's bytes against the Build Provenance) and run by the verifier itself.
-    /// <paramref name="buildRoot"/> is the checkout holding the built tree; nothing from it is trusted that the provenance does not pin.
+    /// <paramref name="buildRoot"/> is the checkout holding the built tree; nothing from it is trusted that the provenance does not pin. The child starts from an absolute dotnet in the build root (G4-T2).
+    /// In an official session (G4-T5/T6) the roots are the installation's, the pinned dotnet and git are used, and every file of each test assembly's folder is a pinned artifact, held without write or
+    /// delete sharing from the check until its child run has ended (no replacement between check and execution).
     /// </summary>
     public static TestProfileRun RunTestProfile(CertificationSession session, string buildRoot, string workDirectory)
     {
+        var b = session.Binding;
+        if (b is not null && (!string.Equals(buildRoot, b.Config.BuildRoot, StringComparison.OrdinalIgnoreCase) || !string.Equals(workDirectory, b.Config.WorkRoot, StringComparison.OrdinalIgnoreCase)))
+            throw EvidenceCodes.Fail(EvidenceCodes.TestProfileMismatch, "TestProfile.roots", "", "test_profile", "Test Profile의 build·work root가 설치 설정 값이 아닙니다(G4).");
+        var runner = b is null ? TestRunner.FromRuntime(buildRoot) : new TestRunner(b.Config.Dotnet.Path, buildRoot, b.Config.StartupForbiddenPrefixes);
         var profile = session.Trust.TestProfile.Doc;
+        var build = session.Trust.Build.Doc;
         TestProfiles.CheckRequired(profile);
-        TestProfiles.CheckFixtures(profile, buildRoot);
+        TestProfiles.CheckFixtures(profile, buildRoot, b?.Config.Git.Path ?? "git");
         var cases = Items(profile["checks"]).Select(Obj).SelectMany(c => Items(c["cases"]).Select(Text)).Distinct(StringComparer.Ordinal).ToList();
         var results = new List<TestCaseResult>();
-        foreach (var rel in Items(session.Trust.Build.Doc["artifacts"]).Select(Obj).Where(x => Text(x["role"]) == "TEST_ASSEMBLY").Select(x => Text(x["relative_path"])))
+        foreach (var rel in Items(build["artifacts"]).Select(Obj).Where(x => Text(x["role"]) == "TEST_ASSEMBLY").Select(x => Text(x["relative_path"])))
         {
             var full = Path.Combine([buildRoot, .. rel.Split('/')]);
-            TestProfiles.CheckAssembly(session.Trust.Build.Doc, rel, File.ReadAllBytes(full));
-            results.AddRange(TestProfiles.Run(Path.GetFileNameWithoutExtension(rel), full, cases, workDirectory));
+            if (b is null)
+            {
+                TestProfiles.CheckAssembly(build, rel, File.ReadAllBytes(full));
+                results.AddRange(TestProfiles.Run(Path.GetFileNameWithoutExtension(rel), full, cases, workDirectory, runner));
+                continue;
+            }
+
+            var held = ExecutionBinding.HoldTree(Path.GetDirectoryName(full)!, build, buildRoot, b.Config.UnpinnedOutputFiles, "TEST_ASSEMBLY", "DEPENDENCY", "RUNTIME_CONFIG");
+            try
+            {
+                if (!held.Any(h => string.Equals(h.Path, full, StringComparison.OrdinalIgnoreCase)))
+                    throw EvidenceCodes.Fail(EvidenceCodes.TestProfileMismatch, "TestProfile.assembly_unknown", "", "test_profile", $"'{rel}'가 고정된 시험 폴더에 없습니다.");
+                results.AddRange(TestProfiles.Run(Path.GetFileNameWithoutExtension(rel), full, cases, workDirectory, runner));
+            }
+            finally
+            {
+                foreach (var h in held)
+                    h.Handle.Dispose();
+            }
         }
 
         return new TestProfileRun(session, TestProfiles.Evidence(profile, session.Trust.TestProfile.Sha, results));
@@ -181,7 +220,9 @@ public static class Certification
         var inventory = Archive.Inventory(originals.Select(o => new JObject(o.Members.Where(m => m.Key != "origin").ToList())));
         var sources = originals.Concat([Derived($"verifier/{id}/canonical-payload.json", payload.Canonical, "CANONICAL_PAYLOAD"), Derived($"verifier/{id}/raw-inventory.json", inventory, "RAW_INVENTORY")])
             .OrderBy(x => Text(x["artifact_id"]), StringComparer.Ordinal).ToList();
-        var verifier = Obj(Items(a.Record["verifiers"])[0]);
+        var verifier = s.Binding?.VerifierEntry ?? Obj(Items(a.Record["verifiers"])[0]);               // G4-T3: the entry of the running binary in an official session
+        if (s.Binding?.Inspect() is { } unpinned)
+            throw EvidenceCodes.Fail(EvidenceCodes.ApprovalMismatch, "Execution.unpinned_load", "", "execution_binding", unpinned);
         var receipt = J.O(
             ("format", J.S(Receipts.Format)), ("receipt_id", J.S(id)), ("validation_set_id", J.S(a.ValidationSetId)),
             ("approvals", J.O(("approval_record_id", J.S(a.Id)), ("approval_record_sha256", J.S(a.RawSha256)), ("freeze_id", J.S(a.FreezeId)))), ("contracts", a.Record["contracts"]),
@@ -197,7 +238,7 @@ public static class Certification
     private static string? Recheck(CertificationSession s)
     {
         var c2 = Capture();
-        return c2.Text() != s.C0.Text() ? "C2 ≠ C0" : ExecutionEnvironment.Mismatch(c2, s.Trust.Environment.Doc);
+        return s.Binding?.Inspect() ?? (c2.Text() != s.C0.Text() ? "C2 ≠ C0" : ExecutionEnvironment.Mismatch(c2, s.Trust.Environment.Doc));
     }
 
     /// <summary>
