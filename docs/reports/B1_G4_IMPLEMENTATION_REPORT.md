@@ -14,7 +14,7 @@
 | Worktree·브랜치 | `E:\Madegame\Star_player_g4`, `phase3/g4-official-entry`(로컬 전용, Push 없음) |
 | 기준 | `96070c5fa1571b079df9c204597215db9da974ac` |
 | 문서 Commit | `2c90a88` — 검수된 B-4 초안(`62ae952e…`)·요청서(`49f6d73c…`)·규범 결정 자료(`4ccc865c…`) 바이트 그대로 |
-| G4 구현 Commit | 이 보고서를 포함한 Commit(SHA는 `git log`) |
+| G4 구현 Commit | `430e306`(코드·시험·문서). 이 결과 기록은 그다음 문서 Commit |
 
 ## 2. 구현 범위 (규범 결정 자료 4절 G4-T1~T8)
 
@@ -76,9 +76,19 @@
 | 자식 실행 | 실제 자식 `dotnet test`가 폴더 유지 중 통과 | 이름 `dotnet`(절대경로 아님), TRX를 쓰지 않는 실행 파일 |
 | CLI | 모든 인자 1회 | `--anchor`, 중복, 누락, 잘못된 family, usage exit 2; 설치 설정 부재 → 시작 환경 위반 → 앵커 부재 순서로 거부, Registry에 도달하지 않음 |
 
-### 6.2 실행 결과
+### 6.2 실행 결과 (실제 명령 출력)
 
-(verify 실행 후 기록)
+| 실행 | 기준 | 결과 | 로그 |
+|---|---|---|---|
+| G4 시험 11개(1차) | 작업 트리 | 1개 실패: 동적 어셈블리를 V-2가 거부(4절) → 수정 후 11/11 PASS | `dotnet test … --filter FullyQualifiedName~G4OfficialEntryTests` |
+| `verify.ps1` run1 | `2c90a88` + 미커밋 G4(12번째 시험 전) | **GATE: PASS**, 3,052 PASS / 0 FAIL / 0 SKIP | [B1_G4_VERIFY_LOG_run1.md](B1_G4_VERIFY_LOG_run1.md) |
+| G4 시험 12개 | 작업 트리 | 12/12 PASS(4초) | 같은 필터 |
+| `verify.ps1` run2 | `430e306`(clean, D2 0건) | **GATE: PASS**, 3,053 PASS / 0 FAIL / 0 SKIP | [B1_G4_VERIFY_LOG_run2.md](B1_G4_VERIFY_LOG_run2.md) |
+
+- run2 세부: U1 327, U2 741, U3 128(U3a·U3b 포함), U4 1,237, U5 538, U6 82(기존 70 + G4 12), B1~B3·G1~G4·E1~E4·D1(232개)·D3 PASS
+- 기준선 3,041(2026-10-25 B1 검토 트리)에서 늘어난 12개는 모두 G4 시험입니다. 기존 시험의 기대값은 하나도 바꾸지 않았습니다.
+- **Godot Export 회귀:** run1·run2 모두 `build/export/StarPlayer.pck` = `3a187e19e7737c3329d81a2e76fe357c30f117c9033af5fcfc3706ea0c49e799`(Scene Migration 5회 결과와 같음). 전체 5회 재현성 검사는 다시 하지 않았습니다(**미검증**).
+- **실행하지 않은 것:** 동적 로드 추적, 운영 기계 시험, 공식 승인값을 쓴 `certify-*` 끝까지의 실행(불가), Codex 검수
 
 ## 7. 남은 위험과 미해결
 
@@ -115,6 +125,25 @@
 | F-19 | 규칙 v2에서 보수적 포함 | — |
 | F-20 | G5 준비 문서 | 운영 실측 |
 
-## 9. 변경 파일
+## 9. 변경 파일 (`2c90a88..430e306`, 13개, +1,145 / −29)
 
-(Commit 후 기록)
+| 파일 | 변경 | blob |
+|---|---|---|
+| `tools/StarPlayer.EvidenceVerifier/ExecutionBinding.cs` | 새 파일(T3·T4·T5·T8) | `12946576533c` |
+| `tools/StarPlayer.EvidenceVerifier/InstallConfig.cs` | 새 파일(T1) | `461ef9053bbc` |
+| `tools/StarPlayer.EvidenceVerifier/OfficialEntry.cs` | 새 파일(T1 CLI) | `d246a764f694` |
+| `tools/StarPlayer.EvidenceVerifier/Certification.cs` | 결속 연결, 시험 폴더 유지, 영수증 verifier 항목 | `d026a2f05bc7` |
+| `tools/StarPlayer.EvidenceVerifier/TestProfiles.cs` | `TestRunner`, 결과 디렉터리·TRX(T2·T7) | `23aa2b39b2b3` |
+| `tools/StarPlayer.EvidenceVerifier/Program.cs` | 명령 연결·usage | `61bc28a2ff16` |
+| `tools/StarPlayer.SimHarness/GitIntegrity.cs` | `Run`에 실행 파일 인자(기본값 `git`, 동작 불변) | `a646fc30bdc1` |
+| `tests/StarPlayer.EvidenceVerifier.Tests/G4OfficialEntryTests.cs` | 새 시험 12개 | `f260d128f2e7` |
+| `CURRENT_STATE.md`, 이 보고서, run1 로그, G5·A-1 준비, Codex 요청서 | 문서 | — |
+
+- SimHarness 소스가 바뀌었으므로 SIMHARNESS_BINARY SHA도 바뀝니다. 게임 로직·Hash·Replay와는 무관합니다(run2 U5·U6 PASS).
+
+## 10. 다음 단계와 중단 지점
+
+1. **Codex READ-ONLY 검수**([요청서](../tasks/B1_G4_CODEX_READONLY_REVIEW_REQUEST.md)). MAJOR·MINOR가 나오면 그 범위만 고치고 다시 검증합니다.
+2. **OWNER 결정:** N-5(Pin 위치·설치 설정 형식), N-6(Root 표), N-7(시작 정책 접두사), N-9(§21 해석), N-10(로드 추적), N-11(Artifact 규칙 v2·EXE 역할)
+3. **OWNER 승인 지점(중단):** A-1 비공개 원격 생성과 최초 Push, 운영 기계 ACL·앵커·설치 설정 설치, 승인 소스 Commit 확정
+4. 그 뒤: 새 원격 URL로 두 폴더 빌드와 Artifact v2 SHA 재계산, 운영 로드 추적과 `execution_pins` 확정, G1~G9 공식 실측
