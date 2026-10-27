@@ -57,6 +57,7 @@
 | 문서 | `docs/tasks/B1_G5_A1_OPERATIONAL_PREP_DRAFT.md` | 후속 문서 링크 한 줄 추가 |
 | 문서 | `Star/02_Decisions/2026-10-28_B1_G4_Code_Acceptance_And_Ops_Direction.md` | OWNER 결정 요약 |
 | 문서 | 이 보고서, `CURRENT_STATE.md`, `Star/00_Dashboard.md` | 상태 기록 |
+| 증거 | `docs/reports/B1_G5PREP_VERIFY_LOG_clean.md` | Clean Checkout verify 로그 사본(7.1절) |
 
 - **변경 없음:**
   - `src`, `game`, `tests`, `tools/StarPlayer.*`(검증기·SimHarness 코드)
@@ -72,7 +73,9 @@
 - Scratch 밖은 다음 두 가지만 읽기 전용으로 접근했습니다.
   - `C:\Program Files\dotnet`·`Git`에 대한 핸들 열기 시도(쓰기 없음)
   - `dotnet.exe` 해시
-- **결과: 36 PASS / 0 FAIL** (TBD_SELFTEST_FINAL)
+- **결과: 36 PASS / 0 FAIL**
+  - Worktree 실행: 가짜 값 조립 변경 전
+  - Clean Checkout `1207767` 실행: 7.1절
 
 | 영역 | 사례 |
 |---|---|
@@ -226,7 +229,42 @@
      - `tools\verify.ps1` 전체
      - `tools\b1-ops\selftest.ps1`
   3. 제품·검증기·계약 파일이 `a980ea5`와 같은지 diff로 확인합니다.
-- **결과:** 다음 문서 Commit에서 이 절에 추가합니다(7.1).
+- **결과:** 7.1절
+
+### 7.1 Clean Checkout `1207767d6c506f15d0a35a1e19072bf7ff8a71cc` 결과 (2026-10-28)
+
+- **Clone:** `E:\Madegame\g3x\g4clean3`
+  - verify 로그 복원 → 작업 브랜치에서 로컬 fetch → `checkout --detach 1207767` → 작업 트리 0건
+  - `origin`은 실험 통제값 그대로입니다(조회·Push 없음).
+- **제품 불변 확인:** `git diff --stat a980ea5 1207767`의 결과가 0줄입니다. 대상 경로는 다음과 같습니다.
+  - `src`, `game`, `tests`, `tools/StarPlayer.EvidenceVerifier`, `tools/StarPlayer.SimHarness`
+  - `tools/verify.ps1`, `TASK.md`, `docs/contracts`, `content`
+- **`tools\verify.ps1`:** exit 0, **`GATE: PASS`**
+
+| 단위 | 결과 |
+|---|---|
+| U1 Domain | 327 / 0 / 0 |
+| U2 Simulation | 741 / 0 / 0 |
+| U3 Application(U3a 14, U3b 48 포함) | 128 / 0 / 0 |
+| U4 Infrastructure | 1,237 / 0 / 0 |
+| U5 SimHarness | 538 / 0 / 0 |
+| U6 EvidenceVerifier | 90 / 0 / 0 |
+| **합계** | **3,061 PASS / 0 FAIL / 0 SKIP** (`a980ea5`와 같음) |
+| Godot G1~G4, Export E1·E1b·E2~E4 | PASS |
+| D1 문서 링크 | PASS, 245개 파일 |
+| D3 승인 계약·보호 파일 | PASS, 5개 일치 |
+| PCK SHA-256 | `3a187e19…` 불변 |
+
+- **`tools\b1-ops\selftest.ps1`(Clean Checkout 사본):** 36 PASS / 0 FAIL, 비승격. Scratch Root는 삭제했습니다.
+- **기록:**
+  - verify 로그 사본 [B1_G5PREP_VERIFY_LOG_clean.md](B1_G5PREP_VERIFY_LOG_clean.md)(`99126b0e…`)
+  - stdout `g5prep\verify_1207767_stdout.txt`(`df6a1c3c…`)
+  - 자체 시험 `g5prep\selftest_clean_1207767.json`(`78ae287f…`)
+- **재실행하지 않은 것:** 제품·검증기·시험 코드가 `a980ea5`와 바이트 단위로 같아 아래는 다시 실행하지 않았습니다. 기준값은 G4-FIX2 보고서의 값입니다.
+  - Golden 4/4
+  - Dry Pilot 9회
+  - PCK 5회 재현성 시험(**미검증** 유지)
+- **B1 Tag:** `b1-code-accepted-2026-10-26` → `7bdde7dd091f9a66957bc740c77d470c7732b3ad` 불변. 루트 `TASK.md`는 D3로 확인했습니다.
 
 ## 8. 증거 (저장소 밖, `E:\Madegame\g3x\`)
 
