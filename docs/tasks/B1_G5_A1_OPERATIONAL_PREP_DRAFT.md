@@ -53,7 +53,8 @@ OWNER가 운영 기계에서 관리자 권한으로 수행할 절차의 초안�
 
 ## 4. 외부 보호 Pin (설치 설정 `execution_pins`)
 
-- **G4 동작:** `dotnet`·`git`·`execution_pins`의 각 파일을 쓰기·삭제 공유 없이 열어 SHA를 대조하고 프로세스가 끝날 때까지 핸들을 유지합니다. 검증기 프로세스에 로드된 어셈블리·모듈 중 Pin도 Build Provenance도 아니고 `%windir%`·`allowed_module_roots` 밖인 것이 있으면 인증을 거부합니다(V-2).
+- **G4 동작:** `dotnet`·`git`·`execution_pins`의 각 파일을 쓰기·삭제 공유 없이 열어 SHA를 대조하고 프로세스가 끝날 때까지 핸들을 유지합니다. 검증기 프로세스에 로드된 어셈블리·모듈 중 `execution_pins`나 Build Provenance로 바이트 Pin되지 않은 파일이 하나라도 있으면 인증을 거부합니다(V-2). Windows 경로(`%windir%`) 아래나 특정 Root 아래라는 이유로 자동 허용되는 비Pin 모듈은 없습니다(G4-01 수정 `ca31226` 이후; 설정 필드 `allowed_module_roots`는 삭제되어 있으면 `schema_invalid`). 동적 어셈블리는 `allowed_dynamic_assemblies`에 나열된 이름만 기본 로드 컨텍스트에서 허용합니다.
+  - *(정정 2026-10-28, G4 표적 재검수 NOTE: 이 항목의 이전 문장은 `%windir%`·`allowed_module_roots` 안의 비Pin 모듈을 허용한다고 적었으나, 현재 코드와 다릅니다.)*
 - **Pin 목록을 만드는 방법(후보):** 승인 운영 기계에서 동적 로드 추적(규범 결정 자료 6절)으로 검증기와 Test Profile 자식이 여는 R-DOTNET 파일을 모은 뒤 OWNER가 승인합니다. 추적 전에는 목록을 확정하지 않습니다.
 - **대안(개정 2026-10-27):** 초안에 있던 `allowed_module_roots`(Root 전체 허용)는 Codex G4-01(MAJOR)로 **삭제**되었습니다. 경로·Root만으로 신뢰하는 방식은 쓰지 않습니다. OS·공유 런타임 예외 정책은 OWNER 결정 대상이며, 실측과 대안은 [G4 수정 보고서](../reports/B1_G4_FIX_REPORT.md) 6절에 있습니다.
 - **한계:** 자식 프로세스(`vstest.console`·`testhost`·`git`)가 로드하는 파일은 부모가 검사하지 못합니다. Pin된 파일은 핸들로 교체를 막지만, Pin 밖 파일은 ACL에만 의존합니다.

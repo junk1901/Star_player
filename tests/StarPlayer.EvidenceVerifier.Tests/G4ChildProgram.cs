@@ -100,7 +100,8 @@ internal static class G4Fixtures
 
 /// <summary>
 /// The entry point of this test assembly when it is run as its own process (<c>dotnet exec</c>), never by the test host. It isolates what cannot be undone inside the shared test host (G4-01: loads from
-/// bytes, other load contexts, unpinned native modules) and plays a scripted <c>dotnet test</c> (G4-02 / G4-04: exit codes and TRX files). Exit codes: 0 no violation, 3 a violation (printed),
+/// bytes, other load contexts, unpinned native modules) and plays a scripted <c>dotnet test</c> (G4-02 / G4-04 / G4-FIX-01: exit codes and TRX files with their run-level state; G4-FIX-02: a started
+/// process that keeps the output pipes open after the child exits, and large output). Exit codes: 0 no violation, 3 a violation (printed),
 /// 4 the binding refused (cause printed), 2 usage.
 /// </summary>
 public static class G4ChildProgram
@@ -115,8 +116,31 @@ public static class G4ChildProgram
     {
         ["g4-binding", var scenario] => Binding(scenario),
         ["g4-fake-dotnet", var scenario, .. var rest] => FakeDotnet(scenario, rest),
+        ["g4-hold", var pid] => Hold(pid),
         _ => 2,
     };
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr GetStdHandle(int which);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool SetHandleInformation(IntPtr handle, uint mask, uint flags);
+
+    /// <summary>Keeps a standard handle of this process out of the processes it starts.</summary>
+    private static void NoInherit(int which)
+    {
+        if (!SetHandleInformation(GetStdHandle(which), 1 /* HANDLE_FLAG_INHERIT */, 0))
+            throw new System.ComponentModel.Win32Exception();
+    }
+
+    /// <summary>G4-FIX-02: the pipe holder. Publishes its process id, then outlives its parent (bounded, so a failed kill still ends).</summary>
+    private static int Hold(string pidFile)
+    {
+        File.WriteAllText(pidFile + ".tmp", Environment.ProcessId.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        File.Move(pidFile + ".tmp", pidFile);
+        Thread.Sleep(120_000);
+        return 0;
+    }
 
     private static IReadOnlyList<ToolPin> LoadedPins()
     {
@@ -203,9 +227,16 @@ public static class G4ChildProgram
         var results = Option("--results-directory");
         var trx = Path.Combine(results, Option("--logger").Split("LogFileName=")[1]);
         var methods = Option("--filter").Split('|').Select(f => f["FullyQualifiedName=".Length..]).ToList();
-        void Write(string path, string outcome) => File.WriteAllText(path,
-            "<?xml version=\"1.0\" encoding=\"utf-8\"?><TestRun xmlns=\"http://microsoft.com/schemas/VisualStudio/TeamTest/2010\"><Results>"
-            + string.Concat(methods.Select(m => $"<UnitTestResult testName=\"{m}\" outcome=\"{outcome}\" />")) + "</Results></TestRun>");
+        var n = methods.Count;
+        // the shape VSTest's TRX logger writes (observed on this PC): Results, then ResultSummary with Counters and, for run-level messages only, RunInfos
+        string Counters(int passed, int failed, int error = 0, string total = "") =>
+            $"<Counters total=\"{total}{passed + failed}\" executed=\"{passed + failed}\" passed=\"{passed}\" failed=\"{failed}\" error=\"{error}\" timeout=\"0\" aborted=\"0\" inconclusive=\"0\" passedButRunAborted=\"0\" notRunnable=\"0\" notExecuted=\"0\" disconnected=\"0\" warning=\"0\" completed=\"0\" inProgress=\"0\" pending=\"0\" />";
+        string Summary(string outcome, string counters, string infos = "") => $"<ResultSummary outcome=\"{outcome}\">{counters}{infos}</ResultSummary>";
+        string Normal(string outcome) => Summary(outcome == "Failed" ? "Failed" : "Completed", Counters(outcome == "Passed" ? n : 0, outcome == "Failed" ? n : 0));
+        const string Crash = "<RunInfos><RunInfo computerName=\"g4\" outcome=\"Error\" timestamp=\"2026-10-27T00:00:00+09:00\"><Text>The active test run was aborted. Reason: Test host process crashed</Text></RunInfo></RunInfos>";
+        void Raw(string path, string body) => File.WriteAllText(path, "<?xml version=\"1.0\" encoding=\"utf-8\"?><TestRun xmlns=\"http://microsoft.com/schemas/VisualStudio/TeamTest/2010\">" + body + "</TestRun>");
+        void Write(string path, string outcome, string? summary = null) =>
+            Raw(path, "<Results>" + string.Concat(methods.Select(m => $"<UnitTestResult testName=\"{m}\" outcome=\"{outcome}\" />")) + "</Results>" + (summary ?? Normal(outcome)));
         switch (scenario)
         {
             case "pass": Write(trx, "Passed"); return 0;
@@ -217,6 +248,48 @@ public static class G4ChildProgram
             case "exit3-passed": Write(trx, "Passed"); return 3;
             case "two-trx": Write(trx, "Passed"); Write(Path.Combine(results, "other.trx"), "Passed"); return 0;
             case "sleep": Thread.Sleep(60_000); return 0;
+            // G4-FIX-01 run-level state
+            case "fail-run-error": Write(trx, "Failed", Summary("Failed", Counters(0, n), Crash)); return 1;
+            case "pass-run-error": Write(trx, "Passed", Summary("Failed", Counters(n, 0), Crash)); return 1;
+            case "exit0-run-error": Write(trx, "Passed", Summary("Completed", Counters(n, 0), Crash)); return 0;
+            case "run-warning": Write(trx, "Passed", Summary("Completed", Counters(n, 0), Crash.Replace("\"Error\"", "\"Warning\""))); return 0;
+            case "error-counter": Write(trx, "Passed", Summary("Completed", Counters(n, 0, error: 1))); return 0;
+            case "aborted": Write(trx, "Passed", Summary("Aborted", Counters(n, 0))); return 0;
+            case "exit0-outcome-failed": Write(trx, "Passed", Summary("Failed", Counters(n, 0))); return 0;
+            case "no-summary": Write(trx, "Passed", ""); return 0;
+            case "two-summaries": Write(trx, "Passed", Normal("Passed") + Normal("Passed")); return 0;
+            case "no-counters": Write(trx, "Passed", Summary("Completed", "")); return 0;
+            case "bad-counter": Write(trx, "Passed", Summary("Completed", Counters(n, 0, total: "x"))); return 0;
+            case "counter-mismatch": Write(trx, "Passed", Summary("Completed", Counters(n + 1, 0))); return 0;
+            case "no-outcome": Write(trx, "Passed", Normal("Passed").Replace(" outcome=\"Completed\"", "")); return 0;
+            case "other-version": Write(trx, "Passed"); File.WriteAllText(trx, File.ReadAllText(trx).Replace("TeamTest/2010", "TeamTest/2006")); return 0;
+            case "not-xml": File.WriteAllText(trx, "<TestRun"); return 0;
+            case "case-no-outcome": Raw(trx, "<Results>" + string.Concat(methods.Select(m => $"<UnitTestResult testName=\"{m}\" />")) + "</Results>" + Normal("Passed")); return 0;
+            // G4-FIX-02 pipes: a process started here inherits the pipe ends this child holds, writes its id beside the TRX and stays alive after this child exits
+            case "hold-both" or "hold-stdout" or "hold-stderr":
+                if (scenario == "hold-stdout")
+                    NoInherit(-12);     // STD_ERROR_HANDLE: only stdout reaches the holder
+                if (scenario == "hold-stderr")
+                    NoInherit(-11);     // STD_OUTPUT_HANDLE
+                var pid = Path.Combine(results, "holder.pid");
+                var holder = new ProcessStartInfo(G4Fixtures.Dotnet) { UseShellExecute = false };
+                foreach (var a in G4Fixtures.Exec("g4-hold", pid))
+                    holder.ArgumentList.Add(a);
+                Process.Start(holder)!.Dispose();
+                for (var i = 0; i < 400 && !File.Exists(pid); i++)
+                    Thread.Sleep(50);
+                Write(trx, "Passed");
+                return 0;
+            case "loud":
+                var text = new string('x', 999);
+                for (var i = 0; i < 8_000; i++)
+                {
+                    Console.Out.WriteLine(text);
+                    Console.Error.WriteLine(text);
+                }
+
+                Write(trx, "Passed");
+                return 0;
             case "trx-everyone":
                 Write(trx, "Passed");
                 var info = new FileInfo(trx);

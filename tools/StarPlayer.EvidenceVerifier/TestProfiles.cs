@@ -246,6 +246,8 @@ public static class TestProfiles
     /// <see cref="TestRunner.RequireProtectedWorkTree"/>, may be written only by the TCB or this account; the TRX is opened once without write or delete sharing, its real path and writers are checked through that handle, it must be the only TRX, and its bytes are read from that same handle.</item>
     /// <item>G4-02: exit code 0 means every case ran and none failed; 1 means real case failures, which the TRX must show (they stay FAIL cases, never hidden); anything else, a 0 with a failed case, a 1
     /// without one, a missing or extra TRX, a start failure, a timeout or a cancellation is an infrastructure failure (<c>Evidence.test_profile_mismatch</c>), never a result.</item>
+    /// <item>G4-FIX-01: the TRX's run-level state (<see cref="RunSummary"/>) must be clean and agree with the exit code; a run-level error outranks case failures.</item>
+    /// <item>G4-FIX-02: the time limit and <paramref name="cancel"/> cover the child's exit and the end of its stdout and stderr together; on either the process tree is killed.</item>
     /// </list>
     /// </summary>
     public static IReadOnlyList<TestCaseResult> Run(string project, string assemblyPath, IEnumerable<string> caseIds, string workDirectory, TestRunner runner, CancellationToken cancel = default)
@@ -287,25 +289,30 @@ public static class TestProfiles
 
         int exit;
         using (var p = started ?? throw Mismatch("TestProfile.start_failed", $"{project} 시험 프로세스를 시작하지 못했습니다."))
+        using (var limit = CancellationTokenSource.CreateLinkedTokenSource(cancel))
         {
-            var stdout = p.StandardOutput.ReadToEndAsync(CancellationToken.None);
-            var stderr = p.StandardError.ReadToEndAsync(CancellationToken.None);
-            using var limit = CancellationTokenSource.CreateLinkedTokenSource(cancel);
+            // G4-FIX-02: one budget covers the exit AND the end of both pipes (a process the child started may hold them open after the child exits); nothing below waits outside it.
             limit.CancelAfter(runner.Timeout);
+            var finished = false;
             try
             {
-                p.WaitForExitAsync(limit.Token).GetAwaiter().GetResult();
+                Task.WhenAll(p.WaitForExitAsync(limit.Token), p.StandardOutput.ReadToEndAsync(limit.Token), p.StandardError.ReadToEndAsync(limit.Token)).WaitAsync(limit.Token).GetAwaiter().GetResult();
+                finished = true;
             }
             catch (OperationCanceledException)
             {
-                p.Kill(entireProcessTree: true);
-                p.WaitForExit();
                 throw cancel.IsCancellationRequested
                     ? Mismatch("TestProfile.cancelled", $"{project} 시험 실행이 취소되었습니다.")
-                    : Mismatch("TestProfile.timeout", $"{project} 시험 실행이 {runner.Timeout} 안에 끝나지 않았습니다.");
+                    : Mismatch("TestProfile.timeout", $"{project} 시험 실행(종료와 stdout·stderr 끝)이 {runner.Timeout} 안에 끝나지 않았습니다.");
+            }
+            finally
+            {
+                if (!finished)
+                    Stop(p);
+                p.StandardOutput.Dispose();
+                p.StandardError.Dispose();
             }
 
-            _ = stdout.Result + stderr.Result;
             exit = p.ExitCode;
         }
 
@@ -337,20 +344,83 @@ public static class TestProfiles
         }
 
         var parsed = Trx(project, bytes);
+        var outcome = RunSummary(project, bytes, parsed);
         if (exit == 0 && parsed.Any(r => r.Outcome == "Failed"))
             throw Mismatch("TestProfile.exit_inconsistent", $"{project}: 종료 코드 0인데 TRX에 실패 Case가 있습니다(G4-02).");
         if (exit == 1 && !parsed.Any(r => r.Outcome == "Failed"))
             throw Mismatch("TestProfile.exit_code", $"{project}: 종료 코드 1인데 TRX에 실패 Case가 없습니다(인프라 실패를 성공으로 보지 않음, G4-02).");
+        if (outcome != (exit == 0 ? "Completed" : "Failed"))
+            throw Mismatch("TestProfile.exit_inconsistent", $"{project}: 종료 코드 {exit}와 TRX ResultSummary outcome '{outcome}'가 맞지 않습니다(G4-FIX-01).");
         return parsed;
     }
 
-    /// <summary>The results of a TRX file (VSTest 2010 schema): <c>UnitTestResult/@testName</c> and <c>@outcome</c>.</summary>
-    public static IReadOnlyList<TestCaseResult> Trx(string project, byte[] trx)
+    /// <summary>G4-FIX-02: best-effort kill of the child and everything it started (the pipes close with them); the run is reported as failed either way.</summary>
+    private static void Stop(Process p)
     {
-        XNamespace ns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
-        using var m = new MemoryStream(trx);
-        var doc = XDocument.Load(m);
-        return doc.Descendants(ns + "UnitTestResult").Select(r => new TestCaseResult($"{project}|{(string)r.Attribute("testName")!}", (string)r.Attribute("outcome")!)).ToList();
+        try
+        {
+            p.Kill(entireProcessTree: true);
+            p.WaitForExit(TimeSpan.FromSeconds(10));
+        }
+        catch (Exception e) when (e is InvalidOperationException or System.ComponentModel.Win32Exception or AggregateException)
+        {
+        }
+    }
+
+    private static readonly XNamespace TrxNs = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
+
+    // Counters that only a run-level problem (testhost crash, abort, adapter error, disconnection) makes non-zero.
+    private static readonly string[] RunErrorCounters = ["error", "timeout", "aborted", "passedButRunAborted", "notRunnable", "disconnected"];
+
+    private static XElement TrxRoot(string project, byte[] trx)
+    {
+        XDocument doc;
+        try
+        {
+            using var reader = System.Xml.XmlReader.Create(new MemoryStream(trx), new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Prohibit, XmlResolver = null });
+            doc = XDocument.Load(reader);
+        }
+        catch (System.Xml.XmlException e)
+        {
+            throw Mismatch("TestProfile.trx", $"{project}: TRX를 XML로 읽을 수 없습니다: {e.Message}");
+        }
+
+        return doc.Root is { } root && root.Name == TrxNs + "TestRun" ? root : throw Mismatch("TestProfile.trx", $"{project}: TRX의 뿌리가 VSTest 2010 TestRun이 아닙니다(형식·버전 불일치).");
+    }
+
+    /// <summary>The results of a TRX file (VSTest 2010 schema): <c>UnitTestResult/@testName</c> and <c>@outcome</c>.</summary>
+    public static IReadOnlyList<TestCaseResult> Trx(string project, byte[] trx) =>
+        TrxRoot(project, trx).Descendants(TrxNs + "UnitTestResult").Select(r => (string?)r.Attribute("testName") is { } name && (string?)r.Attribute("outcome") is { } outcome
+            ? new TestCaseResult($"{project}|{name}", outcome)
+            : throw Mismatch("TestProfile.trx", $"{project}: testName·outcome이 없는 UnitTestResult가 있습니다.")).ToList();
+
+    /// <summary>
+    /// G4-FIX-01: the run as a whole, not only its cases. Exactly one <c>ResultSummary</c> with one <c>Counters</c> whose totals equal the <paramref name="cases"/>, or <c>TestProfile.trx</c> (fail closed on any
+    /// other shape). Any <c>RunInfo</c> (VSTest's run-level error or warning: testhost crash, abort, adapter error, no matching test; a normal run writes none), a non-zero run-error counter or an outcome other
+    /// than <c>Completed</c>/<c>Failed</c> is <c>TestProfile.run_error</c>, an infrastructure failure even when cases failed too. Returns the summary outcome.
+    /// </summary>
+    private static string RunSummary(string project, byte[] trx, IReadOnlyList<TestCaseResult> cases)
+    {
+        EvidenceException Shape(string what) => Mismatch("TestProfile.trx", $"{project}: TRX {what}(G4-FIX-01).");
+        EvidenceException RunError(string what) => Mismatch("TestProfile.run_error", $"{project}: TRX에 실행 수준 오류가 있습니다: {what}(케이스 실패와 무관하게 인프라 실패, G4-FIX-01).");
+        var root = TrxRoot(project, trx);
+        if (root.Elements(TrxNs + "ResultSummary").ToList() is not [var summary])
+            throw Shape("ResultSummary가 정확히 하나가 아닙니다");
+        if (summary.Elements(TrxNs + "Counters").ToList() is not [var counters])
+            throw Shape("ResultSummary/Counters가 정확히 하나가 아닙니다");
+        int Count(string name) => int.TryParse((string?)counters.Attribute(name), System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var n)
+            ? n : throw Shape($"Counters/@{name}가 0 이상의 정수가 아닙니다");
+        var outcome = (string?)summary.Attribute("outcome") ?? throw Shape("ResultSummary/@outcome이 없습니다");
+
+        if (root.Descendants(TrxNs + "RunInfo").FirstOrDefault() is { } info)
+            throw RunError($"RunInfo {(string?)info.Attribute("outcome")}: {info.Value.Trim()}");
+        if (RunErrorCounters.FirstOrDefault(c => Count(c) != 0) is { } counter)
+            throw RunError($"Counters/@{counter} = {Count(counter)}");
+        if (outcome is not ("Completed" or "Failed"))
+            throw RunError($"ResultSummary outcome '{outcome}'");
+        if (Count("total") != cases.Count || Count("passed") != cases.Count(c => c.Outcome == "Passed") || Count("failed") != cases.Count(c => c.Outcome == "Failed"))
+            throw Shape("Counters(total·passed·failed)가 UnitTestResult와 다릅니다");
+        return outcome;
     }
 
     /// <summary>

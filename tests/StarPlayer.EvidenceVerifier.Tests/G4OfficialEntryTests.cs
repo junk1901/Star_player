@@ -239,6 +239,83 @@ public sealed class G4OfficialEntryTests(TestOnlyWorld w) : IClassFixture<TestOn
         Assert.Equal("TestProfile.cancelled", Run(Fake("sleep"), cancel.Token));
     }
 
+    // ---------------------------------------------------------------- G4-FIX-01 TRX run-level state
+
+    [Fact]
+    public void A_run_level_error_in_the_trx_is_an_infrastructure_failure_even_with_failed_cases_and_a_plain_case_failure_stays_a_fail_result()
+    {
+        // a normal case failure is still a result with a FAIL case, and the Evidence keeps it as FAIL
+        var failed = TestProfiles.Run(Project, "x.dll", Cases, Temp("work"), Fake("fail"));
+        Assert.Equal([new TestCaseResult(Cases[0], "Failed")], failed);
+        var profile = J.O(("profile_id", J.S("p")), ("source_git_sha", J.S("s")), ("checks", J.A(J.O(("check_id", J.S("c")), ("cases", J.A(J.S(Cases[0])))))));
+        Assert.False(TestProfiles.AllPass(TestProfiles.Evidence(profile, "sha", failed)["c"]));
+
+        Assert.Equal("TestProfile.run_error", Run(Fake("fail-run-error")));      // failed cases + run error: infrastructure, not a FAIL result
+        Assert.Equal("TestProfile.run_error", Run(Fake("pass-run-error")));      // exit 1, only passed cases, run error
+        Assert.Equal("TestProfile.run_error", Run(Fake("exit0-run-error")));     // exit 0 + run error
+        Assert.Equal("TestProfile.run_error", Run(Fake("run-warning")));         // any RunInfo (a normal run writes none)
+        Assert.Equal("TestProfile.run_error", Run(Fake("error-counter")));
+        Assert.Equal("TestProfile.run_error", Run(Fake("aborted")));
+        Assert.Equal("TestProfile.exit_inconsistent", Run(Fake("exit0-outcome-failed")));
+        foreach (var shape in new[] { "no-summary", "two-summaries", "no-counters", "bad-counter", "counter-mismatch", "no-outcome", "other-version", "not-xml", "case-no-outcome" })
+            Assert.True(Run(Fake(shape)) == "TestProfile.trx", shape);
+    }
+
+    // ---------------------------------------------------------------- G4-FIX-02 one time budget for the exit and both pipes
+
+    /// <summary>Runs a pipe-holding scenario; returns the refusal cause, the elapsed time and whether the holder is gone afterwards (it is killed here if not, so no test leaves it behind).</summary>
+    private (string Cause, TimeSpan Elapsed, bool HolderGone) Held(string scenario, TimeSpan limit, CancellationToken cancel = default)
+    {
+        string? pidFile = null;
+        var runner = Fake(scenario) with { Timeout = limit, BeforeChild = (_, results) => pidFile = Path.Combine(results, "holder.pid") };
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        var cause = Run(runner, cancel);
+        clock.Stop();
+        Assert.True(File.Exists(pidFile), $"{scenario}: the holder never started");
+        var pid = int.Parse(File.ReadAllText(pidFile!), System.Globalization.CultureInfo.InvariantCulture);
+        try
+        {
+            using var holder = System.Diagnostics.Process.GetProcessById(pid);
+            if (holder.WaitForExit(10_000))
+                return (cause, clock.Elapsed, true);
+            holder.Kill();
+            return (cause, clock.Elapsed, false);
+        }
+        catch (ArgumentException)
+        {
+            return (cause, clock.Elapsed, true);     // no such process any more
+        }
+    }
+
+    [Fact]
+    public void A_process_left_holding_stdout_or_stderr_after_the_child_exits_is_a_timeout_and_is_killed_with_the_tree()
+    {
+        foreach (var scenario in new[] { "hold-both", "hold-stdout", "hold-stderr" })
+        {
+            var (cause, elapsed, gone) = Held(scenario, TimeSpan.FromSeconds(5));
+            Assert.True(cause == "TestProfile.timeout", $"{scenario}: {cause}");     // a valid passing TRX and exit 0 are not enough while a pipe is open
+            Assert.True(elapsed < TimeSpan.FromSeconds(60), $"{scenario}: {elapsed}");
+            Assert.True(gone, $"{scenario}: the holder survived");
+        }
+    }
+
+    [Fact]
+    public void A_cancellation_while_a_pipe_is_held_is_a_cancellation_and_kills_the_holder()
+    {
+        using var cancel = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        var (cause, elapsed, gone) = Held("hold-both", TimeSpan.FromMinutes(30), cancel.Token);
+        Assert.Equal("TestProfile.cancelled", cause);
+        Assert.True(elapsed < TimeSpan.FromSeconds(60), elapsed.ToString());
+        Assert.True(gone);
+    }
+
+    [Fact]
+    public void Large_interleaved_stdout_and_stderr_are_drained_without_blocking_the_child()
+    {
+        // ~8 MB on each pipe: a sequential reader would leave the child blocked on the other pipe until the limit
+        Assert.Equal([new TestCaseResult(Cases[0], "Passed")], TestProfiles.Run(Project, "x.dll", Cases, Temp("work"), Fake("loud") with { Timeout = TimeSpan.FromMinutes(2) }));
+    }
+
     [Fact]
     public void A_real_child_test_run_passes_while_its_whole_folder_is_held_against_replacement()
     {
