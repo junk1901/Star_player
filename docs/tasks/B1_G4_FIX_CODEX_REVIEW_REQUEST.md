@@ -16,10 +16,11 @@
 |---|---|
 | Worktree·브랜치 | `E:\Madegame\Star_player_g4`, `phase3/g4-official-entry` |
 | 이전 검수 기준 | `01d1626bbdfcfc28a59b154128db1e0ecc1ab821`(G4 구현 `430e306f…`) |
-| 수정 소스 Commit | `ca312267df14b0bea6bf25d5bd69df0e363b5114` |
+| 수정 코드 Commit | `ca312267df14b0bea6bf25d5bd69df0e363b5114` |
+| 검증 소스 Commit | `6110d5fcfde0a1d89b8aab1a6e5f84213d598d84`(시험 격리 수정. `tools`·`src`·`game` 트리는 `ca31226`과 같음) |
 | 보고서 | [B1_G4_FIX_REPORT.md](../reports/B1_G4_FIX_REPORT.md) |
 | 이전 판정 원문 | `E:\Madegame\g3x\codex-originals-g4\20261027T103204Z_verdict-g4-fix-required.txt`(`2ac5cafe…`) |
-| Clean Checkout | `E:\Madegame\g3x\g4clean`(보고서 3.2·7절) |
+| Clean Checkout | `E:\Madegame\g3x\g4clean`(`ca31226`, U6 1건 실패), `E:\Madegame\g3x\g4clean2`(`6110d5f`, GATE PASS) — 보고서 3.2·7절 |
 
 **재현 명령(읽기 전용):**
 
@@ -62,7 +63,7 @@ git -C E:/Madegame/Star_player_g4 log --oneline 01d1626bbdfcfc28a59b154128db1e0e
    - `TestProfiles.Run` 시그니처(취소 인자, `TestRunner` 확장)
    - 기존 Test Profile 실행(U4·U6)의 결과 불변
    - Hash·RNG·Replay·Golden 불변
-8. **Git·SourceLink:** Clean Checkout 빌드의 SourceLink Commit이 `ca31226`인지, 그 URL이 아직 A-1 공식 원격이 아닌 실험 통제값이라는 기록이 정확한지 봐 주십시오.
+8. **Git·SourceLink:** Clean Checkout 빌드의 SourceLink Commit이 `6110d5f`인지, `ca31226`의 U6 실패 원인 분석(정적 Seam 경합)과 Collection 직렬화 수정이 타당한지, 그 URL이 아직 A-1 공식 원격이 아닌 실험 통제값이라는 기록이 정확한지 봐 주십시오.
 
 ## 3. 범위 밖
 

@@ -13,7 +13,8 @@
 |---|---|
 | Worktree·브랜치 | `E:\Madegame\Star_player_g4`, `phase3/g4-official-entry`(로컬 전용) |
 | 검수된 G4 | 구현 `430e306f5cfec3eff5cc6ffe7eb62e08e46eded9`, 문서 HEAD `01d1626bbdfcfc28a59b154128db1e0ecc1ab821` |
-| **수정 소스 Commit** | **`ca312267df14b0bea6bf25d5bd69df0e363b5114`** |
+| 수정 코드 Commit | `ca312267df14b0bea6bf25d5bd69df0e363b5114`(G4-01~04, NOTE) |
+| **검증 소스 Commit** | **`6110d5fcfde0a1d89b8aab1a6e5f84213d598d84`** — `ca31226` + 시험 격리 수정(3.2절)과 이 보고서 이전 문서. `tools`·`src`·`game` 트리는 `ca31226`과 같음 |
 | 수정 diff | `git diff 01d1626 ca31226`: 9개 파일, +628 / −135. 저장소 밖 사본 `E:\Madegame\g3x\g4fix_01d1626_ca31226.diff`(1,131행, `git diff` 출력 SHA `8875a04e…`) |
 | Codex 원문(로컬 보존, Git 밖) | `E:\Madegame\g3x\codex-originals-g4\`: 요청 13487행(`f050bc35…`), 판정 13689행 FIX_REQUIRED(`2ac5cafe…`), `manifest.json`(`14904b02…`). 모두 NOT_INDEPENDENTLY_VERIFIED. 요청 본문은 Codex 첨부 파일로, 이번에는 복사하지 않음 |
 
@@ -118,9 +119,23 @@
   - 자식 출력 인코딩(cp949) → UTF-8 고정
   - 중복 시나리오가 기본 컨텍스트에 로드되지 않은 Domain을 썼음 → SimHarness로 바꿈. 중복 검사를 감시 결과보다 먼저 보도록 순서를 정함
 
-### 3.2 전체 회귀
+### 3.2 전체 회귀 (실제 명령 출력)
 
-(실행 후 기록)
+| 실행 | 기준·위치 | 결과 | 증거 |
+|---|---|---|---|
+| G4 시험 16개 | Worktree | 16/16 PASS(9초) | `dotnet test … --filter FullyQualifiedName~G4OfficialEntryTests` |
+| `verify.ps1` | Clean clone `E:\Madegame\g3x\g4clean`, `ca31226` | **GATE: FAIL** — U6 85/86. G4 E2-1 시험이 `c1_differs` 대신 `forbidden_variable`을 받음 | [B1_G4FIX_VERIFY_LOG_clean_FAIL.md](B1_G4FIX_VERIFY_LOG_clean_FAIL.md)(`d57b6e0e…`) |
+| 원인 | — | 병렬로 실행되는 `T11CertificationTests`가 정적 `Certification.VariablesSeam`을 시험 도중 null로 되돌림. 제품 결함이 아니라 시험 격리 결함(Worktree에서는 시점 차이로 통과) | `g4clean\build\verify\U6.log` |
+| 수정 | `6110d5f` | 정적 Seam을 쓰는 두 시험 클래스를 같은 xUnit Collection으로 직렬화(속성만, 기대값 변경 없음) | — |
+| U6 전체 | Worktree | 86/86 PASS(21분 11초, verify 한도 30분 안) | — |
+| `verify.ps1` | Clean clone `E:\Madegame\g3x\g4clean2`, `6110d5f`(clean, D2 0건) | **GATE: PASS**, **3,057 PASS / 0 FAIL / 0 SKIP** | [B1_G4FIX_VERIFY_LOG_clean2.md](B1_G4FIX_VERIFY_LOG_clean2.md)(`3b2d5348…`) |
+| Golden | 같은 clone | `Evidence.GoldenTests` **4/4 PASS** | `E:\Madegame\g3x\g4fix_golden_clean2.txt`(`f8e54bdd…`) |
+| Dry Pilot 9 | 같은 clone(보관 manifest 130개 복사, 이전 절차와 같음) | **`ALL_9_IDENTICAL=True`**: config_hash·run_result_hash·manifest 9행 모두 같음 | `E:\Madegame\g3x\g4fix_drypilot_clean2.txt`(`eee1232f…`) |
+
+- verify 세부: U1 327, U2 741, U3 128(U3a 14·U3b 48), U4 1,237, U5 538, U6 86. B1~B3·G1~G4·E1~E4·D1(235개)·D3(5개) PASS
+- 기준선 3,041에서 늘어난 16개는 모두 G4 시험입니다. 기존 시험 기대값과 Golden은 바꾸지 않았습니다.
+- **게임 Hash·RNG·Replay 불변:** Dry Pilot 9 Run 동일, Golden 4/4, U2·U4·U5 PASS. 게임 계산 코드(`src`·`game`)는 G4 전체에서 바뀌지 않았습니다.
+- **Godot Export:** E1~E4 PASS, `StarPlayer.pck` = `3a187e19e7737c3329d81a2e76fe357c30f117c9033af5fcfc3706ea0c49e799`(변경 없음). 5회 재현성 검사는 다시 하지 않음(**미검증**)
 
 ## 4. 기존 반례의 재현·정적 차단 근거
 
@@ -157,7 +172,19 @@
 
 ## 7. Git·SourceLink
 
-(Clean Checkout 재검증 후 기록)
+- **Clean Checkout:** `git clone --no-hardlinks E:\Madegame\Star_player_g4 E:\Madegame\g3x\g4clean2` → `checkout --detach 6110d5f` → 작업 트리 0건
+- **원격 URL:** clone의 `origin`을 `https://github.com/junk1901/Star_player.git`로 **설정만** 했습니다(조회·Push 없음). 이전 진단과 같은 **실험 통제값**이며 A-1 공식 원격이 아닙니다. A-1 URL이 정해지면 SourceLink와 DLL·PDB SHA가 모두 바뀝니다.
+- **CI 빌드:** `dotnet build StarPlayer.sln -c Release --disable-build-servers -nr:false -p:UseSharedCompilation=false -p:ContinuousIntegrationBuild=true`, exit 0(`E:\Madegame\g3x\g4fix_ci_build_clean2.txt`, `a7b62173…`)
+
+| 파일 | DLL SHA-256 | PDB SHA-256 | SourceLink |
+|---|---|---|---|
+| `tools/StarPlayer.EvidenceVerifier/…/StarPlayer.EvidenceVerifier.dll` | `80788b2d6e7a71753693d133e6fd9854ada38805efd83ee0d02fe71716f080d5` | `c33fa9b19739d811…` | `/_/*` → `https://raw.githubusercontent.com/junk1901/Star_player/6110d5fcfde0a1d89b8aab1a6e5f84213d598d84/*` |
+| `tools/StarPlayer.SimHarness/…/StarPlayer.SimHarness.dll` | `adc823e34526b84bf89979fb97549b993e4e2d9b25c52b8baf46c039c175c506` | `7ac698a3ca9198a7…` | 같음 |
+| 검증기 폴더의 `StarPlayer.SimHarness.dll` 사본 | `adc823e3…`(SIMHARNESS_BINARY와 같음) | `7ac698a3…` | 같음 |
+
+- SourceLink Commit = 실제 빌드 Commit `6110d5f`. 이 SHA는 진단값이며 Build Provenance로 등록하지 않았습니다.
+- 브랜치 Commit(로컬 전용): `2c90a88` → `430e306` → `01d1626` → `ca31226` → `6110d5f` → 이 보고서 Commit
+- **D1·D3·계약:** D1 235개 PASS, D3 5개 PASS(승인 계약 `1338a2f7…`, `TASK.md` `ecbc0859…` 포함). B1 Tag `b1-code-accepted-2026-10-26` → `7bdde7dd…` 불변
 
 ## 8. 검증하지 못한 사항
 
