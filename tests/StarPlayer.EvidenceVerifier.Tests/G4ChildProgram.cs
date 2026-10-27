@@ -9,6 +9,13 @@ using StarPlayer.SimHarness.Evidence;
 
 namespace StarPlayer.EvidenceVerifier.Tests;
 
+/// <summary>The test classes that set the static <c>Certification.VariablesSeam</c> / <c>CaptureSeam</c> run one at a time (a parallel class would reset them mid-test).</summary>
+[CollectionDefinition(Name)]
+public sealed class CertificationSeams
+{
+    public const string Name = "Certification static seams";
+}
+
 /// <summary>TEST_ONLY values shared by the G4 tests and their isolated child processes (none of them is an OWNER value).</summary>
 internal static class G4Fixtures
 {

@@ -6,6 +6,7 @@ namespace StarPlayer.EvidenceVerifier.Tests;
 /// B1-T11-01 / -02 / -03 on one TEST_ONLY world (shared, it is costly): the certification boundary, the Phase child binding and the whole-archive snapshot. Written after the fix (no Red run): the
 /// boundary did not exist before, so each test targets the path Codex traced (caller-built receipt, recheck=null, [c, c, c], an unopened DIAGNOSTICS reference, a re-read result directory).
 /// </summary>
+[Collection(CertificationSeams.Name)]                                                                     // G4: shares the static Certification seams with G4OfficialEntryTests
 public sealed partial class T11CertificationTests(TestOnlyWorld w) : IClassFixture<TestOnlyWorld>
 {
     private static EvidenceError Refused(Action a) => Assert.Throws<EvidenceException>(a).Error;

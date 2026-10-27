@@ -6,6 +6,7 @@
   - 승인 계약(B1-T00)·닫힌 Schema·B1 Code Tag·Golden·Hash·RNG·Replay·루트 `TASK.md`·원문은 바꾸지 않았습니다.
   - 공식 승인값(앵커·SID·Pin·설치 설정 값·승인 기록)은 하나도 만들지 않았습니다. 그래서 공식 인증 명령은 이 PC에서 항상 거부됩니다.
 - 상태: Official Execution = **NOT_READY** · Final Execution Freeze = **PENDING** · Phase 3 = **INCOMPLETE**
+- **개정 (2026-10-27, Codex G4 FIX_REQUIRED 수정 `ca31226`):** 아래 T4·V-2의 "`%windir%`·OWNER 허용 Root 안" 허용과 설치 설정 `allowed_module_roots`는 G4-01(MAJOR)로 **삭제**되었습니다. 지금은 모든 로드 파일이 Pin이어야 합니다. 종료 코드 검사(G4-02), E2-1 순서(G4-03), TRX 핸들 읽기(G4-04)도 바뀌었습니다. 현재 동작은 [수정 보고서](B1_G4_FIX_REPORT.md)가 기준이며, 이 문서는 `430e306` 시점 기록으로 남깁니다.
 
 ## 1. 작업 위치와 Commit
 

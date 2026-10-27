@@ -11,6 +11,7 @@ namespace StarPlayer.EvidenceVerifier.Tests;
 /// verifier, SimHarness copy and the SimHarness in use, every loaded file pinned), the held folders, the child runner (exit code with TRX), the pinned results tree and the CLI order (E2-1 first). Each guard
 /// has a passing case and a counterexample that must refuse; loads that cannot be undone run in an isolated child process. All values are TEST_ONLY; none is an OWNER value.
 /// </summary>
+[Collection(CertificationSeams.Name)]
 public sealed class G4OfficialEntryTests(TestOnlyWorld w) : IClassFixture<TestOnlyWorld>
 {
     private static EvidenceError Refused(Action a) => Assert.Throws<EvidenceException>(a).Error;
