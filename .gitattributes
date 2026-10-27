@@ -50,3 +50,6 @@ CURRENT_STATE.md text eol=crlf
 Star/00_Dashboard.md text eol=crlf
 # Godot scenes keep the LF bytes Godot 4.7.2 writes (G3 scene migration candidate, 2026-10-26; tracked .tscn are exactly the 4 scenes)
 *.tscn text eol=lf
+# B1 operations tooling and G5 notes (2026-10-28): explicit LF like the other B1 tools
+tools/b1-ops/** text eol=lf
+Star/02_Decisions/2026-10-28_B1_G4_Code_Acceptance_And_Ops_Direction.md text eol=lf
