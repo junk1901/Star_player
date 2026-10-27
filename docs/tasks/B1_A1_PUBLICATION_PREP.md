@@ -110,7 +110,7 @@ SourceLink URL(`https://raw.githubusercontent.com/<owner>/<repo>/<commit>/*`)이
 - **SECRET 클래스**(하나라도 있으면 게시 중단, 종료 코드 1): 개인 키 블록, GitHub·Google·AWS·Slack·LLM 키 형태, 따옴표로 둘러싼 자격 증명 대입
 - **PRIVACY 클래스**(OWNER 판단): 이메일, Windows 계정 SID, 사용자 프로필 경로, 로컬 프로젝트 경로, Windows 기계 이름
 
-**결과 — `20ec650` 기준(59 Commit, 이번 작업 Commit은 보고서 3절):**
+**결과 — `20ec650` 기준(59 Commit, 이번 작업 Commit은 보고서 6절):**
 
 | 분류 | 결과 | 내용 |
 |---|---|---|
