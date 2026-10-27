@@ -1,4 +1,9 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
+using System.Security.AccessControl;
+using Microsoft.Win32.SafeHandles;
+using StarPlayer.Domain.Common;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 using StarPlayer.SimHarness;
@@ -19,6 +24,74 @@ public sealed record TestRunner(string Dotnet, string WorkingDirectory, IReadOnl
     /// <summary>Outside an official session: the <c>dotnet.exe</c> of the runtime hosting this process (<c>dotnet\shared\Microsoft.NETCore.App\v\</c> three levels up).</summary>
     public static TestRunner FromRuntime(string workingDirectory) =>
         new(Path.GetFullPath(Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(), "..", "..", "..", "dotnet.exe")), workingDirectory, []);
+
+    /// <summary>
+    /// G4-04: the work root, the results directory and the TRX may be written only by the TCB or this account (an official session always sets this; R-WORK's real ACL is the G5 measurement). Without it
+    /// the tree is still pinned by handle and the TRX read once, but a shared work tree (a developer's %TEMP%) is accepted.
+    /// </summary>
+    public bool RequireProtectedWorkTree { get; init; }
+
+    /// <summary>The longest a child run may take before it is killed (<c>TestProfile.timeout</c>).</summary>
+    public TimeSpan Timeout { get; init; } = TimeSpan.FromMinutes(30);
+
+    /// <summary>Tests only: arguments placed before <c>test</c> (a stand-in child that plays dotnet test).</summary>
+    internal IReadOnlyList<string> LeadingArguments { get; init; } = [];
+
+    /// <summary>Tests only: called with the pinned work root and results directory just before the child starts.</summary>
+    internal Action<string, string>? BeforeChild { get; init; }
+
+    /// <summary>Tests only: called with the TRX path after it is opened and checked, before its bytes are read.</summary>
+    internal Action<string>? AfterTrxOpen { get; init; }
+}
+
+/// <summary>G4-04: what the verifier asks of an object it reads a judgement input from (its own work tree): its owner and every writer are the TCB or this account.</summary>
+[SupportedOSPlatform("windows")]
+internal static partial class WorkTree
+{
+    // NSC-4 TCB (SYSTEM, BUILTIN\Administrators, NT SERVICE\TrustedInstaller); CREATOR OWNER resolves to the creator, who must already be a writer.
+    private static readonly string[] Tcb = ["S-1-5-18", "S-1-5-32-544", "S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464"];
+    private const string CreatorOwner = "S-1-3-0";
+    // FILE_WRITE_DATA/ADD_FILE, FILE_APPEND_DATA/ADD_SUBDIRECTORY, FILE_WRITE_EA, FILE_DELETE_CHILD, FILE_WRITE_ATTRIBUTES, DELETE, WRITE_DAC, WRITE_OWNER, GENERIC_ALL, GENERIC_WRITE
+    private const int WriteMask = 0x2 | 0x4 | 0x10 | 0x40 | 0x100 | 0x10000 | 0x40000 | 0x80000 | 0x10000000 | 0x40000000;
+
+    /// <summary>The first reason a descriptor lets someone other than the TCB or this account change the object or (inherited) its children, or null. Deny entries never relax anything.</summary>
+    public static string? WriterProblem(byte[] descriptor)
+    {
+        var self = System.Security.Principal.WindowsIdentity.GetCurrent().User!.Value;
+        var sd = new RawSecurityDescriptor(descriptor, 0);
+        var owner = sd.Owner?.Value;
+        if (owner is null || (!Tcb.Contains(owner) && owner != self))
+            return $"소유자 {owner ?? "(없음)"}가 TCB나 이 계정이 아닙니다.";
+        if (sd.DiscretionaryAcl is null)
+            return "DACL이 없습니다(모두 쓰기 가능).";
+        foreach (var ace in sd.DiscretionaryAcl)
+        {
+            if (ace is not CommonAce c)
+                return $"해석하지 않는 ACE 형식 {ace.AceType}가 있습니다.";
+            var sid = c.SecurityIdentifier.Value;
+            if (c.AceQualifier == AceQualifier.AccessAllowed && (c.AccessMask & WriteMask) != 0 && !Tcb.Contains(sid) && sid != self && sid != CreatorOwner)
+                return $"{sid}에게 쓰기·삭제·권한 변경 권한이 있습니다.";
+        }
+
+        return null;
+    }
+
+    [LibraryImport("kernel32.dll", EntryPoint = "GetFinalPathNameByHandleW", SetLastError = true)]
+    private static unsafe partial uint GetFinalPathNameByHandle(SafeFileHandle file, ushort* path, uint length, uint flags);
+
+    /// <summary>The real path of an open object (no <c>\\?\</c> prefix), or null.</summary>
+    public static unsafe string? FinalPath(SafeFileHandle handle)
+    {
+        const int capacity = 32768;
+        var buffer = new ushort[capacity];
+        uint n;
+        fixed (ushort* b = buffer)
+            n = GetFinalPathNameByHandle(handle, b, capacity, 0);
+        if (n == 0 || n >= capacity)
+            return null;
+        var path = new string(buffer.Take((int)n).Select(c => (char)c).ToArray());
+        return path.StartsWith(@"\\?\", StringComparison.Ordinal) ? path[4..] : path;
+    }
 }
 
 /// <summary>
@@ -155,59 +228,120 @@ public static class TestProfiles
     /// <summary>The xUnit method a case id names (display name up to the parameter list).</summary>
     public static string Method(string caseId) => caseId[(caseId.IndexOf('|') + 1)..] is var name && name.IndexOf('(') is var p and >= 0 ? name[..p] : caseId[(caseId.IndexOf('|') + 1)..];
 
-    private static bool IsReparse(string path) => (File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0;
+    private static PinnedDirectory Pinned(Result<PinnedDirectory> r, string what) =>
+        r.IsSuccess ? r.Value : throw Mismatch("TestProfile.results_directory", $"{what}를 핸들로 고정할 수 없습니다(Reparse·교체·이미 있음, G4-04): {r.Error!.Value.Message}");
+
+    [SupportedOSPlatform("windows")]
+    private static void Writers(string path, byte[] descriptor)
+    {
+        if (WorkTree.WriterProblem(descriptor) is { } why)
+            throw Mismatch("TestProfile.results_acl", $"'{path}': {why} (G4-04, 운영 R-WORK ACL은 G5)");
+    }
 
     /// <summary>
     /// Runs the given cases of ONE test assembly in a child <c>dotnet test</c> (forbidden prefixes removed from its environment, E4) and returns every result of the methods they name (so a case the profile
-    /// does not list but the assembly now has is seen, not dropped). G4-T7 (F-17): the child writes into a NEW results directory of its own under <paramref name="workDirectory"/> (neither may be a reparse
-    /// point), which must then hold exactly the one expected TRX, read once.
+    /// does not list but the assembly now has is seen, not dropped).
+    /// <list type="bullet">
+    /// <item>G4-04 (F-17): the work root and a NEW results directory are pinned by handle from the volume root (no link followed, no rename or delete while held) and, when
+    /// <see cref="TestRunner.RequireProtectedWorkTree"/>, may be written only by the TCB or this account; the TRX is opened once without write or delete sharing, its real path and writers are checked through that handle, it must be the only TRX, and its bytes are read from that same handle.</item>
+    /// <item>G4-02: exit code 0 means every case ran and none failed; 1 means real case failures, which the TRX must show (they stay FAIL cases, never hidden); anything else, a 0 with a failed case, a 1
+    /// without one, a missing or extra TRX, a start failure, a timeout or a cancellation is an infrastructure failure (<c>Evidence.test_profile_mismatch</c>), never a result.</item>
+    /// </list>
     /// </summary>
-    public static IReadOnlyList<TestCaseResult> Run(string project, string assemblyPath, IEnumerable<string> caseIds, string workDirectory, TestRunner runner)
+    public static IReadOnlyList<TestCaseResult> Run(string project, string assemblyPath, IEnumerable<string> caseIds, string workDirectory, TestRunner runner, CancellationToken cancel = default)
     {
         var methods = caseIds.Where(c => c.StartsWith(project + "|", StringComparison.Ordinal)).Select(Method).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
         if (methods.Count == 0)
             return [];
+        if (!OperatingSystem.IsWindows())
+            throw Mismatch("TestProfile.platform", "Test Profile 실행은 Windows 핸들 고정이 필요합니다.");
         if (!Path.IsPathFullyQualified(runner.Dotnet) || !File.Exists(runner.Dotnet) || !Path.IsPathFullyQualified(runner.WorkingDirectory) || !Directory.Exists(runner.WorkingDirectory))
             throw Mismatch("TestProfile.runner", $"시험 실행 파일 '{runner.Dotnet}'·작업 디렉터리 '{runner.WorkingDirectory}'가 존재하는 절대경로가 아닙니다(G4-T2).");
-        Directory.CreateDirectory(workDirectory);
-        var results = Path.Combine(workDirectory, $"{project}-{Guid.NewGuid():N}");
-        if (IsReparse(workDirectory) || Directory.Exists(results) || File.Exists(results))
-            throw Mismatch("TestProfile.results_directory", $"결과 디렉터리 '{results}'를 새로 만들 수 없습니다(Reparse Point 또는 이미 있음, G4-T7).");
-        Directory.CreateDirectory(results);
-        var trx = $"{project}.trx";
+        using var root = Pinned(PinnedDirectory.Open(workDirectory, [], create: true, createRoot: true), "작업 Root");
+        if (runner.RequireProtectedWorkTree)
+            Writers(root.FullPath, new DirectoryInfo(root.FullPath).GetAccessControl().GetSecurityDescriptorBinaryForm());       // the path resolves to the pinned object
+        using var results = Pinned(root.CreateSubdirectory($"{project}-{Guid.NewGuid():N}"), "결과 디렉터리");
+        if (runner.RequireProtectedWorkTree)
+            Writers(results.FullPath, new DirectoryInfo(results.FullPath).GetAccessControl().GetSecurityDescriptorBinaryForm());
+        runner.BeforeChild?.Invoke(root.FullPath, results.FullPath);
+
+        var trx = Path.Combine(results.FullPath, $"{project}.trx");
         var filter = string.Join('|', methods.Select(m => $"FullyQualifiedName={m}"));
         var start = new ProcessStartInfo(runner.Dotnet) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true, WorkingDirectory = runner.WorkingDirectory };
-        foreach (var arg in new[] { "test", assemblyPath, "--filter", filter, "--logger", $"trx;LogFileName={trx}", "--results-directory", results })
+        foreach (var arg in runner.LeadingArguments.Concat(["test", assemblyPath, "--filter", filter, "--logger", $"trx;LogFileName={Path.GetFileName(trx)}", "--results-directory", results.FullPath]))
             start.ArgumentList.Add(arg);
         foreach (var name in ExecutionEnvironment.ForbiddenVariables(Environment.GetEnvironmentVariables()))
             start.Environment.Remove(name);
         foreach (var name in start.Environment.Keys.Where(k => runner.ExtraForbiddenPrefixes.Any(x => k.StartsWith(x, StringComparison.OrdinalIgnoreCase))).ToList())
             start.Environment.Remove(name);
-        using (var p = Process.Start(start)!)
+
+        Process? started;
+        try
         {
-            var stdout = p.StandardOutput.ReadToEndAsync();
-            var stderr = p.StandardError.ReadToEndAsync();
-            if (!p.WaitForExit(30 * 60 * 1000))
+            started = Process.Start(start);
+        }
+        catch (Exception e) when (e is System.ComponentModel.Win32Exception or InvalidOperationException)
+        {
+            throw Mismatch("TestProfile.start_failed", $"{project} 시험 프로세스를 시작하지 못했습니다: {e.Message}");
+        }
+
+        int exit;
+        using (var p = started ?? throw Mismatch("TestProfile.start_failed", $"{project} 시험 프로세스를 시작하지 못했습니다."))
+        {
+            var stdout = p.StandardOutput.ReadToEndAsync(CancellationToken.None);
+            var stderr = p.StandardError.ReadToEndAsync(CancellationToken.None);
+            using var limit = CancellationTokenSource.CreateLinkedTokenSource(cancel);
+            limit.CancelAfter(runner.Timeout);
+            try
+            {
+                p.WaitForExitAsync(limit.Token).GetAwaiter().GetResult();
+            }
+            catch (OperationCanceledException)
             {
                 p.Kill(entireProcessTree: true);
-                throw Mismatch("TestProfile.timeout", $"{project} 시험 실행이 30분 안에 끝나지 않았습니다.");
+                p.WaitForExit();
+                throw cancel.IsCancellationRequested
+                    ? Mismatch("TestProfile.cancelled", $"{project} 시험 실행이 취소되었습니다.")
+                    : Mismatch("TestProfile.timeout", $"{project} 시험 실행이 {runner.Timeout} 안에 끝나지 않았습니다.");
             }
 
             _ = stdout.Result + stderr.Result;
+            exit = p.ExitCode;
         }
 
-        var path = Path.Combine(results, trx);
-        if (Directory.GetFiles(results, "*.trx", SearchOption.AllDirectories) is not [var only] || !string.Equals(only, path, StringComparison.OrdinalIgnoreCase) || IsReparse(results) || IsReparse(path))
-            throw Mismatch("TestProfile.trx", $"{project}: 결과 디렉터리에 기대한 TRX 하나만 있지 않습니다(G4-T7).");
+        if (exit is not (0 or 1))
+            throw Mismatch("TestProfile.exit_code", $"{project} 시험 프로세스 종료 코드 {exit}는 실행 인프라 실패입니다(TRX와 무관하게 결과로 쓰지 않음, G4-02).");
         byte[] bytes;
-        using (var s = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+        FileStream s;
+        try
         {
+            s = new FileStream(trx, FileMode.Open, FileAccess.Read, FileShare.Read);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            throw Mismatch("TestProfile.trx", $"{project}: 기대한 TRX를 열 수 없습니다(없음·잠김, 종료 코드 {exit}): {e.Message}");
+        }
+
+        using (s)
+        {
+            if (WorkTree.FinalPath(s.SafeFileHandle) is not { } final || !string.Equals(final, trx, StringComparison.OrdinalIgnoreCase))
+                throw Mismatch("TestProfile.trx", $"{project}: 연 TRX의 실제 경로가 기대 경로가 아닙니다(Reparse·교체, G4-04).");
+            if (runner.RequireProtectedWorkTree)
+                Writers(trx, s.GetAccessControl().GetSecurityDescriptorBinaryForm());
+            if (Directory.GetFiles(results.FullPath, "*.trx", SearchOption.AllDirectories) is not [var only] || !string.Equals(only, trx, StringComparison.OrdinalIgnoreCase))
+                throw Mismatch("TestProfile.trx", $"{project}: 결과 디렉터리에 기대한 TRX 하나만 있지 않습니다(G4-T7).");
+            runner.AfterTrxOpen?.Invoke(trx);
             using var m = new MemoryStream();
             s.CopyTo(m);
             bytes = m.ToArray();
         }
 
-        return Trx(project, bytes);
+        var parsed = Trx(project, bytes);
+        if (exit == 0 && parsed.Any(r => r.Outcome == "Failed"))
+            throw Mismatch("TestProfile.exit_inconsistent", $"{project}: 종료 코드 0인데 TRX에 실패 Case가 있습니다(G4-02).");
+        if (exit == 1 && !parsed.Any(r => r.Outcome == "Failed"))
+            throw Mismatch("TestProfile.exit_code", $"{project}: 종료 코드 1인데 TRX에 실패 Case가 없습니다(인프라 실패를 성공으로 보지 않음, G4-02).");
+        return parsed;
     }
 
     /// <summary>The results of a TRX file (VSTest 2010 schema): <c>UnitTestResult/@testName</c> and <c>@outcome</c>.</summary>

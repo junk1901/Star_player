@@ -13,6 +13,7 @@ internal sealed record OfficialSeams(
 /// <summary>
 /// G4-T1 (F-13): the official certification entry point. In this order, and nothing is issued unless every step passes (Fail-Closed):
 /// <list type="number">
+/// <item>E2-1 (G4-03): the DOTNET_ / COMPlus_ check and the initial capture C0, before anything else is read; that C0 is the one C1 and C2 are compared with;</item>
 /// <item>the OWNER installation settings from their one fixed location (§16 T1 — no anchor, root or pin comes from the command line);</item>
 /// <item>the G4 process binding before any trust input is read (start environment, pinned dotnet host, execution pins);</item>
 /// <item>the trust anchor from the settings (T1/T2) and the authenticated registry pipe (T3);</item>
@@ -74,13 +75,14 @@ internal static class OfficialEntry
         seams ??= new OfficialSeams();
         try
         {
+            var c0 = Certification.InitialCapture(seams.Variables);
             var config = InstallConfigReader.Read(seams.ConfigPath ?? InstallConfigReader.DefaultPath, seams.Acl, seams.Elevated);
             using var binding = ExecutionBinding.Establish(config, seams.Variables, seams.ProcessPath);
             var anchor = TrustAnchorReader.Read(config.AnchorPath, config.BuildRoot, config.ArchiveRoot, seams.Acl, seams.Elevated);
             var registry = (seams.Connect ?? (a => RegistryPipeClient.Connect(a)))(anchor);
             try
             {
-                var session = Certification.Open(anchor, registry, o["approval-record-id"], o["approval-record-sha256"], o["authorization-id"], config.BuildRoot, config.ArchiveRoot, binding);
+                var session = Certification.Open(anchor, registry, o["approval-record-id"], o["approval-record-sha256"], o["authorization-id"], config.BuildRoot, config.ArchiveRoot, binding, c0);
                 IssuedReceipt receipt;
                 if (command == "certify-family")
                 {

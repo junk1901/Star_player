@@ -72,7 +72,7 @@ internal static class PathSafety
 /// </list>
 /// Anything that cannot be established is refused. Only Windows drive-letter roots are supported; elsewhere the official output is refused as unpinnable.
 /// </summary>
-internal sealed class PinnedDirectory : IDisposable
+public sealed class PinnedDirectory : IDisposable
 {
     private const uint FileListDirectory = 0x0001, FileAddFile = 0x0002, FileAddSubdirectory = 0x0004, FileTraverse = 0x0020, FileReadAttributes = 0x0080, Synchronize = 0x0010_0000,
         FileWriteData = 0x0002, FileAppendData = 0x0004, FileWriteAttributes = 0x0100;

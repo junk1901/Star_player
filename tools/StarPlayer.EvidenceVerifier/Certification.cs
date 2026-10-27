@@ -81,15 +81,29 @@ public static class Certification
     private static EnvironmentSnapshot Capture() => CaptureSeam?.Invoke() ?? ExecutionEnvironment.Capture();
 
     /// <summary>
+    /// E2-1 on its own (G4-03): the static prefix check and the initial capture C0, before any evidence, anchor, approval material or installation setting is read. The official entry point runs this
+    /// first and hands the same C0 to <see cref="Open"/>, which compares C1 and later C2 with it (never a new baseline).
+    /// </summary>
+    public static EnvironmentSnapshot InitialCapture(IDictionary? variables = null)
+    {
+        if (ExecutionEnvironment.ForbiddenVariables(variables ?? VariablesSeam?.Invoke() ?? System.Environment.GetEnvironmentVariables()) is { Count: > 0 } forbidden)
+            throw Environment("Environment.forbidden_variable", $"금지 접두사 환경 변수가 있습니다: {string.Join(", ", forbidden)} (E2-1).");
+        return Capture();
+    }
+
+    /// <summary>
     /// E2-1 → E2-2/E2-3 (trust bootstrap) → G4 execution binding → E2-4 → E2-5; any failure leaves no session. A record that resolves official needs the process <paramref name="binding"/> (G4: the
-    /// official entry point makes it before the anchor is read); without one only a TEST_ONLY session can exist.
+    /// official entry point makes it before the anchor is read); without one only a TEST_ONLY session can exist. A bound session needs the <paramref name="initial"/> C0 that entry point captured with
+    /// <see cref="InitialCapture"/> before reading anything (G4-03); the E2-1 prefix check is repeated here and C1 / C2 are compared with that C0.
     /// </summary>
     public static CertificationSession Open(TrustAnchorV1 anchor, IEvidenceRegistry registry, string approvalRecordId, string approvalRecordSha256, string authorizationId, string repositoryRoot,
-        string archiveRoot, ExecutionBinding? binding = null)
+        string archiveRoot, ExecutionBinding? binding = null, EnvironmentSnapshot? initial = null)
     {
         if (ExecutionEnvironment.ForbiddenVariables(VariablesSeam?.Invoke() ?? System.Environment.GetEnvironmentVariables()) is { Count: > 0 } forbidden)
             throw Environment("Environment.forbidden_variable", $"금지 접두사 환경 변수가 있습니다: {string.Join(", ", forbidden)} (E2-1).");
-        var c0 = Capture();
+        if (binding is not null && initial is null)
+            throw EvidenceCodes.Fail(EvidenceCodes.ApprovalMismatch, "Execution.initial_capture_missing", "", "execution_binding", "결속 세션은 진입점이 앵커를 읽기 전에 수집한 C0가 필요합니다(E2-1, G4-03).");
+        var c0 = initial ?? Capture();
         var trust = TrustBootstrap.Resolve(anchor, registry, approvalRecordId, approvalRecordSha256, authorizationId, repositoryRoot);
         if (binding is null && trust.Resolution == ApprovalResolution.ResolvedOfficial)
             throw EvidenceCodes.Fail(EvidenceCodes.ApprovalMismatch, "Execution.unbound", "", "execution_binding", "공식 승인 기록은 실행 결속(G4) 없이 세션을 열지 않습니다.");
@@ -129,7 +143,7 @@ public static class Certification
         var b = session.Binding;
         if (b is not null && (!string.Equals(buildRoot, b.Config.BuildRoot, StringComparison.OrdinalIgnoreCase) || !string.Equals(workDirectory, b.Config.WorkRoot, StringComparison.OrdinalIgnoreCase)))
             throw EvidenceCodes.Fail(EvidenceCodes.TestProfileMismatch, "TestProfile.roots", "", "test_profile", "Test Profile의 build·work root가 설치 설정 값이 아닙니다(G4).");
-        var runner = b is null ? TestRunner.FromRuntime(buildRoot) : new TestRunner(b.Config.Dotnet.Path, buildRoot, b.Config.StartupForbiddenPrefixes);
+        var runner = b is null ? TestRunner.FromRuntime(buildRoot) : new TestRunner(b.Config.Dotnet.Path, buildRoot, b.Config.StartupForbiddenPrefixes) { RequireProtectedWorkTree = true };
         var profile = session.Trust.TestProfile.Doc;
         var build = session.Trust.Build.Doc;
         TestProfiles.CheckRequired(profile);

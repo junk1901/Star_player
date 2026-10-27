@@ -14,7 +14,7 @@ public sealed record ToolPin(string Path, string Sha256);
 /// </summary>
 public sealed record InstallConfig(
     string AnchorPath, string BuildRoot, string ArchiveRoot, string WorkRoot, ToolPin Dotnet, ToolPin Git, IReadOnlyList<ToolPin> ExecutionPins, IReadOnlyList<string> StartupForbiddenPrefixes,
-    IReadOnlyList<string> AllowedModuleRoots, IReadOnlyList<string> UnpinnedOutputFiles, byte[] Raw, string RawSha256);
+    IReadOnlyList<string> AllowedDynamicAssemblies, IReadOnlyList<string> UnpinnedOutputFiles, byte[] Raw, string RawSha256);
 
 [SupportedOSPlatform("windows")]
 public static class InstallConfigReader
@@ -39,7 +39,7 @@ public static class InstallConfigReader
 
     public static readonly Shape ConfigShape = Obj(
         ("format", Const(Format)), ("anchor_path", AbsPath), ("build_root", AbsPath), ("archive_root", AbsPath), ("work_root", AbsPath), ("dotnet", Pin), ("git", Pin),
-        ("execution_pins", Arr(Pin)), ("startup_forbidden_prefixes", SortedUnique(Pattern("^[A-Za-z][A-Za-z0-9_]{0,63}$", "PREFIX"))), ("allowed_module_roots", SortedUnique(AbsPath)),
+        ("execution_pins", Arr(Pin)), ("startup_forbidden_prefixes", SortedUnique(Pattern("^[A-Za-z][A-Za-z0-9_]{0,63}$", "PREFIX"))), ("allowed_dynamic_assemblies", SortedUnique(Text1)),
         ("unpinned_output_files", SortedUnique(RelPath)));
 
     private static EvidenceException Untrusted(string cause, string message) => EvidenceCodes.Fail(EvidenceCodes.ApprovalMismatch, cause, "", "install_config", message);
@@ -89,6 +89,6 @@ public static class InstallConfigReader
                     throw Untrusted("Trust.install_config_untrusted", $"{what}이 {name} 안에 있습니다: '{root}'.");
         return new InstallConfig(anchor, roots["build_root"], roots["archive_root"], roots["work_root"], P(o["dotnet"], "dotnet"), P(o["git"], "git"),
             Items(o["execution_pins"]).Select((n, i) => P(n, $"execution_pins/{i}")).ToList(), Items(o["startup_forbidden_prefixes"]).Select(Text).ToList(),
-            Items(o["allowed_module_roots"]).Select((n, i) => Canonical(Text(n), $"allowed_module_roots/{i}")).ToList(), Items(o["unpinned_output_files"]).Select(Text).ToList(), raw, Archive.Sha(raw));
+            Items(o["allowed_dynamic_assemblies"]).Select(Text).ToList(), Items(o["unpinned_output_files"]).Select(Text).ToList(), raw, Archive.Sha(raw));
     }
 }
