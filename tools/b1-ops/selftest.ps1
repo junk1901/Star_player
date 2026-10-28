@@ -527,6 +527,42 @@ $out | ConvertTo-Json -Depth 4
     $r1 = RefCheck $b2 @("refs/tags/v-approved=$tagA"); $r2 = RefCheck $b2 @($main, "refs/tags/v-approved^{}=$sha")
     Check 'a1.r02_expectation_must_name_main_and_real_refs' ($r1.Exit -eq 2 -and $r2.Exit -eq 2) "exit=$($r1.Exit)/$($r2.Exit)"
 
+    # A1-FIX2-01: ref names are exact (ordinal). reftable repositories keep refs that differ only in case apart on NTFS, as a
+    # case-sensitive server does (a loose-ref repository on Windows cannot hold both). PowerShell variable names ignore case,
+    # hence $tagUpper / $tagLower; refspecs push object IDs.
+    $g6 = "$Root\repo6"; Git init -q --ref-format=reftable --initial-branch=main $g6
+    Git -C $g6 config user.name selftest; Git -C $g6 config user.email selftest@example.invalid
+    [IO.File]::WriteAllText("$g6\a.txt", "a`n"); Git -C $g6 add a.txt; Git -C $g6 commit -q -m one
+    Git -C $g6 tag -a V-approved -m upper; Git -C $g6 tag -a v-approved -m lower
+    $c6 = (& git.exe -C $g6 rev-parse HEAD).Trim()
+    $tagUpper = (& git.exe -C $g6 rev-parse refs/tags/V-approved).Trim(); $tagLower = (& git.exe -C $g6 rev-parse refs/tags/v-approved).Trim()
+    function CaseRemote([string]$name, [string[]]$specs) { $b = "$Root\case-$name.git"; Git init -q --bare --ref-format=reftable --initial-branch=main $b; Git @(@('-C', $g6, 'push', '-q', '--no-follow-tags', $b) + $specs); $b }
+    $m6 = "refs/heads/main=$c6"
+    Check 'a1.fix2_fixture_two_case_variant_tags' ($tagUpper -cne $tagLower -and $tagUpper -and $tagLower) "$tagUpper / $tagLower"
+    $cl = CaseRemote 'lower-only' @("$($c6):refs/heads/main", "$($tagUpper):refs/tags/v-approved")
+    $r = RefCheck $cl @($m6, "refs/tags/V-approved=$tagUpper")
+    Check 'a1.fix2_case_variant_does_not_satisfy_approval' ($r.Exit -eq 1 -and $r.Text -cmatch 'UNEXPECTED refs/tags/v-approved' -and $r.Text -cmatch 'MISSING refs/tags/V-approved') "exit=$($r.Exit)"
+    $cs = CaseRemote 'both-same' @("$($c6):refs/heads/main", "$($tagUpper):refs/tags/V-approved", "$($tagUpper):refs/tags/v-approved")
+    $r = RefCheck $cs @($m6, "refs/tags/V-approved=$tagUpper")
+    Check 'a1.fix2_case_variants_never_merged_one_approved_fails' ($r.Exit -eq 1 -and $r.Text -match 'remote_refs=3' -and $r.Text -cmatch 'UNEXPECTED refs/tags/v-approved') "exit=$($r.Exit)"
+    $cb = CaseRemote 'both-diff' @("$($c6):refs/heads/main", "$($tagUpper):refs/tags/V-approved", "$($tagLower):refs/tags/v-approved")
+    $r = RefCheck $cb @($m6, "refs/tags/v-approved=$tagLower")
+    Check 'a1.fix2_other_case_variant_unapproved_fails' ($r.Exit -eq 1 -and $r.Text -cmatch 'UNEXPECTED refs/tags/V-approved') "exit=$($r.Exit)"
+    $r = RefCheck $cb @($m6, "refs/tags/V-approved=$tagUpper", "refs/tags/v-approved=$tagLower")
+    Check 'a1.fix2_both_case_variants_approved_pass' ($r.Exit -eq 0 -and $r.Text -match 'RESULT=PASS remote_refs=3 expected=3') "exit=$($r.Exit)"
+    $r = RefCheck $cb @($m6, "refs/tags/V-approved=$tagLower", "refs/tags/v-approved=$tagUpper")
+    Check 'a1.fix2_both_approved_ids_compared_per_exact_name' ($r.Exit -eq 1 -and @([regex]::Matches($r.Text, 'MISMATCH refs/tags/')).Count -eq 2) "exit=$($r.Exit)"
+    $fake = "$Root\fake-git"; [void][IO.Directory]::CreateDirectory($fake)
+    [IO.File]::WriteAllLines("$fake\dup.txt", [string[]]@("$c6`trefs/heads/main", "$tagUpper`trefs/tags/V-approved", "$tagUpper`trefs/tags/V-approved"))
+    [IO.File]::WriteAllLines("$fake\upper.txt", [string[]]@("$($c6.ToUpperInvariant())`trefs/heads/main"))
+    foreach ($x in 'dup', 'upper') { [IO.File]::WriteAllText("$fake\$x.cmd", "@type `"%~dp0$x.txt`"`r`n@exit /b 0`r`n") }
+    $r = Run 'a1-refcheck.ps1' @('-Remote', 'fake-remote', '-Expect', "$m6|refs/tags/V-approved=$tagUpper", '-Git', "$fake\dup.cmd")
+    Check 'a1.fix2_duplicate_ref_in_output_fails_not_overwritten' ($r.Exit -eq 1 -and $r.Text -match 'DUPLICATE refs/tags/V-approved listed twice') "exit=$($r.Exit)"
+    $r = Run 'a1-refcheck.ps1' @('-Remote', 'fake-remote', '-Expect', $m6, '-Git', "$fake\upper.cmd")
+    Check 'a1.fix2_upper_case_id_in_output_is_error' ($r.Exit -eq 2 -and $r.Text -match 'RESULT=ERROR') "exit=$($r.Exit)"
+    $r1 = RefCheck $b1 @("refs/heads/Main=$sha"); $r2 = RefCheck $b1 @("refs/heads/main=$($sha.ToUpperInvariant())")
+    Check 'a1.fix2_expectation_case_exact_main_and_lower_hex' ($r1.Exit -eq 2 -and $r2.Exit -eq 2) "exit=$($r1.Exit)/$($r2.Exit)"
+
     # ---------------- b4-candidates ----------------
     $b = "$Root\build"
     $files = @('tools/StarPlayer.SimHarness/bin/Release/net8.0/StarPlayer.SimHarness.dll', 'tools/StarPlayer.SimHarness/bin/Release/net8.0/StarPlayer.SimHarness.pdb',

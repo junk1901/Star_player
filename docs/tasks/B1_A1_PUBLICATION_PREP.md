@@ -57,13 +57,18 @@ SourceLink URL(`https://raw.githubusercontent.com/<owner>/<repo>/<commit>/*`)이
 3. 빈 비공개 저장소를 만듭니다(README·License 자동 생성 없음).
 4. **게시 전 Ref 대조(A1-R02):**
    - **승인 Ref 목록 작성:** 게시 직전에 승인 Ref 목록 파일을 만듭니다. 기본은 `refs/heads/main <승인 Commit SHA>` 한 줄입니다. 승인된 Tag가 있으면 `refs/tags/<tag> <Tag 객체 SHA>`를 추가합니다.
+   - **Tag 객체 SHA는 정확한 이름으로 읽습니다(A1-FIX2-01):** `git for-each-ref --format="%(objectname) %(refname)" refs/tags/<승인 Tag>`를 씁니다.
+     - 출력의 Ref 이름은 OWNER가 승인한 이름과 **대소문자까지 바이트 단위로** 같아야 합니다. 출력이 비어 있거나 이름이 다르면 중단합니다.
+     - `git rev-parse`·`git show-ref --verify`는 쓰지 않습니다. Windows의 일반(loose ref) 저장소는 대소문자를 구분하지 않습니다. 그래서 `refs/tags/v-approved`(틀린 대소문자)를 물어도 `V-approved`의 ID를 돌려주고, `show-ref`는 틀린 이름을 그대로 출력합니다.
+     - 정확한 결과를 낸 것은 `for-each-ref`뿐이었습니다(빈 출력). 실측: git 2.45.1.windows.1, 보고서 `docs/reports/B1_A1_FIX2_REPORT.md`.
+     - 같은 이유로 Windows의 일반 로컬 저장소에는 대소문자만 다른 Tag 두 개가 함께 있을 수 없습니다. 원격 서버(대소문자 구분)에는 있을 수 있으므로 게시 후 대조는 대소문자를 구분합니다(6단계).
    - **원격이 비어 있는지 확인:** `git ls-remote <A-1 URL>`의 출력이 비어 있어야 합니다(새 저장소).
    - **Dry Run으로 전송 Ref 확인:** 다음 명령의 `*` 줄이 승인 목록의 `refs/heads/main` **한 줄뿐**이어야 합니다. 다른 Ref가 보이면 중단합니다.
      `git -c push.followTags=false push --no-follow-tags --porcelain --dry-run <A-1 URL> <승인 Commit SHA>:refs/heads/main`
 5. **최초 Push:** 강제 Push는 하지 않습니다.
    - `git -c push.followTags=false push --no-follow-tags --porcelain <A-1 URL> <승인 Commit SHA>:refs/heads/main`
-   - **승인된 Tag만**, Tag마다 별도 명령으로 보냅니다.
-     `git -c push.followTags=false push --no-follow-tags --porcelain <A-1 URL> refs/tags/<tag>:refs/tags/<tag>`
+   - **승인된 Tag만**, Tag마다 별도 명령으로 보냅니다. 원본은 이름이 아니라 4단계에서 읽은 **Tag 객체 SHA**로 씁니다. 그래야 대소문자를 구분하지 않는 로컬 이름 해석이 끼어들지 않습니다.
+     `git -c push.followTags=false push --no-follow-tags --porcelain <A-1 URL> <Tag 객체 SHA>:refs/tags/<승인 Tag 정확한 이름>`
    - **명령 형식의 규칙:**
      - 원격 이름이 아니라 **URL을 직접** 씁니다. 저장된 원격의 `remote.<name>.push`·`mirror` 설정이 끼어들지 않게 하기 위해서입니다.
      - 대상은 전체 Ref 이름으로 씁니다.
@@ -80,14 +85,20 @@ SourceLink URL(`https://raw.githubusercontent.com/<owner>/<repo>/<commit>/*`)이
      - Annotated Tag의 Peeled 줄(`refs/tags/<tag>^{}`)도 나오지 않습니다.
      - 따라서 정상 최초 Push와 승인 Annotated Tag가 "목록 외 Ref"로 오판되지 않습니다.
      - 이전 판(`fb1e338`)은 `--refs` 없는 출력을 승인 목록과 그대로 비교했습니다. 그래서 정상 게시도 `HEAD`·`^{}` 줄 때문에 실패로 판정되었습니다. 로컬 bare 재현 기록은 G5/A-1 2차 수정 보고서(`docs/reports/B1_G5_FIX2_REPORT.md`)에 둡니다.
-   - **기대값:** 로컬의 `git rev-parse <Ref>` 값, 즉 Ref 자신의 객체 ID입니다.
+   - **기대값:** 4단계 승인 Ref 목록의 값, 즉 Ref 자신의 객체 ID입니다(Tag는 `for-each-ref`로 정확한 이름에서 읽은 값).
      - `main`과 Lightweight Tag는 Commit SHA입니다.
      - Annotated Tag는 **Tag 객체 SHA**입니다. Peeled Commit SHA를 쓰면 `MISMATCH`가 납니다.
      - `-Expect`에는 `refs/heads/main`이 정확히 한 번 있어야 합니다. Tag는 **OWNER가 승인한 것만** 넣습니다.
    - **판정:**
      - `PASS`(종료 코드 0): 원격의 모든 `refs/heads/main`·`refs/tags/*`가 기대값과 같습니다.
-     - `FAIL`(종료 코드 1): 기대 밖 Ref(다른 Branch·미승인 Tag 등, `UNEXPECTED`), SHA 불일치(`MISMATCH`), 누락(`MISSING`) 중 하나라도 있습니다.
-     - `ERROR`(종료 코드 2): 조회 실패나 해석할 수 없는 출력입니다. **PASS로 취급하지 않습니다.**
+     - `FAIL`(종료 코드 1): 기대 밖 Ref(다른 Branch·미승인 Tag 등, `UNEXPECTED`), SHA 불일치(`MISMATCH`), 누락(`MISSING`), 같은 Ref가 두 번 나온 출력(`DUPLICATE`, 덮어쓰지 않음) 중 하나라도 있습니다.
+     - `ERROR`(종료 코드 2): 조회 실패나 해석할 수 없는 출력(소문자 16진수가 아닌 ID 포함)입니다. **PASS로 취급하지 않습니다.**
+   - **Ref 이름은 대소문자까지 정확히 비교합니다(A1-FIX2-01):**
+     - 기대 목록과 조회 목록은 모두 `StringComparer.Ordinal` 사전에 담습니다. 패턴은 `-cmatch`만 씁니다.
+     - `refs/tags/V-approved` 승인은 `refs/tags/v-approved`를 승인하지 않습니다.
+     - 대소문자만 다른 두 Ref는 각각 독립된 Ref입니다. 둘 다 승인하려면 둘 다 정확한 이름과 ID로 `-Expect`에 넣습니다.
+     - 이전 판(`4a3d61b`)은 PowerShell `[ordered]@{}`(대소문자 무시)를 썼습니다. 그래서 대소문자 변형 Ref가 승인 Ref로 통과하거나 두 Ref가 하나로 합쳐졌습니다.
+     - `-Expect`의 `refs/heads/Main`이나 대문자 16진수 ID는 사용 오류입니다.
    - FAIL·ERROR이면 게시 미완료로 보고 OWNER에 보고합니다. 원격 Ref를 임의로 삭제하지 않습니다.
    - **한계:** 서버가 숨기는 Ref(`uploadpack.hideRefs` 등)는 `ls-remote`에 나타나지 않으므로 이 대조로 확인할 수 없습니다.
    - **[시험: 로컬 bare 저장소]** `selftest.ps1`의 `a1.r02_*` 12개 사례가 다음을 반복합니다.
@@ -96,6 +107,9 @@ SourceLink URL(`https://raw.githubusercontent.com/<owner>/<repo>/<commit>/*`)이
      - `push.followTags=true`라도 `--no-follow-tags`가 있으면 PASS입니다.
      - 조회 오류는 ERROR입니다.
      - Peeled 이름이나 `main` 없는 기대값은 사용 오류입니다.
+   - **[시험: reftable 로컬 bare 저장소]** `a1.fix2_*` 9개 사례가 대소문자 정확 비교를 반복합니다.
+     - reftable 형식은 NTFS에서도 대소문자만 다른 Ref를 따로 보관하므로, 대소문자를 구분하는 서버와 같은 상태를 만들 수 있습니다.
+     - 대상: 대소문자 변형만 있음, 두 변형 중 하나만 승인, 두 변형 모두 승인·ID 교차, 출력 중복, 대문자 ID 출력, `Main`·대문자 ID 기대값
 7. 기본 브랜치 보호(강제 Push·삭제 금지)와 Tag 보호를 설정합니다.
 8. 7절 원격 조회 검증을 실행합니다.
 
