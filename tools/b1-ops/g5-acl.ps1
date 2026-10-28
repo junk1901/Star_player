@@ -28,29 +28,42 @@
     * every existing ancestor that is not itself an apply root of this layout must already satisfy the ancestor rule (a trusted
       parent: only the TCB can rename, delete or re-permission it);
     * no reparse point and no unreadable entry under an existing apply root;
+    * every object Apply will change (each existing apply root and every entry under it) is opened and held through its own
+      handle, and through that handle (G5-FIX-01): the volume is NTFS, the link count is exactly 1 and the file ID is non-zero
+      and unique among all objects to change. A file with a second hard link (in a non-applied root such as R-ARCHIVE, another
+      directory or the same root) or whose link count / file ID cannot be read is refused: changing its descriptor would change
+      every other path of the same object;
     * a root of the layout nested under an apply root and not applied itself (e.g. R-ARCHIVE under R-BASE) must already exist with
-      a protected DACL: Windows propagates the parent's inheritable ACEs to unprotected children, so such a layout is refused
-      instead of changing a root the OWNER did not approve; its whole tree is also compared before / after (detection only);
+      a protected DACL, so that it never inherits the new ACEs (a layout that needs it changed is refused instead of changing a
+      root the OWNER did not approve); its whole tree is also compared before / after (detection only);
     * outside -DiagnosticRoot (or with the 'maintenance-check' injection): no running process is owned by a layout principal.
-  Changes then go through handles only: a missing directory is created already carrying its final protected descriptor (never
-  with an inherited DACL), a root's owner and DACL are set on the held handle, and each descendant is opened (reparse not
-  followed, final path checked) and reset to owner + inherit-only through that handle. A full Verify and the nested-root
-  comparison follow. On any failure every snapshot entry is restored independently (one failure does not stop the others),
-  the directories Apply created (journal <snapshot>.created, intermediate directories included, pre-existing paths never) are
-  removed if empty, and the real state is compared with the snapshot again: exit 1 ROLLED_BACK only when nothing differs and no
-  created directory remains, otherwise exit 3 ROLLBACK_FAILED with every residue listed. This is a best-effort compensation,
-  not a transaction: a crash or power loss during Apply leaves the snapshot and journal for Restore.
+  Right before the first change every held object is queried again (link count 1, same file ID); a difference refuses Apply
+  with nothing written. Changes then go through handles only and never propagate (SetKernelObjectSecurity, nothing is walked by
+  name): a missing directory is created already carrying its final protected descriptor, a root's owner and protected DACL are
+  written on its held handle, and every entry below gets owner + the inherited copy of its root's ACEs (exactly what Windows
+  would compute for these ACEs) on its own handle, after the same link-count / file-ID check on that handle. An entry that
+  appears after the preflight is checked the same way before it is touched. After the last change every handle is queried once
+  more; a link added meanwhile fails Apply and rolls the object back through the same handle. A full Verify and the nested-root
+  comparison follow. On any failure every snapshot entry is restored independently through its held handle, or a fresh handle
+  whose file ID must equal the snapshot (one failure does not stop the others), the directories Apply created (journal
+  <snapshot>.created, intermediate directories included, pre-existing paths never) are removed if empty, and the real state is
+  compared with the snapshot again: exit 1 ROLLED_BACK only when nothing differs, no created directory remains and no object
+  outside the snapshot was changed, otherwise exit 3 ROLLBACK_FAILED with every residue listed. This is a best-effort
+  compensation, not a transaction: a crash or power loss during Apply leaves the snapshot and journal for Restore.
 
-  Remaining limits (OWNER operating preconditions, see the G5 design 4.3 / 5): the held handles stop renames of the checked
-  path, but a principal that still has write access inside an apply root could add entries while Apply runs; Apply therefore
-  requires the maintenance condition (no principal process; the OWNER also signs principals out or disables them). An unknown
-  process owner is reported, not treated as a principal.
+  Remaining limits (OWNER operating preconditions, see the G5 design 4.3 / 5): the held handles stop renames and deletes of the
+  checked objects and every change is bound to a checked handle, but a principal that can still write inside a root, or create
+  a link to one of its files, can add entries or links while Apply runs (detected and rolled back, not prevented); Apply
+  therefore requires the maintenance condition (no principal process; the OWNER also signs principals out or disables them).
+  An unknown process owner is reported, not treated as a principal.
 
   -DiagnosticRoot is for isolated tests only: every root must lie under it, the current user counts as trusted and is the
   owner Apply sets, the diagnostic root and its ancestors are not judged by the ancestor rule (they are still reparse-checked),
   elevation is not required and the result is labelled DIAGNOSTIC (never operational evidence). -DiagnosticInject (only with
   -DiagnosticRoot) injects faults for the self-test: apply-fail:<path>, restore-fail:<path>, drop-file:<path>,
-  swap-after-check:<path>, admin-lookup-fail, maintenance-check.
+  swap-after-check:<path>, link-query-fail:<path>, links-misreported:<path> (the link count is ignored, so only the
+  file-ID cross-check remains), add-link-after-check:<new>=<existing>, add-link-after-change:<new>=<existing>,
+  admin-lookup-fail, maintenance-check (paths relative to the diagnostic root).
 
   Exit: 0 PASS, 1 violations / refused / rolled back, 2 usage or layout error, 3 rollback failed or unexpected error after a change.
 #>
@@ -239,11 +252,22 @@ if ($DiagnosticInject.Count -and -not $diag) { Fail-Usage '-DiagnosticInject is 
 $inject = @{}
 foreach ($x in $DiagnosticInject) {
     $kind, $arg = $x -split ':', 2
-    if ($kind -notin 'apply-fail', 'restore-fail', 'drop-file', 'swap-after-check', 'admin-lookup-fail', 'maintenance-check') { Fail-Usage "unknown injection '$kind'." }
+    if ($kind -notin 'apply-fail', 'restore-fail', 'drop-file', 'swap-after-check', 'link-query-fail', 'links-misreported', 'add-link-after-check', 'add-link-after-change', 'admin-lookup-fail', 'maintenance-check') { Fail-Usage "unknown injection '$kind'." }
     if (-not $inject.ContainsKey($kind)) { $inject[$kind] = @() }
-    if ($arg) { $inject[$kind] += (Get-Canonical (Join-Path $diag $arg)) } else { $inject[$kind] += '*' }
+    if ($kind -like 'add-link-*') {
+        $new, $old = $arg -split '=', 2
+        if (-not $old) { Fail-Usage "$kind needs <new>=<existing>." }
+        $inject[$kind] += , @((Get-Canonical (Join-Path $diag $new)), (Get-Canonical (Join-Path $diag $old)))
+    }
+    elseif ($arg) { $inject[$kind] += (Get-Canonical (Join-Path $diag $arg)) } else { $inject[$kind] += '*' }
 }
 function Injected([string]$kind, [string]$path) { $inject.ContainsKey($kind) -and ($inject[$kind] -contains '*' -or ($path -and $inject[$kind] -contains $path)) }
+function Add-InjectedLinks([string]$kind) {                                   # a hard link created by someone else (diagnostic)
+    if (-not $inject.ContainsKey($kind)) { return @() }
+    foreach ($x in $inject[$kind]) {
+        try { New-Item -ItemType HardLink -Path $x[0] -Target $x[1] -ErrorAction Stop | Out-Null; "LINKED $($x[0]) -> $($x[1])" } catch { "LINK FAILED $($x[0]): $($_.Exception.Message)" }
+    }
+}
 
 $script:L = $null
 $trusted = @($Tcb)
@@ -259,6 +283,30 @@ function Build-Sddl($r, [string]$owner) {
 
 # An intermediate directory Apply has to create: TCB only (principals reach the roots below by traverse).
 function Intermediate-Sddl([string]$owner) { "O:$($owner)D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)$(if ($diag) { "(A;OICI;FA;;;$($me.User.Value))" })" }
+
+# The descriptor of an entry below root $r: owner + the inherited copy of the root's ACEs. Every root ACE is OICI (no IO / NP), so a
+# directory inherits it as OICIID and a file as ID, in the same order: what Windows computes (self-test acl.fix01_exact_*).
+function Child-Sddl($r, [string]$owner, [bool]$dir) {
+    $aces = (Build-Sddl $r $owner) -replace '^.*?D:PAI', ''
+    "O:$($owner)D:AI" + ($aces -replace ';OICI;', $(if ($dir) { ';OICIID;' } else { ';ID;' }))
+}
+
+# G5-FIX-01: an object may be changed only if, through its own handle, it has exactly one link and a file ID that no other object
+# of this Apply has; otherwise its descriptor is shared with another path. Returns "<volume>:<file id>" or throws.
+$script:fsByVolume = @{}
+function Get-ObjectKey([string]$p, $h) {
+    if (Injected 'link-query-fail' $p) { throw "$($p): link count / file ID could not be read (injected, diagnostic) - refused" }
+    $i = [B1Ops.Native]::Query($h)
+    if (-not $script:fsByVolume.ContainsKey($i.VolumeSerial)) { $script:fsByVolume[$i.VolumeSerial] = [B1Ops.Native]::FileSystem($h) }
+    if ($script:fsByVolume[$i.VolumeSerial] -ne 'NTFS') { throw "$($p): volume file system '$($script:fsByVolume[$i.VolumeSerial])' - link count / 64-bit file ID not trusted, refused" }
+    if ($i.FileId -eq 0) { throw "$($p): file ID 0 - not trusted, refused" }
+    if ($i.Links -ne 1 -and -not (Injected 'links-misreported' $p)) { throw "$($p): $($i.Links) hard links - its descriptor is shared with another path, refused" }
+    '{0:x8}:{1:x16}' -f $i.VolumeSerial, $i.FileId
+}
+function Register-Object([hashtable]$seen, [string]$key, [string]$p) {
+    if ($seen.ContainsKey($key) -and $seen[$key] -ne $p) { throw "$($p): same file ID as $($seen[$key]) - two paths to one object, refused" }
+    $seen[$key] = $p
+}
 
 function Get-Nested($L, $r) { @($L.Roots | Where-Object { $_.Path -ne $r.Path -and (Test-Under $_.Path $r.Path) } | ForEach-Object { $_.Path }) }
 
@@ -335,6 +383,8 @@ function Invoke-Preflight($L, [string]$owner) {
     $held = @{}                                                                # lower-case path -> held handle (closed when Apply ends)
     $plan = New-Object System.Collections.Generic.List[object]                 # directories to create, parents first
     $baseline = New-Object System.Collections.Generic.List[object]             # non-applied nested roots: SDDL of the whole tree
+    $items = New-Object System.Collections.Generic.List[object]                # every existing object Apply will change (held, checked)
+    $seen = @{}                                                                # object key -> path
     $applyPaths = @($L.Roots | Where-Object { $_.Apply } | ForEach-Object { $_.Path })
     function Hold([string]$p, [uint32]$access) {
         $k = $p.ToLowerInvariant()
@@ -369,8 +419,15 @@ function Invoke-Preflight($L, [string]$owner) {
         }
         if (-not $missing -and [IO.Directory]::Exists($r.Path)) {
             foreach ($item in (Get-Tree $r.Path (Get-Nested $L $r))) {
-                if ($item.Error) { $errors.Add("$($item.Path): $($item.Error)") }
-                elseif ($item.Reparse) { $errors.Add("$($item.Path): reparse point under an apply root") }
+                if ($item.Error) { $errors.Add("$($item.Path): $($item.Error)"); continue }
+                if ($item.Reparse) { $errors.Add("$($item.Path): reparse point under an apply root"); continue }
+                try {
+                    $o = Hold $item.Path $Change                                # held until Apply ends: no rename / delete / swap
+                    $key = Get-ObjectKey $item.Path $o.H
+                    Register-Object $seen $key $item.Path
+                    $items.Add([pscustomobject]@{ Path = $item.Path; Dir = $item.Dir; Key = $key })
+                }
+                catch { $errors.Add($(if ($_.Exception.Message -like "$($item.Path)*") { $_.Exception.Message } else { "$($item.Path): $($_.Exception.Message)" })) }
             }
         }
         foreach ($n in @($L.Roots | Where-Object { -not $_.Apply -and $_.Path -ne $r.Path -and (Test-Under $_.Path $r.Path) })) {
@@ -394,44 +451,48 @@ function Invoke-Preflight($L, [string]$owner) {
         $note = "processes with unknown owner: $($pp.Unknown)"
     }
     else { $note = 'maintenance condition not checked (diagnostic)' }
-    [pscustomobject]@{ Errors = $errors.ToArray(); Held = $held; Plan = @($plan | Sort-Object { $_.Path.Length }); Baseline = $baseline.ToArray(); Note = $note }
+    [pscustomobject]@{ Errors = $errors.ToArray(); Held = $held; Items = $items.ToArray(); Seen = $seen; Plan = @($plan | Sort-Object { $_.Path.Length }); Baseline = $baseline.ToArray(); Note = $note }
 }
 
-function Get-Snapshot($L) {
-    $entries = New-Object System.Collections.Generic.List[object]
-    foreach ($r in @($L.Roots | Where-Object { $_.Apply })) {
-        if (-not [IO.Directory]::Exists($r.Path)) { continue }                # created by Apply: tracked in the journal
-        foreach ($item in (Get-Tree $r.Path (Get-Nested $L $r))) {
-            if ($item.Error -or $item.Reparse) { throw "snapshot: $($item.Path): $(if ($item.Error) { $item.Error } else { 'reparse point' })" }
-            $entries.Add([pscustomobject]@{ path = $item.Path; dir = $item.Dir; sddl = (Get-HandleSddl $item.Path) })
-        }
+# The handle the snapshot entry was taken from (held by this Apply), or a fresh one whose object must be the snapshot's object.
+function Open-Entry($e, [hashtable]$held) {
+    $k = $e.path.ToLowerInvariant()
+    if ($held.ContainsKey($k)) { return [pscustomobject]@{ H = $held[$k].H; Own = $false } }
+    $o = Open-Checked $e.path $Change
+    try {
+        $i = [B1Ops.Native]::Query($o.H)
+        $key = '{0:x8}:{1:x16}' -f $i.VolumeSerial, $i.FileId
+        if ($key -ne $e.object) { throw "file ID $key is not the snapshot's object $($e.object) - not restored" }
     }
-    $entries.ToArray()
+    catch { $o.H.Dispose(); throw }
+    [pscustomobject]@{ H = $o.H; Own = $true }
 }
 
-# Every entry is restored on its own (a failure is recorded and the rest continue), then re-read and compared; the directories Apply
-# created are removed deepest first if empty. Returns the residue: an empty list means the state equals the snapshot again.
+# Every entry is restored on its own through the handle bound to its object (a failure is recorded and the rest continue), then
+# re-read and compared; the directories Apply created are removed deepest first if empty. Returns the residue: an empty list
+# means the state equals the snapshot again. Writes never propagate (SetSddlExact).
 function Restore-Snapshot($entries, [string[]]$created, [hashtable]$held = @{}) {
     $residue = New-Object System.Collections.Generic.List[string]
     $null = [B1Ops.Native]::EnablePrivilege('SeRestorePrivilege')            # needed to give an item back another account's ownership
     foreach ($e in @($entries | Sort-Object { $_.path.Length })) {
         try {
             if (Injected 'restore-fail' $e.path) { throw 'injected restore failure (diagnostic)' }
-            $o = Open-Checked $e.path $Change
+            $o = Open-Entry $e $held
             try {
                 $now = [B1Ops.Native]::GetSddl($o.H)
                 if ($now -ne $e.sddl) {
                     $ownerDiffers = ([Security.AccessControl.RawSecurityDescriptor]::new($now)).Owner.Value -ne ([Security.AccessControl.RawSecurityDescriptor]::new($e.sddl)).Owner.Value
-                    [B1Ops.Native]::SetSddl($o.H, $e.sddl, $ownerDiffers, $true)
+                    [B1Ops.Native]::SetSddlExact($o.H, $e.sddl, $ownerDiffers)
                 }
             }
-            finally { $o.H.Dispose() }
+            finally { if ($o.Own) { $o.H.Dispose() } }
         }
         catch { $residue.Add("$($e.path): not restored: $($_.Exception.Message)") }
     }
     foreach ($e in $entries) {
         try {
-            $now = Get-HandleSddl $e.path
+            $o = Open-Entry $e $held
+            try { $now = [B1Ops.Native]::GetSddl($o.H) } finally { if ($o.Own) { $o.H.Dispose() } }
             if ($now -ne $e.sddl) { $residue.Add("$($e.path): differs after restore: $now != $($e.sddl)") }
         }
         catch { $residue.Add("$($e.path): cannot be re-read after restore: $($_.Exception.Message)") }
@@ -467,7 +528,7 @@ function Read-Journal([string]$snap) {
 if ($Mode -eq 'Restore') {
     if (-not $Snapshot -or -not (Test-Path -LiteralPath $Snapshot)) { Fail-Usage '-Snapshot <existing file> is required.' }
     $snap = [IO.File]::ReadAllText($Snapshot, $utf8) | ConvertFrom-Json
-    if ($snap.format -ne 'starplayer-g5-acl-snapshot-v2') { Fail-Usage 'snapshot format must be starplayer-g5-acl-snapshot-v2.' }
+    if ($snap.format -ne 'starplayer-g5-acl-snapshot-v3') { Fail-Usage 'snapshot format must be starplayer-g5-acl-snapshot-v3.' }
     if (-not $diag -and (-not $elevated -or -not $OwnerApproved)) { Fail-Usage 'Restore changes ACLs: run elevated with -OwnerApproved (or inside -DiagnosticRoot).' }
     $created = @(Read-Journal $Snapshot)
     $entries = @($snap.entries | Where-Object { $_ })
@@ -485,7 +546,7 @@ $owner = if ($diag) { $me.User.Value } else { $L.Owner }
 
 if ($Mode -eq 'Plan') {
     foreach ($r in $L.Roots) {
-        if ($r.Apply) { Write-Output "$($r.Id) $($r.Path)`n    create if missing (born with this descriptor); owner+DACL := $(Build-Sddl $r $owner)`n    every descendant: owner := $owner, explicit ACEs removed, inherit only" }
+        if ($r.Apply) { Write-Output "$($r.Id) $($r.Path)`n    create if missing (born with this descriptor); owner+DACL := $(Build-Sddl $r $owner)`n    every descendant (one link each, checked first): owner := $owner, DACL := inherited copy of the root ACEs, written exactly, no propagation" }
         else { Write-Output "$($r.Id) $($r.Path)`n    verify only (no change; under an apply root it must already be protected)" }
     }
     Write-Output 'RESULT=PLAN (nothing changed; Apply runs the preflight first)'
@@ -517,9 +578,26 @@ try {
     foreach ($p in @($inject['swap-after-check'] | Where-Object { $_ -and $_ -ne '*' })) {    # a path change after the preflight (diagnostic)
         try { [IO.Directory]::Move($p, "$p.swapped"); $swap += "MOVED $p"; [void](cmd.exe /c mklink /J "$p" "$p.swapped") } catch { $swap += "BLOCKED $($p): $($_.Exception.Message)" }
     }
-    $entries = Get-Snapshot $L
-    [IO.File]::WriteAllText($Snapshot, ([ordered]@{ format = 'starplayer-g5-acl-snapshot-v2'; layout_sha256 = $L.Sha256; time_utc = [DateTime]::UtcNow.ToString('o'); entries = $entries } | ConvertTo-Json -Depth 5), $utf8)
+    $swap += @(Add-InjectedLinks 'add-link-after-check')
+    $swapNote = if ($swap.Count) { '; injected: ' + ($swap -join '; ') } else { '' }
+    # G5-FIX-01: right before the first change, every held object is still the checked object with one link
+    $keyOf = @{}                                                               # lower-case path -> object key, for every object Apply may change
+    $recheck = New-Object System.Collections.Generic.List[string]
+    foreach ($it in $pre.Items) {
+        $keyOf[$it.Path.ToLowerInvariant()] = $it.Key
+        try { if ((Get-ObjectKey $it.Path $held[$it.Path.ToLowerInvariant()].H) -ne $it.Key) { $recheck.Add("$($it.Path): not the object of the preflight") } }
+        catch { $recheck.Add($_.Exception.Message) }
+    }
+    if ($recheck.Count) {
+        $rows = @([pscustomobject]@{ id = 'recheck'; path = ''; status = 'FAIL'; items = $recheck.Count; violations = $recheck.ToArray(); note = $pre.Note })
+        Write-Result 'REFUSED' $rows "an object changed after the preflight; nothing was changed and no snapshot was written$swapNote"
+        exit 1
+    }
+    $entries = @($pre.Items | ForEach-Object { [pscustomobject]@{ path = $_.Path; dir = $_.Dir; object = $_.Key; sddl = [B1Ops.Native]::GetSddl($held[$_.Path.ToLowerInvariant()].H) } })
+    [IO.File]::WriteAllText($Snapshot, ([ordered]@{ format = 'starplayer-g5-acl-snapshot-v3'; layout_sha256 = $L.Sha256; time_utc = [DateTime]::UtcNow.ToString('o'); entries = $entries } | ConvertTo-Json -Depth 5), $utf8)
     $created = New-Object System.Collections.Generic.List[string]
+    $late = New-Object System.Collections.Generic.List[string]                # objects that appeared after the preflight and were changed
+    $seen = $pre.Seen
     try {
         foreach ($step in $pre.Plan) {
             $script:changed = $true
@@ -527,33 +605,52 @@ try {
             $created.Add($step.Path)
             [IO.File]::AppendAllText("$Snapshot.created", "$($step.Path)`r`n", $utf8)
             if (Injected 'drop-file' $step.Path) { [IO.File]::WriteAllText((Join-Path $step.Path 'concurrent-writer.txt'), 'x') }
-            $held[$step.Path.ToLowerInvariant()] = Open-Checked $step.Path $Change
+            $o = Open-Checked $step.Path $Change
+            $held[$step.Path.ToLowerInvariant()] = $o
+            $key = Get-ObjectKey $step.Path $o.H; Register-Object $seen $key $step.Path; $keyOf[$step.Path.ToLowerInvariant()] = $key
         }
         foreach ($r in @($L.Roots | Where-Object { $_.Apply })) {
             if (Injected 'apply-fail' $r.Path) { throw "injected apply failure at $($r.Path) (diagnostic)" }
+            $rk = $r.Path.ToLowerInvariant()
+            if ((Get-ObjectKey $r.Path $held[$rk].H) -ne $keyOf[$rk]) { throw "$($r.Path): not the object of the preflight" }
             $script:changed = $true
-            [B1Ops.Native]::SetSddl($held[$r.Path.ToLowerInvariant()].H, (Build-Sddl $r $owner), $true, $true)
+            [B1Ops.Native]::SetSddlExact($held[$rk].H, (Build-Sddl $r $owner), $true)
             foreach ($item in @(Get-Tree $r.Path (Get-Nested $L $r) | Select-Object -Skip 1)) {
                 if ($item.Error -or $item.Reparse) { throw "$($item.Path): $(if ($item.Error) { $item.Error } else { 'reparse point appeared during Apply' })" }
                 if (Injected 'apply-fail' $item.Path) { throw "injected apply failure at $($item.Path) (diagnostic)" }
-                $o = Open-Checked $item.Path $Change
-                try { [B1Ops.Native]::SetSddl($o.H, "O:$($owner)D:AI", $true, $true) } finally { $o.H.Dispose() }
+                $k = $item.Path.ToLowerInvariant()
+                if ($held.ContainsKey($k)) {
+                    if ((Get-ObjectKey $item.Path $held[$k].H) -ne $keyOf[$k]) { throw "$($item.Path): not the object of the preflight" }
+                }
+                else {                                                         # appeared after the preflight: checked before it is touched
+                    $o = Open-Checked $item.Path $Change
+                    $held[$k] = $o
+                    $key = Get-ObjectKey $item.Path $o.H; Register-Object $seen $key $item.Path; $keyOf[$k] = $key
+                    $late.Add($item.Path)
+                }
+                [B1Ops.Native]::SetSddlExact($held[$k].H, (Child-Sddl $r $owner $item.Dir), $true)
             }
+        }
+        $more = @(Add-InjectedLinks 'add-link-after-change')
+        if ($more.Count) { $swapNote += '; injected: ' + ($more -join '; ') }
+        foreach ($k in @($keyOf.Keys)) {                                       # a link added while Apply ran: roll the object back
+            $p = $seen[$keyOf[$k]]
+            if ((Get-ObjectKey $p $held[$k].H) -ne $keyOf[$k]) { throw "$($p): not the object of the preflight after the change" }
         }
         $rows = @(Invoke-Verify $L)
         $bad = @($rows | Where-Object { $_.status -ne 'PASS' })
         if ($bad.Count) { throw ('post-apply verify failed: ' + ((@($bad | ForEach-Object { $_.violations }) | Select-Object -First 5) -join '; ')) }
         foreach ($b in $pre.Baseline) { if ((Get-HandleSddl $b.path) -ne $b.sddl) { throw "non-applied nested root changed: $($b.path)" } }
-        Write-Result 'PASS' $rows "snapshot=$Snapshot created=$($created.Count); $($pre.Note)$(if ($swap.Count) { '; swap: ' + ($swap -join '; ') })"
+        Write-Result 'PASS' $rows "snapshot=$Snapshot created=$($created.Count) objects=$($keyOf.Count) appeared_after_preflight=$($late.Count); $($pre.Note)$swapNote"
         exit 0
     }
     catch {
         $why = $_.Exception.Message
         $residue = New-Object System.Collections.Generic.List[string]
         try { foreach ($x in @(Restore-Snapshot $entries $created.ToArray() $held)) { $residue.Add($x) } } catch { $residue.Add("restore aborted: $($_.Exception.Message)") }
+        foreach ($p in $late) { if (-not @($created | Where-Object { Test-Under $p $_ }).Count -or (Test-Path -LiteralPath $p)) { $residue.Add("$($p): appeared after the preflight and was changed by Apply; its earlier descriptor is not in the snapshot") } }
         try { foreach ($b in $pre.Baseline) { if ((Get-HandleSddl $b.path) -ne $b.sddl) { $residue.Add("non-applied nested root changed: $($b.path)") } } } catch { $residue.Add("nested root re-check failed: $($_.Exception.Message)") }
         try { $rows = @(Invoke-Verify $L) } catch { $rows = @([pscustomobject]@{ id = 'verify'; path = ''; status = 'FAIL'; items = 0; violations = @("verify failed: $($_.Exception.Message)"); note = '' }) }
-        $swapNote = if ($swap.Count) { '; swap: ' + ($swap -join '; ') } else { '' }
         if ($residue.Count) {
             $rows = @($rows) + @([pscustomobject]@{ id = 'residue'; path = $Snapshot; status = 'FAIL'; items = $residue.Count; violations = $residue.ToArray(); note = 'state differs from the snapshot' })
             Write-Result 'ROLLBACK_FAILED' $rows "cause=$why; created=$($created.Count)$swapNote"

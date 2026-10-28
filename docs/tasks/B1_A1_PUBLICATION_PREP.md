@@ -73,9 +73,29 @@ SourceLink URL(`https://raw.githubusercontent.com/<owner>/<repo>/<commit>/*`)이
      - 같은 명령에서 `--no-follow-tags`를 빼면 미승인 Tag도 함께 전송되었습니다.
      - 승인 Tag는 별도의 명시 Ref Push로만 전송되었습니다.
      - 같은 비교는 `tools/b1-ops/selftest.ps1`의 `a1.push_no_follow_tags` 사례로 반복됩니다.
-6. **게시 후 Ref 대조:** `git ls-remote <A-1 URL>`의 출력이 승인 목록과 **정확히 같아야** 합니다.
-   - Annotated Tag는 `refs/tags/<tag>`와 `refs/tags/<tag>^{}` 두 줄로 나타납니다.
-   - 목록에 없는 Ref가 있으면 게시 미완료로 보고 OWNER에 보고합니다. 원격 Ref를 임의로 삭제하지 않습니다.
+6. **게시 후 Ref 대조(A1-R02 2차 보완):** `tools/b1-ops/a1-refcheck.ps1`로 대조합니다.
+   - 명령: `a1-refcheck.ps1 -Remote <A-1 URL> -Expect "refs/heads/main=<승인 Commit SHA>|refs/tags/<승인 Tag>=<Tag 객체 SHA>" -Git <승인 git.exe>`
+   - 도구는 `git ls-remote --refs <A-1 URL>`만 읽습니다. `--refs`는 실제 Ref만 나열합니다.
+     - 새 저장소가 항상 광고하는 `HEAD`는 나오지 않습니다.
+     - Annotated Tag의 Peeled 줄(`refs/tags/<tag>^{}`)도 나오지 않습니다.
+     - 따라서 정상 최초 Push와 승인 Annotated Tag가 "목록 외 Ref"로 오판되지 않습니다.
+     - 이전 판(`fb1e338`)은 `--refs` 없는 출력을 승인 목록과 그대로 비교했습니다. 그래서 정상 게시도 `HEAD`·`^{}` 줄 때문에 실패로 판정되었습니다. 로컬 bare 재현 기록은 G5/A-1 2차 수정 보고서(`docs/reports/B1_G5_FIX2_REPORT.md`)에 둡니다.
+   - **기대값:** 로컬의 `git rev-parse <Ref>` 값, 즉 Ref 자신의 객체 ID입니다.
+     - `main`과 Lightweight Tag는 Commit SHA입니다.
+     - Annotated Tag는 **Tag 객체 SHA**입니다. Peeled Commit SHA를 쓰면 `MISMATCH`가 납니다.
+     - `-Expect`에는 `refs/heads/main`이 정확히 한 번 있어야 합니다. Tag는 **OWNER가 승인한 것만** 넣습니다.
+   - **판정:**
+     - `PASS`(종료 코드 0): 원격의 모든 `refs/heads/main`·`refs/tags/*`가 기대값과 같습니다.
+     - `FAIL`(종료 코드 1): 기대 밖 Ref(다른 Branch·미승인 Tag 등, `UNEXPECTED`), SHA 불일치(`MISMATCH`), 누락(`MISSING`) 중 하나라도 있습니다.
+     - `ERROR`(종료 코드 2): 조회 실패나 해석할 수 없는 출력입니다. **PASS로 취급하지 않습니다.**
+   - FAIL·ERROR이면 게시 미완료로 보고 OWNER에 보고합니다. 원격 Ref를 임의로 삭제하지 않습니다.
+   - **한계:** 서버가 숨기는 Ref(`uploadpack.hideRefs` 등)는 `ls-remote`에 나타나지 않으므로 이 대조로 확인할 수 없습니다.
+   - **[시험: 로컬 bare 저장소]** `selftest.ps1`의 `a1.r02_*` 12개 사례가 다음을 반복합니다.
+     - 정상 main+HEAD, 승인 Annotated·Lightweight Tag는 PASS입니다.
+     - 미승인 Tag, `push.followTags=true`에서 `--no-follow-tags` 없는 Push, SHA 불일치, 기대 밖 Branch, 기대 Tag 누락은 FAIL입니다.
+     - `push.followTags=true`라도 `--no-follow-tags`가 있으면 PASS입니다.
+     - 조회 오류는 ERROR입니다.
+     - Peeled 이름이나 `main` 없는 기대값은 사용 오류입니다.
 7. 기본 브랜치 보호(강제 Push·삭제 금지)와 Tag 보호를 설정합니다.
 8. 7절 원격 조회 검증을 실행합니다.
 
@@ -184,7 +204,7 @@ SourceLink URL(`https://raw.githubusercontent.com/<owner>/<repo>/<commit>/*`)이
 
 [B-4 규범 결정 자료](B1_B4_OWNER_NORMATIVE_DECISION_DRAFT.md) 1.3절을 그대로 씁니다. 비공개이므로 **읽기 전용 자격 증명**으로 수행하고, 자격 증명은 어떤 파일에도 남기지 않습니다.
 
-1. `git ls-remote <A-1 URL>`: 광고된 `refs/heads/main`(과 승인 Tag)이 승인 Commit이거나 그 자손인지 확인합니다.
+1. `git ls-remote --refs <A-1 URL>`(`HEAD`·Peeled 줄 제외, 2.2절 6단계): 광고된 `refs/heads/main`(과 승인 Tag)이 승인 Commit이거나 그 자손인지 확인합니다.
 2. 빈 저장소에서 `git fetch <A-1 URL> <승인 Commit>`: 객체 SHA가 일치하는지 확인합니다.
 3. 6절 빌드 PDB의 SourceLink가 A-1 raw URL + 승인 Commit인지 확인합니다.
 4. PDB에 기록된 문서마다 비교합니다. 비공개 저장소의 raw 조회는 인증이 필요합니다.

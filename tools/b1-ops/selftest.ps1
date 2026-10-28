@@ -147,7 +147,7 @@ try {
 
     $t7 = "$Root\acl7"; New-Tree $t7; $lay7 = "$Root\layout7.json"; Layout $t7 $lay7
     $r = Acl $t7 $lay7 "$Root\snap-g.json" 'swap-after-check:base\build'
-    Check 'acl.r01_swap_after_check_blocked_by_held_handle' ($r.Exit -eq 0 -and $r.Text -match 'swap: BLOCKED' -and -not (Test-Path "$t7\base\build.swapped") -and -not (Test-Reparse "$t7\base\build")) "exit=$($r.Exit)"
+    Check 'acl.r01_swap_after_check_blocked_by_held_handle' ($r.Exit -eq 0 -and $r.Text -match 'injected: BLOCKED' -and -not (Test-Path "$t7\base\build.swapped") -and -not (Test-Reparse "$t7\base\build")) "exit=$($r.Exit)"
 
     $lay8 = "$Root\layout8.json"
     Write-Json $lay8 ([ordered]@{ format = 'starplayer-g5-layout-v1'; owner_sid = 'S-1-5-32-544'; principals = [ordered]@{ producer = $me }; roots = @([ordered]@{ id = 'R-X'; path = "$Root\acl8\x"; apply = $true; writers = @(); readers = @() }) })
@@ -209,6 +209,65 @@ try {
             roots = @([ordered]@{ id = 'R-DEEP'; path = "$t15\newA\newB\root"; apply = $true; writers = @(); readers = @('verifier') }, [ordered]@{ id = 'R-OTHER'; path = "$t15\other"; apply = $true; writers = @(); readers = @() }) })
     $r = Acl $t15 $lay15 "$Root\snap-p.json" 'apply-fail:other|drop-file:newA\newB'
     Check 'acl.r03_created_paths_left_behind_are_residue' ($r.Exit -eq 3 -and $r.Text -match 'ROLLBACK_FAILED' -and $r.Text -match 'newB: created by Apply and left in place' -and $r.Text -match 'newA: created by Apply and left in place' -and -not (Test-Path "$t15\newA\newB\root") -and (Test-Path "$t15\other") -and (Test-Path $t15)) "exit=$($r.Exit)"
+
+    # ---------------- G5-FIX-01: a hard link never widens the change ----------------
+    function HlTree([string]$t) {                                       # R-BUILD (apply), R-ARCHIVE (not applied, protected, extra NS reader), R-WORK (missing)
+        foreach ($d in 'build\sub', 'archive', 'elsewhere') { [void][IO.Directory]::CreateDirectory("$t\$d") }
+        [IO.File]::WriteAllText("$t\build\a.dll", 'a'); [IO.File]::WriteAllText("$t\build\sub\b.json", 'b'); [IO.File]::WriteAllText("$t\archive\run.json", 'archive')
+        $acl = New-Object Security.AccessControl.DirectorySecurity
+        $acl.SetSecurityDescriptorSddlForm("D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;FA;;;$me)(A;OICI;0x1200a9;;;LS)(A;OICI;0x1200a9;;;NS)", 'Access')
+        Set-Dacl "$t\archive" $acl
+        Write-Json "$t.layout.json" ([ordered]@{ format = 'starplayer-g5-layout-v1'; owner_sid = 'S-1-5-32-544'; principals = [ordered]@{ verifier = 'S-1-5-19' }
+                roots = @([ordered]@{ id = 'R-BUILD'; path = "$t\build"; apply = $true; writers = @(); readers = @('verifier') },
+                    [ordered]@{ id = 'R-ARCHIVE'; path = "$t\archive"; apply = $false; writers = @(); readers = @('verifier') },
+                    [ordered]@{ id = 'R-WORK'; path = "$t\work"; apply = $true; writers = @('verifier'); readers = @() }) })
+    }
+    function Without($tree, [string]$name) { @($tree | Where-Object { $_ -notlike "*\$name|*" }) }
+    function HlRefused([string]$case, [string]$t, [string]$inject, [string]$why) {
+        $preB = Tree-Sddl "$t\build"; $preA = Tree-Sddl "$t\archive"; $preE = Tree-Sddl "$t\elsewhere"
+        $r = Acl $t "$t.layout.json" "$t.snap.json" $inject
+        Check $case ($r.Exit -eq 1 -and $r.Text -match 'RESULT=REFUSED' -and $r.Text -match $why -and -not (Test-Path "$t.snap.json") -and -not (Test-Path "$t\work") -and
+            (Same-Tree $preB (Tree-Sddl "$t\build")) -and (Same-Tree $preA (Tree-Sddl "$t\archive")) -and (Same-Tree $preE (Tree-Sddl "$t\elsewhere"))) "exit=$($r.Exit)"
+    }
+    $h1 = "$Root\hl1"; HlTree $h1; New-Item -ItemType HardLink -Path "$h1\build\linked.json" -Target "$h1\archive\run.json" | Out-Null
+    HlRefused 'acl.fix01_archive_file_linked_into_build_refused' $h1 '' 'linked\.json: 2 hard links'
+    $h2 = "$Root\hl2"; HlTree $h2; New-Item -ItemType HardLink -Path "$h2\elsewhere\copy.json" -Target "$h2\build\sub\b.json" | Out-Null
+    HlRefused 'acl.fix01_link_in_other_directory_refused' $h2 '' 'b\.json: 2 hard links'
+    $h3 = "$Root\hl3"; HlTree $h3; New-Item -ItemType HardLink -Path "$h3\build\sub\a-again.dll" -Target "$h3\build\a.dll" | Out-Null
+    HlRefused 'acl.fix01_two_links_in_same_root_refused' $h3 '' 'a\.dll: 2 hard links'
+    HlRefused 'acl.fix01_same_file_id_cross_check_refused' $h3 'links-misreported:build\a.dll|links-misreported:build\sub\a-again.dll' 'same file ID as'
+    $h4 = "$Root\hl4"; HlTree $h4
+    HlRefused 'acl.fix01_link_count_unreadable_refused' $h4 'link-query-fail:build\sub\b.json' 'could not be read'
+
+    $h5 = "$Root\hl5"; HlTree $h5
+    $preB = Tree-Sddl "$h5\build"; $preA = Tree-Sddl "$h5\archive"
+    $r = Acl $h5 "$h5.layout.json" "$h5.snap.json" 'add-link-after-check:archive\late.json=build\a.dll'
+    Check 'acl.fix01_link_added_after_check_refused_before_change' ($r.Exit -eq 1 -and $r.Text -match 'RESULT=REFUSED' -and $r.Text -match 'a\.dll: 2 hard links' -and $r.Text -match 'LINKED' -and
+        -not (Test-Path "$h5.snap.json") -and -not (Test-Path "$h5\work") -and (Same-Tree $preB (Tree-Sddl "$h5\build")) -and (Same-Tree $preA (Without (Tree-Sddl "$h5\archive") 'late.json'))) "exit=$($r.Exit)"
+
+    $h6 = "$Root\hl6"; HlTree $h6
+    $preB = Tree-Sddl "$h6\build"; $preA = Tree-Sddl "$h6\archive"; $preRun = Sddl "$h6\archive\run.json"
+    $r = Acl $h6 "$h6.layout.json" "$h6.snap.json" 'add-link-after-check:build\late.json=archive\run.json'
+    Check 'acl.fix01_link_into_apply_root_after_check_never_written' ($r.Exit -eq 1 -and $r.Text -match 'RESULT=ROLLED_BACK' -and $r.Text -match 'late\.json: 2 hard links' -and
+        (Sddl "$h6\archive\run.json") -eq $preRun -and (Same-Tree $preA (Tree-Sddl "$h6\archive")) -and (Same-Tree $preB (Without (Tree-Sddl "$h6\build") 'late.json')) -and -not (Test-Path "$h6\work")) "exit=$($r.Exit)"
+
+    $h7 = "$Root\hl7"; HlTree $h7
+    $preB = Tree-Sddl "$h7\build"; $preA = Tree-Sddl "$h7\archive"; $preDll = Sddl "$h7\build\a.dll"
+    $r = Acl $h7 "$h7.layout.json" "$h7.snap.json" 'add-link-after-change:archive\late2.json=build\a.dll'
+    Check 'acl.fix01_link_added_after_change_rolled_back_through_handle' ($r.Exit -eq 1 -and $r.Text -match 'RESULT=ROLLED_BACK' -and $r.Text -match 'a\.dll: 2 hard links' -and
+        (Same-Tree $preB (Tree-Sddl "$h7\build")) -and (Sddl "$h7\archive\late2.json") -eq $preDll -and (Same-Tree $preA (Without (Tree-Sddl "$h7\archive") 'late2.json')) -and -not (Test-Path "$h7\work")) "exit=$($r.Exit)"
+
+    $h8 = "$Root\hl8"; HlTree $h8
+    $preA = Tree-Sddl "$h8\archive"
+    $r = Acl $h8 "$h8.layout.json" "$h8.snap.json" ''
+    Check 'acl.fix01_single_link_apply_pass' ($r.Exit -eq 0 -and $r.Text -match 'RESULT=PASS' -and (Same-Tree $preA (Tree-Sddl "$h8\archive")) -and (Test-Path "$h8\work")) "exit=$($r.Exit)"
+    [void][IO.Directory]::CreateDirectory("$h8\build\os-dir"); [IO.File]::WriteAllText("$h8\build\sub\os-file.txt", 'os')
+    Check 'acl.fix01_exact_descriptors_equal_windows_inheritance' ((Sddl "$h8\build\os-dir") -eq (Sddl "$h8\build\sub") -and (Sddl "$h8\build\sub\os-file.txt") -eq (Sddl "$h8\build\sub\b.json") -and (Sddl "$h8\build\a.dll") -eq (Sddl "$h8\build\sub\b.json")) (Sddl "$h8\build\sub\b.json")
+    $r = Run 'g5-acl.ps1' @('-Mode', 'Restore', '-Snapshot', "$h8.snap.json", '-DiagnosticRoot', $h8)
+    $restoredOk = $r.Exit -eq 0
+    Remove-Item -LiteralPath "$h8\build\a.dll"; [IO.File]::WriteAllText("$h8\build\a.dll", 'replaced')
+    $r = Run 'g5-acl.ps1' @('-Mode', 'Restore', '-Snapshot', "$h8.snap.json", '-DiagnosticRoot', $h8)
+    Check 'acl.fix01_restore_refuses_a_replaced_object' ($restoredOk -and $r.Exit -eq 3 -and $r.Text -match "a\.dll: not restored: file ID .* is not the snapshot's object") "restore_exit=$($r.Exit)"
 
     # ---------------- g5-probe ----------------
     $p = "$Root\probe"; foreach ($x in 'deny', 'open', 'work') { [void][IO.Directory]::CreateDirectory("$p\$x"); [IO.File]::WriteAllText("$p\$x\f.trx", 'x') }
@@ -277,6 +336,104 @@ try {
     Check 'pins.r05_fast_reuse_sub_second_is_another_instance' (@($un | Where-Object { $_ -like '301@1620 *another instance*' }).Count -eq 1 -and @($un | Where-Object { $_ -like '700@2000 *another instance*' }).Count -eq 1) ''
     Check 'pins.r05_unobserved_parent_not_attributed' (-not (@($ad + $un) -match '^.*500@1200')) ''
 
+    # G5-R05: module reading bound to one process handle, driven through a scripted IProcessApi (deterministic races, no real pid reuse)
+    $fakeCs = @'
+using System; using System.Collections.Generic;
+public sealed class FakeProc { public long Ticks; public string[] Mods; public bool Alive = true; }
+public sealed class FakeProcessApi : B1Ops.IProcessApi
+{
+    public Dictionary<int, FakeProc> Pids = new Dictionary<int, FakeProc>();
+    private readonly Dictionary<IntPtr, FakeProc> handles = new Dictionary<IntPtr, FakeProc>();
+    private int next = 100;
+    public int Opens, Closes, OpenError;
+    public string Event = "";          // exit-after-time | reuse-before-modules | exit-during-modules | partial | fail-modules
+    public FakeProc Reuser;            // takes the pid over when the instance exits
+    private void Exit(int pid) { foreach (var kv in Pids) if (kv.Key == pid) kv.Value.Alive = false; if (Reuser != null) Pids[pid] = Reuser; }
+    public IntPtr Open(int pid, out int e)
+    {
+        Opens++; e = 0;
+        if (OpenError != 0) { e = OpenError; return IntPtr.Zero; }
+        FakeProc p; if (!Pids.TryGetValue(pid, out p) || !p.Alive) { e = 87; return IntPtr.Zero; }
+        IntPtr h = new IntPtr(next++); handles[h] = p; return h;
+    }
+    public long CreationTicks(IntPtr h)
+    {
+        long t = handles[h].Ticks;
+        if (Event == "exit-after-time") { foreach (var kv in new List<KeyValuePair<int, FakeProc>>(Pids)) if (kv.Value == handles[h]) Exit(kv.Key); Event = ""; }
+        return t;
+    }
+    public bool IsRunning(IntPtr h)
+    {
+        bool alive = handles[h].Alive;      // reuse-before-modules: the instance exits and its pid is reused right after this check passed
+        if (alive && Event == "reuse-before-modules") { foreach (var kv in new List<KeyValuePair<int, FakeProc>>(Pids)) if (kv.Value == handles[h]) Exit(kv.Key); Event = ""; }
+        return alive;
+    }
+    public string[] Modules(IntPtr h, out bool complete, out string error)
+    {
+        FakeProc p = handles[h]; complete = false; error = null;
+        if (!p.Alive || Event == "fail-modules") { error = "EnumProcessModulesEx failed (299)"; return null; }
+        if (Event == "partial") { error = "GetModuleFileNameExW failed for module 1 of 2"; return new string[] { p.Mods[0], null }; }
+        if (Event == "exit-during-modules") { foreach (var kv in new List<KeyValuePair<int, FakeProc>>(Pids)) if (kv.Value == p) Exit(kv.Key); }
+        complete = true; return p.Mods;
+    }
+    public void Close(IntPtr h) { Closes++; handles.Remove(h); }
+}
+public static class PreFixPatternModel
+{
+    // The call pattern of g5-pins before the fix: GetProcessById + StartTime and .Modules each resolve the pid on their own.
+    public static string[] Read(B1Ops.IProcessApi api, int pid, long expected)
+    {
+        int e; IntPtr h = api.Open(pid, out e); if (h == IntPtr.Zero) return null;
+        long t = api.CreationTicks(h); api.Close(h);
+        if (B1Ops.ModuleReader.Micro(t) != expected) return null;
+        h = api.Open(pid, out e); if (h == IntPtr.Zero) return null;
+        bool c; string err; string[] m = api.Modules(h, out c, out err); api.Close(h); return m;
+    }
+}
+'@
+    [IO.File]::WriteAllText("$Root\FakeProcessApi.cs", $fakeCs, $utf8)
+    $runner = @'
+param([string]$Native, [string]$Fake)
+$ErrorActionPreference = 'Stop'
+Add-Type -Path $Native, $Fake
+function Api([string]$event, [int]$openError = 0) {
+    $a = New-Object FakeProcessApi; $a.Event = $event; $a.OpenError = $openError
+    $a.Pids[42] = New-Object FakeProc -Property @{ Ticks = 1000; Mods = [string[]]@('C:\app\child.exe', 'C:\app\real.dll') }
+    $a.Reuser = New-Object FakeProc -Property @{ Ticks = 2000; Mods = [string[]]@('C:\evil\other.exe', 'C:\evil\evil.dll') }
+    $a
+}
+$out = [ordered]@{}
+foreach ($c in @(@('normal', ''), @('reuse_before_modules', 'reuse-before-modules'), @('exit_before_modules', 'exit-after-time'), @('exit_during_modules', 'exit-during-modules'),
+        @('partial', 'partial'), @('fail_modules', 'fail-modules'))) {
+    $a = Api $c[1]; $r = [B1Ops.ModuleReader]::Read($a, 42, 1000)
+    $out[$c[0]] = [ordered]@{ status = $r.Status; modules = @($r.Modules); opens = $a.Opens; closes = $a.Closes; handle_ticks = $r.HandleTicks; identity = $r.Identity }
+}
+$a = Api '' 5; $r = [B1Ops.ModuleReader]::Read($a, 42, 1000); $out['open_denied'] = [ordered]@{ status = $r.Status; modules = @($r.Modules); opens = $a.Opens; closes = $a.Closes }
+$a = Api ''; $a.Pids.Remove(42) | Out-Null; $r = [B1Ops.ModuleReader]::Read($a, 42, 1000); $out['gone'] = [ordered]@{ status = $r.Status; opens = $a.Opens; closes = $a.Closes }
+$a = Api ''; $a.Pids[42] = $a.Reuser; $r = [B1Ops.ModuleReader]::Read($a, 42, 1000); $out['other_instance'] = [ordered]@{ status = $r.Status; modules = @($r.Modules); closes = $a.Closes }
+$a = Api 'exit-after-time'; $out['prefix_model_reuse'] = [ordered]@{ modules = @([PreFixPatternModel]::Read($a, 42, 1000)); opens = $a.Opens }
+$out | ConvertTo-Json -Depth 4
+'@
+    [IO.File]::WriteAllText("$Root\r05-runner.ps1", $runner, $utf8)
+    $ErrorActionPreference = 'Continue'
+    $fj = (& powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$Root\r05-runner.ps1" -Native (Join-Path $here 'B1OpsNative.cs') -Fake "$Root\FakeProcessApi.cs" 2>&1 | ForEach-Object { "$_" }) -join "`n"
+    $ErrorActionPreference = 'Stop'
+    $f = $fj | ConvertFrom-Json
+    function NoMods($x) { @($x.modules | Where-Object { $_ }).Count -eq 0 }
+    Check 'pins.r05_normal_read_one_handle' ($f.normal.status -eq 'OK' -and (@($f.normal.modules) -join ',') -eq 'C:\app\child.exe,C:\app\real.dll' -and $f.normal.opens -eq 1 -and $f.normal.closes -eq 1 -and $f.normal.handle_ticks -eq 1000) "$($f.normal.status) opens=$($f.normal.opens)"
+    Check 'pins.r05_pid_reused_after_time_check_never_reads_other_instance' ($f.reuse_before_modules.status -eq 'READ_FAILED' -and (NoMods $f.reuse_before_modules) -and $f.reuse_before_modules.opens -eq 1 -and $f.reuse_before_modules.closes -eq 1) "$($f.reuse_before_modules.status)"
+    Check 'pins.r05_prefix_call_pattern_model_reads_other_instance' ((@($f.prefix_model_reuse.modules) -join ',') -eq 'C:\evil\other.exe,C:\evil\evil.dll' -and $f.prefix_model_reuse.opens -eq 2) 'model of the pre-fix pattern (separate opens)'
+    Check 'pins.r05_exit_before_read_no_modules' ($f.exit_before_modules.status -eq 'EXITED_BEFORE_READ' -and (NoMods $f.exit_before_modules) -and $f.exit_before_modules.closes -eq 1) "$($f.exit_before_modules.status)"
+    Check 'pins.r05_exit_during_read_list_discarded' ($f.exit_during_modules.status -eq 'EXITED_DURING_READ' -and (NoMods $f.exit_during_modules) -and $f.exit_during_modules.closes -eq 1) "$($f.exit_during_modules.status)"
+    Check 'pins.r05_open_failure_no_handle_no_modules' ($f.open_denied.status -eq 'OPEN_FAILED' -and (NoMods $f.open_denied) -and $f.open_denied.opens -eq 1 -and $f.open_denied.closes -eq 0 -and $f.gone.status -eq 'NOT_RUNNING') "$($f.open_denied.status)/$($f.gone.status)"
+    Check 'pins.r05_partial_or_failed_list_not_used' ($f.partial.status -eq 'INCOMPLETE' -and (NoMods $f.partial) -and $f.fail_modules.status -eq 'READ_FAILED' -and (NoMods $f.fail_modules) -and $f.partial.closes -eq 1 -and $f.fail_modules.closes -eq 1) "$($f.partial.status)/$($f.fail_modules.status)"
+    Check 'pins.r05_other_instance_no_modules' ($f.other_instance.status -eq 'OTHER_INSTANCE' -and (NoMods $f.other_instance) -and $f.other_instance.closes -eq 1) "$($f.other_instance.status)"
+    $r = Run 'g5-pins.ps1' @('-Mode', 'Trace', '-FilePath', "$env:windir\System32\cmd.exe", '-ArgumentList', "/c $env:windir\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -Command Start-Sleep -Seconds 2", '-Out', "$n\trace-child.tsv")
+    $rows = @(Get-Content -LiteralPath "$n\trace-child.tsv.processes.tsv" | Select-Object -Skip 1 | ForEach-Object { , ($_ -split "`t") })
+    $child = @($rows | Where-Object { $_[0] -eq 'ADOPTED' -and $_[11] -like '*powershell.exe' })
+    Check 'pins.r05_real_child_adopted_and_read_through_handle' ($r.Exit -eq 0 -and $child.Count -ge 1 -and [int]$child[0][7] -ge 1 -and $child[0][9] -match '(^|;)OK=\d+' -and
+        @(Get-Content -LiteralPath "$n\trace-child.tsv" | Where-Object { $_ -match "^IMAGE_LOADED`t.*\\System\.Management\.Automation\.ni\.dll`t|^IMAGE_LOADED`t.*\\System\.Management\.Automation\.dll`t" }).Count -ge 1) $(if ($child.Count) { ($child[0][0..9] -join ' | ') } else { "rows=$($rows.Count) exit=$($r.Exit)" })
+
     # ---------------- a1-scan ----------------
     $g = "$Root\repo"; [void][IO.Directory]::CreateDirectory($g)
     Git -C $g init -q; Git -C $g config user.name selftest; Git -C $g config user.email selftest@example.invalid
@@ -321,6 +478,54 @@ try {
     Git -C $g4 -c push.followTags=true push --porcelain "$Root\unsafe.git" "$($sha):refs/heads/main"
     $safe = @(& git.exe ls-remote "$Root\safe.git"); $unsafe = @(& git.exe ls-remote "$Root\unsafe.git")
     Check 'a1.push_no_follow_tags' ($safe.Count -eq 1 -and $safe[0] -match 'refs/heads/main$' -and @($unsafe | Where-Object { $_ -match 'refs/tags/not-approved' }).Count -ge 1) "safe=$($safe.Count) unsafe=$($unsafe.Count)"
+
+    # A1-R02: post-publication ref check with ls-remote --refs (HEAD and peeled rows are not refs), one fresh bare remote per case
+    Git -C $g4 tag -a v-approved -m 'annotated, approved'; Git -C $g4 tag lw-approved
+    $tagA = (& git.exe -C $g4 rev-parse refs/tags/v-approved).Trim(); $tagL = (& git.exe -C $g4 rev-parse refs/tags/lw-approved).Trim()
+    [IO.File]::WriteAllText("$g4\a.txt", "b`n"); Git -C $g4 add a.txt; Git -C $g4 commit -q -m two
+    $sha2 = (& git.exe -C $g4 rev-parse HEAD).Trim()
+    function Remote([string]$name, [string[]]$refspecs, [bool]$follow) {
+        $b = "$Root\refs-$name.git"; Git init -q --bare --initial-branch=main $b
+        $a = @('-C', $g4, '-c', 'push.followTags=true', 'push', '--porcelain'); if (-not $follow) { $a += '--no-follow-tags' }
+        Git @($a + @($b) + $refspecs)
+        $b
+    }
+    function RefCheck([string]$remote, [string[]]$expect) { Run 'a1-refcheck.ps1' @('-Remote', $remote, '-Expect', ($expect -join '|')) }
+    $main = "refs/heads/main=$sha"
+    $b1 = Remote 'main' @("$($sha):refs/heads/main") $false
+    $plain = @(& git.exe ls-remote $b1)
+    $r = RefCheck $b1 @($main)
+    Check 'a1.r02_first_push_main_with_head_passes' ($r.Exit -eq 0 -and $r.Text -match 'RESULT=PASS remote_refs=1' -and @($plain | Where-Object { $_ -match "`tHEAD$" }).Count -eq 1) "exit=$($r.Exit) plain_rows=$($plain.Count)"
+    $b2 = Remote 'annotated' @("$($sha):refs/heads/main", 'refs/tags/v-approved:refs/tags/v-approved') $false
+    $plain = @(& git.exe ls-remote $b2)
+    $r = RefCheck $b2 @($main, "refs/tags/v-approved=$tagA")
+    Check 'a1.r02_approved_annotated_tag_passes' ($r.Exit -eq 0 -and $r.Text -match 'RESULT=PASS remote_refs=2' -and @($plain | Where-Object { $_ -match '\^\{\}$' }).Count -eq 1) "exit=$($r.Exit) plain_rows=$($plain.Count)"
+    $r = RefCheck $b2 @($main, "refs/tags/v-approved=$sha")
+    Check 'a1.r02_annotated_tag_expects_tag_object_not_peeled_commit' ($r.Exit -eq 1 -and $r.Text -match 'MISMATCH refs/tags/v-approved') "exit=$($r.Exit)"
+    $b3 = Remote 'lightweight' @("$($sha):refs/heads/main", 'refs/tags/lw-approved:refs/tags/lw-approved') $false
+    $r = RefCheck $b3 @($main, "refs/tags/lw-approved=$tagL")
+    Check 'a1.r02_approved_lightweight_tag_passes' ($r.Exit -eq 0 -and $tagL -eq $sha) "exit=$($r.Exit)"
+    $b4 = Remote 'unapproved' @("$($sha):refs/heads/main", 'refs/tags/v-approved:refs/tags/v-approved', 'refs/tags/not-approved:refs/tags/not-approved') $false
+    $r = RefCheck $b4 @($main, "refs/tags/v-approved=$tagA")
+    Check 'a1.r02_unapproved_tag_fails' ($r.Exit -eq 1 -and $r.Text -match 'UNEXPECTED refs/tags/not-approved') "exit=$($r.Exit)"
+    $b5 = Remote 'follow' @("$($sha):refs/heads/main") $true
+    $r = RefCheck $b5 @($main)
+    Check 'a1.r02_follow_tags_without_flag_fails' ($r.Exit -eq 1 -and $r.Text -match 'UNEXPECTED refs/tags/') "exit=$($r.Exit)"
+    $b6 = Remote 'nofollow' @("$($sha):refs/heads/main") $false
+    $r = RefCheck $b6 @($main)
+    Check 'a1.r02_follow_tags_config_with_no_follow_tags_passes' ($r.Exit -eq 0) "exit=$($r.Exit)"
+    $b7 = Remote 'mismatch' @("$($sha2):refs/heads/main") $false
+    $r = RefCheck $b7 @($main)
+    Check 'a1.r02_main_sha_mismatch_fails' ($r.Exit -eq 1 -and $r.Text -match 'MISMATCH refs/heads/main') "exit=$($r.Exit)"
+    $b8 = Remote 'branch' @("$($sha):refs/heads/main", "$($sha):refs/heads/feature") $false
+    $r = RefCheck $b8 @($main)
+    Check 'a1.r02_unexpected_branch_fails' ($r.Exit -eq 1 -and $r.Text -match 'UNEXPECTED refs/heads/feature') "exit=$($r.Exit)"
+    $r = RefCheck $b6 @($main, "refs/tags/v-approved=$tagA")
+    Check 'a1.r02_missing_expected_tag_fails' ($r.Exit -eq 1 -and $r.Text -match 'MISSING refs/tags/v-approved') "exit=$($r.Exit)"
+    $r = RefCheck "$Root\no-such-remote.git" @($main)
+    Check 'a1.r02_query_error_is_not_pass' ($r.Exit -eq 2 -and $r.Text -match 'RESULT=ERROR') "exit=$($r.Exit)"
+    $r1 = RefCheck $b2 @("refs/tags/v-approved=$tagA"); $r2 = RefCheck $b2 @($main, "refs/tags/v-approved^{}=$sha")
+    Check 'a1.r02_expectation_must_name_main_and_real_refs' ($r1.Exit -eq 2 -and $r2.Exit -eq 2) "exit=$($r1.Exit)/$($r2.Exit)"
 
     # ---------------- b4-candidates ----------------
     $b = "$Root\build"

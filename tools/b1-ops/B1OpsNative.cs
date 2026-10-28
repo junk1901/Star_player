@@ -1,6 +1,7 @@
-// Handle-bound file-system helpers for tools/b1-ops (loaded with Add-Type -Path by g5-acl.ps1 and b4-candidates.ps1).
-// Every open uses FILE_FLAG_OPEN_REPARSE_POINT (a reparse point is opened, never followed) and never shares FILE_SHARE_DELETE, so while a
-// handle is held its object cannot be renamed, deleted or replaced; checks and changes go through the same handle (no path re-resolution).
+// Handle-bound helpers for tools/b1-ops (loaded with Add-Type -Path by g5-acl.ps1, b4-candidates.ps1 and g5-pins.ps1).
+// Every file open uses FILE_FLAG_OPEN_REPARSE_POINT (a reparse point is opened, never followed) and never shares FILE_SHARE_DELETE, so while
+// a handle is held its object cannot be renamed, deleted or replaced; checks and changes go through the same handle (no path re-resolution).
+// ModuleReader does the same for processes: identity check and module list through one process handle.
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -48,8 +49,12 @@ namespace B1Ops
         private static extern bool GetSecurityDescriptorOwner(IntPtr sd, out IntPtr owner, out bool defaulted);
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool GetSecurityDescriptorControl(IntPtr sd, out ushort control, out uint revision);
-        [DllImport("advapi32.dll")]
-        private static extern uint SetSecurityInfo(SafeFileHandle h, int type, uint info, IntPtr owner, IntPtr group, IntPtr dacl, IntPtr sacl);
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern bool SetSecurityDescriptorControl(IntPtr sd, ushort mask, ushort bits);
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern bool SetKernelObjectSecurity(SafeFileHandle h, uint info, IntPtr sd);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern bool GetVolumeInformationByHandleW(SafeFileHandle h, char[] name, uint nameSize, out uint serial, out uint maxComponent, out uint flags, [Out] char[] fsName, uint fsNameSize);
         [DllImport("advapi32.dll")]
         private static extern uint GetSecurityInfo(SafeFileHandle h, int type, uint info, out IntPtr owner, out IntPtr group, out IntPtr dacl, out IntPtr sacl, out IntPtr sd);
         [DllImport("kernel32.dll")]
@@ -120,30 +125,37 @@ namespace B1Ops
         }
 
         /// <summary>
-        /// Sets the owner and/or DACL of the object behind the handle from SDDL. The DACL is written protected when the SDDL says so (D:P...),
-        /// otherwise unprotected, in which case Windows recomputes the inherited ACEs from the parent. Windows propagates inheritable ACEs to
-        /// existing children; a protected child is not changed.
+        /// Writes the DACL (and the owner when asked) of the SDDL to the object behind the handle exactly as given (SetKernelObjectSecurity):
+        /// no inherited ACE is recomputed from a parent and nothing is propagated to children, so only this one, already checked object
+        /// changes (G5-FIX-01: SetSecurityInfo walks the children by name and would reach an object that has another link elsewhere).
+        /// The caller supplies inherited ACEs itself (ID flag) and the protected / auto-inherited flags come from the SDDL.
         /// </summary>
-        public static void SetSddl(SafeFileHandle h, string sddl, bool owner, bool dacl)
+        public static void SetSddlExact(SafeFileHandle h, string sddl, bool owner)
         {
             IntPtr sd; uint len;
             if (!ConvertStringSecurityDescriptorToSecurityDescriptorW(sddl, 1, out sd, out len)) throw new Win32Exception(Marshal.GetLastWin32Error());
             try
             {
-                IntPtr o = IntPtr.Zero, d = IntPtr.Zero; bool present, defaulted; ushort control; uint rev;
-                uint info = 0;
-                if (owner) { GetSecurityDescriptorOwner(sd, out o, out defaulted); if (o == IntPtr.Zero) throw new ArgumentException("SDDL has no owner"); info |= 0x1; }
-                if (dacl)
-                {
-                    GetSecurityDescriptorDacl(sd, out present, out d, out defaulted);
-                    if (!present || d == IntPtr.Zero) throw new ArgumentException("SDDL has no DACL");
-                    GetSecurityDescriptorControl(sd, out control, out rev);
-                    info |= 0x4 | ((control & 0x1000) != 0 ? 0x80000000u : 0x20000000u);
-                }
-                uint rc = SetSecurityInfo(h, 1, info, o, IntPtr.Zero, d, IntPtr.Zero);
-                if (rc != 0) throw new Win32Exception((int)rc);
+                IntPtr o, d; bool present, defaulted; ushort control; uint rev;
+                if (owner) { GetSecurityDescriptorOwner(sd, out o, out defaulted); if (o == IntPtr.Zero) throw new ArgumentException("SDDL has no owner"); }
+                GetSecurityDescriptorDacl(sd, out present, out d, out defaulted);
+                if (!present || d == IntPtr.Zero) throw new ArgumentException("SDDL has no DACL");
+                GetSecurityDescriptorControl(sd, out control, out rev);
+                // SE_DACL_AUTO_INHERITED is only kept by the object manager when SE_DACL_AUTO_INHERIT_REQ accompanies it
+                ushort ai = (ushort)((control & 0x0400) != 0 ? 0x0500 : 0);
+                if (!SetSecurityDescriptorControl(sd, 0x0500, ai)) throw new Win32Exception(Marshal.GetLastWin32Error());
+                uint info = (owner ? 0x1u : 0u) | 0x4 | ((control & 0x1000) != 0 ? 0x80000000u : 0x20000000u);
+                if (!SetKernelObjectSecurity(h, info, sd)) throw new Win32Exception(Marshal.GetLastWin32Error());
             }
             finally { LocalFree(sd); }
+        }
+
+        /// <summary>File system name of the volume behind the handle (e.g. NTFS).</summary>
+        public static string FileSystem(SafeFileHandle h)
+        {
+            char[] fs = new char[261]; uint serial, maxLen, flags;
+            if (!GetVolumeInformationByHandleW(h, null, 0, out serial, out maxLen, out flags, fs, (uint)fs.Length)) throw new Win32Exception(Marshal.GetLastWin32Error());
+            return new string(fs).TrimEnd('\0');
         }
 
         /// <summary>Creates one directory that is born with the given security descriptor. False if the name already existed (nothing created).</summary>
@@ -191,5 +203,127 @@ namespace B1Ops
                 return BitConverter.ToString(sha.Hash).Replace("-", "").ToLowerInvariant();
             }
         }
+    }
+
+    /// <summary>The process calls ModuleReader needs; Win32ProcessApi is the real one, the self-test supplies a scripted stand-in.</summary>
+    public interface IProcessApi
+    {
+        /// <summary>A process handle for the pid, or IntPtr.Zero (error in lastError).</summary>
+        IntPtr Open(int pid, out int lastError);
+        /// <summary>Creation time read from the handle as UTC ticks, or -1.</summary>
+        long CreationTicks(IntPtr h);
+        /// <summary>True while the process behind the handle has not exited.</summary>
+        bool IsRunning(IntPtr h);
+        /// <summary>Module file names read through the handle; null on failure, complete=false when the list may be partial.</summary>
+        string[] Modules(IntPtr h, out bool complete, out string error);
+        void Close(IntPtr h);
+    }
+
+    public sealed class ModuleRead
+    {
+        public string Status;           // OK | NOT_RUNNING | OPEN_FAILED | TIME_UNREADABLE | OTHER_INSTANCE | EXITED_BEFORE_READ | READ_FAILED | INCOMPLETE | EXITED_DURING_READ
+        public int Pid; public long ExpectedTicks; public long HandleTicks = -1; public string Reason = ""; public string[] Modules = new string[0];
+        public string Identity { get { return "pid " + Pid + " + creation time read from the same process handle the modules were read through"; } }
+    }
+
+    /// <summary>
+    /// G5-R05: one OpenProcess per read. The creation time is checked and the modules are listed through that one handle, so the pid is
+    /// never resolved a second time (an open handle also keeps the process object, and so its pid, from being reused). Modules count only
+    /// when the handle's creation time equals the expected instance, the list is complete and the process is still running afterwards;
+    /// otherwise the read is a failure or a different instance and no module is returned. The handle is always closed.
+    /// </summary>
+    public static class ModuleReader
+    {
+        public static long Micro(long ticks) { return ticks - (ticks % 10); }
+
+        public static ModuleRead Read(IProcessApi api, int pid, long expectedTicks)
+        {
+            ModuleRead r = new ModuleRead { Pid = pid, ExpectedTicks = expectedTicks };
+            int err;
+            IntPtr h = api.Open(pid, out err);
+            if (h == IntPtr.Zero)
+            {
+                r.Status = err == 87 ? "NOT_RUNNING" : "OPEN_FAILED";             // ERROR_INVALID_PARAMETER: no process has this pid any more
+                r.Reason = "OpenProcess failed (" + err + ")"; return r;
+            }
+            try
+            {
+                long t = api.CreationTicks(h);
+                if (t < 0) { r.Status = "TIME_UNREADABLE"; r.Reason = "creation time unreadable from the handle"; return r; }
+                r.HandleTicks = Micro(t);
+                if (r.HandleTicks != expectedTicks) { r.Status = "OTHER_INSTANCE"; r.Reason = "the pid belongs to another process instance"; return r; }
+                if (!api.IsRunning(h)) { r.Status = "EXITED_BEFORE_READ"; r.Reason = "the instance exited before its modules were read"; return r; }
+                bool complete; string error;
+                string[] mods = api.Modules(h, out complete, out error);
+                if (mods == null) { r.Status = "READ_FAILED"; r.Reason = error ?? "module list unreadable"; return r; }
+                if (!complete) { r.Status = "INCOMPLETE"; r.Reason = error ?? "module list partial"; return r; }
+                if (!api.IsRunning(h)) { r.Status = "EXITED_DURING_READ"; r.Reason = "the instance exited while its modules were read; the list is not used"; return r; }
+                if (Micro(api.CreationTicks(h)) != expectedTicks) { r.Status = "READ_FAILED"; r.Reason = "creation time changed on the same handle"; return r; }
+                r.Status = "OK"; r.Modules = mods;
+                return r;
+            }
+            finally { api.Close(h); }
+        }
+    }
+
+    public sealed class Win32ProcessApi : IProcessApi
+    {
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr OpenProcess(uint access, bool inherit, int pid);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool GetProcessTimes(IntPtr h, out long creation, out long exit, out long kernel, out long user);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern uint WaitForSingleObject(IntPtr h, uint ms);
+        [DllImport("psapi.dll", SetLastError = true)]
+        private static extern bool EnumProcessModulesEx(IntPtr h, [Out] IntPtr[] modules, uint size, out uint needed, uint filter);
+        [DllImport("psapi.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern uint GetModuleFileNameExW(IntPtr h, IntPtr module, [Out] char[] name, uint size);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool CloseHandle(IntPtr h);
+
+        public IntPtr Open(int pid, out int lastError)
+        {
+            IntPtr h = OpenProcess(0x0400 | 0x0010 | 0x00100000, false, pid);    // QUERY_INFORMATION | VM_READ | SYNCHRONIZE
+            lastError = h == IntPtr.Zero ? Marshal.GetLastWin32Error() : 0;
+            return h;
+        }
+
+        public long CreationTicks(IntPtr h)
+        {
+            long c, e, k, u;
+            return GetProcessTimes(h, out c, out e, out k, out u) ? DateTime.FromFileTimeUtc(c).Ticks : -1;
+        }
+
+        public bool IsRunning(IntPtr h) { return WaitForSingleObject(h, 0) == 0x102; }    // WAIT_TIMEOUT
+
+        public string[] Modules(IntPtr h, out bool complete, out string error)
+        {
+            complete = false; error = null;
+            IntPtr[] buf = new IntPtr[256];
+            for (int attempt = 0; attempt < 5; attempt++)
+            {
+                uint needed;
+                if (!EnumProcessModulesEx(h, buf, (uint)(buf.Length * IntPtr.Size), out needed, 0x03))    // LIST_MODULES_ALL
+                {
+                    error = "EnumProcessModulesEx failed (" + Marshal.GetLastWin32Error() + ")"; return null;
+                }
+                int count = (int)(needed / IntPtr.Size);
+                if (count > buf.Length) { buf = new IntPtr[count + 64]; continue; }             // the list grew: read it again, whole
+                string[] names = new string[count];
+                char[] name = new char[32768];
+                for (int i = 0; i < count; i++)
+                {
+                    uint n = GetModuleFileNameExW(h, buf[i], name, (uint)name.Length);
+                    if (n == 0) { error = "GetModuleFileNameExW failed (" + Marshal.GetLastWin32Error() + ") for module " + i + " of " + count; return names; }
+                    names[i] = new string(name, 0, (int)n);
+                }
+                complete = true;
+                return names;
+            }
+            error = "the module list kept growing";
+            return null;
+        }
+
+        public void Close(IntPtr h) { CloseHandle(h); }
     }
 }

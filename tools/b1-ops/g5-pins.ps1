@@ -16,8 +16,13 @@
               to another instance), it is UNVERIFIED_PARENT: listed, never attributed, its modules never read;
             * a process whose parent pid never belonged to the tree is ignored (a descendant of an unobserved short-lived
               intermediate is therefore missed, never wrongly included).
-          Modules are read only from a live instance whose start time equals the recorded one; a failed read is counted per
-          instance (module_reads_failed), never silently skipped. Outputs: <out> (path, state, first_ms, instances, images),
+          Modules are read through ONE process handle (B1OpsNative ModuleReader, G5-R05): OpenProcess once, the creation time
+          read from that handle must equal the instance's, the list comes from EnumProcessModulesEx / GetModuleFileNameExW on
+          the same handle, the process must still be running afterwards, and the handle is closed. The pid is never resolved a
+          second time (an open handle also keeps the pid from being reused). A different instance, an exit before or during the
+          read, a failed open or a failed / partial list yields no module; every read status is counted per instance
+          (module_read_statuses; module_reads_failed counts OPEN_FAILED, TIME_UNREADABLE, READ_FAILED and INCOMPLETE).
+          Outputs: <out> (path, state, first_ms, instances, images),
           <out>.processes.tsv (status, pid, created_utc, ppid, parent_created_utc, ...) and <out>.raw.tsv (every snapshot row
           whose pid or parent pid belonged to the tree), which -Mode Adopt replays offline.
           It is a non-elevated, sampling diagnostic: a module loaded and unloaded between two samples, a short-lived child, a file
@@ -141,6 +146,8 @@ if ($Mode -eq 'Trace') {
     $start = @{ FilePath = $FilePath; PassThru = $true; NoNewWindow = $true; RedirectStandardOutput = "$Out.stdout.txt"; RedirectStandardError = "$Out.stderr.txt" }
     if ($ArgumentList) { $start.ArgumentList = $ArgumentList }
     if ($WorkingDirectory) { $start.WorkingDirectory = $WorkingDirectory }
+    if (-not ('B1Ops.ModuleReader' -as [type])) { Add-Type -Path (Join-Path $PSScriptRoot 'B1OpsNative.cs') }
+    $api = New-Object B1Ops.Win32ProcessApi
     $clock = [Diagnostics.Stopwatch]::StartNew()
     $root = Start-Process @start
     $null = $root.Handle                                                        # keeps the handle so ExitCode and StartTime survive the exit
@@ -161,19 +168,16 @@ if ($Mode -eq 'Trace') {
         $exited = $root.HasExited
         foreach ($t in @($state.Tree.Values)) {                                 # modules of live tree instances first: the discovery query is slow
             $key = "$($t.pid)@$($t.ticks)"
-            if (-not $info.ContainsKey($key)) { $info[$key] = @{ image = ''; command_line = ''; first_ms = $clock.ElapsedMilliseconds; ok = 0; failed = 0 } }
-            try { $p = [Diagnostics.Process]::GetProcessById($t.pid) } catch [ArgumentException] { continue }     # exited
-            try {
-                if ((Get-Ticks $p.StartTime) -ne $t.ticks) { continue }        # the pid now belongs to another instance
-                $img = "$($p.ProcessName).exe"
-                foreach ($m in $p.Modules) { Note $m.FileName 'IMAGE_LOADED' $key $img }
+            if (-not $info.ContainsKey($key)) { $info[$key] = @{ image = ''; command_line = ''; first_ms = $clock.ElapsedMilliseconds; ok = 0; failed = 0; statuses = @{} } }
+            $read = [B1Ops.ModuleReader]::Read($api, $t.pid, $t.ticks)          # one handle: creation time checked, modules listed, closed
+            $st = $info[$key].statuses
+            $st[$read.Status] = 1 + $(if ($st.ContainsKey($read.Status)) { $st[$read.Status] } else { 0 })
+            if ($read.Status -eq 'OK') {
+                $img = [IO.Path]::GetFileName($read.Modules[0])                 # the first module is the process image
+                foreach ($m in $read.Modules) { Note $m 'IMAGE_LOADED' $key $img }
                 $info[$key].ok++
             }
-            catch {
-                $gone = $false
-                try { $gone = $p.HasExited } catch { }
-                if (-not $gone) { $info[$key].failed++ }                        # counted, not silently skipped
-            }
+            elseif ($read.Status -in 'OPEN_FAILED', 'TIME_UNREADABLE', 'READ_FAILED', 'INCOMPLETE') { $info[$key].failed++ }    # counted, never skipped
         }
         $snapshot = @(Get-CimInstance Win32_Process -Property ProcessId, ParentProcessId, ExecutablePath, CommandLine, CreationDate | Where-Object { $_.CreationDate })
         $rows = @($snapshot | ForEach-Object { [pscustomobject]@{ pid = [int]$_.ProcessId; ppid = [int]$_.ParentProcessId; ticks = (Get-Ticks $_.CreationDate); image = $_.ExecutablePath; cmd = $_.CommandLine } })
@@ -182,7 +186,7 @@ if ($Mode -eq 'Trace') {
             if ($state.Pids.ContainsKey($r.pid) -or $state.Pids.ContainsKey($r.ppid)) { $rawLines.Add("$samples`t$($r.pid)`t$($r.ppid)`t$($r.ticks)`t$($r.image)") }
             $key = "$($r.pid)@$($r.ticks)"
             if (($state.Tree.ContainsKey($key) -or $state.Unverified.ContainsKey($key)) -and (-not $info.ContainsKey($key) -or -not $info[$key].image)) {
-                if (-not $info.ContainsKey($key)) { $info[$key] = @{ ok = 0; failed = 0; first_ms = $clock.ElapsedMilliseconds } }
+                if (-not $info.ContainsKey($key)) { $info[$key] = @{ ok = 0; failed = 0; first_ms = $clock.ElapsedMilliseconds; statuses = @{} } }
                 $info[$key].image = [string]$r.image; $info[$key].command_line = [string]$r.cmd
                 if ($state.Tree.ContainsKey($key)) { Note $r.image 'PROCESS_STARTED' $key ([IO.Path]::GetFileName([string]$r.image)) }
             }
@@ -194,12 +198,13 @@ if ($Mode -eq 'Trace') {
     $lines = @("state`tpath`tfirst_ms`tinstances`timages")
     $lines += @($seen.Values | Sort-Object state, path | ForEach-Object { "$($_.state)`t$($_.path)`t$($_.first_ms)`t$((@($_.instances.Keys) | Sort-Object) -join ',')`t$((@($_.images.Keys) | Sort-Object) -join ',')" })
     [IO.File]::WriteAllLines($Out, $lines, $utf8)
-    $pl = @("status`tpid`tcreated_ticks`tcreated_utc`tppid`tparent_created_utc`tfirst_ms`tmodule_reads_ok`tmodule_reads_failed`treason`timage`tcommand_line")
+    $pl = @("status`tpid`tcreated_ticks`tcreated_utc`tppid`tparent_created_utc`tfirst_ms`tmodule_reads_ok`tmodule_reads_failed`tmodule_read_statuses`treason`timage`tcommand_line")
     foreach ($t in @(@($state.Tree.Values) + @($state.Unverified.Values) | Sort-Object ticks)) {
         $key = "$($t.pid)@$($t.ticks)"
-        $i = if ($info.ContainsKey($key)) { $info[$key] } else { @{ image = ''; command_line = ''; first_ms = ''; ok = 0; failed = 0 } }
+        $i = if ($info.ContainsKey($key)) { $info[$key] } else { @{ image = ''; command_line = ''; first_ms = ''; ok = 0; failed = 0; statuses = @{} } }
         $reason = if ($t.PSObject.Properties['reason']) { $t.reason } else { '' }
-        $pl += "$($t.status)`t$($t.pid)`t$($t.ticks)`t$(Format-Ticks $t.ticks)`t$($t.ppid)`t$(Format-Ticks $t.parent_ticks)`t$($i.first_ms)`t$($i.ok)`t$($i.failed)`t$reason`t$($i.image)`t$($i.command_line)"
+        $sts = (@($i.statuses.Keys) | Sort-Object | ForEach-Object { "$_=$($i.statuses[$_])" }) -join ';'
+        $pl += "$($t.status)`t$($t.pid)`t$($t.ticks)`t$(Format-Ticks $t.ticks)`t$($t.ppid)`t$(Format-Ticks $t.parent_ticks)`t$($i.first_ms)`t$($i.ok)`t$($i.failed)`t$sts`t$reason`t$($i.image)`t$($i.command_line)"
     }
     [IO.File]::WriteAllLines("$Out.processes.tsv", $pl, $utf8)
     [IO.File]::WriteAllLines("$Out.raw.tsv", $rawLines, $utf8)
