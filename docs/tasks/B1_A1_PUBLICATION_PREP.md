@@ -55,11 +55,29 @@ SourceLink URL(`https://raw.githubusercontent.com/<owner>/<repo>/<commit>/*`)이
 1. 2.1 표의 Commit SHA를 다시 확인합니다.
 2. 3절 검사를 게시 대상 Commit에서 다시 실행하고 결과를 보존합니다.
 3. 빈 비공개 저장소를 만듭니다(README·License 자동 생성 없음).
-4. 최초 Push를 합니다. 강제 Push는 하지 않습니다.
-   - `git push <A-1 URL> <승인 Commit>:refs/heads/main`
-   - 승인된 Tag만 `git push <A-1 URL> refs/tags/<tag>`
-5. 기본 브랜치 보호(강제 Push·삭제 금지)와 Tag 보호를 설정합니다.
-6. 5절 원격 조회 검증을 실행합니다.
+4. **게시 전 Ref 대조(A1-R02):**
+   - **승인 Ref 목록 작성:** 게시 직전에 승인 Ref 목록 파일을 만듭니다. 기본은 `refs/heads/main <승인 Commit SHA>` 한 줄입니다. 승인된 Tag가 있으면 `refs/tags/<tag> <Tag 객체 SHA>`를 추가합니다.
+   - **원격이 비어 있는지 확인:** `git ls-remote <A-1 URL>`의 출력이 비어 있어야 합니다(새 저장소).
+   - **Dry Run으로 전송 Ref 확인:** 다음 명령의 `*` 줄이 승인 목록의 `refs/heads/main` **한 줄뿐**이어야 합니다. 다른 Ref가 보이면 중단합니다.
+     `git -c push.followTags=false push --no-follow-tags --porcelain --dry-run <A-1 URL> <승인 Commit SHA>:refs/heads/main`
+5. **최초 Push:** 강제 Push는 하지 않습니다.
+   - `git -c push.followTags=false push --no-follow-tags --porcelain <A-1 URL> <승인 Commit SHA>:refs/heads/main`
+   - **승인된 Tag만**, Tag마다 별도 명령으로 보냅니다.
+     `git -c push.followTags=false push --no-follow-tags --porcelain <A-1 URL> refs/tags/<tag>:refs/tags/<tag>`
+   - **명령 형식의 규칙:**
+     - 원격 이름이 아니라 **URL을 직접** 씁니다. 저장된 원격의 `remote.<name>.push`·`mirror` 설정이 끼어들지 않게 하기 위해서입니다.
+     - 대상은 전체 Ref 이름으로 씁니다.
+     - `--tags`·`--all`·`--mirror`·`--follow-tags`는 쓰지 않습니다.
+   - **[시험: 로컬 bare 저장소, 2026-10-28]** 설정 `push.followTags=true`와 도달 가능한 미승인 Annotated Tag가 있는 상태에서 비교했습니다.
+     - 위 형식(`--no-follow-tags`)은 `refs/heads/main`만 전송했습니다.
+     - 같은 명령에서 `--no-follow-tags`를 빼면 미승인 Tag도 함께 전송되었습니다.
+     - 승인 Tag는 별도의 명시 Ref Push로만 전송되었습니다.
+     - 같은 비교는 `tools/b1-ops/selftest.ps1`의 `a1.push_no_follow_tags` 사례로 반복됩니다.
+6. **게시 후 Ref 대조:** `git ls-remote <A-1 URL>`의 출력이 승인 목록과 **정확히 같아야** 합니다.
+   - Annotated Tag는 `refs/tags/<tag>`와 `refs/tags/<tag>^{}` 두 줄로 나타납니다.
+   - 목록에 없는 Ref가 있으면 게시 미완료로 보고 OWNER에 보고합니다. 원격 Ref를 임의로 삭제하지 않습니다.
+7. 기본 브랜치 보호(강제 Push·삭제 금지)와 Tag 보호를 설정합니다.
+8. 7절 원격 조회 검증을 실행합니다.
 
 - **주의:** 기본 Worktree(`E:\Madegame\Star_player`)에는 미추적 파일 3개(`docs/tasks/B1_B4_*_DRAFT.md`)가 있습니다. 같은 경로의 파일이 작업 브랜치에서는 추적되므로, 그 Worktree에서 `main`을 빨리 감기하면 Git이 덮어쓰기를 거부할 수 있습니다. P-1은 Worktree를 바꾸지 않고 Commit SHA로 Push하므로 영향이 없습니다.
 
@@ -106,7 +124,15 @@ SourceLink URL(`https://raw.githubusercontent.com/<owner>/<repo>/<commit>/*`)이
 
 **도구:** `tools/b1-ops/a1-scan.ps1`. 읽기 전용이며 게시 Commit과 조상 전체를 검사합니다.
 
-- **검사 범위:** 조상 Commit 전체 트리에 `git grep -P` → 모든 도달 가능 Text blob, Commit 메시지, 작성자 정보
+- **검사 범위(A1-R01 보완):**
+  - 조상 Commit 전체 트리에 `git grep -P`를 실행해 모든 도달 가능 Text blob을 검사합니다.
+  - 각 조상 Commit 객체를 원시 바이트(`git cat-file commit`)로 읽어 다음 필드에 같은 패턴을 적용합니다.
+    - 작성자 이름·이메일
+    - Committer 이름·이메일
+    - 그 밖의 머리글(encoding·gpgsig 등)
+    - **메시지 전체**
+  - 메시지는 첫 빈 줄 뒤 전부이므로, 메시지 안의 구분 문자·제어 문자·빈 줄이 범위를 자르지 않습니다.
+  - 이전 판은 작성자·Committer를 통계에만 썼고, 메시지를 구분 문자로 잘랐습니다.
 - **SECRET 클래스**(하나라도 있으면 게시 중단, 종료 코드 1): 개인 키 블록, GitHub·Google·AWS·Slack·LLM 키 형태, 따옴표로 둘러싼 자격 증명 대입
 - **PRIVACY 클래스**(OWNER 판단): 이메일, Windows 계정 SID, 사용자 프로필 경로, 로컬 프로젝트 경로, Windows 기계 이름
 
@@ -126,6 +152,7 @@ SourceLink URL(`https://raw.githubusercontent.com/<owner>/<repo>/<commit>/*`)이
 - **운영 값 주의:** 앞으로 운영 SID·Pipe 이름·설치 경로를 문서에 넣으면 그 Commit도 게시 범위입니다. 운영 값은 R-AUDIT·설치 설정에만 두는 것을 권고합니다.
 - **자격 증명:** 원격 접근 토큰은 저장소·세이브·로그·증거·설치 설정에 넣지 않습니다.
 - **한계:** 정규식 검사이므로 "없음"을 증명하지 않습니다. Text가 아닌 파일은 경로 목록만 확인합니다.
+  - 결과 표기는 `NO_SECRET_PATTERN_FOUND (pattern-based; not proof that no secret exists)`입니다. 패턴 0건은 기밀정보 부재와 다릅니다.
 
 ## 5. SourceLink 공식 URL 설정 방법
 

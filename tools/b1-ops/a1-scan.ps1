@@ -4,8 +4,8 @@
 
 .DESCRIPTION
   Every blob reachable from -Commit is in the tree of some ancestor commit, so the text patterns run with "git grep -P" over all
-  ancestor commits (binary files are skipped by -I and listed separately). Commit messages and author / committer identities are
-  scanned too.
+  ancestor commits (binary files are skipped by -I and listed separately). Every ancestor commit object is also read raw and its
+  author name / e-mail, committer name / e-mail, other header lines and whole message are scanned with the same patterns.
 
   SECRET classes (block publication, exit 1): private key blocks, GitHub / Google / AWS / Slack / LLM-provider key shapes and
   quoted credential assignments. PRIVACY classes (reported for the OWNER's decision): e-mail addresses, Windows account SIDs,
@@ -75,19 +75,49 @@ foreach ($name in $classes.Keys) {
     }
 }
 
-# commit messages and identities
-$log = (Invoke-Git @('log', '--format=%H%x1f%an <%ae>%x1f%cn <%ce>%x1f%B%x1e', $full)) -join "`n"
+# commit metadata: every ancestor commit object is read as raw bytes ("git cat-file commit") and split at the first empty line, so no
+# message content (separators, control characters, blank lines) can cut a field short. Fields: author name / e-mail, committer
+# name / e-mail, every other header line (encoding, gpgsig, mergetag, ...) and the whole message.
+function Get-GitBytes([string[]]$a) {
+    $psi = New-Object Diagnostics.ProcessStartInfo('git.exe')
+    $psi.Arguments = (@('-C', "`"$Repo`"") + $a) -join ' '
+    $psi.UseShellExecute = $false; $psi.RedirectStandardOutput = $true; $psi.RedirectStandardError = $true; $psi.CreateNoWindow = $true
+    $proc = [Diagnostics.Process]::Start($psi)
+    $ms = New-Object IO.MemoryStream
+    $err = $proc.StandardError.ReadToEndAsync()
+    $proc.StandardOutput.BaseStream.CopyTo($ms)
+    $proc.WaitForExit()
+    if ($proc.ExitCode -ne 0) { throw "git $($a -join ' ') exited $($proc.ExitCode): $($err.Result)" }
+    $ms.ToArray()
+}
 $ids = @{}
-foreach ($rec in ($log -split [char]0x1e)) {
-    $f = $rec.Trim() -split [char]0x1f
-    if ($f.Count -lt 4) { continue }
-    foreach ($who in $f[1], $f[2]) { $ids[$who] = 1 + $(if ($ids.ContainsKey($who)) { $ids[$who] } else { 0 }) }
-    foreach ($name in $classes.Keys) {
-        foreach ($mm in [regex]::Matches($f[3], $classes[$name].re)) {
-            $key = "$name|commit-message|$($mm.Value)"
-            if ($seen.ContainsKey($key)) { continue }
-            $seen[$key] = $true
-            $findings.Add([pscustomobject]@{ class = $name; kind = $classes[$name].kind; where = 'commit-message'; path = ''; line = 0; first_seen_in = $f[0]; value = $mm.Value })
+$metaFields = 0
+foreach ($rev in $revs) {
+    $text = $utf8.GetString((Get-GitBytes @('cat-file', 'commit', $rev)))
+    $cut = $text.IndexOf("`n`n")
+    $head = if ($cut -ge 0) { $text.Substring(0, $cut) } else { $text }
+    $fields = New-Object System.Collections.Generic.List[object]
+    $fields.Add(@('message', $(if ($cut -ge 0) { $text.Substring($cut + 2) } else { '' })))
+    $other = New-Object System.Collections.Generic.List[string]
+    foreach ($h in ($head -split "`n")) {
+        $m = [regex]::Match($h, '^(author|committer) (.*) <([^>]*)> (-?\d+) ([+-]\d{4})$')
+        if ($m.Success) {
+            $fields.Add(@("$($m.Groups[1].Value)_name", $m.Groups[2].Value)); $fields.Add(@("$($m.Groups[1].Value)_email", $m.Groups[3].Value))
+            $who = "$($m.Groups[2].Value) <$($m.Groups[3].Value)>"; $ids[$who] = 1 + $(if ($ids.ContainsKey($who)) { $ids[$who] } else { 0 })
+        }
+        elseif ($h -match '^(author|committer) ') { $fields.Add(@("$($Matches[1])_unparsed", $h)) }
+        elseif ($h -notmatch '^(tree|parent) [0-9a-f]{40}$') { $other.Add($h) }
+    }
+    if ($other.Count) { $fields.Add(@('header_other', ($other -join "`n"))) }
+    foreach ($fv in $fields) {
+        $metaFields++
+        foreach ($name in $classes.Keys) {
+            foreach ($mm in [regex]::Matches([string]$fv[1], $classes[$name].re)) {
+                $key = "$name|commit:$($fv[0])|$($mm.Value)"
+                if ($seen.ContainsKey($key)) { continue }
+                $seen[$key] = $true
+                $findings.Add([pscustomobject]@{ class = $name; kind = $classes[$name].kind; where = "commit:$($fv[0])"; path = "(commit:$($fv[0]))"; line = 0; first_seen_in = $rev; value = $mm.Value })
+            }
         }
     }
 }
@@ -99,12 +129,14 @@ $tsv = @("kind`tclass`twhere`tpath`tline`tfirst_seen_in`tvalue") + @($findings |
 [IO.File]::WriteAllLines("$Out\findings.tsv", $tsv, $utf8)
 $summary = [ordered]@{
     tool = 'b1-ops/a1-scan.ps1'; commit = $full; public_ref = $PublicRef; time_utc = [DateTime]::UtcNow.ToString('o')
-    commits = $revs.Count; commits_not_in_public_ref = @($newRevs).Count
+    commits = $revs.Count; commits_not_in_public_ref = @($newRevs).Count; commit_fields_scanned = $metaFields
+    scope = 'text blobs of every ancestor tree (git grep -I), and per commit: author name / e-mail, committer name / e-mail, other headers, whole message'
+    meaning = 'pattern-based: 0 SECRET findings means no implemented pattern matched in this scope, not that no secret exists'
     identities = @($ids.Keys | Sort-Object | ForEach-Object { [ordered]@{ identity_sha256 = (Get-Sha $_); commits_fields = $ids[$_] } })
     classes = @(foreach ($name in $classes.Keys) {
             $g = @($findings | Where-Object { $_.class -eq $name })
             [ordered]@{ class = $name; kind = $classes[$name].kind; findings = $g.Count; distinct_values = @($g | ForEach-Object { $_.value } | Sort-Object -Unique).Count
-                paths = @($g | ForEach-Object { if ($_.where -eq 'blob') { $_.path } else { '(commit message)' } } | Sort-Object -Unique)
+                paths = @($g | ForEach-Object { $_.path } | Sort-Object -Unique)
                 value_sha256 = @($g | ForEach-Object { Get-Sha $_.value } | Sort-Object -Unique) }
         })
     binary_paths = $binary; originals = $originals
@@ -113,6 +145,6 @@ $summary = [ordered]@{
 
 $secret = @($findings | Where-Object { $_.kind -eq 'SECRET' })
 foreach ($c in $summary.classes) { Write-Output ("{0,-8} {1,-19} findings={2,-5} distinct={3,-4} paths={4}" -f $c.kind, $c.class, $c.findings, $c.distinct_values, @($c.paths).Count) }
-Write-Output "commits=$($revs.Count) not_in_public_ref=$(@($newRevs).Count) identities=$($ids.Count) binary_paths=$($binary.Count) originals=$($originals.Count)"
-Write-Output "RESULT=$(if ($secret.Count) { 'SECRET_FOUND' } else { 'NO_SECRET_PATTERN' }) commit=$full out=$Out"
+Write-Output "commits=$($revs.Count) not_in_public_ref=$(@($newRevs).Count) commit_fields_scanned=$metaFields identities=$($ids.Count) binary_paths=$($binary.Count) originals=$($originals.Count)"
+Write-Output "RESULT=$(if ($secret.Count) { 'SECRET_FOUND' } else { 'NO_SECRET_PATTERN_FOUND (pattern-based; not proof that no secret exists)' }) commit=$full out=$Out"
 exit $(if ($secret.Count) { 1 } else { 0 })

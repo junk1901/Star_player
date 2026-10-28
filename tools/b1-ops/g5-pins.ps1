@@ -1,20 +1,37 @@
 <#
 .SYNOPSIS
-  B1 G5 execution-pin tool: Trace (diagnostic load observation) | Collect (candidate pins) | Verify (re-hash pins).
+  B1 G5 execution-pin tool: Trace (diagnostic load observation) | Adopt (offline replay of a trace's process attribution) |
+  Collect (candidate pins) | Verify (re-hash pins).
 
 .DESCRIPTION
   Trace   Starts one command and samples its process tree until the root process exits: every process image is recorded as
           PROCESS_STARTED and every module the OS lists for a tree process as IMAGE_LOADED (the observation states of
-          B1_B4_OWNER_NORMATIVE_DECISION_DRAFT.md 6.1). A process is identified by (pid, creation time), so a pid reused by an
-          unrelated process after a tree process exited is not attributed. It is a non-elevated, sampling diagnostic: a module loaded and unloaded
-          between two samples, a short-lived child, a file only opened (not mapped) and an IL assembly the runtime maps without the
-          OS loader are not seen. Absence is NOT_OBSERVED_IN_RUN, never "unused". The operational trace uses ETW (kernel
-          image load + file I/O + CLR loader events) on the approved machine, see B1_G5_OPERATIONAL_DESIGN_DRAFT.md.
+          B1_B4_OWNER_NORMATIVE_DECISION_DRAFT.md 6.1).
+          A process INSTANCE is (pid, exact creation time, UTC ticks truncated to the microsecond, the precision both
+          Win32_Process.CreationDate and Process.StartTime share); no tolerance window is used. Attribution rule (Step-Tree):
+            * the root instance is the started process;
+            * another instance is ADOPTED only if, in the same snapshot, its parent pid is held by an instance already in the
+              tree (same pid AND same creation time) and it was created at or after that parent;
+            * if its parent pid was a tree pid but that parent instance is no longer provable (exited, or the pid now belongs
+              to another instance), it is UNVERIFIED_PARENT: listed, never attributed, its modules never read;
+            * a process whose parent pid never belonged to the tree is ignored (a descendant of an unobserved short-lived
+              intermediate is therefore missed, never wrongly included).
+          Modules are read only from a live instance whose start time equals the recorded one; a failed read is counted per
+          instance (module_reads_failed), never silently skipped. Outputs: <out> (path, state, first_ms, instances, images),
+          <out>.processes.tsv (status, pid, created_utc, ppid, parent_created_utc, ...) and <out>.raw.tsv (every snapshot row
+          whose pid or parent pid belonged to the tree), which -Mode Adopt replays offline.
+          It is a non-elevated, sampling diagnostic: a module loaded and unloaded between two samples, a short-lived child, a file
+          only opened (not mapped) and an IL assembly the runtime maps without the OS loader are not seen. Absence is
+          NOT_OBSERVED_IN_RUN, never "unused". The operational trace uses ETW (kernel process / image load + file I/O + CLR loader
+          events) on the approved machine, see B1_G5_OPERATIONAL_DESIGN_DRAFT.md 8; an ETW gap is reported, never filled in.
+  Adopt   Replays Step-Tree over a raw snapshot file (-Raw, columns sample, pid, ppid, created_ticks, image) from a root
+          (-RootPid, -RootTicks) and prints the ADOPTED / UNVERIFIED_PARENT instances as JSON. Used by the self-test and to
+          re-check a trace's attribution independently of the run.
   Collect Turns observed paths (Trace TSV or a plain list, one path per line) into a pin candidate file: canonical path, no reparse
-          point on the way, SHA-256 of the bytes; files under an -ExcludeRoot (the build root, pinned by Build Provenance) are left
-          out. dotnet.exe goes to "dotnet", the first git.exe to "git", everything else to "execution_pins" in the exact shape of
-          the verifier install configuration (path + raw_sha256). The file is marked CANDIDATE_NOT_APPROVED: only the OWNER turns
-          candidates into approved pins.
+          point on the way, SHA-256 of the bytes, and the source files each path was observed in; files under an -ExcludeRoot
+          (the build root, pinned by Build Provenance) are left out. dotnet.exe goes to "dotnet", the first git.exe to "git",
+          everything else to "execution_pins" in the exact shape of the verifier install configuration (path + raw_sha256). The
+          file is marked CANDIDATE_NOT_APPROVED: only the OWNER turns candidates into approved pins.
   Verify  Re-hashes every pin of a candidate file or an install configuration (dotnet, git, execution_pins) from a handle opened
           without write / delete sharing, the way the verifier does. Exit 1 on any MISMATCH, MISSING, REPARSE or DUPLICATE.
 
@@ -22,7 +39,7 @@
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)][ValidateSet('Trace', 'Collect', 'Verify')][string]$Mode,
+    [Parameter(Mandatory = $true)][ValidateSet('Trace', 'Adopt', 'Collect', 'Verify')][string]$Mode,
     [string]$FilePath,
     [string]$ArgumentList = '',
     [string]$WorkingDirectory,
@@ -32,7 +49,10 @@ param(
     [string[]]$ExcludeRoot = @(),
     [string]$DotnetRoot = 'C:\Program Files\dotnet',
     [string]$GitRoot = 'C:\Program Files\Git',
-    [int]$IntervalMs = 50
+    [int]$IntervalMs = 50,
+    [string]$Raw,
+    [int]$RootPid,
+    [int64]$RootTicks
 )
 
 Set-StrictMode -Version 2
@@ -68,6 +88,53 @@ function Get-Category([string]$p) {
     'OTHER'
 }
 
+function Get-Ticks([datetime]$t) { $u = $t.ToUniversalTime().Ticks; $u - ($u % 10) }      # microsecond precision, UTC
+
+# One snapshot (rows: pid, ppid, ticks) applied to the attribution state (see the header). Repeats until stable, so a parent and its
+# child first seen in the same snapshot are both handled.
+function New-TreeState([int]$rootPid, [int64]$rootTicks) {
+    $s = @{ Tree = @{}; Unverified = @{}; Pids = @{ $rootPid = $true } }
+    $s.Tree["$rootPid@$rootTicks"] = [pscustomobject]@{ status = 'ROOT'; pid = $rootPid; ticks = $rootTicks; ppid = 0; parent_ticks = 0 }
+    $s
+}
+function Step-Tree($state, $rows) {
+    $alive = @{}
+    foreach ($r in $rows) { $alive[[int]$r.pid] = [int64]$r.ticks }
+    do {
+        $added = 0
+        foreach ($r in $rows) {
+            $key = "$($r.pid)@$($r.ticks)"
+            if ($state.Tree.ContainsKey($key) -or $state.Unverified.ContainsKey($key)) { continue }
+            if (-not $state.Pids.ContainsKey([int]$r.ppid)) { continue }                 # parent never part of the tree
+            $parentKey = if ($alive.ContainsKey([int]$r.ppid)) { "$($r.ppid)@$($alive[[int]$r.ppid])" } else { $null }
+            if ($parentKey -and $state.Tree.ContainsKey($parentKey) -and [int64]$r.ticks -ge $alive[[int]$r.ppid]) {
+                $state.Tree[$key] = [pscustomobject]@{ status = 'ADOPTED'; pid = [int]$r.pid; ticks = [int64]$r.ticks; ppid = [int]$r.ppid; parent_ticks = $alive[[int]$r.ppid] }
+                $state.Pids[[int]$r.pid] = $true
+                $added++
+            }
+            else {
+                $why = if (-not $parentKey) { 'parent exited before the child was observed' } elseif (-not $state.Tree.ContainsKey($parentKey)) { 'parent pid now belongs to another instance' } else { 'child older than its parent' }
+                $state.Unverified[$key] = [pscustomobject]@{ status = 'UNVERIFIED_PARENT'; pid = [int]$r.pid; ticks = [int64]$r.ticks; ppid = [int]$r.ppid; parent_ticks = $(if ($parentKey) { $alive[[int]$r.ppid] } else { 0 }); reason = $why }
+            }
+        }
+    } while ($added)
+}
+function Format-Ticks([int64]$t) { if ($t -le 0) { '' } else { ([datetime]::new($t, [DateTimeKind]::Utc)).ToString('yyyy-MM-ddTHH:mm:ss.ffffffZ') } }
+
+if ($Mode -eq 'Adopt') {
+    if (-not $Raw -or -not $RootPid -or -not $RootTicks) { Fail-Usage 'Adopt needs -Raw, -RootPid and -RootTicks.' }
+    $state = New-TreeState $RootPid $RootTicks
+    $rows = @([IO.File]::ReadAllLines($Raw, $utf8) | Select-Object -Skip 1 | Where-Object { $_ } | ForEach-Object {
+            $f = $_ -split "`t"; [pscustomobject]@{ sample = [int]$f[0]; pid = [int]$f[1]; ppid = [int]$f[2]; ticks = [int64]$f[3] } })
+    foreach ($g in ($rows | Group-Object sample | Sort-Object { [int]$_.Name })) { Step-Tree $state $g.Group }
+    $replay = [ordered]@{
+        adopted = @($state.Tree.Values | Sort-Object ticks | ForEach-Object { "$($_.status) $($_.pid)@$($_.ticks) parent=$($_.ppid)@$($_.parent_ticks)" })
+        unverified = @($state.Unverified.Values | Sort-Object ticks | ForEach-Object { "$($_.pid)@$($_.ticks) parent=$($_.ppid) ($($_.reason))" })
+    }
+    Write-Output ($replay | ConvertTo-Json -Depth 3)
+    exit 0
+}
+
 if ($Mode -eq 'Trace') {
     if (-not $FilePath -or -not $Out) { Fail-Usage 'Trace needs -FilePath and -Out.' }
     if (Test-Path -LiteralPath $Out) { Fail-Usage "'$Out' already exists." }
@@ -76,52 +143,68 @@ if ($Mode -eq 'Trace') {
     if ($WorkingDirectory) { $start.WorkingDirectory = $WorkingDirectory }
     $clock = [Diagnostics.Stopwatch]::StartNew()
     $root = Start-Process @start
-    $null = $root.Handle                                                        # keeps the handle so ExitCode survives the exit
-    # pid -> creation time (UTC). A pid is reused once its process exits, so identity is (pid, creation time): a process belongs to the
-    # tree only if its parent pid is still held by the recorded tree process (or by nobody) and it was created after that process.
-    $tree = @{ $root.Id = $root.StartTime.ToUniversalTime() }
-    function Same([datetime]$a, [datetime]$b) { [Math]::Abs(($a - $b).TotalMilliseconds) -lt 1000 }
-    $procs = @{}                                                                # pid -> process row
-    $seen = @{}                                                                 # path -> row
-    function Note([string]$path, [string]$state, [string]$image) {
+    $null = $root.Handle                                                        # keeps the handle so ExitCode and StartTime survive the exit
+    $state = New-TreeState $root.Id (Get-Ticks $root.StartTime)
+    $info = @{}                                                                 # instance key -> image, command line, first_ms, module read counters
+    $seen = @{}                                                                 # path|state -> row
+    function Note([string]$path, [string]$st, [string]$key, [string]$image) {
         if (-not $path) { return }
-        $k = $path.ToLowerInvariant() + '|' + $state
-        if (-not $seen.ContainsKey($k)) { $seen[$k] = [pscustomobject]@{ state = $state; path = $path; first_ms = $clock.ElapsedMilliseconds; processes = @{} } }
-        $seen[$k].processes[$image] = $true
+        $k = $path.ToLowerInvariant() + '|' + $st
+        if (-not $seen.ContainsKey($k)) { $seen[$k] = [pscustomobject]@{ state = $st; path = $path; first_ms = $clock.ElapsedMilliseconds; instances = @{}; images = @{} } }
+        $seen[$k].instances[$key] = $true
+        $seen[$k].images[$image] = $true
     }
+    $rawLines = New-Object System.Collections.Generic.List[string]
+    $rawLines.Add("sample`tpid`tppid`tcreated_ticks`timage")
     $samples = 0
     do {
         $exited = $root.HasExited
-        foreach ($id in @($tree.Keys)) {                                       # modules of the known tree first: the discovery query is slow
+        foreach ($t in @($state.Tree.Values)) {                                 # modules of live tree instances first: the discovery query is slow
+            $key = "$($t.pid)@$($t.ticks)"
+            if (-not $info.ContainsKey($key)) { $info[$key] = @{ image = ''; command_line = ''; first_ms = $clock.ElapsedMilliseconds; ok = 0; failed = 0 } }
+            try { $p = [Diagnostics.Process]::GetProcessById($t.pid) } catch [ArgumentException] { continue }     # exited
             try {
-                $p = [Diagnostics.Process]::GetProcessById($id)
-                if (-not (Same $p.StartTime.ToUniversalTime() $tree[$id])) { continue }      # the pid now belongs to another process
-                foreach ($m in $p.Modules) { Note $m.FileName 'IMAGE_LOADED' "$($p.ProcessName).exe" }
+                if ((Get-Ticks $p.StartTime) -ne $t.ticks) { continue }        # the pid now belongs to another instance
+                $img = "$($p.ProcessName).exe"
+                foreach ($m in $p.Modules) { Note $m.FileName 'IMAGE_LOADED' $key $img }
+                $info[$key].ok++
             }
-            catch { }
+            catch {
+                $gone = $false
+                try { $gone = $p.HasExited } catch { }
+                if (-not $gone) { $info[$key].failed++ }                        # counted, not silently skipped
+            }
         }
-        $snapshot = @(Get-CimInstance Win32_Process -Property ProcessId, ParentProcessId, ExecutablePath, CommandLine, CreationDate)
-        $holder = @{}
-        foreach ($c in $snapshot) { $holder[[int]$c.ProcessId] = $c.CreationDate.ToUniversalTime() }
-        foreach ($c in $snapshot) {
-            $cid = [int]$c.ProcessId; $pp = [int]$c.ParentProcessId; $created = $c.CreationDate.ToUniversalTime()
-            if (-not $tree.ContainsKey($cid) -and $tree.ContainsKey($pp) -and $created -ge $tree[$pp].AddSeconds(-1) -and
-                (-not $holder.ContainsKey($pp) -or (Same $holder[$pp] $tree[$pp]))) { $tree[$cid] = $created }
-            if ($tree.ContainsKey($cid) -and (Same $created $tree[$cid]) -and -not $procs.ContainsKey($cid)) {
-                $procs[[int]$c.ProcessId] = [pscustomobject]@{ pid = [int]$c.ProcessId; ppid = [int]$c.ParentProcessId; image = $c.ExecutablePath; command_line = $c.CommandLine; first_ms = $clock.ElapsedMilliseconds }
-                Note $c.ExecutablePath 'PROCESS_STARTED' ([IO.Path]::GetFileName([string]$c.ExecutablePath))
+        $snapshot = @(Get-CimInstance Win32_Process -Property ProcessId, ParentProcessId, ExecutablePath, CommandLine, CreationDate | Where-Object { $_.CreationDate })
+        $rows = @($snapshot | ForEach-Object { [pscustomobject]@{ pid = [int]$_.ProcessId; ppid = [int]$_.ParentProcessId; ticks = (Get-Ticks $_.CreationDate); image = $_.ExecutablePath; cmd = $_.CommandLine } })
+        Step-Tree $state $rows
+        foreach ($r in $rows) {
+            if ($state.Pids.ContainsKey($r.pid) -or $state.Pids.ContainsKey($r.ppid)) { $rawLines.Add("$samples`t$($r.pid)`t$($r.ppid)`t$($r.ticks)`t$($r.image)") }
+            $key = "$($r.pid)@$($r.ticks)"
+            if (($state.Tree.ContainsKey($key) -or $state.Unverified.ContainsKey($key)) -and (-not $info.ContainsKey($key) -or -not $info[$key].image)) {
+                if (-not $info.ContainsKey($key)) { $info[$key] = @{ ok = 0; failed = 0; first_ms = $clock.ElapsedMilliseconds } }
+                $info[$key].image = [string]$r.image; $info[$key].command_line = [string]$r.cmd
+                if ($state.Tree.ContainsKey($key)) { Note $r.image 'PROCESS_STARTED' $key ([IO.Path]::GetFileName([string]$r.image)) }
             }
         }
         $samples++
         if (-not $exited) { Start-Sleep -Milliseconds $IntervalMs }
     } while (-not $exited)
     $root.WaitForExit()
-    $lines = @("state`tpath`tfirst_ms`tprocesses")
-    $lines += @($seen.Values | Sort-Object state, path | ForEach-Object { "$($_.state)`t$($_.path)`t$($_.first_ms)`t$((@($_.processes.Keys) | Sort-Object) -join ',')" })
+    $lines = @("state`tpath`tfirst_ms`tinstances`timages")
+    $lines += @($seen.Values | Sort-Object state, path | ForEach-Object { "$($_.state)`t$($_.path)`t$($_.first_ms)`t$((@($_.instances.Keys) | Sort-Object) -join ',')`t$((@($_.images.Keys) | Sort-Object) -join ',')" })
     [IO.File]::WriteAllLines($Out, $lines, $utf8)
-    $pl = @("pid`tppid`tfirst_ms`timage`tcommand_line") + @($procs.Values | Sort-Object first_ms | ForEach-Object { "$($_.pid)`t$($_.ppid)`t$($_.first_ms)`t$($_.image)`t$($_.command_line)" })
+    $pl = @("status`tpid`tcreated_ticks`tcreated_utc`tppid`tparent_created_utc`tfirst_ms`tmodule_reads_ok`tmodule_reads_failed`treason`timage`tcommand_line")
+    foreach ($t in @(@($state.Tree.Values) + @($state.Unverified.Values) | Sort-Object ticks)) {
+        $key = "$($t.pid)@$($t.ticks)"
+        $i = if ($info.ContainsKey($key)) { $info[$key] } else { @{ image = ''; command_line = ''; first_ms = ''; ok = 0; failed = 0 } }
+        $reason = if ($t.PSObject.Properties['reason']) { $t.reason } else { '' }
+        $pl += "$($t.status)`t$($t.pid)`t$($t.ticks)`t$(Format-Ticks $t.ticks)`t$($t.ppid)`t$(Format-Ticks $t.parent_ticks)`t$($i.first_ms)`t$($i.ok)`t$($i.failed)`t$reason`t$($i.image)`t$($i.command_line)"
+    }
     [IO.File]::WriteAllLines("$Out.processes.tsv", $pl, $utf8)
-    Write-Output "exit=$($root.ExitCode) samples=$samples processes=$($procs.Count) paths=$($seen.Count) ms=$($clock.ElapsedMilliseconds)"
+    [IO.File]::WriteAllLines("$Out.raw.tsv", $rawLines, $utf8)
+    $failedReads = @($info.Values | Where-Object { $_.failed -gt 0 }).Count
+    Write-Output "exit=$($root.ExitCode) samples=$samples adopted=$($state.Tree.Count) unverified=$($state.Unverified.Count) instances_with_failed_module_reads=$failedReads paths=$($seen.Count) root=$($root.Id)@$(Get-Ticks $root.StartTime) ms=$($clock.ElapsedMilliseconds)"
     Write-Output 'RESULT=TRACED (sampling diagnostic; absence is NOT_OBSERVED_IN_RUN)'
     exit 0
 }
@@ -131,7 +214,7 @@ if ($Mode -eq 'Collect') {
     if (Test-Path -LiteralPath $Out) { Fail-Usage "'$Out' already exists." }
     $List = @($List | ForEach-Object { $_ -split '\|' } | Where-Object { $_ })
     $ExcludeRoot = @($ExcludeRoot | ForEach-Object { $_ -split '\|' } | Where-Object { $_ } | ForEach-Object { [IO.Path]::GetFullPath($_).TrimEnd('\') })
-    $paths = @{}
+    $paths = @{}; $from = @{}
     $sources = foreach ($f in $List) {
         $bytes = [IO.File]::ReadAllBytes($f)
         $rows = @($utf8.GetString($bytes) -split "`r?`n" | Where-Object { $_ })
@@ -139,7 +222,11 @@ if ($Mode -eq 'Collect') {
         if ($rows.Count -and $rows[0] -match "`t") { $col = [Array]::IndexOf(($rows[0] -split "`t"), 'path'); $rows = @($rows | Select-Object -Skip 1) }
         foreach ($r in $rows) {
             $p = if ($col -ge 0) { ($r -split "`t")[$col] } else { $r.Trim() }
-            if ($p) { $full = [IO.Path]::GetFullPath($p); $paths[$full.ToLowerInvariant()] = $full }
+            if ($p) {
+                $full = [IO.Path]::GetFullPath($p); $k = $full.ToLowerInvariant(); $paths[$k] = $full
+                if (-not $from.ContainsKey($k)) { $from[$k] = @{} }
+                $from[$k][[IO.Path]::GetFileName($f)] = $true
+            }
         }
         [ordered]@{ file = [IO.Path]::GetFullPath($f); sha256 = (Get-Sha $bytes) }
     }
@@ -151,7 +238,7 @@ if ($Mode -eq 'Collect') {
         $rp = Get-Reparse $p
         if ($rp) { $refused.Add("REPARSE $p (at $rp)"); continue }
         $len = (New-Object IO.FileInfo($p)).Length
-        $files.Add([pscustomobject]@{ path = $p; raw_sha256 = (Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash.ToLowerInvariant(); byte_length = $len; category = (Get-Category $p) })
+        $files.Add([pscustomobject]@{ path = $p; raw_sha256 = (Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash.ToLowerInvariant(); byte_length = $len; category = (Get-Category $p); observed_in = @(@($from[$p.ToLowerInvariant()].Keys) | Sort-Object) })
     }
     $sorted = $files.ToArray()
     [Array]::Sort($sorted, [Comparison[object]] { param($a, $b) [string]::CompareOrdinal($a.path, $b.path) })
