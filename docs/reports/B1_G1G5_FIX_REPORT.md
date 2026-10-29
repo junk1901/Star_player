@@ -13,7 +13,7 @@
 | 1 | G1-POLICY-01 수정 전후 RED/GREEN | 2.3절 |
 | 2 | 검사 도구 새 SHA | 2.2절 |
 | 3 | 기존 6개·신규 반례 결과 | 2.3·2.4절 |
-| 4 | PowerShell 5.1/7 결과 | 2.4절(7은 **미검증**) |
+| 4 | PowerShell 5.1/7 결과 | 2.4절(5.1·7.4.22 모두 실행) |
 | 5 | G5-TEMP-01 강화 운영 보호 모델 | [보호 모델](../tasks/B1_G5_TEMP01_PROTECTION_MODEL.md) 1·2절 |
 | 6 | 강제 실행 차단 절차 | 같은 문서 3절 |
 | 7 | M-12A~J 실측 계획 | 같은 문서 4절 |
@@ -83,7 +83,10 @@
 | 이전 도구 일반·`-SelfTest` | 5.1 | CRLF Clone | PASS, `cases=7 failed=0`(이전 보고서의 로그 SHA `b6805117`·`08e584f5`와 같은 바이트) | 0 |
 | RED/GREEN 드라이버 | 5.1 | CRLF Clone | 2.3절 표, 수정 도구 판정 17/17 OK | 0 |
 | 수정 도구 일반 실행 | 5.1 | 작업 트리 `E:\Madegame\Star_player_g4`(제품 경로 `c77ed1a`와 차이 0) | PASS | 0 |
-| **수정 도구 전체** | **PowerShell 7** | — | **미검증** — 이 개발 PC에 PowerShell 7(`pwsh`)이 설치되어 있지 않습니다. 설치(다운로드)는 OWNER 허락이 필요합니다 | — |
+| 위 7개 실행 전부(같은 명령) | **7.4.22 Core**(.NET 8.0.31) | 같음 | 모두 PowerShell 5.1과 같은 판정: 일반 실행 PASS(CRLF·LF), `-SelfTest` 17/17(로그 바이트가 5.1과 동일), 이전 도구 로그 바이트 동일, RED/GREEN 표 바이트 동일, 사례별 34개 `RESULT` 줄 일치 | 0 |
+
+- PowerShell 7은 OWNER 승인(2026-10-30) 뒤 `dotnet tool install --global PowerShell --version "7.4.*"`(nuget.org)로 설치했습니다. `pwsh.exe` SHA-256 `d83e66c694f5d963fb31de328a0e65ac631bfc9c773a0c26c2161ca6e6b7c803`, 버전 7.4.22(설치된 .NET Runtime이 8뿐이라 .NET 8 대상 LTS 7.4를 택함). 로그는 `g1fix\logs\ps7\`(5.1 로그와 별도), 명령·종료 코드 `logs\ps7\commands.tsv`.
+- 5.1의 `*>` 로그는 UTF-16LE, 7의 로그는 UTF-8이라 사례별 로그 바이트는 다릅니다. 비교는 디코딩한 `RESULT` 줄로 했습니다(34/34 일치).
 
 **조건 기록:**
 
@@ -125,7 +128,7 @@
 | # | 항목 | 주체 |
 |---|---|---|
 | 1 | Codex 표적 재검수: G1-POLICY-01, G5-TEMP-01 운영 경로 충분성, G2 E-1 영향 없음 | Codex |
-| 2 | PowerShell 7 실행 증거(현재 미검증) | OWNER 설치 허락 → Claude 실행 |
+| 2 | ~~PowerShell 7 실행 증거~~ — 완료(2026-10-30, 7.4.22, 2.4절) | — |
 | 3 | OWNER 결정: 개정 G2(E-1) 수용 조건 최종 승인 | OWNER |
 | 4 | OWNER 결정: G1-a 수용(수정 도구 기준) 또는 G1-b | OWNER |
 | 5 | OWNER 결정: G5-TEMP-01 해결 방식(운영 경로 또는 코드 C-3 등). 코드 경로면 새 소스 Commit → 공식 소스 후보 변경 | OWNER |
@@ -138,7 +141,7 @@
 
 - 도구 수정 후 개발 실행은 첫 회에 PASS, `-SelfTest` 17/17이었습니다. 증거는 Commit `c4a04bb` 뒤 Blob을 내보내 다시 실행한 것입니다.
 - 지배 줄 고정값은 Python(`-I -X utf8`)으로 산출했고, PowerShell 5.1 구현이 같은 값으로 PASS해 두 구현이 일치합니다. 첫 Python 산출 두 번은 콘솔 인코딩(cp949) 문제로 실패했습니다(작업 파일만, 증거 아님).
-- PowerShell 7 실행은 하지 않았습니다(미설치).
+- PowerShell 7은 처음에 미설치로 실행하지 못했고, OWNER 승인 뒤 7.4.22를 설치해 같은 증거 세트를 실행했습니다(2.4절).
 
 ## 7. 증거 해시 (SHA-256, 저장소 밖 `E:\Madegame\g3x\phase3ops\g1fix\`, 전체 목록 `SHA256SUMS_g1fix.txt`)
 
@@ -152,3 +155,7 @@
 | `logs\ps51\new_selftest_c77-crlf.log` = `new_selftest_c77-lf.log` | `474790ba751fe25668ec3d15d38bd1df8dbecb3f17cd665e6200715b9708f2cf` |
 | `logs\ps51\old_check_c77-crlf.log` · `old_selftest_c77-crlf.log` | `b6805117c10afbf30a2a4fb65a49a57bbc9c50d70d9665be9aa594de28c0294f` · `08e584f5f73d6fd661a46c385d3c3828793d2959196987151674e62f34ff8c11` |
 | `logs\ps51\commands.tsv` | `67d0f6cbe7795d0671d8b8e9dfe107e8936d67c2e2c4094c0b00106b7e939e02` |
+| `logs\ps7\new_check_c77-crlf.log` · `new_check_c77-lf.log` | `21a3db4cd941bb3ac9f40be503b9432ca69b98d34042e6cee94207f7e65ea398` · `52d67c6c0a0679c6fa2c39ceba6e73abefe1814e9ad9ecd134a9daa2160f6659` |
+| `logs\ps7\new_selftest_c77-*.log` · `old_check` · `old_selftest` · `redgreen_c77-crlf.log` | 5.1과 같은 바이트: `474790ba…f2cf` · `b6805117…294f` · `08e584f5…8c11` · `3840bfea…1d03` |
+| `logs\ps7\pwsh.txt` · `commands.tsv` | `cbafdb242b2d6b03ed7fb769a2403450cf54e8497ba732c0426116b5fec4af97` · `2b1695ad1c85be7fdce7e4f6cf1157a2b2fc7a62f7805eae6704317bb53a7370` |
+| PS 7 로그 전체 목록 | `SHA256SUMS_g1fix_ps7.txt` |

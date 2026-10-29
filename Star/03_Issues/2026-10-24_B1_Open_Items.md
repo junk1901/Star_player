@@ -74,5 +74,5 @@ tags:
 
 ## Codex FIX_REQUIRED 후속 (2026-10-30)
 
-- **G1-POLICY-01 (MINOR):** 도구 수정(`c4a04bb`) — Codex 재검수 대기. PowerShell 7 실행 미검증. 정적 검사 한계(고정 파일 밖 조각 조립)는 종단 시험·코드 검수 몫. [후속 보고서](../../docs/reports/B1_G1G5_FIX_REPORT.md)
+- **G1-POLICY-01 (MINOR):** 도구 수정(`c4a04bb`) — Codex 재검수 대기. PowerShell 5.1·7.4.22 동일 판정. 정적 검사 한계(고정 파일 밖 조각 조립)는 종단 시험·코드 검수 몫. [후속 보고서](../../docs/reports/B1_G1G5_FIX_REPORT.md)
 - **G5-TEMP-01 (OPEN_MAJOR):** 운영 보호 모델·시작 절차 설계(NOT_IMPLEMENTED)·M-12A~J. 운영 기계 실측 통과 전 공식 인증 금지. 운영 경로가 부족하면 코드 대안 C-3(별도 TASK). [보호 모델](../../docs/tasks/B1_G5_TEMP01_PROTECTION_MODEL.md)
