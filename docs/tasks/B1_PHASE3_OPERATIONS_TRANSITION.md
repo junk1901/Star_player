@@ -96,6 +96,7 @@
 | B-12 | 운영 ETW 결과 채택 | B-11 근거 | 추적 계획(G5 설계 8절) | 미실행 |
 | B-13 | Trust Anchor 설치값(R03-1 앵커) | R-TRUST | 앵커 검사(기존 G4 코드) | `OWNER_VALUE_PENDING` |
 | B-14 | 설치 설정 `starplayer-verifier-install-config-v1` 값 | R-CONFIG 고정 위치 | 형식·검사(G4) | `OWNER_VALUE_PENDING` |
+| B-15~B-22 | G5-TEMP-01 로컬 S4U 실행기(로그온 권한, 작업·보안 설명자, 시작 스크립트·설정 SHA, 요청 디렉터리, `verifier-tmp` SDDL, 호스트 `powershell.exe`, 실행기 로그·S8 절차)와 G1 공식 감사 PowerShell(2026-10-30 추가) | S0~S9, G1 감사 | [S4U 구성안](B1_G5_S4U_LAUNCHER_PLAN.md) 6절 | `OWNER_VALUE_PENDING`. B-5는 로컬 S4U 전용 표준 사용자로 한정(gMSA 제외) |
 
 **준비 완료(코드 단계 수용됨):** `g5-acl.ps1`(Plan·Verify·Apply·Restore), `g5-probe.ps1`, `g5-pins.ps1`(Trace·Adopt·Collect·Verify), `b4-candidates.ps1`, `a1-scan.ps1`, `a1-refcheck.ps1`, `selftest.ps1` 109건, G5 설계 문서.
 
@@ -127,6 +128,7 @@
 
 - 관리자 그룹 중첩 구성원은 도구가 해석하지 않으므로 각 계정의 `whoami /groups`를 증거로 남깁니다.
 - **M-12 개정 (2026-10-30, Codex G5-TEMP-01 OPEN_MAJOR):** 위 M-12 단일 행은 이력으로 남기고, 판정은 [G5-TEMP-01 보호 모델](B1_G5_TEMP01_PROTECTION_MODEL.md) 4절의 **M-12A~J** 전부로 합니다. TEMP를 R-WORK 아래로 옮기는 것만으로는 해소가 아닙니다. 강제 시작 절차(같은 문서 3절, NOT_IMPLEMENTED)와 M-12A~J 통과 전에는 공식 인증을 시작하지 않습니다.
+- **M-12 개정 1 (2026-10-30, Codex G5-MODEL-01/02):** M-12A~J에 로컬 S4U 동작·EFS·세션 중 예방 확인·우회 시도를 더했습니다([보호 모델](B1_G5_TEMP01_PROTECTION_MODEL.md) 4절).
 - 실패하면 해당 Gate(G5) 중단 조건입니다([운영 Gate 준비표](B1_OPERATIONAL_GATE_READINESS.md) G5).
 
 ### 3.3 실행 체인 추적·Pin 후보 (승인 B의 일부)

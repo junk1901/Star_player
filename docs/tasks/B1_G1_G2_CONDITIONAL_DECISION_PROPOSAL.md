@@ -7,6 +7,7 @@
 - 근거 자료: [G2/G3 진단 보고서](../reports/B1_G2G3_DIAGNOSTIC_REPORT.md), [선행 문제 보고서](../reports/B1_G2G3_PREREQ_REPORT.md), [정책 준비 보고서](../reports/B1_G1G2_POLICY_PREP_REPORT.md)
 - 상태: Official Execution = **NOT_READY** · Final Execution Freeze = **PENDING** · Phase 3 = **INCOMPLETE**
 - **개정 1 (2026-10-30):** Codex 판정(FIX_REQUIRED, G2 E-1 ACCEPTABLE, G1-a NEEDS_CHANGE, G1-POLICY-01 MINOR)에 따라 B.3-3의 정적 검사를 강화했습니다(B.7). A절(G2-E1)은 바꾸지 않았습니다. B.3·B.4·B.6 원문은 이력으로 남깁니다.
+- **OWNER 정책 채택 (2026-10-30):** G2는 E-1, G1은 G1-a를 채택했습니다(C절). 정책 채택이며 운영 G1·G2 Gate PASS가 아닙니다. 이 문서 A·B절의 "결정안·초안" 표기는 이력으로 남깁니다.
 
 ---
 
@@ -145,3 +146,26 @@ G2를 다음 조건이 **모두** 참일 때 충족된 것으로 봅니다.
 - **B.4 한계 정정:** 남는 한계는 "고정 8개 파일 **밖**의 새 파일에서 이름을 조각으로 조립·복제하는 코드"와 "고정 파일 밖에서 이름·기호 없는 식별자로 들어오는 값 흐름"입니다(반례 `assembled_name_in_new_file`로 한계 확인). 고정 파일 안의 변경은 모두 FAIL합니다. 이 한계는 B.3-4 종단 시험과 코드 검수가 다룹니다.
 - **B.6 결과 정정:** `c77ed1a` Clone 2개(CRLF·LF) PASS, `-SelfTest` 17건 모두 기대대로(기존 6, Codex 반례 2, 같은 개수 반례 3, 새 파일 1, 값 흐름 1, 오탐 대조 2, 한계 1). PowerShell 5.1과 7.4.22에서 같은 판정입니다.
 - 이름·코드·Hash·Replay·DRAFT 색인 바이트는 바뀌지 않습니다(B.3-5 그대로).
+
+## C. OWNER 정책 채택 기록 (2026-10-30)
+
+- 근거: OWNER 지시 "G1/G2 정책 확정 및 G5-MODEL-01/02 후속 조치"(2026-10-30) 0~2항. Codex 최신 판정: 최종 FIX_REQUIRED(G5 Finding 때문), G2 E-1 **ACCEPTABLE**, G1-POLICY-01 **RESOLVED**.
+- **이것은 운영 Gate PASS나 최종 Build Freeze 승인이 아닙니다.** 공식 G1·G2는 운영 기계에서 아래 정책대로 실행하고 Codex 독립 검수 뒤 OWNER가 수용할 때만 PASS입니다.
+- 공식 원격 `https://github.com/junk1901/Star_player.git`, 공식 제품 소스 **후보** `c77ed1a5d15d43d5a97a4e5e777c9c3ea698771f`(유지).
+
+### C.1 G2 — E-1 채택
+
+- 공식 빌드 정책(A.3과 같음): `core.autocrlf=true`를 **첫 Checkout 전에** 설정, 승인 Git Commit·Tree, 정확한 원격 URL(`-ceq`), 승인 입력 파일의 실제 SHA 전체 대조, 고정 SDK·복원 입력·CI 빌드 옵션, 서로 다른 Clone 2개의 결과 비교, 불일치 시 중단
+- **E-1이 제공하지 않는 보장(명시):** 기존 G2 원문의 "Checkout 설정과 무관하게 같은 빌드 입력 바이트"는 E-1에서 보장하지 않습니다(A.4). 다른 설정의 Clone 빌드는 공식이 아닙니다.
+- **알려진 제한(보존):** 301개 소스의 GitHub Raw와 PDB 체크섬 차이(Raw에 LF→CRLF를 적용하면 모두 일치, 설명 불가 0, A.6). 디버거 SourceLink 체크섬 경고가 남습니다.
+- 승인 계약 본문과 `.gitattributes`는 바꾸지 않습니다. 이번 채택을 운영 G2 PASS로 기록하지 않습니다.
+
+### C.2 G1 — G1-a 채택
+
+- 현행 파일명·경로 유지, B-4 6.1 단일 규범 표 유지
+- 공식 감사 조건: 전체 소스 Commit·Tree 확인, Clean Checkout 검사, 별도 감사 도구의 고정 SHA, 생산자·검증기·시험의 이름 일치성 검증(정적 검사 + B.3-4 종단 시험)
+- 감사 도구: `tools/b1-ops/g1-names-check.ps1`, SHA-256 **`d3945b5ed51f0c49e39b2689bd73a8b14240ff9d13564745aca12f22eeb56ba0`**(Commit `c4a04bb`). Codex RESOLVED 판정에 따라 다시 수정하지 않습니다.
+- 대상: Commit `c77ed1a5d15d43d5a97a4e5e777c9c3ea698771f`, Tree `a7b9b937e2283fcdb0adb5d83114274940f0e71a`
+- 도구는 제품 빌드와 독립된 감사 도구입니다. **도구 PASS만으로 다른 소스 Commit을 승인하지 않습니다.** 고정 8개 파일과 지배 줄이 같은 다른 Commit도 PASS할 수 있으므로, 공식 감사는 먼저 대상 Commit·Tree가 위 승인값과 같은지 확인하고 그 뒤 도구를 실행합니다. 고정 파일이 바뀐 Commit은 FAIL하며, 고정값을 바꾸려면 검수된 도구 변경이 필요합니다.
+- 유지하는 기록: 탐지 한계(B.7, [후속 보고서](../reports/B1_G1G5_FIX_REPORT.md) 2.5절), PowerShell 5.1(5.1.26100.9711)·7(7.4.22) 진단 결과(같은 판정)
+- 공식 감사에 쓸 PowerShell의 실제 경로·버전·SHA, 실행 계정, 실행 로그 위치는 운영 환경에서 고정합니다(승인 B-22, [S4U 실행기 구성안](B1_G5_S4U_LAUNCHER_PLAN.md) 6절). 개발 PC 진단 결과는 공식 G1 증거가 아닙니다.

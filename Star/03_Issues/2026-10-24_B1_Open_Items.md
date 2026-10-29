@@ -76,3 +76,10 @@ tags:
 
 - **G1-POLICY-01 (MINOR):** 도구 수정(`c4a04bb`) — Codex 재검수 대기. PowerShell 5.1·7.4.22 동일 판정. 정적 검사 한계(고정 파일 밖 조각 조립)는 종단 시험·코드 검수 몫. [후속 보고서](../../docs/reports/B1_G1G5_FIX_REPORT.md)
 - **G5-TEMP-01 (OPEN_MAJOR):** 운영 보호 모델·시작 절차 설계(NOT_IMPLEMENTED)·M-12A~J. 운영 기계 실측 통과 전 공식 인증 금지. 운영 경로가 부족하면 코드 대안 C-3(별도 TASK). [보호 모델](../../docs/tasks/B1_G5_TEMP01_PROTECTION_MODEL.md)
+
+## OWNER 정책 채택·G5-MODEL 후속 (2026-10-30)
+
+- **G1-POLICY-01:** Codex RESOLVED. G1-a·G2 E-1은 OWNER 정책 채택(운영 Gate PASS 아님)
+- **G5-MODEL-01 (MAJOR):** C-3 보완 설계(Snapshot 색인·전체 Manifest 결속, 메모리 Replay) — 문서만, 구현 없음. Codex 재검수 대기
+- **G5-MODEL-02 (MINOR):** gMSA 외부 신뢰 범위 기록, 이번 운영 선택에서 제외. Codex 재검수 대기
+- **G5-TEMP-01 (OPEN_MAJOR):** 로컬 S4U 실행기 NOT_IMPLEMENTED. **새 충돌:** S8 사후 대조는 영수증 등록 뒤라 막지 못하고, 계약에 영수증 철회 절차가 없음 → 예방 통제 실측이 안 되면 C-3 전환. [보호 모델](../../docs/tasks/B1_G5_TEMP01_PROTECTION_MODEL.md) 3.4

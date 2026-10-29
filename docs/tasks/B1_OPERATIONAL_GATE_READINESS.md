@@ -45,6 +45,7 @@
 ### G1 — B-4 공식 출력 파일명·경로
 
 - **현재:** 미결. B-4 Clause와 출력 Root는 운영 값 확인 뒤 확정합니다(OWNER 2026-10-28 4항).
+  - **2026-10-30 OWNER 정책 채택:** G1-a(현행 이름 유지, B-4 6.1 단일 규범 표, 감사 도구 SHA `d3945b5e…6ba0`, 대상 `c77ed1a`·Tree `a7b9b937…`). 공식 G1은 운영 기계에서 이 도구와 종단 시험으로 실행하며, PowerShell 경로·버전·SHA는 승인 B-22로 고정합니다. 운영 G1 PASS 아님([결정안](B1_G1_G2_CONDITIONAL_DECISION_PROPOSAL.md) C.2).
   - 2026-10-29 진단: 현행 이름 대부분이 코드 한 곳에서 정의되어 그대로 채택 가능합니다. 생산 Archive 조립 명령 부재, 생산자 출력의 저장소 내부 제한, `manifest.json` 다중 정의를 발견했습니다([G2/G3 진단 보고서](../reports/B1_G2G3_DIAGNOSTIC_REPORT.md) 9절).
 - **선행 조건:** G5 Root 구조 확정([G5 설계](B1_G5_OPERATIONAL_DESIGN_DRAFT.md) 1절), §21 `run/<run_id>/` 내부 배치(결정 3 §6)
 - **진단:** 확정 이름 후보로 생산자·검증기·시험이 같은 경로를 쓰는지 TEST_ONLY 시험. 이름은 코드 한 곳에서만 정의되는지 확인
@@ -57,6 +58,7 @@
 ### G2 — CRLF/LF 정책·빌드 입력 고정
 
 - **현재:** 정책 결정됨(OWNER G2 2026-10-26: 검수된 바이트를 `-text`로 그대로 유지, 일괄 정규화 없음, `.gitattributes`). Gate 판정은 선언되지 않았습니다.
+  - **2026-10-30 OWNER 정책 채택:** E-1(`core.autocrlf=true` 첫 Checkout 전, 승인 Commit·Tree·URL, 입력 SHA 전체 대조, 고정 SDK·옵션, Clone 2개 비교, 불일치 시 중단). "Checkout 설정과 무관한 같은 바이트"는 보장하지 않으며 301개 SourceLink 체크섬 차이는 알려진 제한입니다. 운영 G2 PASS 아님([결정안](B1_G1_G2_CONDITIONAL_DECISION_PROPOSAL.md) C.1).
 - **선행 조건:** 없음
 - **진단:** 깨끗한 clone에서 보호 파일·내장 리소스 SHA가 체크아웃 설정과 무관하게 같은지 확인. 현재 `verify.ps1` D3 5개 PASS(G4 Clean Checkout)
 - **공식:** A-1 원격에서 받은 clone 2개로 같은 확인(A-1 문서 6절 1~2단계)
@@ -133,6 +135,7 @@
 - **독립 검수:** Codex(ACL 규칙·증거)
 - **OWNER 최종 승인:** 필요(실행 전과 결과)
 - **2026-10-30:** G5-TEMP-01(Codex OPEN_MAJOR) — 공식 인증 전 [보호 모델](B1_G5_TEMP01_PROTECTION_MODEL.md)의 시작 절차 구현·검수와 M-12A~J 통과가 필요합니다. 운영 상태는 그때까지 OPEN_MAJOR입니다.
+- **2026-10-30 (개정 1):** 운영 경로는 로컬 S4U 전용 계정만 검토하고 gMSA는 제외합니다. 시작 절차는 NOT_IMPLEMENTED이며, S8 사후 대조는 등록 뒤라 예방 통제를 대신하지 않습니다([보호 모델](B1_G5_TEMP01_PROTECTION_MODEL.md) 3.4, [S4U 구성안](B1_G5_S4U_LAUNCHER_PLAN.md)).
 
 ### G6 — AT-1~AT-14r·정식 AT-4/P-1
 
