@@ -4,6 +4,7 @@
 - **성격:** 기술 준비 자료입니다. 운영 OS의 ACL 변경, 신뢰 앵커·설치 설정 설치, 계정·권한 부여, 원격 생성·Push·Tag 게시는 **하지 않았고**, 모두 OWNER 승인 지점입니다.
 - **OWNER 결정 반영:** N-1 = **A-1 신규 비공개 공식 원격**. 원격 생성과 최초 Push는 별도 승인 지점입니다.
 - 관련: [G4 구현 보고서](../reports/B1_G4_IMPLEMENTATION_REPORT.md), [B-4 규범 결정 자료](B1_B4_OWNER_NORMATIVE_DECISION_DRAFT.md)
+- **OWNER 결정 변경(2026-10-29):** 신규 비공개 원격(N-1 = A-1 신규 비공개) 계획은 **취소**되었습니다. 공식 원격은 기존 공개 저장소 `https://github.com/junk1901/Star_player.git`입니다. 아래 6절의 "신규 비공개 원격" 전제는 이력으로만 남고, 현재 절차는 [A-1 게시 준비](B1_A1_PUBLICATION_PREP.md)(2026-10-29 개정)와 [Phase 3 운영 전환 계획](B1_PHASE3_OPERATIONS_TRANSITION.md)입니다.
 - **후속(2026-10-28):** 1~5절은 [G5 운영 설계](B1_G5_OPERATIONAL_DESIGN_DRAFT.md), 6절은 [A-1 게시 준비](B1_A1_PUBLICATION_PREP.md)가 구체화합니다. 두 문서가 이 초안과 다르면 후속 문서가 최신 제안입니다.
 - 상태: Official Execution = **NOT_READY** · Final Execution Freeze = **PENDING** · Phase 3 = **INCOMPLETE**
 

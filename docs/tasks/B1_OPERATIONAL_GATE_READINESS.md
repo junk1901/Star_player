@@ -3,6 +3,10 @@
 - 작성: Claude Code, 2026-10-28. 근거: OWNER 지시 "G4 구현 수용 및 Phase 3 잔여 작업 자율 진행"(2026-10-28) 5항
 - [운영 Gate 후속 계획](B1_OPERATIONAL_GATE_PLAN.md)(2026-10-25)의 G1~G9 정의를 그대로 씁니다. 이 문서는 각 Gate의 실행 조건을 구체화합니다. Godot `verify.ps1`의 G1~G4·E1~E4 검사와는 다른 번호 체계입니다.
 - **공식 Gate PASS를 선언하지 않습니다.** 아래 "현재"는 사실 기록입니다.
+- **개정 2026-10-29:** OWNER 지시 "G4/G5 검수 수용 및 기존 GitHub 기반 Phase 3 운영 단계 전환" 6항.
+  - 공식 원격은 기존 공개 저장소 `https://github.com/junk1901/Star_player.git`입니다. 이 문서의 "A-1 원격"은 이 저장소를 뜻합니다.
+  - G4·G5 운영 도구 코드 검수는 Codex REVIEW_READY로 종료되었습니다(검증 소스 `1751fe0`). 운영 Gate PASS는 아닙니다.
+  - 순서·의존성은 [Phase 3 운영 전환 계획](B1_PHASE3_OPERATIONS_TRANSITION.md) 5절에 있습니다.
 - 상태: Official Execution = **NOT_READY** · Final Execution Freeze = **PENDING** · Phase 3 = **INCOMPLETE**
 
 ## 1. 실행 구분
@@ -21,6 +25,22 @@
   - 어느 경우든 작업을 멈추고 별도 보고합니다.
 
 ## 2. Gate별 준비표
+
+### 2.0 Gate별 실행 계정·필요 승인값·실행 명령 (2026-10-29 추가)
+
+개발용 `verify.ps1`의 GATE PASS는 아래 운영 Gate의 PASS가 아닙니다. 선행 조건이 하나라도 빠지면 공식 실행을 하지 않습니다.
+
+| Gate | 실행 계정 | 필요한 승인값(실행 전) | 실행 명령·절차 |
+|---|---|---|---|
+| G1 | 배포 계정(빌드), 검증기 서비스(확인) | G5 Root 구조(B-2), 출력 이름·Root | 확정 이름으로 TEST_ONLY 시험 + `tools\verify.ps1` |
+| G2 | 배포 계정 | 승인 A 게시 완료 | 공식 원격 clone 2개 → `tools\verify.ps1` D3, 내장 리소스 SHA 비교([A-1](B1_A1_PUBLICATION_PREP.md) 6절 1~2단계) |
+| G3 | 배포 계정 | 승인 A, 승인 소스 Commit(A1-6), G1, G2 | [A-1](B1_A1_PUBLICATION_PREP.md) 6절 3~6단계: CI 빌드, `b4-candidates.ps1`, SourceLink(5절), PCK 5회 |
+| G4 | 검증기 서비스(실행), OWNER 관리 세션(설치) | G3 VERIFIER_BINARY SHA, G5 완료, 승인된 `execution_pins`·`dotnet`·`git`(B-10~B-12), 설치 설정·앵커(B-13·B-14) | 운영 ETW 추적([G5 설계](B1_G5_OPERATIONAL_DESIGN_DRAFT.md) 8절) → `g5-pins.ps1 -Mode Collect`/`Verify` → 설치 → 거부 경로 확인 |
+| G5 | OWNER 관리 세션(Apply), 각 역할 계정(Probe) | 운영 기계·Root·SID·R-ARCHIVE 권한(B-1~B-9) | `g5-acl.ps1` Plan→Verify→Apply→Verify, 역할별 `g5-probe.ps1`, [전환 계획](B1_PHASE3_OPERATIONS_TRANSITION.md) 3.2절 M-1~M-11 |
+| G6 | 계약 3.5 표의 각 계정(표준 사용자 포함) | G5 공식 완료, Registry·Pipe 계정 SID(B-6) | 계약 AT-1~AT-14r 명령, AT-4 `ERROR_INVALID_OWNER` 확인 |
+| G7 | 생산자·검증기 서비스·Registry 계정 | G5·G6 | N27-d/e/f 반례 실행 |
+| G8 | 검증기 서비스 | 운영 기계(B-1) | 검증기 `environment` 명령으로 C0 생성 → Profile 승인 → 변경 시 거부 실측(E2-4) |
+| G9 | 검증기 서비스 | G8 Profile | 승인 환경에서 `UpperQuantile` j=1..36·`witness_digest`·Holm Fixture 생성 → Profile `math_golden` 대조 |
 
 ### G1 — B-4 공식 출력 파일명·경로
 
@@ -47,6 +67,7 @@
 ### G3 — 운영 Build Provenance·바이너리 SHA
 
 - **현재:** 진단 완료분은 재현성 조사, Scene Migration(`0009173`), Artifact 후보 규칙 v2입니다. 공식 SHA는 A-1 URL과 승인 소스 Commit이 정해져야 측정할 수 있습니다.
+  - 2026-10-29: 공식 URL 결정(기존 공개 저장소). `1751fe0` 개발 빌드 후보 재산출 441행(StarPlayer 27행만 변경, [전환 계획](B1_PHASE3_OPERATIONS_TRANSITION.md) 2.2절). URL 대소문자가 SourceLink·DLL 바이트를 바꾸는 것을 실측했습니다(A-1 문서 5절). 승인 소스 Commit은 미확정입니다.
 - **선행 조건:** G1, G2, A-1 원격 게시, 승인 소스 Commit
 - **진단:** 이번 작업에서 수행했습니다. 결과는 [준비 보고서](../reports/B1_G5_A1_PREP_REPORT.md) 4·5절입니다.
   - `b4-candidates.ps1`로 `a980ea5` 빌드의 441행 재산출
@@ -92,7 +113,8 @@
 
 ### G5 — 보호 Root·계정 분리·ACL
 
-- **현재:** 준비 완료(이 작업). 운영 적용·실측은 하지 않았습니다.
+- **현재:** 준비 완료. 운영 적용·실측은 하지 않았습니다.
+  - 2026-10-29: 운영 도구(`g5-acl`·`g5-probe`·`g5-pins`·`b4-candidates`·`a1-scan`·`a1-refcheck`) 코드 검수가 Codex REVIEW_READY로 종료되었습니다(검증 소스 `1751fe0`, 자체 시험 109/109). 운영 실측 항목은 [전환 계획](B1_PHASE3_OPERATIONS_TRANSITION.md) 3.2절 M-1~M-11입니다.
 - **선행 조건:** 운영 기계, 역할 계정·SID, R-ARCHIVE 계약 값
 - **진단:** 이번 작업에서 수행했습니다.
   - 완료: 도구 4종(`g5-acl`·`g5-probe`·`g5-pins`·`selftest`)과 격리 자체 시험 36/36
@@ -159,8 +181,9 @@
 
 ## 3. 다음에 묶어서 받을 OWNER 승인 지점
 
-1. **A-1 비공개 원격 생성·최초 게시:** [A-1 문서](B1_A1_PUBLICATION_PREP.md) 8절 결정 A1-1~A1-7
-2. **실제 운영 ACL·Trust Anchor·Pin 설치:** G5 공식 적용, 설치 설정·앵커 설치, `execution_pins` 승인
-3. **최종 운영 Gate 결과와 Build Freeze:** G1~G9 결과 수용 → Final Execution Freeze 준비 → Official Execution 검토
+1. **승인 A — 기존 공식 GitHub 최초 게시:** [A-1 문서](B1_A1_PUBLICATION_PREP.md) 8절 결정 A1-2~A1-7(A1-1은 2026-10-29 결정됨)
+2. **승인 B — G5 실제 운영 설치:** 운영 기계·SID·R-ARCHIVE 권한, G5 공식 적용, 설치 설정·앵커 설치, `execution_pins` 승인([전환 계획](B1_PHASE3_OPERATIONS_TRANSITION.md) 3.1절)
+3. **승인 C — 공식 Gate 및 Build Freeze:** 최종 Artifact·Build Provenance, G1~G9 결과 수용, 독립 검수 결과 → Final Execution Freeze → Phase 3 완료 판단
 
-- 권장 순서: 1 → (G2·G3 공식) → 2 → (G4·G5 공식) → G6·G7 → G8·G9 → 3
+- 권장 순서: A → (G2·G3 공식) → B → (G5 공식 → Pin·설치 → G4 공식) → G1·G6·G7 → G8·G9 → C. 세부는 [전환 계획](B1_PHASE3_OPERATIONS_TRANSITION.md) 5절입니다.
+- *(2026-10-29 개정 전 1번은 "A-1 비공개 원격 생성"이었습니다. OWNER 결정으로 기존 공개 저장소 게시로 바뀌었습니다.)*
