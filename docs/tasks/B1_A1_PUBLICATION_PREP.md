@@ -5,6 +5,7 @@
   - Public 상태를 유지합니다. Public이라는 이유만으로 개발·Phase 3를 멈추지 않습니다.
   - 새 비공개 저장소(`star-player-official` 등) 생성 계획은 **취소**되었습니다. 이 문서의 이전 판(2026-10-28)이 권고한 신규 비공개 저장소 후보는 이력으로만 남습니다.
   - [B-4 빌드 절차 결정 초안](B1_B4_BUILD_PROCEDURE_DECISION_DRAFT.md) 11.4절 선택지 중 **R-1**(현재 공개 저장소에 승인 Commit과 조상을 Push)에 해당합니다.
+- **게시 완료(2026-10-29, OWNER 승인 A):** 원격 `refs/heads/main` `7456f44` → `c77ed1a5d15d43d5a97a4e5e777c9c3ea698771f`(Fast-forward, Tag 없음). 게시 후 대조 PASS. 기록은 [게시 기록](../reports/B1_A1_PUBLICATION_RECORD.md)입니다. 아래 본문은 게시 전 준비 자료로 그대로 둡니다.
 - **성격:** OWNER 승인 A(최초 게시)에 필요한 정보입니다.
   - Push, Tag 생성·게시, 원격 설정 변경은 **하지 않았습니다**.
   - 원격에는 읽기 전용 조회(`git ls-remote`)만 했습니다. Fetch도 하지 않았습니다(원격 `main` 객체가 이미 로컬에 있음).

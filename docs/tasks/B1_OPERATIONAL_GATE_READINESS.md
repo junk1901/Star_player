@@ -67,6 +67,7 @@
 ### G3 — 운영 Build Provenance·바이너리 SHA
 
 - **현재:** 진단 완료분은 재현성 조사, Scene Migration(`0009173`), Artifact 후보 규칙 v2입니다. 공식 SHA는 A-1 URL과 승인 소스 Commit이 정해져야 측정할 수 있습니다.
+  - 2026-10-29 승인 A: 공식 원격 `main` = `c77ed1a` 게시·검증 완료(Raw SourceLink 조회 가능). G2·G3 공식 실행 전 필요 항목은 [게시 기록](../reports/B1_A1_PUBLICATION_RECORD.md) 5절(승인 소스 Commit A1-6, 빌드 위치·계정, G1)입니다.
   - 2026-10-29: 공식 URL 결정(기존 공개 저장소). `1751fe0` 개발 빌드 후보 재산출 441행(StarPlayer 27행만 변경, [전환 계획](B1_PHASE3_OPERATIONS_TRANSITION.md) 2.2절). URL 대소문자가 SourceLink·DLL 바이트를 바꾸는 것을 실측했습니다(A-1 문서 5절). 승인 소스 Commit은 미확정입니다.
 - **선행 조건:** G1, G2, A-1 원격 게시, 승인 소스 Commit
 - **진단:** 이번 작업에서 수행했습니다. 결과는 [준비 보고서](../reports/B1_G5_A1_PREP_REPORT.md) 4·5절입니다.
