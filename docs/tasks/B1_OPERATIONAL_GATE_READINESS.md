@@ -45,6 +45,7 @@
 ### G1 — B-4 공식 출력 파일명·경로
 
 - **현재:** 미결. B-4 Clause와 출력 Root는 운영 값 확인 뒤 확정합니다(OWNER 2026-10-28 4항).
+  - 2026-10-29 진단: 현행 이름 대부분이 코드 한 곳에서 정의되어 그대로 채택 가능합니다. 생산 Archive 조립 명령 부재, 생산자 출력의 저장소 내부 제한, `manifest.json` 다중 정의를 발견했습니다([G2/G3 진단 보고서](../reports/B1_G2G3_DIAGNOSTIC_REPORT.md) 9절).
 - **선행 조건:** G5 Root 구조 확정([G5 설계](B1_G5_OPERATIONAL_DESIGN_DRAFT.md) 1절), §21 `run/<run_id>/` 내부 배치(결정 3 §6)
 - **진단:** 확정 이름 후보로 생산자·검증기·시험이 같은 경로를 쓰는지 TEST_ONLY 시험. 이름은 코드 한 곳에서만 정의되는지 확인
 - **공식:** OWNER가 이름·Root를 확정. 코드 변경이 필요하면 별도 TASK·Codex 검수
@@ -67,6 +68,7 @@
 ### G3 — 운영 Build Provenance·바이너리 SHA
 
 - **현재:** 진단 완료분은 재현성 조사, Scene Migration(`0009173`), Artifact 후보 규칙 v2입니다. 공식 SHA는 A-1 URL과 승인 소스 Commit이 정해져야 측정할 수 있습니다.
+  - 2026-10-29 G2/G3 **진단**(개발 PC, 공식 원격 `c77ed1a`의 독립 Clone 2개): 두 Clone `verify.ps1` GATE PASS 3,061/0/0, Golden 4/4, Dry Pilot 9/9, CI 빌드 Artifact 441행 Clone 간 동일(다른 6개는 경로가 든 Coverage 대응표), SourceLink = 공식 Raw + `c77ed1a`, PCK 5회+교차 1회 `3a187e19…` 동일. 공식 PASS 아님. 남은 결정은 [G2/G3 진단 보고서](../reports/B1_G2G3_DIAGNOSTIC_REPORT.md) 12절(소스 Commit, 빌드 장소, `core.autocrlf` 고정, G1 이름)입니다.
   - 2026-10-29 승인 A: 공식 원격 `main` = `c77ed1a` 게시·검증 완료(Raw SourceLink 조회 가능). G2·G3 공식 실행 전 필요 항목은 [게시 기록](../reports/B1_A1_PUBLICATION_RECORD.md) 5절(승인 소스 Commit A1-6, 빌드 위치·계정, G1)입니다.
   - 2026-10-29: 공식 URL 결정(기존 공개 저장소). `1751fe0` 개발 빌드 후보 재산출 441행(StarPlayer 27행만 변경, [전환 계획](B1_PHASE3_OPERATIONS_TRANSITION.md) 2.2절). URL 대소문자가 SourceLink·DLL 바이트를 바꾸는 것을 실측했습니다(A-1 문서 5절). 승인 소스 Commit은 미확정입니다.
 - **선행 조건:** G1, G2, A-1 원격 게시, 승인 소스 Commit
