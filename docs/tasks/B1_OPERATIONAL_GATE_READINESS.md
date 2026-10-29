@@ -68,6 +68,7 @@
 ### G3 — 운영 Build Provenance·바이너리 SHA
 
 - **현재:** 진단 완료분은 재현성 조사, Scene Migration(`0009173`), Artifact 후보 규칙 v2입니다. 공식 SHA는 A-1 URL과 승인 소스 Commit이 정해져야 측정할 수 있습니다.
+  - 2026-10-29 선행 문제 분석([선행 문제 보고서](../reports/B1_G2G3_PREREQ_REPORT.md)): CRLF(`core.autocrlf=true`)만 기존 불변 기준을 충족하고 LF는 U4 1건 FAIL(튜닝 v4 CRLF 저장). 검증기 바이너리는 이미 `eol=lf`로 설정 무관. 공식 실행 경로·Archive 조립은 계약 §14상 B-1 밖. Producer 분리는 현재 코드로 가능(빌드 산출물 없는 전용 Checkout + R-BUILD 바이너리). 남은 결정은 그 보고서 6절입니다.
   - 2026-10-29 G2/G3 **진단**(개발 PC, 공식 원격 `c77ed1a`의 독립 Clone 2개): 두 Clone `verify.ps1` GATE PASS 3,061/0/0, Golden 4/4, Dry Pilot 9/9, CI 빌드 Artifact 441행 Clone 간 동일(다른 6개는 경로가 든 Coverage 대응표), SourceLink = 공식 Raw + `c77ed1a`, PCK 5회+교차 1회 `3a187e19…` 동일. 공식 PASS 아님. 남은 결정은 [G2/G3 진단 보고서](../reports/B1_G2G3_DIAGNOSTIC_REPORT.md) 12절(소스 Commit, 빌드 장소, `core.autocrlf` 고정, G1 이름)입니다.
   - 2026-10-29 승인 A: 공식 원격 `main` = `c77ed1a` 게시·검증 완료(Raw SourceLink 조회 가능). G2·G3 공식 실행 전 필요 항목은 [게시 기록](../reports/B1_A1_PUBLICATION_RECORD.md) 5절(승인 소스 Commit A1-6, 빌드 위치·계정, G1)입니다.
   - 2026-10-29: 공식 URL 결정(기존 공개 저장소). `1751fe0` 개발 빌드 후보 재산출 441행(StarPlayer 27행만 변경, [전환 계획](B1_PHASE3_OPERATIONS_TRANSITION.md) 2.2절). URL 대소문자가 SourceLink·DLL 바이트를 바꾸는 것을 실측했습니다(A-1 문서 5절). 승인 소스 Commit은 미확정입니다.
