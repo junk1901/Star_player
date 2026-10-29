@@ -210,6 +210,26 @@
   - 위 `run/<run_id>/…` 행은 현재 생산자·검증기·시험이 함께 쓰는 배치입니다.
   - 공식 경로를 바꾸면 `EvidenceWriter.RunPath`·`OfficialOutput`·검증기 `RunFile`·시험이 같은 정의를 써야 합니다(G1 수용 기준: 이름 정의 한 곳, 기존 Hash·Replay 불변).
 
+### 6.1 G1-a 단일 규범 이름·경로 표 (조건부 제안, 2026-10-29)
+
+- **상태:** [G1·G2 조건부 결정안](B1_G1_G2_CONDITIONAL_DECISION_PROPOSAL.md) B절의 제안입니다. OWNER 결정 전에는 공식 확정이 아닙니다. 이름은 모두 **현재 코드 그대로**이며 바꾸지 않습니다.
+- 생산 코드 위치·개수는 `tools/b1-ops/g1-names-check.ps1`의 고정 목록과 같아야 합니다. 이 표와 그 목록은 함께만 바뀝니다.
+
+| 이름·경로 | 해석 Root | 생산 코드 정의(파일=개수) | 쓰는 쪽 | 읽는 쪽 |
+|---|---|---|---|---|
+| `build/simharness/official/<run_id>` | 생산자 Checkout(저장소) | `Official.cs`=1(`OfficialOutput.RootRelative`) | 생산자 | — (검증기는 읽지 않음) |
+| `run/<run_id>/<결과 폴더 내 경로>` | Archive Root | `EvidenceWriter.cs`=1(`RunPath`) | 생산자(Archive 사본) | 검증기(`RunPath` 재사용) |
+| `preflight.json` | 결과 폴더·`run/<run_id>/` | `Official.cs`=1(`PreflightFile`) | 생산자 | 검증기(`PreflightFile` 재사용) |
+| `preflight/<unit 소문자>.json` | 같음 | `Official.cs`=1(`PreflightDirectory`), `UnitPreflightName` | 생산자 | 검증기(재사용) |
+| `units/<unit 소문자>/` | 결과 폴더(Family), Archive(Unit 증거) | `FamilyOfficial.cs`=1(`UnitDirectory`), `EvidenceWriter.cs`=1(Archive) | 생산자 | 검증기(`UnitDirectory` 재사용) |
+| `cells/<cell 소문자>/` | 결과 폴더(Dominance) | `DominanceOfficial.cs`=1(`CellDirectory`) | 생산자 | 검증기(재사용) |
+| `…/manifest.json`(UNIT_MANIFEST) | 결과 폴더·`run/<run_id>/` | `Verifier.cs`=1, `DominanceOfficial.cs`=3, `EvidenceWriter.cs`=2, `FamilyOfficial.cs`=2, `RunReport.cs`=1 | 생산자 | 검증기·Replay |
+| `family-result.json`(Family 실행 색인) | 결과 폴더·`run/<run_id>/` | `FamilyOfficial.cs`=1(`ResultFile`) | 생산자 | 검증기(재사용) |
+| `dominance-result.json`(Dominance 실행 색인) | 같음 | `DominanceOfficial.cs`=1(`ResultFile`) | 생산자 | 검증기(재사용) |
+| 공식 Archive Root(절대경로) | — | 없음 | — | — | 
+
+- 공식 Archive Root는 승인 B(R-ARCHIVE) 값입니다. Trust·Proof·결과 문서 이름(Archive Root 기준, TEST_ONLY 후보)은 위 6절 표와 [선행 문제 보고서](../reports/B1_G2G3_PREREQ_REPORT.md) 2절 표를 따르며, OWNER 미확정 항목은 승인 B와 기존 B-4 규범 결정 대상입니다.
+
 ## 7. Artifact 109개 후보 검증 결과 (`00091736` CI 빌드 2개) — CANDIDATE_INCOMPLETE
 
 - **상태:** 109개 파일 목록은 **확정하지 않습니다**(OWNER 지시). 실제 로드 여부를 확인하기 전에는 파일 수를 정하지 않습니다.
