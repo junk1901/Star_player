@@ -227,7 +227,7 @@ public static class Verifier
             BindApproval(d, a, family);
         BindUnits(doc, a, family, kind);
 
-        // the run's own files from the snapshot: exactly the index and one manifest per unit, materialized byte for byte into a new verifier-owned directory for the existing replay (§20.2 1)
+        // the run's own files from the snapshot: exactly the index and one manifest per unit, handed to the existing replay as the snapshot's own buffers (§20.2 1)
         var plan = kind == EvidenceKind.Family ? (family == "fc3-cal" ? OfficialFamilyPlan.Calibration : OfficialFamilyPlan.Integration) : null;
         var unitDirectories = plan is not null ? plan.Units.Select(OfficialFamilyPlan.UnitDirectory).ToList() : DominanceMatrix.Cells.Select(DominancePreflight.CellDirectory).ToList();
         var unitIdsInPlan = plan is not null ? plan.Units.Select(u => u.Id).ToList() : DominanceMatrix.Cells.Select(c => c.Id).ToList();
@@ -242,101 +242,85 @@ public static class Verifier
             unitIdsInPlan.Select(id => RunFile(snapshot, "PREFLIGHT", id, EvidenceWriter.RunPath(runId, $"{OfficialOutput.PreflightDirectory}/{OfficialOutput.UnitPreflightName(id)}"), family)).ToList(),
             manifests.Select(m => Attestation(m.Bytes)).ToList(), unitIdsInPlan);
 
-        var replayRoot = Path.Combine(Path.GetTempPath(), "starplayer-verifier", Guid.NewGuid().ToString("N"));
+        // G5-TEMP-01 (C-3): the replay reads these same verified buffers by their path in the result folder; nothing is written for it and no path is opened again
+        var replayFiles = manifests.Append(index).ToDictionary(f => Text(f.Reference["relative_path"])[runPrefix.Length..], f => f.Bytes, StringComparer.Ordinal);
+        byte[]? ReplayFile(string pathInResultDirectory) => replayFiles.GetValueOrDefault(pathInResultDirectory);
+
+        // the existing replay, observing every game it re-executes
+        var observers = new Dictionary<(string Key, int Index), PzlEventObserver>();
+        GameRunResult Play(RunConfig c, GameSpec s) => GameExecutor.Play(c, s, default, null, observers[(c.CompetitionKey, s.GameIndex)] = new PzlEventObserver());
+        IReadOnlyList<RunResult> reruns;
+        JObject expected;
+        var ctx = new EvidenceContext(a.ValidationSetId, a.Id, a.RawSha256, a.FreezeId, Text(a.Ref("build_provenance")["id"]),
+            kind == EvidenceKind.Family ? Text(Obj(a.Record["combination_policy_clauses"])[family == "fc3-cal" ? "calibration" : "integration"]) : null);
+        if (kind == EvidenceKind.Dominance)
+        {
+            var outcome = DominanceOfficialReplay.Verify(ReplayFile, approvals, r.RepositoryRoot, default,
+                (c, specs, ct) => SimRunner.RunSpecs(c, specs, null, ct, s => Play(c, s)), authority);
+            if (outcome.Error is { } e)
+                throw new EvidenceException(Wrap(e, family, outcome.GamesExecuted));
+            reruns = outcome.Reruns!;
+            expected = OfficialDocuments.Dominance(runId, reruns.Select((run, i) => (run, Attestation(manifests[i].Bytes))).ToList(), outcome.Evaluation!, ctx, refs);
+        }
+        else
+        {
+            var outcome = FamilyOfficialReplay.Verify(plan!, ReplayFile, approvals, r.RepositoryRoot, default, Play, authority);
+            if (outcome.Error is { } e)
+                throw new EvidenceException(Wrap(e, family, outcome.GamesExecuted));
+            reruns = outcome.Reruns!;
+            expected = OfficialDocuments.Family(plan!, runId, reruns.Select((run, i) => (run, Attestation(manifests[i].Bytes))).ToList(), outcome.Evaluation!, ctx, refs);
+        }
+
+        Compare(doc, expected, family);
+
+        // PZL: every Unit PZL document and bundle row against the re-observation
+        var unitIds = kind == EvidenceKind.Dominance ? DominanceMatrix.Cells.Select(c => c.Id).ToList() : Items(Obj(doc["plan"])["unit_ids"]).Select(Text).ToList();
+        if (unitDocs.Count != reruns.Count)
+            throw Fail(EvidenceCodes.PzlIncomplete, "Evidence.pzl_units_missing", "/additional_evidence/pzl_unit_ids", "pzl_reobservation", "Unit PZL 문서가 Unit마다 하나씩 있지 않습니다.", family);
+        for (var i = 0; i < reruns.Count; i++)
+        {
+            var run = reruns[i];
+            var games = run.Games.Select(g => new ObservedGame(g, observers.GetValueOrDefault((run.Config.CompetitionKey, g.Game.GameIndex)))).ToList();
+            var unitArtifacts = Items(Obj(unitDocs[i]["additional_evidence"])["artifacts"]).Select(Obj).ToList();
+            var reprojected = UnitPzlEvidence.Document(ctx, family, unitIds[i], a.GitCommitSha, run, games, unitArtifacts);
+            if (bundles[i].Games.Count != games.Count)
+                throw Fail(games.Count > bundles[i].Games.Count ? EvidenceCodes.PzlIncomplete : EvidenceCodes.PzlMismatch, "Evidence.bundle_games", "", "pzl_reobservation",
+                    $"{unitIds[i]}: 번들 경기 {bundles[i].Games.Count}개 ≠ 재실행 {games.Count}개(실패 경기 누락 포함, N05).", family, unitIds[i]);
+            var docGames = Items(unitDocs[i]["games"]).Select(Obj).ToList();
+            if (docGames.Count != games.Count)
+                throw Fail(EvidenceCodes.PzlIncomplete, "Evidence.pzl_games_missing", "/games", "pzl_reobservation", $"{unitIds[i]}: Unit PZL games가 실행 경기 전부가 아닙니다(N05).", family, unitIds[i]);
+            for (var k = 0; k < games.Count; k++)
+                if (UnitPzlEvidence.CompareGame(bundles[i].Games[k], docGames[k], games[k]) is { } diff)
+                    throw new EvidenceException(diff with { Family = family, Unit = unitIds[i] });
+            if (JDiff.First(EvidenceHash.M(unitDocs[i]), EvidenceHash.M(reprojected)) is { } p)
+                throw Fail(EvidenceCodes.PzlMismatch, "Evidence.unit_pzl_differs", p, "pzl_reobservation", $"{unitIds[i]}: Unit PZL 문서가 재관찰 투영과 다릅니다({p}).", family, unitIds[i]);
+            // OWNER decision 3 §5 (content): every GameResult of the unit's GAME_RESULTS = the parent document's row = the re-projection
+            var unitTechnical = Obj(Obj(Items(doc["units"])[i])["technical"]);
+            var expectedRows = Items(Obj(Obj(Items(expected["units"])[i])["technical"])["games"]).Select(Obj).ToList();
+            if (GameResultsEvidence.Compare(results[i], unitDocs[i], unitTechnical, expectedRows) is { } gr)
+                throw new EvidenceException(gr with { Family = family });
+        }
+
+        if (pzl6 is not null)
+            VerifyPzl6(pzl6, doc, reruns, r.Codec, family, snapshot);
+
+        var payload = kind == EvidenceKind.Dominance ? EvidenceHash.Dominance(doc, unitDocs) : EvidenceHash.Family(doc, unitDocs, pzl6);
+        (string? technical, string? statistical, EvidenceError? ineligible) = (null, null, null);
         try
         {
-            foreach (var f in manifests.Append(index))
-                Archive.WriteNew(replayRoot, Text(f.Reference["relative_path"])[runPrefix.Length..], f.Bytes, f.ArtifactId, f.Role);
-
-            // the existing replay, observing every game it re-executes
-            var observers = new Dictionary<(string Key, int Index), PzlEventObserver>();
-            GameRunResult Play(RunConfig c, GameSpec s) => GameExecutor.Play(c, s, default, null, observers[(c.CompetitionKey, s.GameIndex)] = new PzlEventObserver());
-            IReadOnlyList<RunResult> reruns;
-            JObject expected;
-            var ctx = new EvidenceContext(a.ValidationSetId, a.Id, a.RawSha256, a.FreezeId, Text(a.Ref("build_provenance")["id"]),
-                kind == EvidenceKind.Family ? Text(Obj(a.Record["combination_policy_clauses"])[family == "fc3-cal" ? "calibration" : "integration"]) : null);
-            if (kind == EvidenceKind.Dominance)
-            {
-                var outcome = DominanceOfficialReplay.Verify(replayRoot, approvals, r.RepositoryRoot, default,
-                    (c, specs, ct) => SimRunner.RunSpecs(c, specs, null, ct, s => Play(c, s)), authority);
-                if (outcome.Error is { } e)
-                    throw new EvidenceException(Wrap(e, family, outcome.GamesExecuted));
-                reruns = outcome.Reruns!;
-                expected = OfficialDocuments.Dominance(runId, reruns.Select((run, i) => (run, Attestation(manifests[i].Bytes))).ToList(), outcome.Evaluation!, ctx, refs);
-            }
-            else
-            {
-                var outcome = FamilyOfficialReplay.Verify(plan!, replayRoot, approvals, r.RepositoryRoot, default, Play, authority);
-                if (outcome.Error is { } e)
-                    throw new EvidenceException(Wrap(e, family, outcome.GamesExecuted));
-                reruns = outcome.Reruns!;
-                expected = OfficialDocuments.Family(plan!, runId, reruns.Select((run, i) => (run, Attestation(manifests[i].Bytes))).ToList(), outcome.Evaluation!, ctx, refs);
-            }
-
-            Compare(doc, expected, family);
-
-            // PZL: every Unit PZL document and bundle row against the re-observation
-            var unitIds = kind == EvidenceKind.Dominance ? DominanceMatrix.Cells.Select(c => c.Id).ToList() : Items(Obj(doc["plan"])["unit_ids"]).Select(Text).ToList();
-            if (unitDocs.Count != reruns.Count)
-                throw Fail(EvidenceCodes.PzlIncomplete, "Evidence.pzl_units_missing", "/additional_evidence/pzl_unit_ids", "pzl_reobservation", "Unit PZL 문서가 Unit마다 하나씩 있지 않습니다.", family);
-            for (var i = 0; i < reruns.Count; i++)
-            {
-                var run = reruns[i];
-                var games = run.Games.Select(g => new ObservedGame(g, observers.GetValueOrDefault((run.Config.CompetitionKey, g.Game.GameIndex)))).ToList();
-                var unitArtifacts = Items(Obj(unitDocs[i]["additional_evidence"])["artifacts"]).Select(Obj).ToList();
-                var reprojected = UnitPzlEvidence.Document(ctx, family, unitIds[i], a.GitCommitSha, run, games, unitArtifacts);
-                if (bundles[i].Games.Count != games.Count)
-                    throw Fail(games.Count > bundles[i].Games.Count ? EvidenceCodes.PzlIncomplete : EvidenceCodes.PzlMismatch, "Evidence.bundle_games", "", "pzl_reobservation",
-                        $"{unitIds[i]}: 번들 경기 {bundles[i].Games.Count}개 ≠ 재실행 {games.Count}개(실패 경기 누락 포함, N05).", family, unitIds[i]);
-                var docGames = Items(unitDocs[i]["games"]).Select(Obj).ToList();
-                if (docGames.Count != games.Count)
-                    throw Fail(EvidenceCodes.PzlIncomplete, "Evidence.pzl_games_missing", "/games", "pzl_reobservation", $"{unitIds[i]}: Unit PZL games가 실행 경기 전부가 아닙니다(N05).", family, unitIds[i]);
-                for (var k = 0; k < games.Count; k++)
-                    if (UnitPzlEvidence.CompareGame(bundles[i].Games[k], docGames[k], games[k]) is { } diff)
-                        throw new EvidenceException(diff with { Family = family, Unit = unitIds[i] });
-                if (JDiff.First(EvidenceHash.M(unitDocs[i]), EvidenceHash.M(reprojected)) is { } p)
-                    throw Fail(EvidenceCodes.PzlMismatch, "Evidence.unit_pzl_differs", p, "pzl_reobservation", $"{unitIds[i]}: Unit PZL 문서가 재관찰 투영과 다릅니다({p}).", family, unitIds[i]);
-                // OWNER decision 3 §5 (content): every GameResult of the unit's GAME_RESULTS = the parent document's row = the re-projection
-                var unitTechnical = Obj(Obj(Items(doc["units"])[i])["technical"]);
-                var expectedRows = Items(Obj(Obj(Items(expected["units"])[i])["technical"])["games"]).Select(Obj).ToList();
-                if (GameResultsEvidence.Compare(results[i], unitDocs[i], unitTechnical, expectedRows) is { } gr)
-                    throw new EvidenceException(gr with { Family = family });
-            }
-
-            if (pzl6 is not null)
-                VerifyPzl6(pzl6, doc, reruns, r.Codec, family, snapshot);
-
-            var payload = kind == EvidenceKind.Dominance ? EvidenceHash.Dominance(doc, unitDocs) : EvidenceHash.Family(doc, unitDocs, pzl6);
-            (string? technical, string? statistical, EvidenceError? ineligible) = (null, null, null);
-            try
-            {
-                (technical, statistical) = Receipts.Eligibility(doc, ((JBool)Obj(a.Record["certification_allowances"])["insufficient_sample"]).Value);
-                Receipts.PzlEligibility(unitDocs, pzl6);
-            }
-            catch (EvidenceException e)
-            {
-                ineligible = e.Error;
-            }
-
-            var sources = snapshot.Values.Select(f => (JObject)JEditMembers.With(f.Reference, "origin", J.S("ORIGINAL"))).OrderBy(x => Text(x["artifact_id"]), StringComparer.Ordinal).ToList();
-            var verified = new VerifiedFamily(doc, Array.AsReadOnly(unitDocs.ToArray()), pzl6, payload, technical, statistical, ineligible, authority.TestOnly, Array.AsReadOnly(sources.ToArray()))
-                { Family = family, Approval = a };
-            Produced.Add(verified, Freeze(verified));                                                      // B1 T11 R1: the snapshot issuance uses
-            return verified;
+            (technical, statistical) = Receipts.Eligibility(doc, ((JBool)Obj(a.Record["certification_allowances"])["insufficient_sample"]).Value);
+            Receipts.PzlEligibility(unitDocs, pzl6);
         }
-        finally
+        catch (EvidenceException e)
         {
-            try
-            {
-                Directory.Delete(replayRoot, true);
-            }
-            catch (IOException)
-            {
-            }
-            catch (UnauthorizedAccessException)
-            {
-            }
+            ineligible = e.Error;
         }
+
+        var sources = snapshot.Values.Select(f => (JObject)JEditMembers.With(f.Reference, "origin", J.S("ORIGINAL"))).OrderBy(x => Text(x["artifact_id"]), StringComparer.Ordinal).ToList();
+        var verified = new VerifiedFamily(doc, Array.AsReadOnly(unitDocs.ToArray()), pzl6, payload, technical, statistical, ineligible, authority.TestOnly, Array.AsReadOnly(sources.ToArray()))
+            { Family = family, Approval = a };
+        Produced.Add(verified, Freeze(verified));                                                      // B1 T11 R1: the snapshot issuance uses
+        return verified;
     }
 
     /// <summary>

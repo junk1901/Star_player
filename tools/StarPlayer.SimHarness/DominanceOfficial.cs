@@ -424,6 +424,14 @@ public static class DominanceOfficialReplay
 {
     /// <param name="rerun">A test seam that observes every re-execution (default: <see cref="SimRunner.RunSpecs"/>); it never changes what is compared.</param>
     public static DominanceReplayOutcome Verify(string resultDirectory, OfficialApprovals a, string repositoryRoot, CancellationToken cancellation = default,
+        Func<RunConfig, IReadOnlyList<GameSpec>, CancellationToken, RunResult>? rerun = null, ReplayAuthority? authority = null) =>
+        Verify(path => Path.Combine([resultDirectory, .. path.Split('/')]) is var file && File.Exists(file) ? File.ReadAllBytes(file) : null, a, repositoryRoot, cancellation, rerun, authority);
+
+    /// <summary>
+    /// G5-TEMP-01 (C-3): the replay of the bytes <paramref name="resultFiles"/> gives for a path in the result folder (null: absent). Each file is asked for once and its SHA-256, checks and parse all
+    /// use that one buffer, so the evidence verifier hands over its archive snapshot's own buffers and nothing is re-read from a path.
+    /// </summary>
+    public static DominanceReplayOutcome Verify(Func<string, byte[]?> resultFiles, OfficialApprovals a, string repositoryRoot, CancellationToken cancellation = default,
         Func<RunConfig, IReadOnlyList<GameSpec>, CancellationToken, RunResult>? rerun = null, ReplayAuthority? authority = null)
     {
         rerun ??= (config, games, token) => SimRunner.RunSpecs(config, games, null, token);
@@ -434,10 +442,8 @@ public static class DominanceOfficialReplay
         string? recordedCanonical, recordedGate, recordedReason, recordedStatus, recordedBatter, recordedPitcher;
         try
         {
-            var path = Path.Combine(resultDirectory, DominanceOfficial.ResultFile);
-            if (!File.Exists(path))
+            if (resultFiles(DominanceOfficial.ResultFile) is not { } raw)
                 return Refuse("DomOfficial.result_missing", $"'{DominanceOfficial.ResultFile}'가 없습니다(완료되지 않았거나 다른 디렉터리).");
-            var raw = File.ReadAllBytes(path);
             if (SeedManifestReader.DuplicateMember(raw) is { } repeated)
                 return Refuse("DomOfficial.result_invalid", $"같은 JSON 항목이 두 번 나옵니다: '{repeated}'.");
             using var parsed = JsonDocument.Parse(raw);
@@ -473,7 +479,7 @@ public static class DominanceOfficialReplay
                 var rel = DominancePreflight.CellDirectory(cell) + "/manifest.json";
                 if (Field("manifest_path") != rel)
                     return Refuse("DomOfficial.cell_path_mismatch", $"{cell.Id}의 Manifest 경로는 '{rel}'로 고정됩니다.");
-                var bytes = File.ReadAllBytes(Path.Combine([resultDirectory, .. rel.Split('/')]));
+                var bytes = resultFiles(rel) ?? throw new FileNotFoundException($"'{rel}'가 없습니다.");
                 if (Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant() != Field("manifest_sha256"))
                     return Refuse("DomOfficial.cell_manifest_hash_mismatch", $"{cell.Id}의 Manifest 파일 SHA-256이 기록값과 다릅니다.");
                 if (SeedManifestReader.DuplicateMember(bytes) is { } dup)

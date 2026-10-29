@@ -538,6 +538,32 @@ public sealed class FamilyOfficialTests : IClassFixture<FamilyOfficialWorld>, ID
     }
 
     [Fact]
+    public void G5T01_the_byte_replay_asks_for_each_file_once_and_equals_the_directory_replay()
+    {
+        var dir = _w.CalPreflight.OutputDirectory!;
+        var asked = new List<string>();
+        byte[]? Read(string path)
+        {
+            asked.Add(path);
+            var file = Path.Combine([dir, .. path.Split('/')]);
+            return File.Exists(file) ? File.ReadAllBytes(file) : null;
+        }
+
+        var bytes = FamilyOfficialReplay.Verify(Cal, Read, _w.Approvals, _w.Root, play: Good().Play);
+        var path = FamilyOfficialReplay.Verify(Cal, dir, _w.Approvals, _w.Root, play: Good().Play);
+        Assert.Null(bytes.Error);
+        Assert.True(bytes.GamesExecuted);
+        Assert.Equal(path.Evaluation!.Canonical(), bytes.Evaluation!.Canonical());
+        Assert.Equal(path.Reruns!.Select(r => r.RunResultHash), bytes.Reruns!.Select(r => r.RunResultHash));
+        Assert.Equal([FamilyOfficial.ResultFile, .. Cal.Units.Select(u => OfficialFamilyPlan.UnitDirectory(u) + "/manifest.json")], asked);
+
+        // an absent manifest is the same refusal as a missing file in a directory, before any game
+        var plays = Good();
+        var missing = FamilyOfficialReplay.Verify(Cal, p => p == FamilyOfficial.ResultFile ? Read(p) : null, _w.Approvals, _w.Root, play: plays.Play);
+        Assert.Equal(("FamOfficial.result_invalid", false, 0), (missing.Error?.Code, missing.GamesExecuted, plays.Count));
+    }
+
+    [Fact]
     public void A_calibration_replay_refuses_every_tampered_or_untrusted_record_before_any_game()
     {
         var src = _w.CalPreflight.OutputDirectory!;

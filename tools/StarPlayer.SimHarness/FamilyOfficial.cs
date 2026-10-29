@@ -444,8 +444,17 @@ public sealed record FamilyReplayOutcome(Error? Error, bool GamesExecuted, Famil
 /// </summary>
 public static class FamilyOfficialReplay
 {
+    /// <summary>The replay of a result directory: each file it asks for is read once from there (the harness CLI and its tests).</summary>
     /// <param name="play">Test seam replacing the production <see cref="GameExecutor"/>; it never changes what is compared.</param>
     public static FamilyReplayOutcome Verify(OfficialFamilyPlan plan, string resultDirectory, OfficialApprovals a, string repositoryRoot, CancellationToken cancellation = default,
+        Func<RunConfig, GameSpec, GameRunResult>? play = null, ReplayAuthority? authority = null) =>
+        Verify(plan, path => Path.Combine([resultDirectory, .. path.Split('/')]) is var file && File.Exists(file) ? File.ReadAllBytes(file) : null, a, repositoryRoot, cancellation, play, authority);
+
+    /// <summary>
+    /// G5-TEMP-01 (C-3): the replay of the bytes <paramref name="resultFiles"/> gives for a path in the result folder (null: absent). Each file is asked for once and its SHA-256, checks and parse all
+    /// use that one buffer, so the evidence verifier hands over its archive snapshot's own buffers and nothing is re-read from a path.
+    /// </summary>
+    public static FamilyReplayOutcome Verify(OfficialFamilyPlan plan, Func<string, byte[]?> resultFiles, OfficialApprovals a, string repositoryRoot, CancellationToken cancellation = default,
         Func<RunConfig, GameSpec, GameRunResult>? play = null, ReplayAuthority? authority = null)
     {
         static FamilyReplayOutcome Refuse(string code, string message) => new(new Error(code, message), false, null);
@@ -454,10 +463,8 @@ public static class FamilyOfficialReplay
         string? recordedCanonical, recordedGate, recordedReason, recordedStatus;
         try
         {
-            var path = Path.Combine(resultDirectory, FamilyOfficial.ResultFile);
-            if (!File.Exists(path))
+            if (resultFiles(FamilyOfficial.ResultFile) is not { } raw)
                 return Refuse("FamOfficial.result_missing", $"'{FamilyOfficial.ResultFile}'가 없습니다(완료되지 않았거나 다른 디렉터리).");
-            var raw = File.ReadAllBytes(path);
             if (SeedManifestReader.DuplicateMember(raw) is { } repeated)
                 return Refuse("FamOfficial.result_invalid", $"같은 JSON 항목이 두 번 나옵니다: '{repeated}'.");
             var doc = JsonNode.Parse(raw) as JsonObject ?? throw new FormatException("결과 색인이 JSON 객체가 아닙니다.");
@@ -488,7 +495,7 @@ public static class FamilyOfficialReplay
                 var rel = OfficialFamilyPlan.UnitDirectory(trusted.Unit) + "/manifest.json";
                 if (Field("manifest_path") != rel)
                     return Refuse("FamOfficial.unit_path_mismatch", $"{trusted.Unit.Id}의 Manifest 경로는 '{rel}'로 고정됩니다.");
-                var bytes = File.ReadAllBytes(Path.Combine([resultDirectory, .. rel.Split('/')]));
+                var bytes = resultFiles(rel) ?? throw new FileNotFoundException($"'{rel}'가 없습니다.");
                 var sha = Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
                 if (sha != Field("manifest_sha256"))
                     return Refuse("FamOfficial.unit_manifest_hash_mismatch", $"{trusted.Unit.Id}의 Manifest 파일 SHA-256이 기록값과 다릅니다.");

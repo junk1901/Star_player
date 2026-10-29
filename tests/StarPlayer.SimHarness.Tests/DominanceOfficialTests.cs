@@ -303,6 +303,24 @@ public sealed partial class DominanceOfficialTests : IClassFixture<DominanceOffi
     }
 
     [Fact]
+    public void G5T01_the_byte_replay_asks_for_each_file_once_and_matches_the_stored_result()
+    {
+        var asked = new List<string>();
+        byte[]? Read(string path)
+        {
+            asked.Add(path);
+            var file = Path.Combine([_w.ResultDirectory, .. path.Split('/')]);
+            return File.Exists(file) ? File.ReadAllBytes(file) : null;
+        }
+
+        var o = DominanceOfficialReplay.Verify(Read, _w.Approvals, _w.Root);
+        Assert.Null(o.Error);
+        Assert.Equal(_w.Result.Evaluation!.Canonical(), o.Evaluation!.Canonical());
+        Assert.Equal(_w.Result.Cells.Select(c => c.Run.RunResultHash), o.Reruns!.Select(r => r.RunResultHash));
+        Assert.Equal([DominanceOfficial.ResultFile, .. DominanceMatrix.Cells.Select(c => DominancePreflight.CellDirectory(c) + "/manifest.json")], asked);
+    }
+
+    [Fact]
     public void Replay_refuses_changes_to_the_index_before_any_game()
     {
         string Edited(Action<JsonObject> edit)
