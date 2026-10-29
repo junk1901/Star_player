@@ -129,6 +129,7 @@
 - 관리자 그룹 중첩 구성원은 도구가 해석하지 않으므로 각 계정의 `whoami /groups`를 증거로 남깁니다.
 - **M-12 개정 (2026-10-30, Codex G5-TEMP-01 OPEN_MAJOR):** 위 M-12 단일 행은 이력으로 남기고, 판정은 [G5-TEMP-01 보호 모델](B1_G5_TEMP01_PROTECTION_MODEL.md) 4절의 **M-12A~J** 전부로 합니다. TEMP를 R-WORK 아래로 옮기는 것만으로는 해소가 아닙니다. 강제 시작 절차(같은 문서 3절, NOT_IMPLEMENTED)와 M-12A~J 통과 전에는 공식 인증을 시작하지 않습니다.
 - **M-12 개정 1 (2026-10-30, Codex G5-MODEL-01/02):** M-12A~J에 로컬 S4U 동작·EFS·세션 중 예방 확인·우회 시도를 더했습니다([보호 모델](B1_G5_TEMP01_PROTECTION_MODEL.md) 4절).
+- **M-12 개정 2 (2026-10-30, C-3 구현):** 검증기 Replay가 TEMP를 쓰지 않게 되어 Replay 사본 항목은 해당 없음이 됩니다. 운영 ETW로 재생용 파일 미생성 확인, Test Profile VSTest 임시 파일 검토를 별도로 남깁니다. S4U 항목은 보류입니다([C-3 보고서](../reports/B1_G5T01_C3_REPORT.md) 12절).
 - 실패하면 해당 Gate(G5) 중단 조건입니다([운영 Gate 준비표](B1_OPERATIONAL_GATE_READINESS.md) G5).
 
 ### 3.3 실행 체인 추적·Pin 후보 (승인 B의 일부)

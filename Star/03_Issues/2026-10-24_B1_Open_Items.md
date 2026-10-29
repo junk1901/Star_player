@@ -83,3 +83,9 @@ tags:
 - **G5-MODEL-01 (MAJOR):** C-3 보완 설계(Snapshot 색인·전체 Manifest 결속, 메모리 Replay) — 문서만, 구현 없음. Codex 재검수 대기
 - **G5-MODEL-02 (MINOR):** gMSA 외부 신뢰 범위 기록, 이번 운영 선택에서 제외. Codex 재검수 대기
 - **G5-TEMP-01 (OPEN_MAJOR):** 로컬 S4U 실행기 NOT_IMPLEMENTED. **새 충돌:** S8 사후 대조는 영수증 등록 뒤라 막지 못하고, 계약에 영수증 철회 절차가 없음 → 예방 통제 실측이 안 되면 C-3 전환. [보호 모델](../../docs/tasks/B1_G5_TEMP01_PROTECTION_MODEL.md) 3.4
+
+## G5-TEMP-01 C-3 구현 (2026-10-30)
+
+- **G5-TEMP-01 (OPEN_MAJOR):** 보완 C-3 구현(`8ca9705`), RED→GREEN, verify 3,071 PASS. Codex 표적 검수 대기. [C-3 보고서](../../docs/reports/B1_G5T01_C3_REPORT.md)
+- **후속:** 새 공식 소스 후보 확정(OWNER), 게시 승인, 새 G1 도구 버전(고정값만 재산출)·Codex 검수, G2/G3 재측정, Test Profile VSTest 임시 파일 검토(미검증)
+- **보류:** 로컬 S4U 실행기 S0~S9

@@ -136,6 +136,7 @@
 - **OWNER 최종 승인:** 필요(실행 전과 결과)
 - **2026-10-30:** G5-TEMP-01(Codex OPEN_MAJOR) — 공식 인증 전 [보호 모델](B1_G5_TEMP01_PROTECTION_MODEL.md)의 시작 절차 구현·검수와 M-12A~J 통과가 필요합니다. 운영 상태는 그때까지 OPEN_MAJOR입니다.
 - **2026-10-30 (개정 1):** 운영 경로는 로컬 S4U 전용 계정만 검토하고 gMSA는 제외합니다. 시작 절차는 NOT_IMPLEMENTED이며, S8 사후 대조는 등록 뒤라 예방 통제를 대신하지 않습니다([보호 모델](B1_G5_TEMP01_PROTECTION_MODEL.md) 3.4, [S4U 구성안](B1_G5_S4U_LAUNCHER_PLAN.md)).
+- **2026-10-30 (개정 2):** OWNER 결정으로 G5-TEMP-01 해결 경로를 보완 C-3(Snapshot 바이트 Replay)으로 바꿨습니다. 로컬 Commit `8ca9705`, Codex 검수 대기, OPEN_MAJOR 유지. S4U 실행기는 보류입니다([C-3 보고서](../reports/B1_G5T01_C3_REPORT.md)).
 
 ### G6 — AT-1~AT-14r·정식 AT-4/P-1
 
