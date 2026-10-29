@@ -126,6 +126,7 @@
 | M-12 | 검증기 서비스 계정 TEMP(G5-TEMP-01, 2026-10-29 추가) | 검증기 서비스에 `TMP`·`TEMP`를 검증기 전용 보호 디렉터리(예: `R-WORK\verifier-tmp`, TCB+VERIFIER만 쓰기)로 지정(서비스 환경 설정, 코드 변경 없음) → 서비스 프로세스의 `Path.GetTempPath()` 실측 → 그 디렉터리 ACL을 `g5-acl Verify`·역할별 `g5-probe`로 확인 → TEST_ONLY 인증 1회로 재생 디렉터리 `starplayer-verifier\<guid>`가 그 아래 생기고 끝나면 지워지는지 확인 → E2-1 환경 블록 digest·Profile에 그 값이 들어가는지 확인 | 다른 역할의 쓰기·삭제·생성 `DENIED`. 재생 디렉터리가 보호 위치에만 생김 | 서비스 설정, `GetTempPath` 출력, ACL·Probe 보고서, 인증 로그 |
 
 - 관리자 그룹 중첩 구성원은 도구가 해석하지 않으므로 각 계정의 `whoami /groups`를 증거로 남깁니다.
+- **M-12 개정 (2026-10-30, Codex G5-TEMP-01 OPEN_MAJOR):** 위 M-12 단일 행은 이력으로 남기고, 판정은 [G5-TEMP-01 보호 모델](B1_G5_TEMP01_PROTECTION_MODEL.md) 4절의 **M-12A~J** 전부로 합니다. TEMP를 R-WORK 아래로 옮기는 것만으로는 해소가 아닙니다. 강제 시작 절차(같은 문서 3절, NOT_IMPLEMENTED)와 M-12A~J 통과 전에는 공식 인증을 시작하지 않습니다.
 - 실패하면 해당 Gate(G5) 중단 조건입니다([운영 Gate 준비표](B1_OPERATIONAL_GATE_READINESS.md) G5).
 
 ### 3.3 실행 체인 추적·Pin 후보 (승인 B의 일부)

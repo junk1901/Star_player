@@ -6,6 +6,7 @@
   - 기존 G1·G2 조건을 조용히 재해석하지 않습니다. 아래는 **기존 조건을 명시적으로 바꾸자는 제안**이며, 바뀌는 부분과 빠지는 보장을 적었습니다.
 - 근거 자료: [G2/G3 진단 보고서](../reports/B1_G2G3_DIAGNOSTIC_REPORT.md), [선행 문제 보고서](../reports/B1_G2G3_PREREQ_REPORT.md), [정책 준비 보고서](../reports/B1_G1G2_POLICY_PREP_REPORT.md)
 - 상태: Official Execution = **NOT_READY** · Final Execution Freeze = **PENDING** · Phase 3 = **INCOMPLETE**
+- **개정 1 (2026-10-30):** Codex 판정(FIX_REQUIRED, G2 E-1 ACCEPTABLE, G1-a NEEDS_CHANGE, G1-POLICY-01 MINOR)에 따라 B.3-3의 정적 검사를 강화했습니다(B.7). A절(G2-E1)은 바꾸지 않았습니다. B.3·B.4·B.6 원문은 이력으로 남깁니다.
 
 ---
 
@@ -132,3 +133,15 @@ G2를 다음 조건이 **모두** 참일 때 충족된 것으로 봅니다.
 
 - `g1-names-check.ps1`: 작업 트리와 `c77ed1a` Clone 모두 PASS(생산 파일 164개, 이름 9개, 불일치 0).
 - `-SelfTest`: 반례 6건(검증기·생산자의 `manifest.json` 변경, 검증기의 `run/` 하드코딩, Preflight 이름 변경, 결과 루트 이동, 두 번째 색인 문자열) 모두 FAIL로 잡음. 첫 구현의 정규식 2개는 반례 2건(접두어가 붙은 이름, 꼬리가 붙은 경로)을 놓쳐 고쳤습니다(로그 `run2`·`run3` 분리 보존).
+
+## B.7 개정 1 — G1-POLICY-01 정정 (2026-10-30)
+
+- **Codex Finding G1-POLICY-01(MINOR):** 첫 도구는 이름 문자열의 파일별 개수만 비교해, 개수가 같은 경로 변경(`RunPath`의 `run/wrong/{runId}/`, `UnitPreflightName`의 `.txt`)을 PASS로 남겼습니다. 수정 전 도구로 실제 PASS임을 확인했습니다([후속 보고서](../reports/B1_G1G5_FIX_REPORT.md) 2.3절 RED).
+- **B.3-3 정정:** `tools/b1-ops/g1-names-check.ps1`(Commit `c4a04bb`, SHA-256 `d3945b5e…6ba0`)은 다음 네 검사가 모두 맞을 때만 PASS합니다. 기준값은 모두 `c77ed1a`에서 고정했습니다.
+  1. 이름 리터럴 9종의 파일별 개수(기존)
+  2. B-4 6.1 각 행의 경로 생성 정의 13줄이 고정 문장 그대로 정확히 한 번
+  3. 이름 리터럴 또는 경로 기호를 가진 생산 코드 줄 전부(50줄, 8개 파일)의 SHA-256 다중집합. 목록 밖 파일의 새 줄도 FAIL
+  4. 그 8개 파일의 SHA-256(CRLF→LF, `c77ed1a` Blob과 같음)
+- **B.4 한계 정정:** 남는 한계는 "고정 8개 파일 **밖**의 새 파일에서 이름을 조각으로 조립·복제하는 코드"와 "고정 파일 밖에서 이름·기호 없는 식별자로 들어오는 값 흐름"입니다(반례 `assembled_name_in_new_file`로 한계 확인). 고정 파일 안의 변경은 모두 FAIL합니다. 이 한계는 B.3-4 종단 시험과 코드 검수가 다룹니다.
+- **B.6 결과 정정:** `c77ed1a` Clone 2개(CRLF·LF) PASS, `-SelfTest` 17건 모두 기대대로(기존 6, Codex 반례 2, 같은 개수 반례 3, 새 파일 1, 값 흐름 1, 오탐 대조 2, 한계 1). PowerShell 5.1만 실행했고 PowerShell 7은 **미검증**입니다.
+- 이름·코드·Hash·Replay·DRAFT 색인 바이트는 바뀌지 않습니다(B.3-5 그대로).

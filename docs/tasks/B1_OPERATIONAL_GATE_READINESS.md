@@ -132,6 +132,7 @@
   - 관리자 그룹에 속한 역할 계정
 - **독립 검수:** Codex(ACL 규칙·증거)
 - **OWNER 최종 승인:** 필요(실행 전과 결과)
+- **2026-10-30:** G5-TEMP-01(Codex OPEN_MAJOR) — 공식 인증 전 [보호 모델](B1_G5_TEMP01_PROTECTION_MODEL.md)의 시작 절차 구현·검수와 M-12A~J 통과가 필요합니다. 운영 상태는 그때까지 OPEN_MAJOR입니다.
 
 ### G6 — AT-1~AT-14r·정식 AT-4/P-1
 

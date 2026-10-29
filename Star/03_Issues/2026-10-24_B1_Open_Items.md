@@ -71,3 +71,8 @@ tags:
 ## OWNER 결정 3 이후 (2026-10-25)
 
 - 결정안 7건 모두 결정·적용됨([결정 3](../../docs/contracts/b1/B1-T00_OWNER_DECISION_3.md), [보고서](../../docs/reports/B1_DECISION3_REPORT.md)). 남은 것은 Codex 표적 재검수, OWNER 최종 수용, 운영 Gate
+
+## Codex FIX_REQUIRED 후속 (2026-10-30)
+
+- **G1-POLICY-01 (MINOR):** 도구 수정(`c4a04bb`) — Codex 재검수 대기. PowerShell 7 실행 미검증. 정적 검사 한계(고정 파일 밖 조각 조립)는 종단 시험·코드 검수 몫. [후속 보고서](../../docs/reports/B1_G1G5_FIX_REPORT.md)
+- **G5-TEMP-01 (OPEN_MAJOR):** 운영 보호 모델·시작 절차 설계(NOT_IMPLEMENTED)·M-12A~J. 운영 기계 실측 통과 전 공식 인증 금지. 운영 경로가 부족하면 코드 대안 C-3(별도 TASK). [보호 모델](../../docs/tasks/B1_G5_TEMP01_PROTECTION_MODEL.md)
