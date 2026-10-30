@@ -432,4 +432,103 @@ public sealed class G4OfficialEntryTests(TestOnlyWorld w) : IClassFixture<TestOn
         Assert.Contains("Environment.startup_policy", Cli(new OfficialSeams(ConfigPath: config, Variables: new Hashtable { ["VSTEST_HOST_DEBUG"] = "1" })));
         Assert.Contains("Trust.anchor_missing", Cli(new OfficialSeams(ConfigPath: config, Variables: new Hashtable())));
     }
+
+    // ---------------------------------------------------------------- G4-ENV-01: VSTEST_ is a required start prefix (OWNER 2026-10-31)
+
+    private string WithPrefixes(string csv) => WriteConfig(o => JEditMembers.With(o, "startup_forbidden_prefixes", J.A(csv.Length == 0 ? [] : csv.Split(',').Select(p => (JNode)J.S(p)))));
+
+    [Theory]
+    [InlineData("VSTEST_")]
+    [InlineData("CORECLR_,VSTEST_")]
+    [InlineData("CORECLR_,OWNER_EXTRA_,VSTEST_")]
+    public void A_config_naming_the_exact_vstest_prefix_is_read_with_its_prefixes_unchanged(string csv)
+    {
+        var c = InstallConfigReader.Read(WithPrefixes(csv), AclOk, NotElevated);
+        Assert.Equal(csv.Split(','), c.StartupForbiddenPrefixes);                                    // nothing added, removed or rewritten
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("CORECLR_")]
+    [InlineData("CORECLR_,VSTEST_CONSOLE_PATH")]                                                     // one variable name does not stand in for the prefix
+    [InlineData("CORECLR_,vstest_")]                                                                 // non-normative spelling
+    [InlineData("VSTEST")]
+    [InlineData("VSTEST_,vstest_")]
+    [InlineData("VSTEST_,VsTest_")]
+    public void A_config_without_the_exact_vstest_prefix_is_refused_as_an_approval_mismatch(string csv)
+    {
+        var e = Refused(() => InstallConfigReader.Read(WithPrefixes(csv), AclOk, NotElevated));
+        Assert.Equal((EvidenceCodes.ApprovalMismatch, "Trust.install_config_policy"), (e.Code, e.Cause));
+    }
+
+    [Theory]
+    [InlineData("VSTEST_,VSTEST_")]
+    [InlineData("VSTEST_,CORECLR_")]
+    [InlineData("CORECLR-,VSTEST_")]
+    public void The_prefix_list_keeps_its_schema_order_and_duplicate_rules_before_the_vstest_rule(string csv) =>
+        Assert.Equal(EvidenceCodes.SchemaInvalid, Refused(() => InstallConfigReader.Read(WithPrefixes(csv), AclOk, NotElevated)).Code);
+
+    [Theory]
+    [InlineData("VSTEST_CONSOLE_PATH")]
+    [InlineData("vStEsT_ConSoLe_PaTh")]
+    [InlineData("VSTEST_HOST_DEBUG")]
+    [InlineData("VSTEST_DISABLE_ARTIFACTS_POSTPROCESSING")]
+    public void A_vstest_variable_in_any_case_refuses_the_start_of_a_binding_built_from_the_read_config(string name)
+    {
+        var config = InstallConfigReader.Read(WriteConfig(), AclOk, NotElevated);
+        var e = Refused(() => ExecutionBinding.Establish(config, new Hashtable { [name] = "x" }));
+        Assert.Equal((EvidenceCodes.EnvironmentMismatch, "Environment.startup_policy"), (e.Code, e.Cause));
+        using var b = ExecutionBinding.Establish(config, new Hashtable { ["G4_ENV_KEEP"] = "1" });            // no forbidden variable: the binding is made
+    }
+
+    [Theory]
+    [InlineData("certify-family")]
+    [InlineData("certify-phase")]
+    public void A_config_missing_vstest_or_a_vstest_start_variable_stops_the_cli_before_the_anchor_registry_and_any_test_profile_child(string command)
+    {
+        string[] args = command == "certify-family"
+            ? ["--family", "fc3-cal", "--approval-record-id", "a", "--approval-record-sha256", new string('0', 64), "--authorization-id", "x", "--document", "{}"]
+            : ["--approval-record-id", "a", "--approval-record-sha256", new string('0', 64), "--authorization-id", "x", "--calibration", "{}", "--integration", "{}", "--dominance", "{}", "--regression-proof", "{}"];
+        IEvidenceRegistry Never(TrustAnchorV1 _) => throw new InvalidOperationException("registry reached");
+        string Cli(string config, Hashtable variables)
+        {
+            var e = new StringWriter();
+            Assert.Equal(OfficialEntry.Refused, OfficialEntry.Run(command, args, TextWriter.Null, e, new OfficialSeams(ConfigPath: config, Variables: variables) with { Acl = AclOk, Elevated = NotElevated, Connect = Never }));
+            return e.ToString();
+        }
+
+        var missing = WithPrefixes("CORECLR_");
+        Assert.Contains("Trust.install_config_policy", Cli(missing, new Hashtable()));
+        Assert.Contains("Trust.install_config_policy", Cli(missing, new Hashtable { ["VSTEST_CONSOLE_PATH"] = "C:\\x\\vstest.console.dll" }));   // the config is refused first
+        var good = WriteConfig();
+        Assert.Contains("Environment.startup_policy", Cli(good, new Hashtable { ["vStEsT_ConSoLe_PaTh"] = "C:\\x\\vstest.console.dll" }));
+        Assert.Contains("Trust.anchor_missing", Cli(good, new Hashtable()));                                                          // control: the same config passes both checks
+        foreach (var config in new[] { missing, good })
+            Assert.False(Directory.Exists(Path.Combine(Path.GetDirectoryName(config)!, "work")));                                     // no Test Profile results directory was ever made
+    }
+
+    [Fact]
+    public void The_parents_vstest_variables_never_reach_the_test_profile_child_when_the_config_names_vstest()
+    {
+        var parent = new Dictionary<string, string> { ["vStEsT_ConSoLe_PaTh"] = "C:\\x\\vstest.console.dll", ["VSTEST_HOST_DEBUG"] = "1", ["VsTest_Diag"] = "x", ["G4_ENV_KEEP"] = "1" };
+        List<string> Names(string prefixes)
+        {
+            var work = Protected("env-work");
+            var (exit, output) = Child(parent, "g4-env-isolation", work, prefixes);
+            Assert.True(exit == 0, output);
+            Assert.Contains("result=StarPlayer.Domain.Tests|StarPlayer.Domain.Tests.X.Y:Passed", output);                           // the PASS result is unchanged
+            var results = Assert.Single(Directory.GetDirectories(work));
+            var lines = File.ReadAllLines(Path.Combine(results, "env.txt"));
+            Assert.Contains($"TEMP={Path.Combine(results, "temp")}", lines, StringComparer.OrdinalIgnoreCase);                         // G4-TEMP protection kept
+            return lines.Where(l => l.StartsWith("name=", StringComparison.Ordinal)).Select(l => l["name=".Length..]).ToList();
+        }
+
+        bool Vstest(string name) => name.StartsWith("VSTEST_", StringComparison.OrdinalIgnoreCase);
+        var with = Names("CORECLR_,VSTEST_");
+        Assert.DoesNotContain(with, Vstest);
+        Assert.Contains("G4_ENV_KEEP", with);
+        var without = Names("CORECLR_");                                                                                              // control: without the prefix all three are inherited
+        foreach (var name in parent.Keys.Where(Vstest))
+            Assert.Contains(name, without, StringComparer.OrdinalIgnoreCase);
+    }
 }

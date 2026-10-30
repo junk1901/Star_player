@@ -123,8 +123,21 @@ public static class G4ChildProgram
         ["g4-fake-dotnet", var scenario, .. var rest] => FakeDotnet(scenario, rest),
         ["g4-hold", var pid] => Hold(pid),
         ["g4-temp-isolation", var work, var planted] => TempIsolation(work, planted),
+        ["g4-env-isolation", var work, var prefixes] => EnvIsolation(work, prefixes),
         _ => 2,
     };
+
+    /// <summary>
+    /// G4-ENV-01: one Test Profile run whose child removal list is <paramref name="prefixes"/> (comma separated, what an install config's <c>startup_forbidden_prefixes</c> hands the runner) from a process
+    /// whose own environment — set by the test — holds VSTest variables. The scripted child lists the variable names it was given into its results directory.
+    /// </summary>
+    private static int EnvIsolation(string work, string prefixes)
+    {
+        var runner = TestRunner.FromRuntime(G4Fixtures.BuildRoot) with { ExtraForbiddenPrefixes = prefixes.Split(','), LeadingArguments = G4Fixtures.Exec("g4-fake-dotnet", "env-names"), RequireProtectedWorkTree = true };
+        foreach (var r in TestProfiles.Run("StarPlayer.Domain.Tests", "x.dll", ["StarPlayer.Domain.Tests|StarPlayer.Domain.Tests.X.Y"], work, runner))
+            Console.WriteLine($"result={r.CaseId}:{r.Outcome}");
+        return 0;
+    }
 
     /// <summary>
     /// G4-TEMP (B-stage trace): two Test Profile runs from a process whose own TEMP/TMP — set by the test — is a folder every account can write, with a directory planted in it the way a post-processing
@@ -321,6 +334,12 @@ public static class G4ChildProgram
                 File.Delete(probe);
                 File.WriteAllLines(Path.Combine(results, "temp-env.txt"), [$"TEMP={Environment.GetEnvironmentVariable("TEMP")}", $"TMP={Environment.GetEnvironmentVariable("TMP")}",
                     $"GetTempPath={temp}", $"planted_visible={Directory.Exists(Path.Combine(temp, rest[0]))}", $"roundtrip={roundtrip && !File.Exists(probe)}"]);
+                Write(trx, "Passed");
+                return 0;
+            // G4-ENV-01: the names of every variable this child was given, and its TEMP
+            case "env-names":
+                File.WriteAllLines(Path.Combine(results, "env.txt"), Environment.GetEnvironmentVariables().Keys.Cast<string>().Order(StringComparer.Ordinal).Select(n => "name=" + n)
+                    .Append($"TEMP={Environment.GetEnvironmentVariable("TEMP")}"));
                 Write(trx, "Passed");
                 return 0;
             case "trx-in-temp":

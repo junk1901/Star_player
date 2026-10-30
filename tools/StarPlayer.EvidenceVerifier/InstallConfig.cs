@@ -21,6 +21,12 @@ public static class InstallConfigReader
 {
     public const string Format = "starplayer-verifier-install-config-v1";
 
+    /// <summary>
+    /// G4-ENV-01 (OWNER 2026-10-31): <c>startup_forbidden_prefixes</c> must name exactly this token. <c>VSTEST_CONSOLE_PATH</c> makes <c>dotnet test</c> run another test runner, and the other
+    /// <c>VSTEST_*</c> variables change its waits, logs and post-processing; this prefix makes the start check refuse them and the Test Profile child drop them.
+    /// </summary>
+    public const string RequiredStartupPrefix = "VSTEST_";
+
     /// <summary>The one fixed location (no CLI or evidence input can move it): <c>%ProgramData%\StarPlayer\EvidenceVerifier\install-config.json</c>.</summary>
     public static string DefaultPath => System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "StarPlayer", "EvidenceVerifier", "install-config.json");
 
@@ -59,7 +65,7 @@ public static class InstallConfigReader
 
     /// <summary>
     /// Reads the settings ONCE: the file has a canonical path with no reparse point, the process is not elevated, the file and its parents are TCB-only (NSC-4 B, the anchor's rule), and the same bytes are
-    /// hashed and strictly parsed. Every path in it is canonical and reparse-free; the file and the anchor lie outside the build, archive and work roots. Any failure is <c>Evidence.approval_mismatch</c>.
+    /// hashed and strictly parsed. The start prefixes name <see cref="RequiredStartupPrefix"/> exactly (G4-ENV-01). Every path in it is canonical and reparse-free; the file and the anchor lie outside the build, archive and work roots. Any failure is <c>Evidence.approval_mismatch</c>.
     /// <paramref name="acl"/> / <paramref name="elevated"/> are seams for tests; production uses the real Windows checks.
     /// </summary>
     public static InstallConfig Read(string path, Func<string, string?>? acl = null, Func<bool>? elevated = null)
@@ -80,6 +86,9 @@ public static class InstallConfigReader
         }
 
         var o = ApprovalFormats.Read(ConfigShape, raw);
+        var prefixes = Items(o["startup_forbidden_prefixes"]).Select(Text).ToList();
+        if (!prefixes.Contains(RequiredStartupPrefix, StringComparer.Ordinal) || prefixes.Any(p => p != RequiredStartupPrefix && string.Equals(p, RequiredStartupPrefix, StringComparison.OrdinalIgnoreCase)))
+            throw Untrusted("Trust.install_config_policy", $"startup_forbidden_prefixes에 필수 접두사 '{RequiredStartupPrefix}'가 정확한 표기로 있어야 합니다(G4-ENV-01, 다른 표기·개별 변수 이름은 대신하지 못함).");
         ToolPin P(JNode n, string field) => new(Canonical(Text(((JObject)n)["path"]), field), Text(((JObject)n)["raw_sha256"]));
         var roots = new[] { "build_root", "archive_root", "work_root" }.ToDictionary(k => k, k => Canonical(Text(o[k]), k));
         var anchor = Canonical(Text(o["anchor_path"]), "anchor_path");
@@ -88,7 +97,7 @@ public static class InstallConfigReader
                 if (file.StartsWith(root.TrimEnd('\\') + "\\", StringComparison.OrdinalIgnoreCase))
                     throw Untrusted("Trust.install_config_untrusted", $"{what}이 {name} 안에 있습니다: '{root}'.");
         return new InstallConfig(anchor, roots["build_root"], roots["archive_root"], roots["work_root"], P(o["dotnet"], "dotnet"), P(o["git"], "git"),
-            Items(o["execution_pins"]).Select((n, i) => P(n, $"execution_pins/{i}")).ToList(), Items(o["startup_forbidden_prefixes"]).Select(Text).ToList(),
+            Items(o["execution_pins"]).Select((n, i) => P(n, $"execution_pins/{i}")).ToList(), prefixes,
             Items(o["allowed_dynamic_assemblies"]).Select(Text).ToList(), Items(o["unpinned_output_files"]).Select(Text).ToList(), raw, Archive.Sha(raw));
     }
 }
