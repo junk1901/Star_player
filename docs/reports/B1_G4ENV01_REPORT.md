@@ -2,7 +2,8 @@
 
 - 작성: Claude Code, 2026-10-31. 근거: OWNER "G4-ENV-01 필수 설정 Fail-Closed 구현" 지시(B안 최소 코드 보완 승인: 보안 코드 수정, 음성·양성 시험, 전체 회귀, 로컬 코드·시험 Commit 1개, Codex 독립 검수 요청)
 - **성격:** Push, Tag, 운영 설치 설정 변경, 운영 ACL·Trust Anchor·Registry·Pin, 공식 G1~G9, Approval B/C, Final Freeze는 **하지 않았습니다.** 문서 4개만 별도 로컬 Commit했습니다(OWNER 2026-10-31 승인, 제품 소스 Commit 아님).
-- 상태: G4-ENV-01 = **OPEN (Codex 판정 전, RESOLVED_IN_CODE 아님)** · G4-TEMP = RESOLVED_IN_CODE · G5-TEMP-01 = RESOLVED_IN_CODE · 신규 시험 20건 · 전체 xUnit 3,097 PASS / 0 FAIL / 0 SKIP · 공식 G1~G9 = **미실행** · Official Execution = **NOT_READY** · Final Execution Freeze = **PENDING** · Phase 3 = **INCOMPLETE** · Artifact Set = **CANDIDATE_INCOMPLETE**
+- 상태 (2026-10-31 Codex 판정 반영, 9·10절): G4-ENV-01 = **RESOLVED_IN_CODE**(현재 공식 진입점 한정) · Codex **REVIEW_READY** · 신규 MAJOR / MINOR / NOTE = **0 / 0 / 1** · G4-TEMP = RESOLVED_IN_CODE · G5-TEMP-01 = RESOLVED_IN_CODE · 신규 시험 20건 · 전체 xUnit 3,097 PASS / 0 FAIL / 0 SKIP · 공식 G1~G9 = **미실행** · Official Execution = **NOT_READY** · Final Execution Freeze = **PENDING** · Phase 3 = **INCOMPLETE** · Artifact Set = **CANDIDATE_INCOMPLETE**
+- 이전 상태 기록(Codex 판정 전 작성 시점): G4-ENV-01 = **OPEN (Codex 판정 전, RESOLVED_IN_CODE 아님)** · G4-TEMP = RESOLVED_IN_CODE · G5-TEMP-01 = RESOLVED_IN_CODE · 신규 시험 20건 · 전체 xUnit 3,097 PASS / 0 FAIL / 0 SKIP · 공식 G1~G9 = **미실행** · Official Execution = **NOT_READY** · Final Execution Freeze = **PENDING** · Phase 3 = **INCOMPLETE** · Artifact Set = **CANDIDATE_INCOMPLETE**
 - 증거: 저장소 밖 `E:\Madegame\g3x\phase3ops\g4env\`
 
 ## 1. 작업 위치와 Commit
@@ -119,3 +120,31 @@ OfficialEntry.Run
 2. 문서 Commit(이 보고서·Codex 요청서·CURRENT_STATE·대시보드)은 OWNER 승인(2026-10-31)으로 수행했다. Codex 판정 뒤 A-1 읽기 전용 사전검사는 그 문서 Commit HEAD를 대상으로 한다.
 3. 게시 승인 뒤, 공식 원격 독립 Clone 2개에서 verify, Golden, Dry Pilot, CI 빌드, B-4 SHA, SourceLink, PCK를 다시 측정한다. A-1 사전검사도 새 HEAD로 다시 한다(`3fa60b6` 기준 결과는 이 Commit을 포함하지 않음).
 4. G1-a 도구는 영향이 없다(PASS, 고정 파일 8개 불변).
+
+2026-10-31 갱신: 1은 Codex REVIEW_READY 뒤 OWNER가 문서 동기화와 조건부 게시를 승인했다. 새 제품 소스의 공식 결속·운영 채택은 공식 원격 Clone 재측정(G2/G3) 뒤 별도 OWNER 승인 대상이다. 3의 재측정은 아직 실행하지 않았다.
+
+## 9. Codex 판정 (2026-10-31, OWNER 전달 요약)
+
+Codex 판정 원문은 이 저장소에 보관하지 않았다. 아래는 OWNER가 작업 지시로 전달한 판정 요약이며, 원문을 새로 쓴 것이 아니다.
+
+| 항목 | 판정 |
+|---|---|
+| Verdict | **REVIEW_READY** |
+| G4-ENV-01 | **RESOLVED_IN_CODE** — 코드 수용은 **현재 공식 진입점**(`OfficialEntry.Run` → `InstallConfigReader.Read`)에 한정 |
+| G4-TEMP / G5-TEMP-01 | RESOLVED_IN_CODE 유지 |
+| 신규 MAJOR / MINOR / NOTE | **0 / 0 / 1** |
+| 기존 공식 실행 경로의 우회 | 발견되지 않음 |
+| 공식 운영 G1~G9 | 미실행 |
+
+NOTE 1의 원문 문장은 전달되지 않았다. 10절의 한계는 OWNER 지시에 적힌 표현을 따른다.
+
+## 10. 수용 범위와 남은 한계
+
+| 항목 | 상태 |
+|---|---|
+| 수용 범위 | 현재 공식 진입점(`certify-family`·`certify-phase` → `InstallConfigReader.Read` → `ExecutionBinding.Establish` → Anchor → Registry → 인증 → Test Profile 자식)에 한정된 코드 수용 |
+| 직접 생성한 `InstallConfig` | Record 생성자가 public이라, `Read`를 거치지 않고 만든 설정은 **일반적으로 검증을 우회할 수 있다**(한계로 보존). 기존 공식 실행 경로에서는 우회가 발견되지 않았다(운영 코드의 생성처는 `Read` 한 곳). 새 진입점을 추가하면 같은 검사가 필요하다 |
+| `Infrastructure.Tests.dll` SHA 변경 원인 | **INFERRED**(신규 public 상수 → 참조 어셈블리 표면 변화로 추정, 직접 확인 안 함). 공식 원격 Clone 재측정에서 다시 확인한다 |
+| 운영 검증 | 운영 설치 설정, 서비스 계정·SID, ACL, Root, 실제 G5, 실행 Pin은 **미완료**. Approval B 조건 ENV-1·2·5의 운영 실측도 남아 있다 |
+| 잔여 위험(7절) | VSLANG, CLI Telemetry, SYSTEM 계정 TEMP, `temp` 자동 정리, B-4 최종 목록. 이번 수정으로 해결되지 않았다 |
+| 6절 ENV-6 "OPEN 유지" | 판정 전 기록이다. 판정 뒤 G4-ENV-01은 코드 수준에서 RESOLVED_IN_CODE이고, 운영 조건(ENV-1·2·5)은 Approval B에 남는다 |

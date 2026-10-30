@@ -4,7 +4,8 @@
 - **READ-ONLY:** 코드·시험·계약·문서 수정, Commit, Push, Tag, 운영 적용을 하지 않습니다. 판정만 요청합니다.
 - 대상: 로컬 Branch `phase3/g4-temp-protect`, 코드 Commit **`1437bd3230ef5a73d73df4f8a214c27c4b538197`**(Tree `b7574b931850420d192a1b9a0e895fbd9b16ab64`, 부모 = 문서 HEAD `3fa60b6684b7cf3d52aebb1a3e4a192d35ed280f`). 원격에 없습니다(Push 미승인).
 - 비교 기준: G4-TEMP 제품 Commit `262f4402880cbaa933eb0a0488aa20a55cd9497f`(`3fa60b6`과 제품 코드 동일)
-- 상태: G4-ENV-01 = **OPEN (Codex 판정 전, RESOLVED_IN_CODE 아님)** · G4-TEMP = RESOLVED_IN_CODE · G5-TEMP-01 = RESOLVED_IN_CODE · 신규 시험 20건 · 전체 xUnit 3,097 PASS / 0 FAIL / 0 SKIP · 공식 G1~G9 = **미실행** · Official Execution = NOT_READY · Final Execution Freeze = PENDING · Phase 3 = INCOMPLETE · Artifact Set = CANDIDATE_INCOMPLETE
+- **판정 결과 (2026-10-31, OWNER 전달 요약, 7절):** REVIEW_READY · G4-ENV-01 = **RESOLVED_IN_CODE**(현재 공식 진입점 한정) · 신규 MAJOR / MINOR / NOTE = 0 / 0 / 1. 아래 요청 본문은 요청 당시 그대로 둔다.
+- 요청 당시 상태: G4-ENV-01 = **OPEN (Codex 판정 전, RESOLVED_IN_CODE 아님)** · G4-TEMP = RESOLVED_IN_CODE · G5-TEMP-01 = RESOLVED_IN_CODE · 신규 시험 20건 · 전체 xUnit 3,097 PASS / 0 FAIL / 0 SKIP · 공식 G1~G9 = **미실행** · Official Execution = NOT_READY · Final Execution Freeze = PENDING · Phase 3 = INCOMPLETE · Artifact Set = CANDIDATE_INCOMPLETE
 - 보고서: `docs/reports/B1_G4ENV01_REPORT.md`(이 요청서와 함께 `1437bd3` 위 문서 전용 Commit에 포함, 제품 소스 아님). 증거: 저장소 밖 `E:\Madegame\g3x\phase3ops\g4env\`
 
 ## 1. 변경 요약
@@ -103,3 +104,19 @@ VSLANG(자식에 계속 전달), .NET CLI Telemetry, SYSTEM 계정 TEMP 동작(`
 4. 게시 후 새 제품 소스 기준 G2/G3 재측정 계획을 작성한다.
 
 판정 전에는 공식 제품 소스를 갱신하지 않는다.
+
+## 7. 판정 결과 기록 (2026-10-31, 요청 뒤 추가)
+
+Codex 판정 원문은 이 저장소에 보관하지 않았다. 아래는 OWNER가 전달한 요약이며, 원문을 새로 쓴 것이 아니다.
+
+| 항목 | 판정 |
+|---|---|
+| Verdict | **REVIEW_READY** |
+| G4-ENV-01 | **RESOLVED_IN_CODE** — 코드 수용은 **현재 공식 진입점**(`OfficialEntry.Run` → `InstallConfigReader.Read`)에 한정 |
+| G4-TEMP / G5-TEMP-01 | RESOLVED_IN_CODE 유지 |
+| 신규 MAJOR / MINOR / NOTE | **0 / 0 / 1** |
+| 기존 공식 실행 경로의 우회 | 발견되지 않음 |
+| 공식 운영 G1~G9 | 미실행 |
+
+- 남은 한계(보고서 10절): 직접 생성한 `InstallConfig`는 일반적으로 검증을 우회할 수 있다(기존 공식 실행 경로에서는 발견 안 됨). `Infrastructure.Tests.dll` 변경 원인은 INFERRED다. 운영 설정·SID·ACL·실행 Pin 검증은 미완료다.
+- NOTE 1의 원문 문장은 전달되지 않았다.
