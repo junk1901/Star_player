@@ -37,7 +37,7 @@ public sealed record TestRunner(string Dotnet, string WorkingDirectory, IReadOnl
     /// <summary>Tests only: arguments placed before <c>test</c> (a stand-in child that plays dotnet test).</summary>
     internal IReadOnlyList<string> LeadingArguments { get; init; } = [];
 
-    /// <summary>Tests only: called with the pinned work root and results directory just before the child starts.</summary>
+    /// <summary>Tests only: called with the pinned work root and results directory just before the child's temporary folder is made and the child starts.</summary>
     internal Action<string, string>? BeforeChild { get; init; }
 
     /// <summary>Tests only: called with the TRX path after it is opened and checked, before its bytes are read.</summary>
@@ -244,6 +244,8 @@ public static class TestProfiles
     /// <list type="bullet">
     /// <item>G4-04 (F-17): the work root and a NEW results directory are pinned by handle from the volume root (no link followed, no rename or delete while held) and, when
     /// <see cref="TestRunner.RequireProtectedWorkTree"/>, may be written only by the TCB or this account; the TRX is opened once without write or delete sharing, its real path and writers are checked through that handle, it must be the only TRX, and its bytes are read from that same handle.</item>
+    /// <item>G4-TEMP: the child's TEMP and TMP are a NEW <c>temp</c> folder pinned inside the results directory the same way (and checked the same way), never the parent's TEMP: <c>dotnet test</c> looks
+    /// there for a post-processing folder before it exits. It is made before the child starts; if it cannot be made or checked, no child starts. A TRX dropped into it is a second TRX.</item>
     /// <item>G4-02: exit code 0 means every case ran and none failed; 1 means real case failures, which the TRX must show (they stay FAIL cases, never hidden); anything else, a 0 with a failed case, a 1
     /// without one, a missing or extra TRX, a start failure, a timeout or a cancellation is an infrastructure failure (<c>Evidence.test_profile_mismatch</c>), never a result.</item>
     /// <item>G4-FIX-01: the TRX's run-level state (<see cref="RunSummary"/>) must be clean and agree with the exit code; a run-level error outranks case failures.</item>
@@ -266,6 +268,9 @@ public static class TestProfiles
         if (runner.RequireProtectedWorkTree)
             Writers(results.FullPath, new DirectoryInfo(results.FullPath).GetAccessControl().GetSecurityDescriptorBinaryForm());
         runner.BeforeChild?.Invoke(root.FullPath, results.FullPath);
+        using var temp = Pinned(results.CreateSubdirectory("temp"), "자식 임시 디렉터리");
+        if (runner.RequireProtectedWorkTree)
+            Writers(temp.FullPath, new DirectoryInfo(temp.FullPath).GetAccessControl().GetSecurityDescriptorBinaryForm());
 
         var trx = Path.Combine(results.FullPath, $"{project}.trx");
         var filter = string.Join('|', methods.Select(m => $"FullyQualifiedName={m}"));
@@ -276,6 +281,8 @@ public static class TestProfiles
             start.Environment.Remove(name);
         foreach (var name in start.Environment.Keys.Where(k => runner.ExtraForbiddenPrefixes.Any(x => k.StartsWith(x, StringComparison.OrdinalIgnoreCase))).ToList())
             start.Environment.Remove(name);
+        start.Environment["TEMP"] = temp.FullPath;                                                   // set last, so no prefix removal can drop them (names are case-insensitive on Windows)
+        start.Environment["TMP"] = temp.FullPath;
 
         Process? started;
         try

@@ -76,7 +76,10 @@ internal static class G4Fixtures
     public static string Dotnet => TestRunner.FromRuntime(BuildRoot).Dotnet;
 
     /// <summary>Runs one isolated child scenario; its exit code and output.</summary>
-    public static (int Exit, string Output) Child(params string[] args)
+    public static (int Exit, string Output) Child(params string[] args) => Child(new Dictionary<string, string>(), args);
+
+    /// <summary>Runs one isolated child scenario with <paramref name="environment"/> set in its start environment (e.g. its own TEMP/TMP); its exit code and output.</summary>
+    public static (int Exit, string Output) Child(IReadOnlyDictionary<string, string> environment, params string[] args)
     {
         var start = new ProcessStartInfo(Dotnet)
         {
@@ -85,6 +88,8 @@ internal static class G4Fixtures
         };
         foreach (var a in Exec(args))
             start.ArgumentList.Add(a);
+        foreach (var (name, value) in environment)
+            start.Environment[name] = value;
         using var p = Process.Start(start)!;
         var output = p.StandardOutput.ReadToEndAsync();
         var error = p.StandardError.ReadToEndAsync();
@@ -117,8 +122,25 @@ public static class G4ChildProgram
         ["g4-binding", var scenario] => Binding(scenario),
         ["g4-fake-dotnet", var scenario, .. var rest] => FakeDotnet(scenario, rest),
         ["g4-hold", var pid] => Hold(pid),
+        ["g4-temp-isolation", var work, var planted] => TempIsolation(work, planted),
         _ => 2,
     };
+
+    /// <summary>
+    /// G4-TEMP (B-stage trace): two Test Profile runs from a process whose own TEMP/TMP — set by the test — is a folder every account can write, with a directory planted in it the way a post-processing
+    /// folder (<c>%TEMP%\&lt;pid&gt;_&lt;guid&gt;</c>) would be. Each scripted child reports the TEMP it was given into its results directory.
+    /// </summary>
+    private static int TempIsolation(string work, string planted)
+    {
+        Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), planted, "artifacts"));
+        var runner = TestRunner.FromRuntime(G4Fixtures.BuildRoot) with { LeadingArguments = G4Fixtures.Exec("g4-fake-dotnet", "temp-env", planted), RequireProtectedWorkTree = true };
+        const string Case = "StarPlayer.Domain.Tests|StarPlayer.Domain.Tests.X.Y";
+        for (var i = 0; i < 2; i++)
+            foreach (var r in TestProfiles.Run("StarPlayer.Domain.Tests", "x.dll", [Case], work, runner))
+                Console.WriteLine($"result={r.CaseId}:{r.Outcome}");
+        Console.WriteLine("parent_temp=" + Path.GetTempPath());
+        return 0;
+    }
 
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern IntPtr GetStdHandle(int which);
@@ -289,6 +311,21 @@ public static class G4ChildProgram
                 }
 
                 Write(trx, "Passed");
+                return 0;
+            // G4-TEMP: what this child was given as its temporary folder (first argument after the scenario: a name planted in the parent's TEMP), and that it can use it
+            case "temp-env":
+                var temp = Path.GetTempPath();
+                var probe = Path.Combine(temp, $"g4-roundtrip-{Environment.ProcessId}.tmp");
+                File.WriteAllText(probe, "x");
+                var roundtrip = File.ReadAllText(probe) == "x";
+                File.Delete(probe);
+                File.WriteAllLines(Path.Combine(results, "temp-env.txt"), [$"TEMP={Environment.GetEnvironmentVariable("TEMP")}", $"TMP={Environment.GetEnvironmentVariable("TMP")}",
+                    $"GetTempPath={temp}", $"planted_visible={Directory.Exists(Path.Combine(temp, rest[0]))}", $"roundtrip={roundtrip && !File.Exists(probe)}"]);
+                Write(trx, "Passed");
+                return 0;
+            case "trx-in-temp":
+                Write(trx, "Passed");
+                Write(Path.Combine(Path.GetTempPath(), $"g4-stray-{Environment.ProcessId}.trx"), "Passed");
                 return 0;
             case "trx-everyone":
                 Write(trx, "Passed");
