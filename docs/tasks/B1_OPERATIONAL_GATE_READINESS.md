@@ -46,6 +46,7 @@
 
 - **현재:** 미결. B-4 Clause와 출력 Root는 운영 값 확인 뒤 확정합니다(OWNER 2026-10-28 4항).
   - **2026-10-30 OWNER 정책 채택:** G1-a(현행 이름 유지, B-4 6.1 단일 규범 표, 감사 도구 SHA `d3945b5e…6ba0`, 대상 `c77ed1a`·Tree `a7b9b937…`). 공식 G1은 운영 기계에서 이 도구와 종단 시험으로 실행하며, PowerShell 경로·버전·SHA는 승인 B-22로 고정합니다. 운영 G1 PASS 아님([결정안](B1_G1_G2_CONDITIONAL_DECISION_PROPOSAL.md) C.2).
+  - **2026-10-30 도구 재결속:** C-3 제품 소스 후보 `8ca9705`용 도구 `g1-names-check-8ca9705.ps1`(SHA `4d086a5c…f96b`). PS 5.1·7.4.22에서 PASS, 반례 13 검출, LIMIT 1 명시. Codex 검수 대기([보고서](../reports/B1_G1_TOOL_8CA9705_REPORT.md)).
   - 2026-10-29 진단: 현행 이름 대부분이 코드 한 곳에서 정의되어 그대로 채택 가능합니다. 생산 Archive 조립 명령 부재, 생산자 출력의 저장소 내부 제한, `manifest.json` 다중 정의를 발견했습니다([G2/G3 진단 보고서](../reports/B1_G2G3_DIAGNOSTIC_REPORT.md) 9절).
 - **선행 조건:** G5 Root 구조 확정([G5 설계](B1_G5_OPERATIONAL_DESIGN_DRAFT.md) 1절), §21 `run/<run_id>/` 내부 배치(결정 3 §6)
 - **진단:** 확정 이름 후보로 생산자·검증기·시험이 같은 경로를 쓰는지 TEST_ONLY 시험. 이름은 코드 한 곳에서만 정의되는지 확인
